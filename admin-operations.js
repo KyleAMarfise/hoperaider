@@ -56,6 +56,7 @@ const signOutButton = document.getElementById("signOutButton");
 const DEMO_CHARACTER_STORAGE_KEY = "hopeRaidTrackerDemoCharacters";
 const DEMO_SIGNUP_STORAGE_KEY = "hopeRaidSignupDemoRows";
 const ARMORY_BASE_URL = "https://classic-armory.org/character/us/tbc-anniversary/dreamscythe";
+const LOGS_BASE_URL = "https://fresh.warcraftlogs.com/character/us/dreamscythe";
 
 const WOW_CLASS_COLORS = {
   Druid: "#FF7D0A",
@@ -157,6 +158,14 @@ function buildArmoryUrl(characterName) {
   return `${ARMORY_BASE_URL}/${encodeURIComponent(slug)}`;
 }
 
+function buildLogsUrl(characterName) {
+  const slug = String(characterName || "").trim().toLowerCase();
+  if (!slug) {
+    return "";
+  }
+  return `${LOGS_BASE_URL}/${encodeURIComponent(slug)}`;
+}
+
 function parseDateOnly(dateText) {
   if (!dateText || !/^\d{4}-\d{2}-\d{2}$/.test(dateText)) {
     return null;
@@ -224,6 +233,8 @@ function buildRequestQueueRows(rows, profilesById, actionMode = "full") {
       const characterName = signup.profileCharacterName || signup.characterName || profile?.characterName || "—";
       const attributes = resolveSignupCharacterAttributes(signup, profilesById);
       const status = normalizeSignupStatus(signup.status);
+      const gearUrl = String(signup.armoryUrl || buildArmoryUrl(characterName)).trim();
+      const logsUrl = buildLogsUrl(characterName);
       const actionCell = actionMode === "full"
         ? `<div class="row-actions">
             <button type="button" data-request-action="accept" data-signup-id="${escapeHtml(signup.id)}">Accept</button>
@@ -241,6 +252,8 @@ function buildRequestQueueRows(rows, profilesById, actionMode = "full") {
         <td>${escapeHtml(characterName)}</td>
         <td>${renderClassText(attributes.wowClass)}</td>
         <td>${escapeHtml(attributes.specialization)}</td>
+        <td>${renderGearLink(gearUrl)}</td>
+        <td>${renderExternalLink(logsUrl, "Logs")}</td>
         <td><span class="signup-status-badge status-${escapeHtml(status)}">${escapeHtml(signupStatusLabel(signup.status))}</span></td>
         <td>${actionCell}</td>
       </tr>`;
@@ -409,20 +422,20 @@ function renderSignupRequestsTable() {
   authStatus.textContent = `${existingAuthText} • Pending requests: ${activeItems.length}`;
 
   if (!activeItems.length) {
-    signupRequestRows.innerHTML = `<tr><td colspan="8">No active signup request records.</td></tr>`;
+    signupRequestRows.innerHTML = `<tr><td colspan="10">No active signup request records.</td></tr>`;
     setMessage(signupRequestMessage, "");
     return;
   }
 
   const profilesById = getCharacterMapById();
   const requestedHeader = requested.length
-    ? `<tr class="request-group-row"><td colspan="8"><strong>Signup Requests (${requested.length})</strong></td></tr>${buildRequestQueueRows(requested, profilesById, "full")}`
+    ? `<tr class="request-group-row"><td colspan="10"><strong>Signup Requests (${requested.length})</strong></td></tr>${buildRequestQueueRows(requested, profilesById, "full")}`
     : "";
   const benchedHeader = benched.length
-    ? `<tr class="request-group-row"><td colspan="8"><strong>Benched Themselves (${benched.length})</strong></td></tr>${buildRequestQueueRows(benched, profilesById, "accept-only")}`
+    ? `<tr class="request-group-row"><td colspan="10"><strong>Benched Themselves (${benched.length})</strong></td></tr>${buildRequestQueueRows(benched, profilesById, "accept-only")}`
     : "";
   const withdrewHeader = withdrew.length
-    ? `<tr class="request-group-row"><td colspan="8"><strong>Accepted Then Withdrew (${withdrew.length})</strong></td></tr>${buildRequestQueueRows(withdrew, profilesById, "none")}`
+    ? `<tr class="request-group-row"><td colspan="10"><strong>Accepted Then Withdrew (${withdrew.length})</strong></td></tr>${buildRequestQueueRows(withdrew, profilesById, "none")}`
     : "";
 
   signupRequestRows.innerHTML = `${requestedHeader}${benchedHeader}${withdrewHeader}`;
@@ -527,11 +540,15 @@ function renderRoleSpec(role, specialization) {
 }
 
 function renderGearLink(url) {
+  return renderExternalLink(url, "Gear");
+}
+
+function renderExternalLink(url, label = "Link") {
   const trimmed = String(url || "").trim();
   if (!trimmed) {
     return "—";
   }
-  return `<a href="${escapeHtml(trimmed)}" target="_blank" rel="noopener noreferrer">Gear</a>`;
+  return `<a href="${escapeHtml(trimmed)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>`;
 }
 
 function renderClassText(wowClass) {

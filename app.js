@@ -95,6 +95,7 @@ const DEMO_STORAGE_KEY = "hopeRaidSignupDemoRows";
 const DEMO_RAID_STORAGE_KEY = "hopeRaidTrackerDemoRaids";
 const DEMO_CHARACTER_STORAGE_KEY = "hopeRaidTrackerDemoCharacters";
 const ARMORY_BASE_URL = "https://classic-armory.org/character/us/tbc-anniversary/dreamscythe";
+const LOGS_BASE_URL = "https://fresh.warcraftlogs.com/character/us/dreamscythe";
 const START_HOURS = Array.from({ length: 24 }, (_, index) => index);
 const END_HOURS = Array.from({ length: 24 }, (_, index) => index + 1);
 const SIGNUP_STATUSES = ["requested", "tentative", "decline"];
@@ -326,6 +327,14 @@ function buildArmoryUrl(characterName) {
     return "";
   }
   return `${ARMORY_BASE_URL}/${encodeURIComponent(slug)}`;
+}
+
+function buildLogsUrl(characterName) {
+  const slug = String(characterName || "").trim().toLowerCase();
+  if (!slug) {
+    return "";
+  }
+  return `${LOGS_BASE_URL}/${encodeURIComponent(slug)}`;
 }
 
 function buildProgressionUrl() {
@@ -2578,6 +2587,7 @@ function renderCategoryRows(targetElement, rows, rosterMap) {
             <td>${escapeHtml(formatSpecDisplay(signup.offSpecialization || "", signup.wowClass || "", signup.offRole || ""))}</td>
             <td><span class="signup-status-badge status-${normalizeSignupStatus(signup.status)}">${escapeHtml(statusLabel(signup.status))}</span></td>
             <td>${buildExternalLink(signup.armoryUrl, "Gear")}</td>
+            <td>${buildExternalLink(buildLogsUrl(signup.characterName || signup.profileCharacterName || ""), "Logs")}</td>
             <td>${signup.progressionUrl ? buildExternalLink(signup.progressionUrl, "Progress") : "TBD"}</td>
           </tr>`)
         .join("");
@@ -2617,6 +2627,7 @@ function renderCategoryRows(targetElement, rows, rosterMap) {
                     <th>OS (Role)</th>
                     <th>Status</th>
                     <th>Gear</th>
+                    <th>Logs</th>
                     <th>Raid Progression</th>
                   </tr>
                 </thead>
