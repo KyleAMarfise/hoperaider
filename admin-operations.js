@@ -810,13 +810,27 @@ function findExistingAssignment(uid, raidId, characterName) {
   ) || null;
 }
 
-function renderAssignmentActions(uid, hasAssignment) {
+function getAssignmentState(existingAssignment) {
+  if (!existingAssignment) {
+    return { label: "Unassigned", className: "is-unassigned", hasAssignment: false };
+  }
+  const status = normalizeSignupStatus(existingAssignment.status);
+  if (status === "tentative") {
+    return { label: "Benched", className: "is-benched", hasAssignment: true };
+  }
+  return { label: "Assigned", className: "is-assigned", hasAssignment: true };
+}
+
+function renderAssignmentActions(uid, existingAssignment) {
   const escapedUid = escapeHtml(uid);
-  if (hasAssignment) {
-    return `<button type="button" data-audit-action="unassign" data-audit-action-uid="${escapedUid}">Unassign</button>`;
+  const state = getAssignmentState(existingAssignment);
+  const stateBadge = `<span class="audit-assignment-state ${escapeHtml(state.className)}">${escapeHtml(state.label)}</span>`;
+  if (state.hasAssignment) {
+    return `${stateBadge}<button type="button" data-audit-action="unassign" data-audit-action-uid="${escapedUid}">Unassign</button>`;
   }
 
   return [
+    stateBadge,
     `<button type="button" data-audit-action="assign" data-audit-action-uid="${escapedUid}">Assign</button>`,
     `<button type="button" data-audit-action="bench" data-audit-action-uid="${escapedUid}">Bench</button>`
   ].join("");
@@ -845,7 +859,7 @@ function refreshAuditAssignmentButtonState(container, uid) {
   }
 
   const existing = findExistingAssignment(uid, raidSelect.value, characterSelect.value);
-  actionWrap.innerHTML = renderAssignmentActions(uid, Boolean(existing));
+  actionWrap.innerHTML = renderAssignmentActions(uid, existing);
 }
 
 function renderAuditAssignmentControl(row, entries, upcomingRaids) {
@@ -887,7 +901,7 @@ function renderAuditAssignmentControl(row, entries, upcomingRaids) {
   return `<div class="audit-assignment" data-audit-assign-wrap="${escapeHtml(row.uid)}">
     <select data-audit-raid-select="${escapeHtml(row.uid)}">${raidOptions}</select>
     <select data-audit-character-select="${escapeHtml(row.uid)}">${characterOptions}</select>
-    <div class="audit-assignment-actions" data-audit-actions="${escapeHtml(row.uid)}">${renderAssignmentActions(row.uid, Boolean(selectedEntryAssignment))}</div>
+    <div class="audit-assignment-actions" data-audit-actions="${escapeHtml(row.uid)}">${renderAssignmentActions(row.uid, selectedEntryAssignment)}</div>
   </div>`;
 }
 
