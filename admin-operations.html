@@ -182,7 +182,13 @@
     </section>
   </main>
 
-  <script src="config/local/app-config.local.js"></script>
+  <script>
+    if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+      const script = document.createElement("script");
+      script.src = "config/local/app-config.local.js";
+      document.head.appendChild(script);
+    }
+  </script>
   <script src="config/prod/app-config.github.js"></script>
   <script type="module" src="admin-operations.js"></script>
 </body>
