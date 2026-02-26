@@ -2,7 +2,6 @@
 .env
 .env.*
 !.env.example
-config/prod/firebase-config.js
 config/local/app-config.local.js
 config/prod/app-config.github.js
 
