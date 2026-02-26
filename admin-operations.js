@@ -111,12 +111,14 @@ let db = null;
 let currentCharacters = [];
 let currentUserDirectory = new Map();
 let currentSignups = [];
+let currentRaids = [];
 let currentAdminUids = [];
 let currentMemberUids = [];
 let currentAdminDirectory = new Map();
 let currentMemberDirectory = new Map();
 let unsubscribeCharacters = null;
 let unsubscribeSignups = null;
+let unsubscribeRaids = null;
 let unsubscribeAdmins = null;
 let unsubscribeMembers = null;
 
@@ -224,6 +226,28 @@ function isActiveSignup(signup) {
     return true;
   }
   return cutoff.getTime() >= Date.now();
+}
+
+function sortRaidsForAssignment(raids) {
+  return [...raids].sort((left, right) => {
+    const leftDate = parseDateOnly(left.raidDate || "")?.getTime() || 0;
+    const rightDate = parseDateOnly(right.raidDate || "")?.getTime() || 0;
+    if (leftDate !== rightDate) {
+      return leftDate - rightDate;
+    }
+    return (Number(left.raidStart) || 0) - (Number(right.raidStart) || 0);
+  });
+}
+
+function getUpcomingRaidsForAssignment() {
+  return sortRaidsForAssignment(currentRaids).filter((raid) => isActiveSignup(raid));
+}
+
+function formatRaidAssignmentLabel(raid) {
+  const dateLabel = formatMonthDayYear(raid.raidDate || "");
+  const start = Number.isInteger(Number(raid.raidStart)) ? String(raid.raidStart) : "?";
+  const end = Number.isInteger(Number(raid.raidEnd)) ? String(raid.raidEnd) : "?";
+  return `${dateLabel} • ${raid.raidName || "Raid"} • ${start}-${end} CST`;
 }
 
 function buildRequestQueueRows(rows, profilesById, actionMode = "full") {
@@ -609,6 +633,10 @@ function buildUserAuditRows(signups) {
     }
 
     const profile = resolveProfileForSignup(signup, getCharacterMapById());
+    const profileNameFromProfile = String(profile?.profileName || "").trim();
+    if (profileNameFromProfile && !profileNamesByUid.has(uid)) {
+      profileNamesByUid.set(uid, profileNameFromProfile);
+    }
     const selectedEntry = profile
       ? findProfileCharacterEntry(
         profile,
@@ -626,6 +654,7 @@ function buildUserAuditRows(signups) {
         : (previous?.acceptedCount || 0);
       bucket.set(key, {
         isMain: Boolean(selectedEntry?.key === "main"),
+        characterKey: String(selectedEntry?.key || previous?.characterKey || "main"),
         characterName,
         wowClass: String(signup.wowClass || selectedEntry?.wowClass || profile?.wowClass || previous?.wowClass || "").trim() || "—",
         mainRole: String(signup.mainRole || signup.role || selectedEntry?.mainRole || profile?.mainRole || profile?.role || previous?.mainRole || "").trim() || "—",
@@ -647,6 +676,49 @@ function buildUserAuditRows(signups) {
   const adminSet = new Set(currentAdminUids);
   const memberSet = new Set(currentMemberUids);
   const uidSet = new Set([...currentAdminUids, ...currentMemberUids, ...acceptedTotals.keys()]);
+
+  currentCharacters.forEach((profile) => {
+    const uid = normalizeUid(profile.ownerUid || profile.id);
+    if (!uid) {
+      return;
+    }
+    uidSet.add(uid);
+
+    const profileNameFromProfile = String(profile.profileName || "").trim();
+    if (profileNameFromProfile && !profileNamesByUid.has(uid)) {
+      profileNamesByUid.set(uid, profileNameFromProfile);
+    }
+
+    const emailFromProfile = String(profile.email || profile.ownerEmail || "").trim();
+    if (emailFromProfile && !emailsByUid.has(uid)) {
+      emailsByUid.set(uid, emailFromProfile);
+    }
+
+    const bucket = ensureCharacterMap(uid);
+    const profileEntries = getProfileCharacterEntries(profile);
+    profileEntries.forEach((entry) => {
+      const characterName = String(entry.characterName || "").trim();
+      if (!characterName) {
+        return;
+      }
+      const key = characterName.toLowerCase();
+      const previous = bucket.get(key);
+      bucket.set(key, {
+        isMain: Boolean(entry.key === "main"),
+        characterKey: String(entry.key || previous?.characterKey || "main"),
+        characterName,
+        wowClass: String(entry.wowClass || previous?.wowClass || "").trim() || "—",
+        mainRole: String(entry.mainRole || previous?.mainRole || "").trim() || "—",
+        mainSpecialization: String(entry.mainSpecialization || previous?.mainSpecialization || "").trim() || "—",
+        offRole: String(entry.offRole || previous?.offRole || "").trim() || "—",
+        offSpecialization: String(entry.offSpecialization || previous?.offSpecialization || "").trim() || "—",
+        armoryUrl: String(entry.armoryUrl || previous?.armoryUrl || buildArmoryUrl(characterName)).trim(),
+        logsUrl: String(entry.logsUrl || previous?.logsUrl || buildLogsUrl(characterName)).trim(),
+        acceptedCount: previous?.acceptedCount || 0
+      });
+    });
+  });
+
   signups.forEach((signup) => {
     const uid = normalizeUid(signup.ownerUid);
     if (uid) {
@@ -657,8 +729,9 @@ function buildUserAuditRows(signups) {
   const rows = Array.from(uidSet).map((uid) => {
     const normalizedUid = normalizeUid(uid);
     const source = getUserDirectoryMeta(normalizedUid) || {};
-    const profileName = String(source.profileName || profileNamesByUid.get(normalizedUid) || source.displayName || "Unknown Profile").trim();
     const email = String(source.email || emailsByUid.get(normalizedUid) || "").trim();
+    const emailLocalPart = email.includes("@") ? email.split("@")[0] : "";
+    const profileName = String(source.profileName || profileNamesByUid.get(normalizedUid) || source.displayName || emailLocalPart || "No Profile Name").trim();
     const role = adminSet.has(normalizedUid) ? "admin" : memberSet.has(normalizedUid) ? "member" : "remove";
     const acceptedTotal = acceptedTotals.get(normalizedUid) || 0;
     const characterEntries = Array.from(characterSummariesByUid.get(normalizedUid)?.values() || [])
@@ -704,6 +777,55 @@ function renderCharacterCell(entry, row) {
   const characterName = escapeHtml(entry.characterName || "—");
   const charTooltip = [`UID: ${row.uid}`, `Discord Name: ${row.profileName || row.displayName || "Unknown"}`, `Google Email: ${row.email || "Unknown"}`].join("\n");
   return `<span class="audit-character-name" title="${escapeHtml(charTooltip)}">${characterName}</span>`;
+}
+
+function renderAuditAssignmentControl(row, entries, upcomingRaids) {
+  if (!entries.length) {
+    return "—";
+  }
+  if (!upcomingRaids.length) {
+    return `<span class="request-action-na">No upcoming raids</span>`;
+  }
+
+  const raidOptions = upcomingRaids
+    .map((raid, index) => `<option value="${escapeHtml(raid.id)}" ${index === 0 ? "selected" : ""}>${escapeHtml(formatRaidAssignmentLabel(raid))}</option>`)
+    .join("");
+
+  const characterOptions = entries
+    .map((entry, index) => `<option value="${escapeHtml(entry.characterName)}" ${index === 0 ? "selected" : ""}>${escapeHtml(entry.characterName)}</option>`)
+    .join("");
+
+  return `<div class="audit-assignment" data-audit-assign-wrap="${escapeHtml(row.uid)}">
+    <select data-audit-raid-select="${escapeHtml(row.uid)}">${raidOptions}</select>
+    <select data-audit-character-select="${escapeHtml(row.uid)}">${characterOptions}</select>
+    <select data-audit-status-select="${escapeHtml(row.uid)}">
+      <option value="accept" selected>Accepted</option>
+      <option value="requested">Requested</option>
+      <option value="tentative">Bench</option>
+      <option value="decline">Can't Go</option>
+    </select>
+    <button type="button" data-audit-assign-uid="${escapeHtml(row.uid)}">Assign</button>
+  </div>`;
+}
+
+function resolveProfileCharacterForAssignment(ownerUid, characterName) {
+  const normalizedOwnerUid = normalizeUid(ownerUid);
+  const normalizedCharacterName = String(characterName || "").trim().toLowerCase();
+  if (!normalizedOwnerUid || !normalizedCharacterName) {
+    return null;
+  }
+
+  const ownerProfiles = currentCharacters.filter((entry) => normalizeUid(entry.ownerUid || entry.id) === normalizedOwnerUid);
+  for (const profile of ownerProfiles) {
+    const matchedEntry = getProfileCharacterEntries(profile).find(
+      (entry) => String(entry.characterName || "").trim().toLowerCase() === normalizedCharacterName
+    );
+    if (matchedEntry) {
+      return { profile, characterEntry: matchedEntry };
+    }
+  }
+
+  return null;
 }
 
 function renderGearLink(url) {
@@ -757,16 +879,17 @@ function renderCharacterAuditTable() {
 
   const allRows = buildUserAuditRows(currentSignups);
   const filteredRows = filterAuditRows(allRows);
+  const upcomingRaids = getUpcomingRaidsForAssignment();
   auditCountBadge.textContent = String(filteredRows.length);
 
   if (!allRows.length) {
-    characterAuditRows.innerHTML = `<tr><td colspan="9">No user records found yet.</td></tr>`;
+    characterAuditRows.innerHTML = `<tr><td colspan="10">No user records found yet.</td></tr>`;
     setMessage(characterAuditMessage, "");
     return;
   }
 
   if (!filteredRows.length) {
-    characterAuditRows.innerHTML = `<tr><td colspan="9">No matches for current search/filter.</td></tr>`;
+    characterAuditRows.innerHTML = `<tr><td colspan="10">No matches for current search/filter.</td></tr>`;
     setMessage(characterAuditMessage, "");
     return;
   }
@@ -782,6 +905,7 @@ function renderCharacterAuditTable() {
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderRoleSpec(entry.offRole, entry.offSpecialization)) : "—"}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.armoryUrl, "Gear")) : "—"}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.logsUrl, "Logs")) : "—"}</td>
+        <td class="audit-assign-col">${renderAuditAssignmentControl(row, entries, upcomingRaids)}</td>
         <td>
           <select data-role-uid="${escapeHtml(row.uid)}" data-role-current="${escapeHtml(row.role)}">
             <option value="member" ${row.role === "member" ? "selected" : ""}>Member</option>
@@ -967,6 +1091,9 @@ characterAuditSection.addEventListener("change", async (event) => {
   }
 
   const uid = normalizeUid(target.dataset.roleUid || "");
+  if (!uid) {
+    return;
+  }
   const nextRole = String(target.value || "");
   const previousRole = String(target.dataset.roleCurrent || "");
   if (!uid || !isAdmin || !db || !["member", "admin", "remove"].includes(nextRole)) {
@@ -1013,6 +1140,120 @@ characterAuditSection.addEventListener("change", async (event) => {
     target.value = previousRole || "remove";
   } finally {
     target.disabled = false;
+  }
+});
+
+characterAuditSection.addEventListener("click", async (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLElement)) {
+    return;
+  }
+  const assignButton = target.closest("button[data-audit-assign-uid]");
+  if (!(assignButton instanceof HTMLButtonElement)) {
+    return;
+  }
+
+  if (!isAdmin || !db) {
+    return;
+  }
+
+  const uid = normalizeUid(assignButton.dataset.auditAssignUid || "");
+  const wrap = assignButton.closest(".audit-assignment");
+  if (!uid || !(wrap instanceof HTMLElement)) {
+    return;
+  }
+
+  const raidSelect = wrap.querySelector("select[data-audit-raid-select]");
+  const characterSelect = wrap.querySelector("select[data-audit-character-select]");
+  const statusSelect = wrap.querySelector("select[data-audit-status-select]");
+
+  if (!(raidSelect instanceof HTMLSelectElement) || !(characterSelect instanceof HTMLSelectElement) || !(statusSelect instanceof HTMLSelectElement)) {
+    return;
+  }
+
+  const raidId = String(raidSelect.value || "").trim();
+  const characterName = String(characterSelect.value || "").trim();
+  const nextStatus = normalizeSignupStatus(statusSelect.value || "accept");
+  const selectedRaid = currentRaids.find((raid) => raid.id === raidId);
+  if (!raidId || !characterName || !selectedRaid) {
+    setMessage(characterAuditMessage, "Select a raid and character before assigning.", true);
+    return;
+  }
+
+  const resolved = resolveProfileCharacterForAssignment(uid, characterName);
+  if (!resolved) {
+    setMessage(characterAuditMessage, "Unable to resolve profile/character for assignment.", true);
+    return;
+  }
+
+  const { profile, characterEntry } = resolved;
+  const payload = {
+    characterId: profile.id,
+    profileCharacterKey: characterEntry.key || "main",
+    profileCharacterName: characterEntry.characterName || characterName,
+    raidId: selectedRaid.id,
+    raidDate: selectedRaid.raidDate,
+    raidName: selectedRaid.raidName,
+    phase: selectedRaid.phase,
+    runType: selectedRaid.runType,
+    raidSize: selectedRaid.raidSize,
+    raidStart: selectedRaid.raidStart,
+    raidEnd: selectedRaid.raidEnd,
+    status: nextStatus,
+    ownerUid: uid,
+    wowClass: characterEntry.wowClass || profile.wowClass || "",
+    mainRole: characterEntry.mainRole || profile.mainRole || profile.role || "",
+    offRole: characterEntry.offRole || profile.offRole || "",
+    mainSpecialization: characterEntry.mainSpecialization || profile.mainSpecialization || profile.specialization || "",
+    offSpecialization: characterEntry.offSpecialization || profile.offSpecialization || "",
+    armoryUrl: characterEntry.armoryUrl || profile.armoryUrl || buildArmoryUrl(characterEntry.characterName || characterName),
+    logsUrl: characterEntry.logsUrl || profile.logsUrl || buildLogsUrl(characterEntry.characterName || characterName),
+    updatedAt: serverTimestamp()
+  };
+
+  const normalizedCharacterName = String(characterName || "").trim().toLowerCase();
+  const existing = currentSignups.find((signup) =>
+    normalizeUid(signup.ownerUid) === uid
+    && String(signup.raidId || "") === raidId
+    && String(signup.profileCharacterName || signup.characterName || "").trim().toLowerCase() === normalizedCharacterName
+  );
+
+  assignButton.disabled = true;
+  try {
+    if (isDemoMode) {
+      const nextEntry = {
+        id: existing?.id || (typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `demo-${Date.now()}`),
+        ...(existing || {}),
+        ...payload,
+        updatedAt: new Date().toISOString(),
+        createdAt: existing?.createdAt || new Date().toISOString()
+      };
+
+      if (existing) {
+        currentSignups = currentSignups.map((signup) => (signup.id === existing.id ? nextEntry : signup));
+      } else {
+        currentSignups = [nextEntry, ...currentSignups];
+      }
+      saveDemoSignups(currentSignups);
+      renderSignupRequestsTable();
+      renderCharacterAuditTable();
+      setMessage(characterAuditMessage, `Assigned ${characterName} to ${selectedRaid.raidName || "raid"} (${signupStatusLabel(nextStatus)}).`);
+      return;
+    }
+
+    if (existing?.id) {
+      await updateDoc(doc(db, "signups", existing.id), payload);
+    } else {
+      await setDoc(doc(collection(db, "signups")), {
+        ...payload,
+        createdAt: serverTimestamp()
+      });
+    }
+    setMessage(characterAuditMessage, `Assigned ${characterName} to ${selectedRaid.raidName || "raid"} (${signupStatusLabel(nextStatus)}).`);
+  } catch (error) {
+    setMessage(characterAuditMessage, error.message, true);
+  } finally {
+    assignButton.disabled = false;
   }
 });
 
@@ -1095,6 +1336,7 @@ if (!hasConfigValues()) {
     }
   ]]);
   currentSignups = loadDemoSignups();
+  currentRaids = [];
   currentAdminUids = ["demo-local"];
   currentMemberUids = ["demo-local"];
   currentAdminDirectory = new Map([["demo-local", { displayName: "demo-local", email: "demo@example.com" }]]);
@@ -1109,6 +1351,7 @@ if (!hasConfigValues()) {
   googleProvider.setCustomParameters({ prompt: "select_account" });
   db = getFirestore(app);
   const signupsRef = collection(db, "signups");
+  const raidsRef = collection(db, "raids");
   const charactersRef = collection(db, "characters");
   const adminsRef = collection(db, "admins");
   const membersRef = collection(db, "members");
@@ -1178,6 +1421,10 @@ if (!hasConfigValues()) {
       unsubscribeSignups();
       unsubscribeSignups = null;
     }
+    if (unsubscribeRaids) {
+      unsubscribeRaids();
+      unsubscribeRaids = null;
+    }
     if (unsubscribeAdmins) {
       unsubscribeAdmins();
       unsubscribeAdmins = null;
@@ -1193,6 +1440,7 @@ if (!hasConfigValues()) {
       currentCharacters = [];
       currentUserDirectory = new Map();
       currentSignups = [];
+      currentRaids = [];
       currentAdminUids = [];
       currentMemberUids = [];
       currentAdminDirectory = new Map();
@@ -1247,6 +1495,22 @@ if (!hasConfigValues()) {
           ...docItem.data()
         }));
         renderSignupRequestsTable();
+        renderCharacterAuditTable();
+      },
+      (error) => {
+        setMessage(characterAuditMessage, error.message, true);
+      }
+    );
+
+    unsubscribeRaids = onSnapshot(
+      raidsRef,
+      (snapshot) => {
+        currentRaids = sortRaidsForAssignment(
+          snapshot.docs.map((docItem) => ({
+            id: docItem.id,
+            ...docItem.data()
+          }))
+        );
         renderCharacterAuditTable();
       },
       (error) => {

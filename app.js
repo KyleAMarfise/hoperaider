@@ -890,7 +890,8 @@ function findProfileCharacterEntry(profile, characterKey, characterName = "") {
     }
   }
   if (characterName) {
-    const byName = entries.find((entry) => entry.characterName === characterName);
+    const normalizedName = String(characterName || "").trim().toLowerCase();
+    const byName = entries.find((entry) => String(entry.characterName || "").trim().toLowerCase() === normalizedName);
     if (byName) {
       return byName;
     }
@@ -898,8 +899,39 @@ function findProfileCharacterEntry(profile, characterKey, characterName = "") {
   return entries[0] || null;
 }
 
+function resolveProfileForSignup(signup) {
+  const direct = getCharacterById(signup.characterId);
+  if (direct) {
+    return direct;
+  }
+
+  const ownerUid = String(signup.ownerUid || "").trim();
+  if (!ownerUid) {
+    return null;
+  }
+
+  const ownerProfiles = allCharacters.filter((character) => String(character.ownerUid || character.id || "").trim() === ownerUid);
+  if (!ownerProfiles.length) {
+    return null;
+  }
+
+  const targetCharacterName = String(signup.profileCharacterName || signup.characterName || "").trim().toLowerCase();
+  if (targetCharacterName) {
+    const matchedByCharacter = ownerProfiles.find((profile) =>
+      getProfileCharacterEntries(profile).some(
+        (entry) => String(entry.characterName || "").trim().toLowerCase() === targetCharacterName
+      )
+    );
+    if (matchedByCharacter) {
+      return matchedByCharacter;
+    }
+  }
+
+  return ownerProfiles[0];
+}
+
 function resolveSignupCharacterData(signup) {
-  const matchedCharacter = getCharacterById(signup.characterId);
+  const matchedCharacter = resolveProfileForSignup(signup);
   if (!matchedCharacter) {
     const fallbackCharacterName = signup.profileCharacterName || signup.characterName || "";
     return {
@@ -3456,7 +3488,9 @@ if (!hasConfigValues()) {
       );
     }
 
-    const charactersQuery = query(charactersRef, where("ownerUid", "==", authUid));
+    const charactersQuery = isAdmin
+      ? query(charactersRef)
+      : query(charactersRef, where("ownerUid", "==", authUid));
 
     unsubscribeCharacters = onSnapshot(
       charactersQuery,
