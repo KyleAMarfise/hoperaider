@@ -1027,23 +1027,40 @@ button:disabled {
 .audit-assignment-state {
   display: inline-flex;
   align-items: center;
-  border: 1px solid var(--line-muted);
+  border: 1px solid #5d6574;
   border-radius: 999px;
   padding: 0.18rem 0.5rem;
   font-size: 0.75rem;
   line-height: 1;
-  background: linear-gradient(180deg, var(--bg-panel-top), var(--bg-panel));
-  color: var(--text-soft);
+  background: rgba(38, 42, 50, 0.45);
+  color: var(--text-dim);
+}
+
+.audit-assignment-state.is-unassigned {
+  border-color: #5d6574;
+  color: var(--text-dim);
 }
 
 .audit-assignment-state.is-assigned {
-  border-color: var(--gold-soft);
-  color: var(--gold);
+  background: rgba(35, 74, 42, 0.4);
+  border-color: #3e8a50;
+  color: #d9ffe2;
 }
 
 .audit-assignment-state.is-benched {
   border-color: color-mix(in srgb, var(--blue-accent) 45%, var(--line-muted));
   color: var(--blue-accent);
+}
+
+.audit-assignment-actions .audit-action-assign {
+  border-color: #3e8a50;
+  background: linear-gradient(180deg, #3f9253, #2b6f3d);
+  color: #e8ffed;
+}
+
+.audit-assignment-actions .audit-action-unassign {
+  border-color: #8a3a34;
+  background: linear-gradient(180deg, #995149, #733630);
 }
 
 @media (max-width: 980px) {

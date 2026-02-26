@@ -826,12 +826,12 @@ function renderAssignmentActions(uid, existingAssignment) {
   const state = getAssignmentState(existingAssignment);
   const stateBadge = `<span class="audit-assignment-state ${escapeHtml(state.className)}">${escapeHtml(state.label)}</span>`;
   if (state.hasAssignment) {
-    return `${stateBadge}<button type="button" data-audit-action="unassign" data-audit-action-uid="${escapedUid}">Unassign</button>`;
+    return `${stateBadge}<button type="button" class="audit-action-unassign" data-audit-action="unassign" data-audit-action-uid="${escapedUid}">Unassign</button>`;
   }
 
   return [
     stateBadge,
-    `<button type="button" data-audit-action="assign" data-audit-action-uid="${escapedUid}">Assign</button>`,
+    `<button type="button" class="audit-action-assign" data-audit-action="assign" data-audit-action-uid="${escapedUid}">Assign</button>`,
     `<button type="button" data-audit-action="bench" data-audit-action-uid="${escapedUid}">Bench</button>`
   ].join("");
 }
@@ -1034,7 +1034,7 @@ function renderCharacterAuditTable() {
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderRoleSpec(entry.offRole, entry.offSpecialization)) : "—"}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.armoryUrl, "Gear")) : "—"}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.logsUrl, "Logs")) : "—"}</td>
-        <td class="audit-assign-col">${renderAuditAssignmentControl(row, entries, upcomingRaids)}</td>
+        <td class="audit-history-col">${escapeHtml(`${row.acceptedTotal} accepted raid${row.acceptedTotal === 1 ? "" : "s"}`)}</td>
         <td>
           <select data-role-uid="${escapeHtml(row.uid)}" data-role-current="${escapeHtml(row.role)}">
             <option value="member" ${row.role === "member" ? "selected" : ""}>Member</option>
@@ -1042,7 +1042,7 @@ function renderCharacterAuditTable() {
             <option value="remove" ${row.role === "remove" ? "selected" : ""}>Remove Access</option>
           </select>
         </td>
-        <td class="audit-history-col">${escapeHtml(`${row.acceptedTotal} accepted raid${row.acceptedTotal === 1 ? "" : "s"}`)}</td>
+        <td class="audit-assign-col">${renderAuditAssignmentControl(row, entries, upcomingRaids)}</td>
       </tr>`;
     })
     .join("");
