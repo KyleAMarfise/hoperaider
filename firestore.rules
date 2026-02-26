@@ -327,8 +327,22 @@ service cloud.firestore {
     }
 
     match /members/{uid} {
-      allow read: if isAdmin() || (isApprovedUser() && request.auth.uid == uid);
-      allow create, update, delete: if isAdmin();
+      allow read: if isAdmin() || (signedIn() && request.auth.uid == uid);
+      allow create: if isAdmin()
+        || (
+          signedIn()
+          && request.auth.uid == uid
+          && request.resource.data.uid == uid
+          && request.resource.data.role == 'member'
+        );
+      allow update: if isAdmin()
+        || (
+          signedIn()
+          && request.auth.uid == uid
+          && request.resource.data.uid == uid
+          && request.resource.data.role == 'member'
+        );
+      allow delete: if isAdmin();
     }
 
     match /admins/{uid} {

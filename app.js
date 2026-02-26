@@ -3212,6 +3212,7 @@ if (!hasConfigValues()) {
   const signupsRef = collection(db, "signups");
   const raidsRef = collection(db, "raids");
   const charactersRef = collection(db, "characters");
+  const membersRef = collection(db, "members");
 
   setAuthPendingState();
   updateAuthActionButtons(null);
@@ -3315,6 +3316,30 @@ if (!hasConfigValues()) {
       hasAdminDoc = false;
     }
     isAdmin = inStaticAdminAllowlist || hasAdminDoc;
+
+    if (!isAdmin) {
+      try {
+        await setDoc(
+          doc(membersRef, authUid),
+          {
+            uid: authUid,
+            role: "member",
+            updatedAt: serverTimestamp(),
+            createdAt: serverTimestamp()
+          },
+          { merge: true }
+        );
+      } catch (error) {
+        const fallback = "Signed in, but unable to initialize member access. Ask an admin to add your UID in Access Manager.";
+        setAuthGateState(false, fallback, true);
+        updateAuthActionButtons(user);
+        updateUidDisplay(authUid);
+        authStatus.textContent = fallback;
+        setMessage(formMessage, error?.message || fallback, true);
+        return;
+      }
+    }
+
     setAuthGateState(true);
     updateAuthActionButtons(user);
     updateUidDisplay(authUid);
@@ -3396,4 +3421,5 @@ if (!hasConfigValues()) {
     void raidsRef;
   }
   void charactersRef;
+  void membersRef;
 }
