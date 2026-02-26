@@ -1048,8 +1048,9 @@ button:disabled {
 }
 
 .audit-assignment-state.is-benched {
-  border-color: color-mix(in srgb, var(--blue-accent) 45%, var(--line-muted));
-  color: var(--blue-accent);
+  background: rgba(81, 51, 24, 0.38);
+  border-color: #b07a45;
+  color: #ffdcb0;
 }
 
 .audit-assignment-actions .audit-action-assign {
