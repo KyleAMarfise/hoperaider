@@ -345,6 +345,15 @@ function setAuthGateState(authenticated, message = "", isError = false) {
   }
 }
 
+function setAuthPendingState() {
+  if (appShell) {
+    appShell.hidden = true;
+  }
+  if (authGate) {
+    authGate.hidden = true;
+  }
+}
+
 function getGoogleAuthErrorMessage(error) {
   if (error?.code === "auth/unauthorized-domain") {
     const host = window.location.hostname || "this domain";
@@ -639,10 +648,10 @@ if (!hasConfigValues()) {
   const raidsRef = collection(db, "raids");
   const signupsRef = collection(db, "signups");
 
-  setAuthGateState(false, "Sign in with Google to continue.");
+  setAuthPendingState();
   updateAuthActionButtons(null);
   updateUidDisplay("");
-  authStatus.textContent = "Sign in with Google to continue.";
+  authStatus.textContent = "Checking sign-in status...";
 
   async function performGoogleSignIn() {
     if (authGateSignInButton) {
@@ -744,7 +753,7 @@ if (!hasConfigValues()) {
     updatePendingBadge(currentSignups);
     authStatus.textContent = `Signed in (${userLabel}) — Raid management enabled`;
 
-    const raidsQuery = query(raidsRef, orderBy("raidDate", "asc"), orderBy("raidStart", "asc"));
+    const raidsQuery = query(raidsRef, orderBy("raidDate", "asc"));
     unsubscribeRaids = onSnapshot(
       raidsQuery,
       (snapshot) => {
