@@ -1,9 +1,10 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
   GoogleAuthProvider,
+  getRedirectResult,
   getAuth,
   onAuthStateChanged,
-  signInWithPopup,
+  signInWithRedirect,
   signOut
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import {
@@ -955,19 +956,28 @@ if (!hasConfigValues()) {
   updateUidDisplay("");
   authStatus.textContent = "Sign in with Google to continue.";
 
+  getRedirectResult(auth).catch((error) => {
+    const errorText = getGoogleAuthErrorMessage(error);
+    authStatus.textContent = errorText;
+    setAuthGateState(false, errorText, true);
+    setMessage(signupRequestMessage, errorText, true);
+    if (authGateSignInButton) {
+      authGateSignInButton.disabled = false;
+    }
+  });
+
   async function performGoogleSignIn() {
     if (authGateSignInButton) {
       authGateSignInButton.disabled = true;
     }
     try {
-      await signInWithPopup(auth, googleProvider);
-      setAuthGateState(true);
+      authStatus.textContent = "Redirecting to Google sign-in...";
+      await signInWithRedirect(auth, googleProvider);
     } catch (error) {
       const errorText = getGoogleAuthErrorMessage(error);
       authStatus.textContent = errorText;
       setAuthGateState(false, errorText, true);
       setMessage(signupRequestMessage, errorText, true);
-    } finally {
       if (authGateSignInButton) {
         authGateSignInButton.disabled = false;
       }
