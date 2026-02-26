@@ -2759,7 +2759,7 @@ if (saveProfileButton) {
       && String(character.profileName || "").trim().toLowerCase() === profileName.toLowerCase()
     );
     if (duplicateProfile) {
-      setMessage(formMessage, "IRL Name must be unique.", true);
+      setMessage(formMessage, "Discord Name must be unique.", true);
       return;
     }
 
