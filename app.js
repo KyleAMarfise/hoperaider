@@ -3214,6 +3214,25 @@ if (!hasConfigValues()) {
   const charactersRef = collection(db, "characters");
   const membersRef = collection(db, "members");
 
+  async function reloadOwnCharacters() {
+    if (!authUid) {
+      return;
+    }
+    try {
+      const snapshot = await getDocs(query(charactersRef, where("ownerUid", "==", authUid)));
+      allCharacters = snapshot.docs.map((docItem) => ({
+        id: docItem.id,
+        ...docItem.data()
+      }));
+      currentCharacters = sortCharacters(allCharacters);
+      refreshCharacterProfileOptions(characterProfileSelect.value);
+      updateSignupActionState();
+      renderRows(currentRows);
+    } catch {
+      // Preserve existing local state when fallback fetch fails.
+    }
+  }
+
   setAuthPendingState();
   updateAuthActionButtons(null);
   updateUidDisplay("");
@@ -3378,6 +3397,9 @@ if (!hasConfigValues()) {
             ...docItem.data()
           }));
           currentRaids = sortRaids(currentRaids);
+          if (!allCharacters.length) {
+            void reloadOwnCharacters();
+          }
           startRaidCountdownTicker();
           updateRaidCountdownClock();
           if (hasAdminUI) {
@@ -3409,6 +3431,7 @@ if (!hasConfigValues()) {
       },
       (error) => {
         setMessage(listMessage, error.message, true);
+        void reloadOwnCharacters();
       }
     );
 
