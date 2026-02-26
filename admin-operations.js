@@ -810,8 +810,27 @@ function findExistingAssignment(uid, raidId, characterName) {
   ) || null;
 }
 
-function assignmentButtonLabel(hasAssignment) {
-  return hasAssignment ? "Update Assignment" : "Unassigned";
+function renderAssignmentActions(uid, hasAssignment) {
+  const escapedUid = escapeHtml(uid);
+  if (hasAssignment) {
+    return `<button type="button" data-audit-action="unassign" data-audit-action-uid="${escapedUid}">Unassign</button>`;
+  }
+
+  return [
+    `<button type="button" data-audit-action="assign" data-audit-action-uid="${escapedUid}">Assign</button>`,
+    `<button type="button" data-audit-action="bench" data-audit-action-uid="${escapedUid}">Bench</button>`
+  ].join("");
+}
+
+function setAuditAssignmentButtonsDisabled(container, disabled) {
+  if (!(container instanceof HTMLElement)) {
+    return;
+  }
+  container.querySelectorAll("button[data-audit-action]").forEach((button) => {
+    if (button instanceof HTMLButtonElement) {
+      button.disabled = disabled;
+    }
+  });
 }
 
 function refreshAuditAssignmentButtonState(container, uid) {
@@ -820,13 +839,13 @@ function refreshAuditAssignmentButtonState(container, uid) {
   }
   const raidSelect = container.querySelector("select[data-audit-raid-select]");
   const characterSelect = container.querySelector("select[data-audit-character-select]");
-  const assignButton = container.querySelector("button[data-audit-assign-uid]");
-  if (!(raidSelect instanceof HTMLSelectElement) || !(characterSelect instanceof HTMLSelectElement) || !(assignButton instanceof HTMLButtonElement)) {
+  const actionWrap = container.querySelector("[data-audit-actions]");
+  if (!(raidSelect instanceof HTMLSelectElement) || !(characterSelect instanceof HTMLSelectElement) || !(actionWrap instanceof HTMLElement)) {
     return;
   }
 
   const existing = findExistingAssignment(uid, raidSelect.value, characterSelect.value);
-  assignButton.textContent = assignmentButtonLabel(Boolean(existing));
+  actionWrap.innerHTML = renderAssignmentActions(uid, Boolean(existing));
 }
 
 function renderAuditAssignmentControl(row, entries, upcomingRaids) {
@@ -848,7 +867,6 @@ function renderAuditAssignmentControl(row, entries, upcomingRaids) {
 
   const selectedRaidId = String(existingUpcomingSignup?.raidId || upcomingRaids[0]?.id || "");
   const selectedCharacterName = String(existingUpcomingSignup?.profileCharacterName || existingUpcomingSignup?.characterName || entries[0]?.characterName || "").trim().toLowerCase();
-  const selectedStatus = normalizeSignupStatus(existingUpcomingSignup?.status || "accept");
   const selectedCharacterValue = entries.find((entry) => String(entry.characterName || "").trim().toLowerCase() === selectedCharacterName)?.characterName
     || entries[0]?.characterName
     || "";
@@ -869,13 +887,7 @@ function renderAuditAssignmentControl(row, entries, upcomingRaids) {
   return `<div class="audit-assignment" data-audit-assign-wrap="${escapeHtml(row.uid)}">
     <select data-audit-raid-select="${escapeHtml(row.uid)}">${raidOptions}</select>
     <select data-audit-character-select="${escapeHtml(row.uid)}">${characterOptions}</select>
-    <select data-audit-status-select="${escapeHtml(row.uid)}">
-      <option value="accept" ${selectedStatus === "accept" ? "selected" : ""}>Accepted</option>
-      <option value="requested" ${selectedStatus === "requested" ? "selected" : ""}>Requested</option>
-      <option value="tentative" ${selectedStatus === "tentative" ? "selected" : ""}>Bench</option>
-      <option value="decline" ${selectedStatus === "decline" ? "selected" : ""}>Can't Go</option>
-    </select>
-    <button type="button" data-audit-assign-uid="${escapeHtml(row.uid)}">${assignmentButtonLabel(Boolean(selectedEntryAssignment))}</button>
+    <div class="audit-assignment-actions" data-audit-actions="${escapeHtml(row.uid)}">${renderAssignmentActions(row.uid, Boolean(selectedEntryAssignment))}</div>
   </div>`;
 }
 
@@ -1251,8 +1263,8 @@ characterAuditSection.addEventListener("click", async (event) => {
   if (!(target instanceof HTMLElement)) {
     return;
   }
-  const assignButton = target.closest("button[data-audit-assign-uid]");
-  if (!(assignButton instanceof HTMLButtonElement)) {
+  const actionButton = target.closest("button[data-audit-action][data-audit-action-uid]");
+  if (!(actionButton instanceof HTMLButtonElement)) {
     return;
   }
 
@@ -1260,28 +1272,67 @@ characterAuditSection.addEventListener("click", async (event) => {
     return;
   }
 
-  const uid = normalizeUid(assignButton.dataset.auditAssignUid || "");
-  const wrap = assignButton.closest(".audit-assignment");
+  const uid = normalizeUid(actionButton.dataset.auditActionUid || "");
+  const action = String(actionButton.dataset.auditAction || "").trim().toLowerCase();
+  const wrap = actionButton.closest(".audit-assignment");
   if (!uid || !(wrap instanceof HTMLElement)) {
     return;
   }
 
   const raidSelect = wrap.querySelector("select[data-audit-raid-select]");
   const characterSelect = wrap.querySelector("select[data-audit-character-select]");
-  const statusSelect = wrap.querySelector("select[data-audit-status-select]");
-
-  if (!(raidSelect instanceof HTMLSelectElement) || !(characterSelect instanceof HTMLSelectElement) || !(statusSelect instanceof HTMLSelectElement)) {
+  if (!(raidSelect instanceof HTMLSelectElement) || !(characterSelect instanceof HTMLSelectElement)) {
     return;
   }
 
   const raidId = String(raidSelect.value || "").trim();
   const characterName = String(characterSelect.value || "").trim();
-  const nextStatus = normalizeSignupStatus(statusSelect.value || "accept");
   const selectedRaid = currentRaids.find((raid) => raid.id === raidId);
   if (!raidId || !characterName || !selectedRaid) {
     setMessage(characterAuditMessage, "Select a raid and character before assigning.", true);
     return;
   }
+
+  const existing = findExistingAssignment(uid, raidId, characterName);
+
+  if (action === "unassign") {
+    if (!existing?.id) {
+      setMessage(characterAuditMessage, "No existing signup found for that raid and character.", true);
+      refreshAuditAssignmentButtonState(wrap, uid);
+      return;
+    }
+
+    setAuditAssignmentButtonsDisabled(wrap, true);
+    try {
+      if (isDemoMode) {
+        currentSignups = currentSignups.filter((signup) => signup.id !== existing.id);
+        saveDemoSignups(currentSignups);
+        renderSignupRequestsTable();
+        renderCharacterAuditTable();
+      } else {
+        await deleteDoc(doc(db, "signups", existing.id));
+      }
+      setMessage(characterAuditMessage, `Unassigned ${characterName} from ${selectedRaid.raidName || "raid"}.`);
+      refreshAuditAssignmentButtonState(wrap, uid);
+    } catch (error) {
+      setMessage(characterAuditMessage, error.message, true);
+    } finally {
+      setAuditAssignmentButtonsDisabled(wrap, false);
+    }
+    return;
+  }
+
+  if (action !== "assign" && action !== "bench") {
+    return;
+  }
+
+  if (existing?.id) {
+    setMessage(characterAuditMessage, "That character is already signed up for the selected raid. Use Unassign to remove them.", true);
+    refreshAuditAssignmentButtonState(wrap, uid);
+    return;
+  }
+
+  const nextStatus = action === "bench" ? "tentative" : "accept";
 
   const resolved = resolveProfileCharacterForAssignment(uid, characterName);
   if (!resolved) {
@@ -1312,24 +1363,16 @@ characterAuditSection.addEventListener("click", async (event) => {
     return;
   }
 
-  const existing = findExistingAssignment(uid, raidId, characterName);
-
-  assignButton.disabled = true;
+  setAuditAssignmentButtonsDisabled(wrap, true);
   try {
     if (isDemoMode) {
       const nextEntry = {
-        id: existing?.id || (typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `demo-${Date.now()}`),
-        ...(existing || {}),
+        id: typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `demo-${Date.now()}`,
         ...payload,
         updatedAt: new Date().toISOString(),
-        createdAt: existing?.createdAt || new Date().toISOString()
+        createdAt: new Date().toISOString()
       };
-
-      if (existing) {
-        currentSignups = currentSignups.map((signup) => (signup.id === existing.id ? nextEntry : signup));
-      } else {
-        currentSignups = [nextEntry, ...currentSignups];
-      }
+      currentSignups = [nextEntry, ...currentSignups];
       saveDemoSignups(currentSignups);
       renderSignupRequestsTable();
       renderCharacterAuditTable();
@@ -1337,20 +1380,16 @@ characterAuditSection.addEventListener("click", async (event) => {
       return;
     }
 
-    if (existing?.id) {
-      await updateDoc(doc(db, "signups", existing.id), payload);
-    } else {
-      await setDoc(doc(collection(db, "signups")), {
-        ...payload,
-        createdAt: serverTimestamp()
-      });
-    }
+    await setDoc(doc(collection(db, "signups")), {
+      ...payload,
+      createdAt: serverTimestamp()
+    });
     setMessage(characterAuditMessage, `Assigned ${characterName} to ${selectedRaid.raidName || "raid"} (${signupStatusLabel(nextStatus)}).`);
     refreshAuditAssignmentButtonState(wrap, uid);
   } catch (error) {
     setMessage(characterAuditMessage, error.message, true);
   } finally {
-    assignButton.disabled = false;
+    setAuditAssignmentButtonsDisabled(wrap, false);
   }
 });
 

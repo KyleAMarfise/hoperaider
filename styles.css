@@ -1007,7 +1007,7 @@ button:disabled {
 
 .audit-assignment {
   display: grid;
-  grid-template-columns: minmax(180px, 1.5fr) minmax(130px, 1fr) minmax(110px, 1fr) auto;
+  grid-template-columns: minmax(180px, 1.5fr) minmax(130px, 1fr) auto;
   gap: 0.38rem;
   align-items: center;
 }
@@ -1015,6 +1015,13 @@ button:disabled {
 .audit-assignment select,
 .audit-assignment button {
   min-height: 30px;
+}
+
+.audit-assignment-actions {
+  display: flex;
+  gap: 0.38rem;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 @media (max-width: 980px) {
