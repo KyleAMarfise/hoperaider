@@ -229,7 +229,7 @@ function isActiveSignup(signup) {
 function buildRequestQueueRows(rows, profilesById, actionMode = "full") {
   return rows
     .map((signup) => {
-      const profile = profilesById.get(signup.characterId);
+      const profile = resolveProfileForSignup(signup, profilesById);
       const profileLabel = profile ? getProfileLabel(profile) : "Unknown Profile";
       const selectedProfileEntry = profile
         ? findProfileCharacterEntry(
@@ -376,7 +376,8 @@ function findProfileCharacterEntry(profile, characterKey = "", characterName = "
     }
   }
   if (characterName) {
-    const byName = entries.find((entry) => entry.characterName === characterName);
+    const normalizedName = String(characterName || "").trim().toLowerCase();
+    const byName = entries.find((entry) => String(entry.characterName || "").trim().toLowerCase() === normalizedName);
     if (byName) {
       return byName;
     }
@@ -384,8 +385,39 @@ function findProfileCharacterEntry(profile, characterKey = "", characterName = "
   return entries[0] || null;
 }
 
+function resolveProfileForSignup(signup, profilesById) {
+  const byId = signup.characterId ? profilesById.get(signup.characterId) : null;
+  if (byId) {
+    return byId;
+  }
+
+  const ownerUid = normalizeUid(signup.ownerUid);
+  if (!ownerUid) {
+    return null;
+  }
+
+  const ownerProfiles = currentCharacters.filter((entry) => normalizeUid(entry.ownerUid || entry.id) === ownerUid);
+  if (!ownerProfiles.length) {
+    return null;
+  }
+
+  const targetCharacterName = String(signup.profileCharacterName || signup.characterName || "").trim().toLowerCase();
+  if (targetCharacterName) {
+    const matchedByCharacter = ownerProfiles.find((profile) =>
+      getProfileCharacterEntries(profile).some(
+        (entry) => String(entry.characterName || "").trim().toLowerCase() === targetCharacterName
+      )
+    );
+    if (matchedByCharacter) {
+      return matchedByCharacter;
+    }
+  }
+
+  return ownerProfiles[0];
+}
+
 function resolveSignupCharacterAttributes(signup, profilesById) {
-  const profile = profilesById.get(signup.characterId);
+  const profile = resolveProfileForSignup(signup, profilesById);
   if (!profile) {
     return {
       wowClass: signup.wowClass || "—",
@@ -576,7 +608,7 @@ function buildUserAuditRows(signups) {
       emailsByUid.set(uid, signupEmail);
     }
 
-    const profile = signup.characterId ? currentCharacters.find((entry) => entry.id === signup.characterId) : null;
+    const profile = resolveProfileForSignup(signup, getCharacterMapById());
     const selectedEntry = profile
       ? findProfileCharacterEntry(
         profile,
@@ -625,14 +657,14 @@ function buildUserAuditRows(signups) {
   const rows = Array.from(uidSet).map((uid) => {
     const normalizedUid = normalizeUid(uid);
     const source = getUserDirectoryMeta(normalizedUid) || {};
-    const profileName = String(source.profileName || profileNamesByUid.get(normalizedUid) || source.displayName || `User ${normalizedUid.slice(0, 6)}`).trim();
+    const profileName = String(source.profileName || profileNamesByUid.get(normalizedUid) || source.displayName || "Unknown Profile").trim();
     const email = String(source.email || emailsByUid.get(normalizedUid) || "").trim();
     const role = adminSet.has(normalizedUid) ? "admin" : memberSet.has(normalizedUid) ? "member" : "remove";
     const acceptedTotal = acceptedTotals.get(normalizedUid) || 0;
     const characterEntries = Array.from(characterSummariesByUid.get(normalizedUid)?.values() || [])
       .sort((left, right) => left.characterName.localeCompare(right.characterName, undefined, { sensitivity: "base" }));
     const tooltip = [
-      `UID: ${normalizedUid}`,
+      `Discord Name: ${profileName || "Unknown"}`,
       `Google Email: ${email || "Unknown"}`
     ].join("\n");
 
