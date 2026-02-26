@@ -3364,6 +3364,8 @@ if (!hasConfigValues()) {
           {
             uid: authUid,
             role: "member",
+            displayName: String(user.displayName || "").trim(),
+            email: authEmail || "",
             updatedAt: serverTimestamp(),
             createdAt: serverTimestamp()
           },

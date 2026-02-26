@@ -111,6 +111,8 @@ let currentCharacters = [];
 let currentSignups = [];
 let currentAdminUids = [];
 let currentMemberUids = [];
+let currentAdminDirectory = new Map();
+let currentMemberDirectory = new Map();
 let unsubscribeCharacters = null;
 let unsubscribeSignups = null;
 let unsubscribeAdmins = null;
@@ -469,118 +471,47 @@ function formatHistorySummary(stats) {
   return `${stats.requested} Requested • ${stats.accept} Accept • ${stats.tentative} Tentative • ${stats.decline} Can't Go • ${stats.withdrawn} Withdrawn • ${stats.denied} Denied`;
 }
 
-function buildCharacterAuditRows(characters, signups) {
-  const today = toDateOnlyString(new Date());
-  const byProfileId = new Map();
-
+function buildUserAuditRows(signups) {
+  const acceptedTotals = new Map();
   signups.forEach((signup) => {
-    const profileId = String(signup.characterId || "");
-    if (!profileId) {
+    const uid = normalizeUid(signup.ownerUid);
+    if (!uid) {
       return;
     }
-    const characterKey = String(signup.profileCharacterKey || "main");
-    const mapKey = `${profileId}::${characterKey}`;
-    if (!byProfileId.has(mapKey)) {
-      byProfileId.set(mapKey, []);
+    if (normalizeSignupStatus(signup.status) !== "accept") {
+      return;
     }
-    byProfileId.get(mapKey).push(signup);
+    acceptedTotals.set(uid, (acceptedTotals.get(uid) || 0) + 1);
   });
 
-  const auditRows = [];
+  const adminSet = new Set(currentAdminUids);
+  const memberSet = new Set(currentMemberUids);
+  const uidSet = new Set([...currentAdminUids, ...currentMemberUids, ...acceptedTotals.keys()]);
 
-  characters.forEach((profile) => {
-    const profileId = String(profile.id || "");
-    const profileLabel = getProfileLabel(profile);
-    const entries = getProfileCharacterEntries(profile);
-    const profileStats = { total: 0, requested: 0, accept: 0, tentative: 0, decline: 0, withdrawn: 0, denied: 0 };
-    let profileLastRaidDate = "";
-    let hasPastAcceptedRaid = false;
+  const rows = Array.from(uidSet).map((uid) => {
+    const normalizedUid = normalizeUid(uid);
+    const source = currentCharacters.find((entry) => normalizeUid(entry.id) === normalizedUid) || {};
+    const displayName = String(source.displayName || source.profileName || source.uid || `User ${normalizedUid.slice(0, 6)}`).trim();
+    const email = String(source.email || source.ownerEmail || "").trim();
+    const role = adminSet.has(normalizedUid) ? "admin" : memberSet.has(normalizedUid) ? "member" : "remove";
+    const acceptedTotal = acceptedTotals.get(normalizedUid) || 0;
+    const tooltip = [
+      `UID: ${normalizedUid}`,
+      `Google Email: ${email || "Unknown"}`
+    ].join("\n");
 
-    const entryRows = entries.map((entry) => {
-      const entryKey = `${profileId}::${entry.key}`;
-      const relatedSignups = byProfileId.get(entryKey) || [];
-      const stats = { total: 0, requested: 0, accept: 0, tentative: 0, decline: 0, withdrawn: 0, denied: 0 };
-      let lastRaidDate = "";
-
-      relatedSignups.forEach((signup) => {
-        const status = normalizeSignupStatus(signup.status);
-        stats.total += 1;
-        stats[status] += 1;
-
-        const raidDate = String(signup.raidDate || "");
-        if (parseDateOnly(raidDate)) {
-          if (!lastRaidDate || raidDate > lastRaidDate) {
-            lastRaidDate = raidDate;
-          }
-          if (status === "accept" && raidDate < today) {
-            hasPastAcceptedRaid = true;
-          }
-        }
-      });
-
-      profileStats.total += stats.total;
-      profileStats.requested += stats.requested;
-      profileStats.accept += stats.accept;
-      profileStats.tentative += stats.tentative;
-      profileStats.decline += stats.decline;
-      profileStats.withdrawn += stats.withdrawn;
-      profileStats.denied += stats.denied;
-
-      if (lastRaidDate && (!profileLastRaidDate || lastRaidDate > profileLastRaidDate)) {
-        profileLastRaidDate = lastRaidDate;
-      }
-
-      return {
-        key: entry.key,
-        isMain: entry.key === "main",
-        characterName: entry.characterName || "—",
-        wowClass: entry.wowClass || "—",
-        mainRole: entry.mainRole || "—",
-        offRole: entry.offRole || "—",
-        mainSpecialization: entry.mainSpecialization || "—",
-        offSpecialization: entry.offSpecialization || "—",
-        armoryUrl: entry.armoryUrl || "",
-        stats,
-        lastRaidDate,
-        hasSignups: stats.total > 0
-      };
-    });
-
-    const classSet = new Set(
-      entryRows
-        .map((entry) => normalizeClassName(entry.wowClass))
-        .filter((value) => value && value !== "—")
-    );
-
-    const searchIndex = [
-      profileLabel,
-      ...entryRows.flatMap((entry) => [
-        entry.characterName,
-        entry.wowClass,
-        entry.mainRole,
-        entry.offRole,
-        entry.mainSpecialization,
-        entry.offSpecialization
-      ]),
-      formatHistorySummary(profileStats)
-    ].join(" ").toLowerCase();
-
-    auditRows.push({
-      id: profileId,
-      profileLabel,
-      entries: entryRows,
-      classes: Array.from(classSet),
-      stats: profileStats,
-      historyText: formatHistorySummary(profileStats),
-      lastRaidDate: profileLastRaidDate,
-      lastRaidLabel: profileLastRaidDate ? formatMonthDayYear(profileLastRaidDate) : "—",
-      hasSignups: profileStats.total > 0,
-      hasPastAcceptedRaid,
-      searchIndex
-    });
+    return {
+      uid: normalizedUid,
+      displayName,
+      email,
+      role,
+      acceptedTotal,
+      tooltip,
+      searchIndex: `${displayName} ${email} ${normalizedUid}`.toLowerCase()
+    };
   });
 
-  return auditRows.sort((left, right) => left.profileLabel.localeCompare(right.profileLabel, undefined, { sensitivity: "base" }));
+  return rows.sort((left, right) => left.displayName.localeCompare(right.displayName, undefined, { sensitivity: "base" }));
 }
 
 function renderAuditEntryLines(entries, renderLine) {
@@ -620,66 +551,16 @@ function normalizeClassKey(value) {
   return normalizeClassName(value).toLowerCase();
 }
 
-function refreshAuditClassFilterOptions(rows) {
-  const classMap = new Map();
-  rows
-    .flatMap((row) => row.classes || [])
-    .forEach((value) => {
-      const normalized = normalizeClassName(value);
-      const key = normalizeClassKey(normalized);
-      if (!normalized || key === "—" || classMap.has(key)) {
-        return;
-      }
-      classMap.set(key, normalized);
-    });
-
-  const classes = Array.from(classMap.values())
-    .sort((left, right) => left.localeCompare(right));
-
-  const currentValue = auditClassFilter.value;
-  auditClassFilter.innerHTML = [
-    `<option value="">All Classes</option>`,
-    ...classes.map((className) => `<option value="${escapeHtml(className)}">${escapeHtml(className)}</option>`)
-  ].join("");
-  if (classes.includes(currentValue)) {
-    auditClassFilter.value = currentValue;
-  }
-}
-
 function filterAuditRows(rows) {
   const search = String(auditSearchInput.value || "").trim().toLowerCase();
-  const classFilter = normalizeClassKey(auditClassFilter.value || "");
-  const activityFilter = String(auditActivityFilter.value || "all");
 
   return rows.filter((row) => {
-    if (classFilter && !(row.classes || []).some((className) => normalizeClassKey(className) === classFilter)) {
-      return false;
-    }
-
-    if (activityFilter === "has-signups" && !row.hasSignups) {
-      return false;
-    }
-    if (activityFilter === "no-signups" && row.hasSignups) {
-      return false;
-    }
-    if (activityFilter === "past-accepted" && !row.hasPastAcceptedRaid) {
-      return false;
-    }
-
     if (!search) {
       return true;
     }
 
     return String(row.searchIndex || "").includes(search);
   });
-}
-
-function getVisibleAuditEntries(row, classFilterKey) {
-  if (!classFilterKey) {
-    return row.entries || [];
-  }
-
-  return (row.entries || []).filter((entry) => normalizeClassKey(entry.wowClass) === classFilterKey);
 }
 
 function renderCharacterAuditTable() {
@@ -690,49 +571,44 @@ function renderCharacterAuditTable() {
     return;
   }
 
-  const allRows = buildCharacterAuditRows(currentCharacters, currentSignups);
-  refreshAuditClassFilterOptions(allRows);
+  const allRows = buildUserAuditRows(currentSignups);
   const filteredRows = filterAuditRows(allRows);
-  const classFilterKey = normalizeClassKey(auditClassFilter.value || "");
   auditCountBadge.textContent = String(filteredRows.length);
 
   if (!allRows.length) {
-    characterAuditRows.innerHTML = `<tr><td colspan="8">No profile records found yet.</td></tr>`;
+    characterAuditRows.innerHTML = `<tr><td colspan="3">No user records found yet.</td></tr>`;
     setMessage(characterAuditMessage, "");
     return;
   }
 
   if (!filteredRows.length) {
-    characterAuditRows.innerHTML = `<tr><td colspan="8">No matches for current search/filter.</td></tr>`;
+    characterAuditRows.innerHTML = `<tr><td colspan="3">No matches for current search/filter.</td></tr>`;
     setMessage(characterAuditMessage, "");
     return;
   }
 
   characterAuditRows.innerHTML = filteredRows
     .map((row) => {
-      const visibleEntries = getVisibleAuditEntries(row, classFilterKey);
       return `<tr>
-        <td>${escapeHtml(row.profileLabel)}</td>
-        <td class="audit-stack-cell">${renderAuditEntryLines(visibleEntries, (entry) => `${escapeHtml(entry.characterName)} <span class="audit-entry-tag">${entry.isMain ? "Main" : "Alt"}</span>`)}</td>
-        <td class="audit-stack-cell">${renderAuditEntryLines(visibleEntries, (entry) => renderClassText(entry.wowClass))}</td>
-        <td class="audit-stack-cell">${renderAuditEntryLines(visibleEntries, (entry) => renderRoleSpec(entry.mainRole, entry.mainSpecialization))}</td>
-        <td class="audit-stack-cell">${renderAuditEntryLines(visibleEntries, (entry) => renderRoleSpec(entry.offRole, entry.offSpecialization))}</td>
-        <td class="audit-stack-cell">${renderAuditEntryLines(visibleEntries, (entry) => renderGearLink(entry.armoryUrl))}</td>
-        <td class="audit-history-col">${escapeHtml(row.historyText)}</td>
-        <td>${escapeHtml(row.lastRaidLabel)}</td>
+        <td><span class="audit-user-name" title="${escapeHtml(row.tooltip)}">${escapeHtml(row.displayName)}</span></td>
+        <td>
+          <select data-role-uid="${escapeHtml(row.uid)}" data-role-current="${escapeHtml(row.role)}">
+            <option value="member" ${row.role === "member" ? "selected" : ""}>Member</option>
+            <option value="admin" ${row.role === "admin" ? "selected" : ""}>Admin</option>
+            <option value="remove" ${row.role === "remove" ? "selected" : ""}>Remove Access</option>
+          </select>
+        </td>
+        <td class="audit-history-col">${escapeHtml(`${row.acceptedTotal} accepted raid${row.acceptedTotal === 1 ? "" : "s"}`)}</td>
       </tr>`;
     })
     .join("");
 
-  setMessage(characterAuditMessage, `${filteredRows.length} profile entries shown.`);
+  setMessage(characterAuditMessage, `${filteredRows.length} user access record(s) shown.`);
 }
 
 function setAdminVisibility() {
   signupRequestsSection.hidden = !isAdmin;
   characterAuditSection.hidden = !isAdmin;
-  if (accessManagerSection) {
-    accessManagerSection.hidden = !isAdmin;
-  }
   if (!isAdmin && adminOpsBadge) {
     adminOpsBadge.hidden = true;
   }
@@ -742,28 +618,34 @@ function normalizeUid(value) {
   return String(value || "").trim();
 }
 
+function rebuildUserDirectory() {
+  const merged = new Map();
+
+  currentMemberDirectory.forEach((meta, uid) => {
+    merged.set(uid, {
+      id: uid,
+      uid,
+      displayName: String(meta.displayName || "").trim(),
+      email: String(meta.email || "").trim(),
+      profileName: String(meta.profileName || "").trim()
+    });
+  });
+
+  currentAdminDirectory.forEach((meta, uid) => {
+    const existing = merged.get(uid) || { id: uid, uid, displayName: "", email: "", profileName: "" };
+    merged.set(uid, {
+      ...existing,
+      displayName: String(meta.displayName || existing.displayName || "").trim(),
+      email: String(meta.email || existing.email || "").trim(),
+      profileName: String(meta.profileName || existing.profileName || "").trim()
+    });
+  });
+
+  currentCharacters = Array.from(merged.values());
+}
+
 function renderAccessRows() {
-  if (!adminAccessRows || !memberAccessRows) {
-    return;
-  }
-
-  if (!isAdmin) {
-    adminAccessRows.innerHTML = "";
-    memberAccessRows.innerHTML = "";
-    return;
-  }
-
-  adminAccessRows.innerHTML = currentAdminUids.length
-    ? currentAdminUids
-      .map((uid) => `<tr><td class="access-uid-cell">${escapeHtml(uid)}</td><td><button type="button" class="danger" data-access-remove="admin" data-access-uid="${escapeHtml(uid)}">Remove</button></td></tr>`)
-      .join("")
-    : `<tr><td colspan="2">No admins found.</td></tr>`;
-
-  memberAccessRows.innerHTML = currentMemberUids.length
-    ? currentMemberUids
-      .map((uid) => `<tr><td class="access-uid-cell">${escapeHtml(uid)}</td><td><button type="button" class="danger" data-access-remove="member" data-access-uid="${escapeHtml(uid)}">Remove</button></td></tr>`)
-      .join("")
-    : `<tr><td colspan="2">No members found.</td></tr>`;
+  renderCharacterAuditTable();
 }
 
 async function upsertAccessUid(uid, accessType) {
@@ -875,12 +757,72 @@ auditSearchInput.addEventListener("input", () => {
   renderCharacterAuditTable();
 });
 
-auditClassFilter.addEventListener("change", () => {
-  renderCharacterAuditTable();
-});
+if (auditClassFilter) {
+  auditClassFilter.addEventListener("change", () => {
+    renderCharacterAuditTable();
+  });
+}
 
-auditActivityFilter.addEventListener("change", () => {
-  renderCharacterAuditTable();
+if (auditActivityFilter) {
+  auditActivityFilter.addEventListener("change", () => {
+    renderCharacterAuditTable();
+  });
+}
+
+characterAuditSection.addEventListener("change", async (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLSelectElement)) {
+    return;
+  }
+
+  const uid = normalizeUid(target.dataset.roleUid || "");
+  const nextRole = String(target.value || "");
+  const previousRole = String(target.dataset.roleCurrent || "");
+  if (!uid || !isAdmin || !db || !["member", "admin", "remove"].includes(nextRole)) {
+    return;
+  }
+
+  target.disabled = true;
+  try {
+    if (nextRole === "member") {
+      await setDoc(doc(db, "members", uid), {
+        uid,
+        role: "member",
+        updatedAt: serverTimestamp(),
+        updatedByUid: authUid,
+        createdAt: serverTimestamp()
+      }, { merge: true });
+      await deleteDoc(doc(db, "admins", uid)).catch(() => {});
+      setMessage(characterAuditMessage, "Role updated to member.");
+    } else if (nextRole === "admin") {
+      await setDoc(doc(db, "admins", uid), {
+        uid,
+        role: "admin",
+        updatedAt: serverTimestamp(),
+        updatedByUid: authUid,
+        createdAt: serverTimestamp()
+      }, { merge: true });
+      await setDoc(doc(db, "members", uid), {
+        uid,
+        role: "member",
+        updatedAt: serverTimestamp(),
+        updatedByUid: authUid,
+        createdAt: serverTimestamp()
+      }, { merge: true });
+      setMessage(characterAuditMessage, "Role updated to admin.");
+    } else {
+      await Promise.allSettled([
+        deleteDoc(doc(db, "admins", uid)),
+        deleteDoc(doc(db, "members", uid))
+      ]);
+      setMessage(characterAuditMessage, "Access removed.");
+    }
+  } catch (error) {
+    setMessage(characterAuditMessage, error.message, true);
+    target.value = previousRole || "remove";
+  } finally {
+    target.disabled = false;
+  }
 });
 
 if (accessForm) {
@@ -944,10 +886,18 @@ if (!hasConfigValues()) {
   updateAuthActionButtons({ uid: "demo" });
   updateUidDisplay("demo-local");
   authStatus.textContent = "Demo mode: Firebase config not set (local testing enabled).";
-  currentCharacters = loadDemoCharacters();
+  currentCharacters = [{
+    id: "demo-local",
+    uid: "demo-local",
+    displayName: "demo-local",
+    email: "demo@example.com",
+    profileName: "demo-local"
+  }];
   currentSignups = loadDemoSignups();
   currentAdminUids = ["demo-local"];
   currentMemberUids = ["demo-local"];
+  currentAdminDirectory = new Map([["demo-local", { displayName: "demo-local", email: "demo@example.com" }]]);
+  currentMemberDirectory = new Map([["demo-local", { displayName: "demo-local", email: "demo@example.com" }]]);
   renderSignupRequestsTable();
   renderCharacterAuditTable();
   renderAccessRows();
@@ -957,7 +907,6 @@ if (!hasConfigValues()) {
   const googleProvider = new GoogleAuthProvider();
   googleProvider.setCustomParameters({ prompt: "select_account" });
   db = getFirestore(app);
-  const charactersRef = collection(db, "characters");
   const signupsRef = collection(db, "signups");
   const adminsRef = collection(db, "admins");
   const membersRef = collection(db, "members");
@@ -1043,6 +992,8 @@ if (!hasConfigValues()) {
       currentSignups = [];
       currentAdminUids = [];
       currentMemberUids = [];
+      currentAdminDirectory = new Map();
+      currentMemberDirectory = new Map();
       setAdminVisibility();
       renderSignupRequestsTable();
       renderCharacterAuditTable();
@@ -1085,22 +1036,6 @@ if (!hasConfigValues()) {
 
     authStatus.textContent = `Signed in (${userLabel}) — Requests and audit enabled`;
 
-    const charactersQuery = query(charactersRef, where("ownerUid", "==", authUid));
-
-    unsubscribeCharacters = onSnapshot(
-      charactersQuery,
-      (snapshot) => {
-        currentCharacters = snapshot.docs.map((docItem) => ({
-          id: docItem.id,
-          ...docItem.data()
-        }));
-        renderCharacterAuditTable();
-      },
-      (error) => {
-        setMessage(characterAuditMessage, error.message, true);
-      }
-    );
-
     unsubscribeSignups = onSnapshot(
       signupsRef,
       (snapshot) => {
@@ -1119,10 +1054,14 @@ if (!hasConfigValues()) {
     unsubscribeAdmins = onSnapshot(
       adminsRef,
       (snapshot) => {
+        currentAdminDirectory = new Map(
+          snapshot.docs.map((docItem) => [String(docItem.id || "").trim(), docItem.data() || {}])
+        );
         currentAdminUids = snapshot.docs
           .map((docItem) => String(docItem.id || "").trim())
           .filter(Boolean)
           .sort((left, right) => left.localeCompare(right));
+        rebuildUserDirectory();
         renderAccessRows();
       },
       (error) => {
@@ -1133,10 +1072,14 @@ if (!hasConfigValues()) {
     unsubscribeMembers = onSnapshot(
       membersRef,
       (snapshot) => {
+        currentMemberDirectory = new Map(
+          snapshot.docs.map((docItem) => [String(docItem.id || "").trim(), docItem.data() || {}])
+        );
         currentMemberUids = snapshot.docs
           .map((docItem) => String(docItem.id || "").trim())
           .filter(Boolean)
           .sort((left, right) => left.localeCompare(right));
+        rebuildUserDirectory();
         renderAccessRows();
       },
       (error) => {

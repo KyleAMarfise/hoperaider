@@ -910,9 +910,21 @@ button:disabled {
 
 .audit-filters {
   display: grid;
-  grid-template-columns: minmax(240px, 2fr) repeat(2, minmax(180px, 1fr));
+  grid-template-columns: minmax(260px, 1fr);
   gap: 0.55rem;
   margin-top: 0.55rem;
+}
+
+.past-toggle-hint {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+.audit-user-name {
+  cursor: help;
+  text-decoration: underline dotted;
+  text-underline-offset: 2px;
 }
 
 .access-form {

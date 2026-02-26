@@ -91,24 +91,7 @@
       <div class="audit-filters">
         <label>
           Search
-          <input id="auditSearch" type="text" placeholder="Search profile, character, class, role, spec" />
-        </label>
-
-        <label>
-          Class
-          <select id="auditClassFilter">
-            <option value="">All Classes</option>
-          </select>
-        </label>
-
-        <label>
-          Activity
-          <select id="auditActivityFilter">
-            <option value="all">All</option>
-            <option value="has-signups">Has signup history</option>
-            <option value="no-signups">No signup history</option>
-            <option value="past-accepted">Has past accepted raid</option>
-          </select>
+          <input id="auditSearch" type="text" placeholder="Search Discord name or email" />
         </label>
       </div>
 
@@ -116,69 +99,16 @@
         <table>
           <thead>
             <tr>
-              <th>Profile</th>
-              <th>Character</th>
-              <th>Class</th>
-              <th>MS</th>
-              <th>OS</th>
-              <th>Gear</th>
+              <th>Discord</th>
+              <th>Role</th>
               <th class="audit-history-col">History</th>
-              <th>Last Raid</th>
             </tr>
           </thead>
           <tbody id="characterAuditRows"></tbody>
         </table>
       </div>
       <p id="characterAuditMessage" class="message"></p>
-    </section>
-
-    <section class="card" id="accessManagerSection" hidden>
-      <div class="list-header">
-        <h2>Access Manager</h2>
-      </div>
-
-      <form id="accessForm" class="access-form">
-        <label>
-          User UID
-          <input id="accessUidInput" type="text" placeholder="Firebase Auth UID" required />
-        </label>
-
-        <label>
-          Access Type
-          <select id="accessTypeSelect">
-            <option value="member">Member</option>
-            <option value="admin">Admin</option>
-          </select>
-        </label>
-
-        <button type="submit" id="accessAddButton">Grant Access</button>
-      </form>
-
       <p id="accessManagerMessage" class="message"></p>
-
-      <div class="access-grid">
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th colspan="2">Admins</th>
-              </tr>
-            </thead>
-            <tbody id="adminAccessRows"></tbody>
-          </table>
-        </div>
-
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th colspan="2">Members</th>
-              </tr>
-            </thead>
-            <tbody id="memberAccessRows"></tbody>
-          </table>
-        </div>
-      </div>
     </section>
   </main>
 
