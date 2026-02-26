@@ -11,6 +11,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getFirestore,
   onSnapshot,
   orderBy,
@@ -327,7 +328,7 @@ function updateUidDisplay(uid) {
     currentUidEl.textContent = normalizedUid ? `UID: ${normalizedUid}` : "";
   }
   if (copyUidButton) {
-    copyUidButton.hidden = !normalizedUid;
+    copyUidButton.hidden = !normalizedUid || !isAdmin;
   }
 }
 
@@ -694,7 +695,7 @@ if (!hasConfigValues()) {
     });
   }
 
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     if (unsubscribeRaids) {
       unsubscribeRaids();
       unsubscribeRaids = null;
@@ -720,7 +721,14 @@ if (!hasConfigValues()) {
     }
 
     authUid = user.uid;
-    isAdmin = Array.isArray(appSettings.adminUids) && appSettings.adminUids.includes(authUid);
+    const inStaticAdminAllowlist = Array.isArray(appSettings.adminUids) && appSettings.adminUids.includes(authUid);
+    let hasAdminDoc = false;
+    try {
+      hasAdminDoc = (await getDoc(doc(db, "admins", authUid))).exists();
+    } catch {
+      hasAdminDoc = false;
+    }
+    isAdmin = inStaticAdminAllowlist || hasAdminDoc;
     setAuthGateState(true);
     updateAuthActionButtons(user);
     updateUidDisplay(authUid);
