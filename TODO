@@ -1,0 +1,10 @@
+# Add a admin console for management
+# In that console, leave a notes field where we can notate things about specific people who sign up. Left early, etc, etc.
+# Create the github pipeline to deploy it
+# Add obfuscation to secure the code
+# Add authentication / authorization. Ideally a plugin with Discord.
+# Add some alerting feature. 
+# Ensure important secrets are stored in github variables for the database and that the pipeline doesn't expose them
+# password gates for the admin panel
+# expand website to cover heroic signups
+# ensure the firebase setup is fully secured along with the code and how it's used

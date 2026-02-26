@@ -1,0 +1,14 @@
+# Secrets / local config
+.env
+.env.*
+!.env.example
+config/prod/firebase-config.js
+config/local/app-config.local.js
+config/prod/app-config.github.js
+
+# OS/editor noise
+.DS_Store
+.vscode/
+
+# Optional runtime artifacts
+node_modules/
