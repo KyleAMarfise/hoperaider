@@ -518,6 +518,37 @@ function formatHistorySummary(stats) {
   return `${stats.requested} Requested • ${stats.accept} Accept • ${stats.tentative} Tentative • ${stats.decline} Can't Go • ${stats.withdrawn} Withdrawn • ${stats.denied} Denied`;
 }
 
+function buildAuditSearchIndex(row) {
+  const baseParts = [
+    row.uid,
+    row.displayName,
+    row.profileName,
+    row.email,
+    row.role,
+    String(row.acceptedTotal || 0),
+    row.tooltip
+  ];
+
+  const characterParts = (row.characterEntries || []).flatMap((entry) => [
+    entry.characterName,
+    entry.wowClass,
+    entry.mainRole,
+    entry.mainSpecialization,
+    entry.offRole,
+    entry.offSpecialization,
+    entry.armoryUrl,
+    entry.logsUrl,
+    entry.isMain ? "main" : "alt",
+    String(entry.acceptedCount || 0)
+  ]);
+
+  return [...baseParts, ...characterParts]
+    .map((value) => String(value || "").trim())
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+}
+
 function buildUserAuditRows(signups) {
   const acceptedTotals = new Map();
   const characterSummariesByUid = new Map();
@@ -614,8 +645,12 @@ function buildUserAuditRows(signups) {
       acceptedTotal,
       characterEntries,
       tooltip,
-      searchIndex: `${profileName} ${email} ${normalizedUid} ${characterEntries.map((entry) => `${entry.characterName} ${entry.wowClass} ${entry.mainSpecialization} ${entry.offSpecialization}`).join(" ")}`.toLowerCase()
+      searchIndex: ""
     };
+  });
+
+  rows.forEach((row) => {
+    row.searchIndex = buildAuditSearchIndex(row);
   });
 
   return rows.sort((left, right) => left.displayName.localeCompare(right.displayName, undefined, { sensitivity: "base" }));
