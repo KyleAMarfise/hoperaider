@@ -154,6 +154,7 @@ service cloud.firestore {
           'preferredEnd2',
           'altCharacters',
           'ownerUid',
+          'ownerEmail',
           'createdAt',
           'updatedAt'
         ])
@@ -226,7 +227,21 @@ service cloud.firestore {
           || data.altCharacters is list
         )
         && data.ownerUid is string
-        && data.ownerUid == request.auth.uid;
+        && data.ownerUid == request.auth.uid
+        && (
+          !('ownerEmail' in data)
+          || data.ownerEmail == null
+          || (
+            data.ownerEmail is string
+            && (
+              data.ownerEmail.size() == 0
+              || (
+                request.auth.token.email is string
+                && data.ownerEmail == request.auth.token.email
+              )
+            )
+          )
+        );
     }
 
     function validPhase(value) {
@@ -306,7 +321,15 @@ service cloud.firestore {
     }
 
     match /characters/{characterId} {
-      allow read: if signedIn() && resource.data.ownerUid == request.auth.uid;
+      allow read: if signedIn()
+        && (
+          resource.data.ownerUid == request.auth.uid
+          || (
+            request.auth.token.email is string
+            && resource.data.ownerEmail is string
+            && resource.data.ownerEmail == request.auth.token.email
+          )
+        );
 
       allow create: if isApprovedUser()
         && validCharacterData(request.resource.data)
@@ -314,14 +337,28 @@ service cloud.firestore {
         && request.resource.data.updatedAt is timestamp;
 
       allow update: if isApprovedUser()
-        && resource.data.ownerUid == request.auth.uid
-        && request.resource.data.ownerUid == resource.data.ownerUid
+        && (
+          resource.data.ownerUid == request.auth.uid
+          || (
+            request.auth.token.email is string
+            && resource.data.ownerEmail is string
+            && resource.data.ownerEmail == request.auth.token.email
+          )
+        )
+        && request.resource.data.ownerUid == request.auth.uid
         && validCharacterData(request.resource.data)
         && request.resource.data.createdAt == resource.data.createdAt
         && request.resource.data.updatedAt is timestamp;
 
       allow delete: if isApprovedUser()
-        && resource.data.ownerUid == request.auth.uid;
+        && (
+          resource.data.ownerUid == request.auth.uid
+          || (
+            request.auth.token.email is string
+            && resource.data.ownerEmail is string
+            && resource.data.ownerEmail == request.auth.token.email
+          )
+        );
     }
 
     match /members/{uid} {

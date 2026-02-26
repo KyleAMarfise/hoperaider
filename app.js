@@ -236,6 +236,7 @@ const hasAdminUI = Boolean(
 );
 
 let authUid = null;
+let authEmail = "";
 let isAdmin = false;
 let currentRows = [];
 let currentRaids = [];
@@ -1896,6 +1897,8 @@ async function upsertCharacterProfile(profile, selectedCharacterId) {
   if (selectedCharacterId) {
     await updateDoc(doc(db, "characters", selectedCharacterId), {
       ...normalizedProfile,
+      ownerUid: authUid,
+      ownerEmail: authEmail || "",
       updatedAt: serverTimestamp()
     });
     return selectedCharacterId;
@@ -1905,6 +1908,7 @@ async function upsertCharacterProfile(profile, selectedCharacterId) {
   await setDoc(doc(db, "characters", newId), {
     ...normalizedProfile,
     ownerUid: authUid,
+    ownerEmail: authEmail || "",
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp()
   });
@@ -3219,8 +3223,23 @@ if (!hasConfigValues()) {
       return;
     }
     try {
-      const snapshot = await getDocs(query(charactersRef, where("ownerUid", "==", authUid)));
-      allCharacters = snapshot.docs.map((docItem) => ({
+      const ownedSnapshot = await getDocs(query(charactersRef, where("ownerUid", "==", authUid)));
+      let docs = ownedSnapshot.docs;
+
+      if (!docs.length && authEmail) {
+        const legacySnapshot = await getDocs(query(charactersRef, where("ownerEmail", "==", authEmail)));
+        docs = legacySnapshot.docs;
+
+        await Promise.allSettled(
+          docs.map((docItem) => updateDoc(docItem.ref, {
+            ownerUid: authUid,
+            ownerEmail: authEmail,
+            updatedAt: serverTimestamp()
+          }))
+        );
+      }
+
+      allCharacters = docs.map((docItem) => ({
         id: docItem.id,
         ...docItem.data()
       }));
@@ -3305,6 +3324,7 @@ if (!hasConfigValues()) {
 
     if (!user) {
       authUid = null;
+      authEmail = "";
       isAdmin = false;
       currentRows = [];
       currentRaids = [];
@@ -3327,6 +3347,7 @@ if (!hasConfigValues()) {
     }
 
     authUid = user.uid;
+  authEmail = String(user.email || "").trim();
     const inStaticAdminAllowlist = Array.isArray(appSettings.adminUids) && appSettings.adminUids.includes(authUid);
     let hasAdminDoc = false;
     try {
