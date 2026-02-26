@@ -1057,11 +1057,10 @@ function renderRaidProfileOptions(selectedCharacterId = "", selectedCharacterKey
   return [
     `<option value="">Select character</option>`,
     ...allCharacters.flatMap((profile) => {
-      const profileLabel = getProfileLabel(profile);
       return getProfileCharacterEntries(profile).map((entry) => {
         const value = `${profile.id}::${entry.key}`;
         const isSelected = profile.id === selectedId && entry.key === (selectedKey || "main");
-        return `<option value="${escapeHtml(value)}" ${isSelected ? "selected" : ""}>${escapeHtml(`${profileLabel}-${entry.characterName}`)}</option>`;
+        return `<option value="${escapeHtml(value)}" ${isSelected ? "selected" : ""}>${escapeHtml(entry.characterName)}</option>`;
       });
     })
   ].join("");
@@ -1088,6 +1087,13 @@ function renderRaidProfileControl(raidId, signup) {
   return `<select class="raid-profile-select" data-raid-profile-select="true" data-raid-id="${escapeHtml(raidId)}" ${isDisabled ? "disabled" : ""}>
       ${renderRaidProfileOptions(selectedCharacterId, selectedCharacterKey)}
     </select>`;
+}
+
+function renderRaidCharacterControl(raidId, signup) {
+  if (!raidId) {
+    return `<span class="signup-control-disabled">Unavailable</span>`;
+  }
+  return renderRaidProfileControl(raidId, signup);
 }
 
 async function clearRaidSignup(signupId) {
@@ -1132,13 +1138,10 @@ function renderRaidSignupControl(raidId, signup) {
     : renderSignupStatusOptions(selectedStatus);
   const isSelectDisabled = !hasProfiles && !hasSignup;
 
-  return `<div class="raid-signup-controls">
-      ${renderRaidProfileControl(raidId, signup)}
-      <select class="raid-signup-select ${statusClass}" data-raid-signup-select="true" data-raid-id="${escapeHtml(raidId)}" data-signup-id="${escapeHtml(signup?.id || "")}" ${isSelectDisabled ? "disabled" : ""}>
-        ${initialOption}
-        ${selectOptions}
-      </select>
-    </div>`;
+  return `<select class="raid-signup-select ${statusClass}" data-raid-signup-select="true" data-raid-id="${escapeHtml(raidId)}" data-signup-id="${escapeHtml(signup?.id || "")}" ${isSelectDisabled ? "disabled" : ""}>
+      ${initialOption}
+      ${selectOptions}
+    </select>`;
 }
 
 function applySignupSelectStatusClass(selectElement, statusValue) {
@@ -2599,7 +2602,7 @@ function hydrateRowsWithRaidWindow(rows) {
 
 function renderCategoryRows(targetElement, rows, rosterMap) {
   if (!rows.length) {
-    targetElement.innerHTML = `<tr><td colspan="9">No raids in this window.</td></tr>`;
+    targetElement.innerHTML = `<tr><td colspan="10">No raids in this window.</td></tr>`;
     return;
   }
 
@@ -2633,6 +2636,9 @@ function renderCategoryRows(targetElement, rows, rosterMap) {
 
       return `<tr class="raid-summary-row">
           <td>
+            ${renderRaidCharacterControl(selectedRaid?.id || "", viewerSignup)}
+          </td>
+          <td>
             ${renderRaidSignupControl(selectedRaid?.id || "", viewerSignup)}
           </td>
           <td>
@@ -2656,7 +2662,7 @@ function renderCategoryRows(targetElement, rows, rosterMap) {
           </td>
         </tr>
         <tr id="${detailId}" class="raid-detail-row" ${isExpanded ? "" : "hidden"}>
-          <td colspan="9">
+          <td colspan="10">
             <div class="raid-detail-wrap">
               <table class="detail-table">
                 <thead>
@@ -3047,9 +3053,9 @@ raidSectionsEl.addEventListener("change", async (event) => {
     return;
   }
 
-  const signupControls = target.closest(".raid-signup-controls");
-  const rowProfileSelect = signupControls
-    ? signupControls.querySelector('[data-raid-profile-select="true"]')
+  const row = target.closest("tr");
+  const rowProfileSelect = row
+    ? row.querySelector('[data-raid-profile-select="true"]')
     : null;
   const selectedProfileValue = rowProfileSelect instanceof HTMLSelectElement
     ? rowProfileSelect.value

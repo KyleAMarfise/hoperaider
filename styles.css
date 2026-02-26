@@ -1240,15 +1240,15 @@ th {
 }
 
 .raid-signup-select {
-  width: 7.4rem;
-  min-width: 7.4rem;
-  max-width: 7.4rem;
+  width: 9.8rem;
+  min-width: 9.8rem;
+  max-width: 9.8rem;
   border: 1px solid #4f5c79;
   border-radius: 8px;
   background: linear-gradient(180deg, #1a2436, #111a29);
   color: #f2f5ff;
-  padding: 0.32rem 0.44rem;
-  font-size: 0.8rem;
+  padding: 0.34rem 0.48rem;
+  font-size: 0.82rem;
 }
 
 .raid-signup-controls {
@@ -1257,15 +1257,15 @@ th {
 }
 
 .raid-profile-select {
-  width: 7.4rem;
-  min-width: 7.4rem;
-  max-width: 7.4rem;
+  width: 13.5rem;
+  min-width: 13.5rem;
+  max-width: 13.5rem;
   border: 1px solid #5e4b2a;
   border-radius: 8px;
   background: #0b0b0e;
   color: var(--text-main);
-  padding: 0.28rem 0.42rem;
-  font-size: 0.76rem;
+  padding: 0.34rem 0.48rem;
+  font-size: 0.82rem;
 }
 
 .raid-signup-select.status-accept {
