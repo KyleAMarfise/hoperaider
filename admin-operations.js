@@ -230,11 +230,18 @@ function buildRequestQueueRows(rows, profilesById, actionMode = "full") {
     .map((signup) => {
       const profile = profilesById.get(signup.characterId);
       const profileLabel = profile ? getProfileLabel(profile) : "Unknown Profile";
-      const characterName = signup.profileCharacterName || signup.characterName || profile?.characterName || "—";
+      const selectedProfileEntry = profile
+        ? findProfileCharacterEntry(
+          profile,
+          String(signup.profileCharacterKey || "main"),
+          String(signup.profileCharacterName || signup.characterName || "")
+        )
+        : null;
+      const characterName = signup.profileCharacterName || signup.characterName || selectedProfileEntry?.characterName || profile?.characterName || "—";
       const attributes = resolveSignupCharacterAttributes(signup, profilesById);
       const status = normalizeSignupStatus(signup.status);
       const gearUrl = String(signup.armoryUrl || buildArmoryUrl(characterName)).trim();
-      const logsUrl = buildLogsUrl(characterName);
+      const logsUrl = String(signup.logsUrl || selectedProfileEntry?.logsUrl || buildLogsUrl(characterName)).trim();
       const actionCell = actionMode === "full"
         ? `<div class="row-actions">
             <button type="button" data-request-action="accept" data-signup-id="${escapeHtml(signup.id)}">Accept</button>
@@ -457,7 +464,8 @@ function getProfileCharacterEntries(profile) {
     offRole: profile.offRole || "",
     mainSpecialization: profile.mainSpecialization || profile.specialization || "",
     offSpecialization: profile.offSpecialization || "",
-    armoryUrl: buildArmoryUrl(profile.characterName || "") || profile.armoryUrl || ""
+    armoryUrl: buildArmoryUrl(profile.characterName || "") || profile.armoryUrl || "",
+    logsUrl: buildLogsUrl(profile.characterName || "") || profile.logsUrl || ""
   });
 
   const alts = Array.isArray(profile.altCharacters) ? profile.altCharacters : [];
@@ -473,7 +481,8 @@ function getProfileCharacterEntries(profile) {
       offRole: alt.offRole || "",
       mainSpecialization: alt.mainSpecialization || "",
       offSpecialization: alt.offSpecialization || "",
-      armoryUrl: buildArmoryUrl(alt.characterName || "") || alt.armoryUrl || profile.armoryUrl || ""
+      armoryUrl: buildArmoryUrl(alt.characterName || "") || alt.armoryUrl || profile.armoryUrl || "",
+      logsUrl: buildLogsUrl(alt.characterName || "") || alt.logsUrl || profile.logsUrl || ""
     });
   });
 
@@ -486,11 +495,50 @@ function formatHistorySummary(stats) {
 
 function buildUserAuditRows(signups) {
   const acceptedTotals = new Map();
+  const characterSummariesByUid = new Map();
+
+  function ensureCharacterMap(uid) {
+    if (!characterSummariesByUid.has(uid)) {
+      characterSummariesByUid.set(uid, new Map());
+    }
+    return characterSummariesByUid.get(uid);
+  }
+
   signups.forEach((signup) => {
     const uid = normalizeUid(signup.ownerUid);
     if (!uid) {
       return;
     }
+    const profile = signup.characterId ? currentCharacters.find((entry) => entry.id === signup.characterId) : null;
+    const selectedEntry = profile
+      ? findProfileCharacterEntry(
+        profile,
+        String(signup.profileCharacterKey || "main"),
+        String(signup.profileCharacterName || signup.characterName || "")
+      )
+      : null;
+    const characterName = String(signup.profileCharacterName || signup.characterName || selectedEntry?.characterName || profile?.characterName || "").trim();
+    if (characterName) {
+      const key = characterName.toLowerCase();
+      const bucket = ensureCharacterMap(uid);
+      const previous = bucket.get(key);
+      const acceptedForCharacter = normalizeSignupStatus(signup.status) === "accept"
+        ? (previous?.acceptedCount || 0) + 1
+        : (previous?.acceptedCount || 0);
+      bucket.set(key, {
+        isMain: Boolean(selectedEntry?.key === "main"),
+        characterName,
+        wowClass: String(signup.wowClass || selectedEntry?.wowClass || profile?.wowClass || previous?.wowClass || "").trim() || "—",
+        mainRole: String(signup.mainRole || signup.role || selectedEntry?.mainRole || profile?.mainRole || profile?.role || previous?.mainRole || "").trim() || "—",
+        mainSpecialization: String(signup.mainSpecialization || signup.specialization || selectedEntry?.mainSpecialization || profile?.mainSpecialization || profile?.specialization || previous?.mainSpecialization || "").trim() || "—",
+        offRole: String(signup.offRole || selectedEntry?.offRole || profile?.offRole || previous?.offRole || "").trim() || "—",
+        offSpecialization: String(signup.offSpecialization || selectedEntry?.offSpecialization || profile?.offSpecialization || previous?.offSpecialization || "").trim() || "—",
+        armoryUrl: String(signup.armoryUrl || previous?.armoryUrl || buildArmoryUrl(characterName)).trim(),
+        logsUrl: String(signup.logsUrl || selectedEntry?.logsUrl || previous?.logsUrl || buildLogsUrl(characterName)).trim(),
+        acceptedCount: acceptedForCharacter
+      });
+    }
+
     if (normalizeSignupStatus(signup.status) !== "accept") {
       return;
     }
@@ -508,6 +556,8 @@ function buildUserAuditRows(signups) {
     const email = String(source.email || source.ownerEmail || "").trim();
     const role = adminSet.has(normalizedUid) ? "admin" : memberSet.has(normalizedUid) ? "member" : "remove";
     const acceptedTotal = acceptedTotals.get(normalizedUid) || 0;
+    const characterEntries = Array.from(characterSummariesByUid.get(normalizedUid)?.values() || [])
+      .sort((left, right) => left.characterName.localeCompare(right.characterName, undefined, { sensitivity: "base" }));
     const tooltip = [
       `UID: ${normalizedUid}`,
       `Google Email: ${email || "Unknown"}`
@@ -519,8 +569,9 @@ function buildUserAuditRows(signups) {
       email,
       role,
       acceptedTotal,
+      characterEntries,
       tooltip,
-      searchIndex: `${displayName} ${email} ${normalizedUid}`.toLowerCase()
+      searchIndex: `${displayName} ${email} ${normalizedUid} ${characterEntries.map((entry) => `${entry.characterName} ${entry.wowClass} ${entry.mainSpecialization} ${entry.offSpecialization}`).join(" ")}`.toLowerCase()
     };
   });
 
@@ -593,21 +644,28 @@ function renderCharacterAuditTable() {
   auditCountBadge.textContent = String(filteredRows.length);
 
   if (!allRows.length) {
-    characterAuditRows.innerHTML = `<tr><td colspan="3">No user records found yet.</td></tr>`;
+    characterAuditRows.innerHTML = `<tr><td colspan="9">No user records found yet.</td></tr>`;
     setMessage(characterAuditMessage, "");
     return;
   }
 
   if (!filteredRows.length) {
-    characterAuditRows.innerHTML = `<tr><td colspan="3">No matches for current search/filter.</td></tr>`;
+    characterAuditRows.innerHTML = `<tr><td colspan="9">No matches for current search/filter.</td></tr>`;
     setMessage(characterAuditMessage, "");
     return;
   }
 
   characterAuditRows.innerHTML = filteredRows
     .map((row) => {
+      const entries = row.characterEntries || [];
       return `<tr>
         <td><span class="audit-user-name" title="${escapeHtml(row.tooltip)}">${escapeHtml(row.displayName)}</span></td>
+        <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => escapeHtml(entry.characterName)) : "—"}</td>
+        <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderClassText(entry.wowClass)) : "—"}</td>
+        <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderRoleSpec(entry.mainRole, entry.mainSpecialization)) : "—"}</td>
+        <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderRoleSpec(entry.offRole, entry.offSpecialization)) : "—"}</td>
+        <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.armoryUrl, "Gear")) : "—"}</td>
+        <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.logsUrl, "Logs")) : "—"}</td>
         <td>
           <select data-role-uid="${escapeHtml(row.uid)}" data-role-current="${escapeHtml(row.role)}">
             <option value="member" ${row.role === "member" ? "selected" : ""}>Member</option>

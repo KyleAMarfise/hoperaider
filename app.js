@@ -854,6 +854,7 @@ function getProfileCharacterEntries(profile) {
     mainSpecialization: profile.mainSpecialization || profile.specialization || "",
     offSpecialization: profile.offSpecialization || "",
     armoryUrl: buildArmoryUrl(profile.characterName || "") || profile.armoryUrl || "",
+    logsUrl: buildLogsUrl(profile.characterName || "") || profile.logsUrl || "",
     progressionUrl: profile.progressionUrl || ""
   });
 
@@ -872,6 +873,7 @@ function getProfileCharacterEntries(profile) {
       mainSpecialization: alt.mainSpecialization || "",
       offSpecialization: alt.offSpecialization || "",
       armoryUrl: buildArmoryUrl(alt.characterName || "") || alt.armoryUrl || profile.armoryUrl || "",
+      logsUrl: buildLogsUrl(alt.characterName || "") || alt.logsUrl || profile.logsUrl || "",
       progressionUrl: alt.progressionUrl || profile.progressionUrl || ""
     });
   });
@@ -911,6 +913,7 @@ function resolveSignupCharacterData(signup) {
       offSpecialization: signup.offSpecialization || "",
       specialization: signup.mainSpecialization || signup.specialization || "",
       armoryUrl: buildArmoryUrl(fallbackCharacterName) || signup.armoryUrl || "",
+      logsUrl: signup.logsUrl || buildLogsUrl(fallbackCharacterName) || "",
       progressionUrl: signup.progressionUrl || ""
     };
   }
@@ -935,6 +938,10 @@ function resolveSignupCharacterData(signup) {
       || buildArmoryUrl(selectedEntry?.characterName || signup.profileCharacterName || matchedCharacter.characterName || signup.characterName || "")
       || matchedCharacter.armoryUrl
       || signup.armoryUrl
+      || "",
+    logsUrl: selectedEntry?.logsUrl
+      || signup.logsUrl
+      || buildLogsUrl(selectedEntry?.characterName || signup.profileCharacterName || matchedCharacter.characterName || signup.characterName || "")
       || "",
     progressionUrl: selectedEntry?.progressionUrl || matchedCharacter.progressionUrl || signup.progressionUrl || ""
   };
@@ -2587,7 +2594,7 @@ function renderCategoryRows(targetElement, rows, rosterMap) {
             <td>${escapeHtml(formatSpecDisplay(signup.offSpecialization || "", signup.wowClass || "", signup.offRole || ""))}</td>
             <td><span class="signup-status-badge status-${normalizeSignupStatus(signup.status)}">${escapeHtml(statusLabel(signup.status))}</span></td>
             <td>${buildExternalLink(signup.armoryUrl, "Gear")}</td>
-            <td>${buildExternalLink(buildLogsUrl(signup.characterName || signup.profileCharacterName || ""), "Logs")}</td>
+            <td>${buildExternalLink(signup.logsUrl || buildLogsUrl(signup.characterName || signup.profileCharacterName || ""), "Logs")}</td>
             <td>${signup.progressionUrl ? buildExternalLink(signup.progressionUrl, "Progress") : "TBD"}</td>
           </tr>`)
         .join("");
