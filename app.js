@@ -3393,8 +3393,10 @@ if (!hasConfigValues()) {
       );
     }
 
+    const charactersQuery = query(charactersRef, where("ownerUid", "==", authUid));
+
     unsubscribeCharacters = onSnapshot(
-      charactersRef,
+      charactersQuery,
       (snapshot) => {
         allCharacters = snapshot.docs.map((docItem) => ({
           id: docItem.id,

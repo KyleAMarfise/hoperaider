@@ -306,7 +306,7 @@ service cloud.firestore {
     }
 
     match /characters/{characterId} {
-      allow read: if isApprovedUser();
+      allow read: if signedIn() && resource.data.ownerUid == request.auth.uid;
 
       allow create: if isApprovedUser()
         && validCharacterData(request.resource.data)
@@ -314,16 +314,14 @@ service cloud.firestore {
         && request.resource.data.updatedAt is timestamp;
 
       allow update: if isApprovedUser()
-        && (
-          isAdmin()
-          || resource.data.ownerUid == request.auth.uid
-        )
+        && resource.data.ownerUid == request.auth.uid
+        && request.resource.data.ownerUid == resource.data.ownerUid
         && validCharacterData(request.resource.data)
         && request.resource.data.createdAt == resource.data.createdAt
         && request.resource.data.updatedAt is timestamp;
 
       allow delete: if isApprovedUser()
-        && (isAdmin() || resource.data.ownerUid == request.auth.uid);
+        && resource.data.ownerUid == request.auth.uid;
     }
 
     match /members/{uid} {

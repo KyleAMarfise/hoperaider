@@ -16,7 +16,9 @@ import {
   onSnapshot,
   serverTimestamp,
   setDoc,
-  updateDoc
+  updateDoc,
+  where,
+  query
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 import { appSettings, firebaseConfig } from "./config/prod/firebase-config.js";
 
@@ -1083,8 +1085,10 @@ if (!hasConfigValues()) {
 
     authStatus.textContent = `Signed in (${userLabel}) — Requests and audit enabled`;
 
+    const charactersQuery = query(charactersRef, where("ownerUid", "==", authUid));
+
     unsubscribeCharacters = onSnapshot(
-      charactersRef,
+      charactersQuery,
       (snapshot) => {
         currentCharacters = snapshot.docs.map((docItem) => ({
           id: docItem.id,
