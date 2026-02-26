@@ -109,6 +109,7 @@ let isAdmin = false;
 let isDemoMode = false;
 let db = null;
 let currentCharacters = [];
+let currentUserDirectory = new Map();
 let currentSignups = [];
 let currentAdminUids = [];
 let currentMemberUids = [];
@@ -330,6 +331,30 @@ function getCharacterMapById() {
   return new Map(currentCharacters.map((entry) => [entry.id, entry]));
 }
 
+function getUserDirectoryMeta(uid) {
+  const normalized = normalizeUid(uid);
+  if (!normalized) {
+    return null;
+  }
+
+  const fromDirectory = currentUserDirectory.get(normalized);
+  if (fromDirectory) {
+    return fromDirectory;
+  }
+
+  const fromCharacter = currentCharacters.find((entry) => normalizeUid(entry.ownerUid || entry.id) === normalized);
+  if (!fromCharacter) {
+    return null;
+  }
+
+  return {
+    uid: normalized,
+    displayName: String(fromCharacter.displayName || "").trim(),
+    profileName: String(fromCharacter.profileName || "").trim(),
+    email: String(fromCharacter.email || fromCharacter.ownerEmail || "").trim()
+  };
+}
+
 function getProfileLabel(profile) {
   if (!profile) {
     return "";
@@ -496,6 +521,8 @@ function formatHistorySummary(stats) {
 function buildUserAuditRows(signups) {
   const acceptedTotals = new Map();
   const characterSummariesByUid = new Map();
+  const profileNamesByUid = new Map();
+  const emailsByUid = new Map();
 
   function ensureCharacterMap(uid) {
     if (!characterSummariesByUid.has(uid)) {
@@ -509,6 +536,15 @@ function buildUserAuditRows(signups) {
     if (!uid) {
       return;
     }
+    const signupProfileName = String(signup.profileName || signup.displayName || "").trim();
+    if (signupProfileName && !profileNamesByUid.has(uid)) {
+      profileNamesByUid.set(uid, signupProfileName);
+    }
+    const signupEmail = String(signup.ownerEmail || signup.email || "").trim();
+    if (signupEmail && !emailsByUid.has(uid)) {
+      emailsByUid.set(uid, signupEmail);
+    }
+
     const profile = signup.characterId ? currentCharacters.find((entry) => entry.id === signup.characterId) : null;
     const selectedEntry = profile
       ? findProfileCharacterEntry(
@@ -548,12 +584,18 @@ function buildUserAuditRows(signups) {
   const adminSet = new Set(currentAdminUids);
   const memberSet = new Set(currentMemberUids);
   const uidSet = new Set([...currentAdminUids, ...currentMemberUids, ...acceptedTotals.keys()]);
+  signups.forEach((signup) => {
+    const uid = normalizeUid(signup.ownerUid);
+    if (uid) {
+      uidSet.add(uid);
+    }
+  });
 
   const rows = Array.from(uidSet).map((uid) => {
     const normalizedUid = normalizeUid(uid);
-    const source = currentCharacters.find((entry) => normalizeUid(entry.id) === normalizedUid) || {};
-    const displayName = String(source.displayName || source.profileName || source.uid || `User ${normalizedUid.slice(0, 6)}`).trim();
-    const email = String(source.email || source.ownerEmail || "").trim();
+    const source = getUserDirectoryMeta(normalizedUid) || {};
+    const profileName = String(source.profileName || profileNamesByUid.get(normalizedUid) || source.displayName || `User ${normalizedUid.slice(0, 6)}`).trim();
+    const email = String(source.email || emailsByUid.get(normalizedUid) || "").trim();
     const role = adminSet.has(normalizedUid) ? "admin" : memberSet.has(normalizedUid) ? "member" : "remove";
     const acceptedTotal = acceptedTotals.get(normalizedUid) || 0;
     const characterEntries = Array.from(characterSummariesByUid.get(normalizedUid)?.values() || [])
@@ -565,13 +607,14 @@ function buildUserAuditRows(signups) {
 
     return {
       uid: normalizedUid,
-      displayName,
+      displayName: profileName,
+      profileName,
       email,
       role,
       acceptedTotal,
       characterEntries,
       tooltip,
-      searchIndex: `${displayName} ${email} ${normalizedUid} ${characterEntries.map((entry) => `${entry.characterName} ${entry.wowClass} ${entry.mainSpecialization} ${entry.offSpecialization}`).join(" ")}`.toLowerCase()
+      searchIndex: `${profileName} ${email} ${normalizedUid} ${characterEntries.map((entry) => `${entry.characterName} ${entry.wowClass} ${entry.mainSpecialization} ${entry.offSpecialization}`).join(" ")}`.toLowerCase()
     };
   });
 
@@ -588,6 +631,12 @@ function renderRoleSpec(role, specialization) {
   const roleLabel = String(role || "—");
   const specLabel = String(specialization || "—");
   return `<span class="audit-role-main">${escapeHtml(roleLabel)}</span><span class="audit-spec-muted">${escapeHtml(specLabel)}</span>`;
+}
+
+function renderCharacterCell(entry, row) {
+  const characterName = escapeHtml(entry.characterName || "—");
+  const charTooltip = [`UID: ${row.uid}`, `Discord Name: ${row.profileName || row.displayName || "Unknown"}`, `Google Email: ${row.email || "Unknown"}`].join("\n");
+  return `<span class="audit-character-name" title="${escapeHtml(charTooltip)}">${characterName}</span>`;
 }
 
 function renderGearLink(url) {
@@ -659,8 +708,8 @@ function renderCharacterAuditTable() {
     .map((row) => {
       const entries = row.characterEntries || [];
       return `<tr>
-        <td><span class="audit-user-name" title="${escapeHtml(row.tooltip)}">${escapeHtml(row.displayName)}</span></td>
-        <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => escapeHtml(entry.characterName)) : "—"}</td>
+        <td><span class="audit-user-name" title="${escapeHtml(row.tooltip)}">${escapeHtml(row.profileName || row.displayName)}</span></td>
+        <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderCharacterCell(entry, row)) : "—"}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderClassText(entry.wowClass)) : "—"}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderRoleSpec(entry.mainRole, entry.mainSpecialization)) : "—"}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderRoleSpec(entry.offRole, entry.offSpecialization)) : "—"}</td>
@@ -716,7 +765,7 @@ function rebuildUserDirectory() {
     });
   });
 
-  currentCharacters = Array.from(merged.values());
+  currentUserDirectory = merged;
 }
 
 function renderAccessRows() {
@@ -963,11 +1012,21 @@ if (!hasConfigValues()) {
   authStatus.textContent = "Demo mode: Firebase config not set (local testing enabled).";
   currentCharacters = [{
     id: "demo-local",
+    ownerUid: "demo-local",
     uid: "demo-local",
     displayName: "demo-local",
     email: "demo@example.com",
     profileName: "demo-local"
   }];
+  currentUserDirectory = new Map([[
+    "demo-local",
+    {
+      uid: "demo-local",
+      displayName: "demo-local",
+      profileName: "demo-local",
+      email: "demo@example.com"
+    }
+  ]]);
   currentSignups = loadDemoSignups();
   currentAdminUids = ["demo-local"];
   currentMemberUids = ["demo-local"];
@@ -983,6 +1042,7 @@ if (!hasConfigValues()) {
   googleProvider.setCustomParameters({ prompt: "select_account" });
   db = getFirestore(app);
   const signupsRef = collection(db, "signups");
+  const charactersRef = collection(db, "characters");
   const adminsRef = collection(db, "admins");
   const membersRef = collection(db, "members");
 
@@ -1064,6 +1124,7 @@ if (!hasConfigValues()) {
       authUid = null;
       isAdmin = false;
       currentCharacters = [];
+      currentUserDirectory = new Map();
       currentSignups = [];
       currentAdminUids = [];
       currentMemberUids = [];
@@ -1115,6 +1176,21 @@ if (!hasConfigValues()) {
       signupsRef,
       (snapshot) => {
         currentSignups = snapshot.docs.map((docItem) => ({
+          id: docItem.id,
+          ...docItem.data()
+        }));
+        renderSignupRequestsTable();
+        renderCharacterAuditTable();
+      },
+      (error) => {
+        setMessage(characterAuditMessage, error.message, true);
+      }
+    );
+
+    unsubscribeCharacters = onSnapshot(
+      charactersRef,
+      (snapshot) => {
+        currentCharacters = snapshot.docs.map((docItem) => ({
           id: docItem.id,
           ...docItem.data()
         }));
