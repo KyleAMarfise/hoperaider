@@ -887,7 +887,7 @@ button:disabled {
 }
 
 .admin-operations-page #characterAuditSection .audit-history-col {
-  min-width: 300px;
+  min-width: 150px;
 }
 
 .admin-operations-page #characterAuditSection th:last-child,
@@ -996,7 +996,7 @@ button:disabled {
 }
 
 .audit-history-col {
-  min-width: 220px;
+  min-width: 150px;
   white-space: nowrap;
 }
 
