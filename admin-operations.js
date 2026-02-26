@@ -245,9 +245,25 @@ function getUpcomingRaidsForAssignment() {
 
 function formatRaidAssignmentLabel(raid) {
   const dateLabel = formatMonthDayYear(raid.raidDate || "");
-  const start = Number.isInteger(Number(raid.raidStart)) ? String(raid.raidStart) : "?";
-  const end = Number.isInteger(Number(raid.raidEnd)) ? String(raid.raidEnd) : "?";
-  return `${dateLabel} • ${raid.raidName || "Raid"} • ${start}-${end} CST`;
+  const start = formatCstHour(Number(raid.raidStart));
+  const end = formatCstHour(Number(raid.raidEnd));
+  return `${dateLabel} • ${raid.raidName || "Raid"} • ${start} - ${end} CST`;
+}
+
+function formatCstHour(hourValue) {
+  if (!Number.isInteger(hourValue) || hourValue < 0 || hourValue > 24) {
+    return "?";
+  }
+  if (hourValue === 0 || hourValue === 24) {
+    return "12 AM";
+  }
+  if (hourValue === 12) {
+    return "12 PM";
+  }
+  if (hourValue > 12) {
+    return `${hourValue - 12} PM`;
+  }
+  return `${hourValue} AM`;
 }
 
 function buildRequestQueueRows(rows, profilesById, actionMode = "full") {
@@ -787,25 +803,74 @@ function renderAuditAssignmentControl(row, entries, upcomingRaids) {
     return `<span class="request-action-na">No upcoming raids</span>`;
   }
 
+  const upcomingRaidIds = new Set(upcomingRaids.map((raid) => String(raid.id)));
+  const entryNames = new Set(entries.map((entry) => String(entry.characterName || "").trim().toLowerCase()));
+  const existingUpcomingSignup = currentSignups.find((signup) => {
+    const ownerUid = normalizeUid(signup.ownerUid);
+    const raidId = String(signup.raidId || "");
+    const characterName = String(signup.profileCharacterName || signup.characterName || "").trim().toLowerCase();
+    return ownerUid === row.uid && upcomingRaidIds.has(raidId) && entryNames.has(characterName);
+  });
+
+  const selectedRaidId = String(existingUpcomingSignup?.raidId || upcomingRaids[0]?.id || "");
+  const selectedCharacterName = String(existingUpcomingSignup?.profileCharacterName || existingUpcomingSignup?.characterName || entries[0]?.characterName || "").trim().toLowerCase();
+  const selectedStatus = normalizeSignupStatus(existingUpcomingSignup?.status || "accept");
+
   const raidOptions = upcomingRaids
-    .map((raid, index) => `<option value="${escapeHtml(raid.id)}" ${index === 0 ? "selected" : ""}>${escapeHtml(formatRaidAssignmentLabel(raid))}</option>`)
+    .map((raid) => `<option value="${escapeHtml(raid.id)}" ${String(raid.id) === selectedRaidId ? "selected" : ""}>${escapeHtml(formatRaidAssignmentLabel(raid))}</option>`)
     .join("");
 
   const characterOptions = entries
-    .map((entry, index) => `<option value="${escapeHtml(entry.characterName)}" ${index === 0 ? "selected" : ""}>${escapeHtml(entry.characterName)}</option>`)
+    .map((entry) => {
+      const characterName = String(entry.characterName || "").trim();
+      const isSelected = characterName.toLowerCase() === selectedCharacterName;
+      return `<option value="${escapeHtml(characterName)}" ${isSelected ? "selected" : ""}>${escapeHtml(characterName)}</option>`;
+    })
     .join("");
 
   return `<div class="audit-assignment" data-audit-assign-wrap="${escapeHtml(row.uid)}">
     <select data-audit-raid-select="${escapeHtml(row.uid)}">${raidOptions}</select>
     <select data-audit-character-select="${escapeHtml(row.uid)}">${characterOptions}</select>
     <select data-audit-status-select="${escapeHtml(row.uid)}">
-      <option value="accept" selected>Accepted</option>
-      <option value="requested">Requested</option>
-      <option value="tentative">Bench</option>
-      <option value="decline">Can't Go</option>
+      <option value="accept" ${selectedStatus === "accept" ? "selected" : ""}>Accepted</option>
+      <option value="requested" ${selectedStatus === "requested" ? "selected" : ""}>Requested</option>
+      <option value="tentative" ${selectedStatus === "tentative" ? "selected" : ""}>Bench</option>
+      <option value="decline" ${selectedStatus === "decline" ? "selected" : ""}>Can't Go</option>
     </select>
     <button type="button" data-audit-assign-uid="${escapeHtml(row.uid)}">Assign</button>
   </div>`;
+}
+
+function normalizeAssignmentPayloadForRules(payload) {
+  const phase = Number(payload.phase);
+  const raidStart = Number(payload.raidStart);
+  const raidEnd = Number(payload.raidEnd);
+  if (!Number.isInteger(phase) || phase < 1 || phase > 5) {
+    return null;
+  }
+  if (!Number.isInteger(raidStart) || raidStart < 0 || raidStart > 23) {
+    return null;
+  }
+  if (!Number.isInteger(raidEnd) || raidEnd < 1 || raidEnd > 24 || raidStart >= raidEnd) {
+    return null;
+  }
+
+  return {
+    characterId: String(payload.characterId || "").trim(),
+    profileCharacterKey: String(payload.profileCharacterKey || "").trim(),
+    profileCharacterName: String(payload.profileCharacterName || "").trim(),
+    raidId: String(payload.raidId || "").trim(),
+    raidDate: String(payload.raidDate || "").trim(),
+    raidName: String(payload.raidName || "").trim(),
+    phase,
+    runType: String(payload.runType || "").trim(),
+    raidSize: String(payload.raidSize || "").trim(),
+    raidStart,
+    raidEnd,
+    status: normalizeSignupStatus(payload.status),
+    ownerUid: String(payload.ownerUid || "").trim(),
+    updatedAt: payload.updatedAt
+  };
 }
 
 function resolveProfileCharacterForAssignment(ownerUid, characterName) {
@@ -1187,7 +1252,7 @@ characterAuditSection.addEventListener("click", async (event) => {
   }
 
   const { profile, characterEntry } = resolved;
-  const payload = {
+  const rawPayload = {
     characterId: profile.id,
     profileCharacterKey: characterEntry.key || "main",
     profileCharacterName: characterEntry.characterName || characterName,
@@ -1201,15 +1266,13 @@ characterAuditSection.addEventListener("click", async (event) => {
     raidEnd: selectedRaid.raidEnd,
     status: nextStatus,
     ownerUid: uid,
-    wowClass: characterEntry.wowClass || profile.wowClass || "",
-    mainRole: characterEntry.mainRole || profile.mainRole || profile.role || "",
-    offRole: characterEntry.offRole || profile.offRole || "",
-    mainSpecialization: characterEntry.mainSpecialization || profile.mainSpecialization || profile.specialization || "",
-    offSpecialization: characterEntry.offSpecialization || profile.offSpecialization || "",
-    armoryUrl: characterEntry.armoryUrl || profile.armoryUrl || buildArmoryUrl(characterEntry.characterName || characterName),
-    logsUrl: characterEntry.logsUrl || profile.logsUrl || buildLogsUrl(characterEntry.characterName || characterName),
     updatedAt: serverTimestamp()
   };
+  const payload = normalizeAssignmentPayloadForRules(rawPayload);
+  if (!payload) {
+    setMessage(characterAuditMessage, "Selected raid has invalid schedule data. Please check raid start/end in Admin: Raids.", true);
+    return;
+  }
 
   const normalizedCharacterName = String(characterName || "").trim().toLowerCase();
   const existing = currentSignups.find((signup) =>

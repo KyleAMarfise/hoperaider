@@ -283,7 +283,10 @@ service cloud.firestore {
       allow read: if isApprovedUser();
 
       allow create: if isApprovedUser()
-        && request.resource.data.ownerUid == request.auth.uid
+        && (
+          isAdmin()
+          || request.resource.data.ownerUid == request.auth.uid
+        )
         && validSignupData(request.resource.data)
         && (isAdmin() || userManageableStatus(request.resource.data.status))
         && request.resource.data.createdAt is timestamp
