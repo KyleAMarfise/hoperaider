@@ -795,6 +795,40 @@ function renderCharacterCell(entry, row) {
   return `<span class="audit-character-name" title="${escapeHtml(charTooltip)}">${characterName}</span>`;
 }
 
+function findExistingAssignment(uid, raidId, characterName) {
+  const normalizedUid = normalizeUid(uid);
+  const normalizedRaidId = String(raidId || "").trim();
+  const normalizedCharacterName = String(characterName || "").trim().toLowerCase();
+  if (!normalizedUid || !normalizedRaidId || !normalizedCharacterName) {
+    return null;
+  }
+
+  return currentSignups.find((signup) =>
+    normalizeUid(signup.ownerUid) === normalizedUid
+    && String(signup.raidId || "") === normalizedRaidId
+    && String(signup.profileCharacterName || signup.characterName || "").trim().toLowerCase() === normalizedCharacterName
+  ) || null;
+}
+
+function assignmentButtonLabel(hasAssignment) {
+  return hasAssignment ? "Update Assignment" : "Unassigned";
+}
+
+function refreshAuditAssignmentButtonState(container, uid) {
+  if (!(container instanceof HTMLElement)) {
+    return;
+  }
+  const raidSelect = container.querySelector("select[data-audit-raid-select]");
+  const characterSelect = container.querySelector("select[data-audit-character-select]");
+  const assignButton = container.querySelector("button[data-audit-assign-uid]");
+  if (!(raidSelect instanceof HTMLSelectElement) || !(characterSelect instanceof HTMLSelectElement) || !(assignButton instanceof HTMLButtonElement)) {
+    return;
+  }
+
+  const existing = findExistingAssignment(uid, raidSelect.value, characterSelect.value);
+  assignButton.textContent = assignmentButtonLabel(Boolean(existing));
+}
+
 function renderAuditAssignmentControl(row, entries, upcomingRaids) {
   if (!entries.length) {
     return "—";
@@ -815,6 +849,10 @@ function renderAuditAssignmentControl(row, entries, upcomingRaids) {
   const selectedRaidId = String(existingUpcomingSignup?.raidId || upcomingRaids[0]?.id || "");
   const selectedCharacterName = String(existingUpcomingSignup?.profileCharacterName || existingUpcomingSignup?.characterName || entries[0]?.characterName || "").trim().toLowerCase();
   const selectedStatus = normalizeSignupStatus(existingUpcomingSignup?.status || "accept");
+  const selectedCharacterValue = entries.find((entry) => String(entry.characterName || "").trim().toLowerCase() === selectedCharacterName)?.characterName
+    || entries[0]?.characterName
+    || "";
+  const selectedEntryAssignment = findExistingAssignment(row.uid, selectedRaidId, selectedCharacterValue);
 
   const raidOptions = upcomingRaids
     .map((raid) => `<option value="${escapeHtml(raid.id)}" ${String(raid.id) === selectedRaidId ? "selected" : ""}>${escapeHtml(formatRaidAssignmentLabel(raid))}</option>`)
@@ -837,7 +875,7 @@ function renderAuditAssignmentControl(row, entries, upcomingRaids) {
       <option value="tentative" ${selectedStatus === "tentative" ? "selected" : ""}>Bench</option>
       <option value="decline" ${selectedStatus === "decline" ? "selected" : ""}>Can't Go</option>
     </select>
-    <button type="button" data-audit-assign-uid="${escapeHtml(row.uid)}">Assign</button>
+    <button type="button" data-audit-assign-uid="${escapeHtml(row.uid)}">${assignmentButtonLabel(Boolean(selectedEntryAssignment))}</button>
   </div>`;
 }
 
@@ -1274,12 +1312,7 @@ characterAuditSection.addEventListener("click", async (event) => {
     return;
   }
 
-  const normalizedCharacterName = String(characterName || "").trim().toLowerCase();
-  const existing = currentSignups.find((signup) =>
-    normalizeUid(signup.ownerUid) === uid
-    && String(signup.raidId || "") === raidId
-    && String(signup.profileCharacterName || signup.characterName || "").trim().toLowerCase() === normalizedCharacterName
-  );
+  const existing = findExistingAssignment(uid, raidId, characterName);
 
   assignButton.disabled = true;
   try {
@@ -1313,11 +1346,29 @@ characterAuditSection.addEventListener("click", async (event) => {
       });
     }
     setMessage(characterAuditMessage, `Assigned ${characterName} to ${selectedRaid.raidName || "raid"} (${signupStatusLabel(nextStatus)}).`);
+    refreshAuditAssignmentButtonState(wrap, uid);
   } catch (error) {
     setMessage(characterAuditMessage, error.message, true);
   } finally {
     assignButton.disabled = false;
   }
+});
+
+characterAuditSection.addEventListener("change", (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLElement)) {
+    return;
+  }
+  const wrap = target.closest(".audit-assignment");
+  if (!(wrap instanceof HTMLElement)) {
+    return;
+  }
+  const raidSelect = wrap.querySelector("select[data-audit-raid-select]");
+  const uid = normalizeUid(raidSelect instanceof HTMLSelectElement ? (raidSelect.dataset.auditRaidSelect || "") : "");
+  if (!uid) {
+    return;
+  }
+  refreshAuditAssignmentButtonState(wrap, uid);
 });
 
 if (accessForm) {
