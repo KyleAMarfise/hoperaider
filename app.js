@@ -239,6 +239,8 @@ let isDemoMode = false;
 let pendingSignupStatus = "tentative";
 let profileModalMode = "create";
 const expandedRaidGroups = new Set();
+const manuallyCollapsedGroups = new Set();
+let charactersLoaded = false;
 const VIEWER_TIMEZONE_LABEL = detectViewerTimezoneLabel();
 let raidCountdownIntervalId = null;
 let unsubscribeSignups = null;
@@ -2035,7 +2037,7 @@ function updateOnboardingBanner() {
   if (!onboardingBanner) {
     return;
   }
-  const needsProfile = authUid && currentCharacters.length === 0;
+  const needsProfile = authUid && charactersLoaded && currentCharacters.length === 0;
   onboardingBanner.hidden = !needsProfile;
 }
 
@@ -2874,6 +2876,15 @@ function renderRows(items) {
 
   const rosterMap = buildRosterMap(scheduleItems);
 
+  // Auto-expand the first upcoming raid unless the user manually collapsed it.
+  const upcomingGroups = groupRowsByRaid(grouped.upcoming);
+  if (upcomingGroups.length) {
+    const firstKey = upcomingGroups[0].key;
+    if (!manuallyCollapsedGroups.has(firstKey)) {
+      expandedRaidGroups.add(firstKey);
+    }
+  }
+
   renderCategoryRows(raidRows.upcoming, grouped.upcoming, rosterMap);
   renderCategoryRows(raidRows.past, grouped.past, rosterMap);
 
@@ -3313,8 +3324,10 @@ raidSectionsEl.addEventListener("click", async (event) => {
       if (raidGroupKey) {
         if (shouldOpen) {
           expandedRaidGroups.add(raidGroupKey);
+          manuallyCollapsedGroups.delete(raidGroupKey);
         } else {
           expandedRaidGroups.delete(raidGroupKey);
+          manuallyCollapsedGroups.add(raidGroupKey);
         }
       }
       target.textContent = shouldOpen
@@ -3702,6 +3715,7 @@ if (!hasConfigValues()) {
       currentCharacters = sortCharacters(
         allCharacters.filter((c) => c.ownerUid === authUid)
       );
+      charactersLoaded = true;
       refreshCharacterProfileOptions(characterProfileSelect.value);
       updateSignupActionState();
       renderRows(currentRows);
@@ -3795,6 +3809,7 @@ if (!hasConfigValues()) {
       currentRaids = [];
       currentCharacters = [];
       allCharacters = [];
+      charactersLoaded = false;
       refreshCharacterProfileOptions();
       updateSignupActionState();
       renderRows(currentRows);
@@ -3925,6 +3940,7 @@ if (!hasConfigValues()) {
         currentCharacters = sortCharacters(
           allCharacters.filter((c) => c.ownerUid === authUid)
         );
+        charactersLoaded = true;
         refreshCharacterProfileOptions(characterProfileSelect.value);
         updateSignupActionState();
         renderRows(currentRows);
