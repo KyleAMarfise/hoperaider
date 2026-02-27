@@ -8,4 +8,10 @@
 # Phil Feedback
 *Add a speciality rule to accomodate a mage or warlock tank in the profile / alt setup. Sometimes this is used in certain TBC wow classic raids.
 
-For the roster, let's also add a visual that shows the roles filled up. Like a horizontal bar graph that shows (2) tanks. Marks the accepted roles and the open ones and the # of over.
+When a character is selected and you change state from not signed up to request signup and change a character name, it doesn't honor selected name for signup.
+
+
+Now, let's also make it so admins cannot modify an owners role. Only owners can do that. 
+
+
+In the raid creation panel the raid date is not selectable. YOu have to slect the icon or type. Can you make it so it pops up upon click or when typed in? 
