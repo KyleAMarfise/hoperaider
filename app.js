@@ -184,6 +184,8 @@ const cancelEditButton = document.getElementById("cancelEditButton");
 const formMessage = document.getElementById("formMessage");
 const listMessage = document.getElementById("listMessage");
 const raidSectionsEl = document.getElementById("raidSections");
+const onboardingBanner = document.getElementById("onboardingBanner");
+const onboardingCreateProfileBtn = document.getElementById("onboardingCreateProfileBtn");
 const profileModal = document.getElementById("profileModal");
 const profileModalHeading = document.getElementById("profileModalHeading");
 const saveProfileButton = document.getElementById("saveProfileButton");
@@ -1175,7 +1177,7 @@ function renderRaidProfileOptions(selectedCharacterId = "", selectedCharacterKey
   const selectedKey = String(selectedCharacterKey || "");
   return [
     `<option value="">Select character</option>`,
-    ...allCharacters.flatMap((profile) => {
+    ...currentCharacters.flatMap((profile) => {
       return getProfileCharacterEntries(profile).map((entry) => {
         const value = `${profile.id}::${entry.key}`;
         const isSelected = profile.id === selectedId && entry.key === (selectedKey || "main");
@@ -2021,6 +2023,15 @@ function updateSignupActionState() {
   const hasSelectedRaid = Boolean(selectedRaidIdInput.value);
   const editingSignup = Boolean(signupIdInput.value);
   saveButton.disabled = !(hasSelectedProfile && (hasSelectedRaid || editingSignup));
+  updateOnboardingBanner();
+}
+
+function updateOnboardingBanner() {
+  if (!onboardingBanner) {
+    return;
+  }
+  const needsProfile = authUid && currentCharacters.length === 0;
+  onboardingBanner.hidden = !needsProfile;
 }
 
 function loadDemoCharacters() {
@@ -3127,6 +3138,12 @@ characterProfileSelect.addEventListener("change", () => {
 addCharacterButton.addEventListener("click", () => {
   openProfileModal("create");
 });
+
+if (onboardingCreateProfileBtn) {
+  onboardingCreateProfileBtn.addEventListener("click", () => {
+    openProfileModal("create");
+  });
+}
 
 if (editProfileButton) {
   editProfileButton.addEventListener("click", (event) => {
