@@ -2915,25 +2915,33 @@ const calPrevWeek = document.getElementById("calPrevWeek");
 const calNextWeek = document.getElementById("calNextWeek");
 const calTodayBtn = document.getElementById("calToday");
 
-let calendarWeekOffset = 0;
+let calendarMonthOffset = 0;
 let lastScheduleItems = [];
 
-function getCalendarStartDate(weekOffset) {
+function getCalendarMonth(monthOffset) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const dayOfWeek = today.getDay();
-  const sunday = new Date(today);
-  sunday.setDate(today.getDate() - dayOfWeek + weekOffset * 7);
-  return sunday;
+  const year = today.getFullYear();
+  const month = today.getMonth() + monthOffset;
+  return { year, month };
 }
 
-function formatCalendarRangeLabel(startDate) {
-  const endDate = new Date(startDate);
-  endDate.setDate(startDate.getDate() + 13);
-  const opts = { month: "short", day: "numeric" };
-  const startLabel = startDate.toLocaleDateString("en-US", opts);
-  const endLabel = endDate.toLocaleDateString("en-US", { ...opts, year: "numeric" });
-  return `${startLabel} — ${endLabel}`;
+function getCalendarMonthGrid(monthOffset) {
+  const { year, month } = getCalendarMonth(monthOffset);
+  const first = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const startDow = first.getDay();
+  const totalDays = lastDay.getDate();
+  const totalCells = Math.ceil((startDow + totalDays) / 7) * 7;
+  const startDate = new Date(first);
+  startDate.setDate(1 - startDow);
+  return { startDate, totalCells, firstOfMonth: first, lastOfMonth: lastDay };
+}
+
+function formatCalendarRangeLabel(monthOffset) {
+  const { year, month } = getCalendarMonth(monthOffset);
+  const d = new Date(year, month, 1);
+  return d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 }
 
 function renderCalendarView(scheduleItems) {
@@ -2942,12 +2950,12 @@ function renderCalendarView(scheduleItems) {
     return;
   }
 
-  const startDate = getCalendarStartDate(calendarWeekOffset);
+  const { startDate, totalCells, firstOfMonth, lastOfMonth } = getCalendarMonthGrid(calendarMonthOffset);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
   if (calRangeLabel) {
-    calRangeLabel.textContent = formatCalendarRangeLabel(startDate);
+    calRangeLabel.textContent = formatCalendarRangeLabel(calendarMonthOffset);
   }
 
   const raidGroups = groupRowsByRaid(scheduleItems);
@@ -2968,17 +2976,19 @@ function renderCalendarView(scheduleItems) {
     .join("");
 
   const dayCells = [];
-  for (let i = 0; i < 14; i++) {
+  for (let i = 0; i < totalCells; i++) {
     const cellDate = new Date(startDate);
     cellDate.setDate(startDate.getDate() + i);
     const dateStr = toDateOnlyString(cellDate);
     const isToday = cellDate.getTime() === today.getTime();
     const isPast = cellDate.getTime() < today.getTime();
+    const isOutsideMonth = cellDate < firstOfMonth || cellDate > lastOfMonth;
     const raids = raidsByDate.get(dateStr) || [];
 
     const dayClasses = ["calendar-day"];
     if (isToday) dayClasses.push("is-today");
     if (isPast && !isToday) dayClasses.push("is-past");
+    if (isOutsideMonth) dayClasses.push("is-outside-month");
 
     const dayNum = cellDate.getDate();
     const monthLabel = (dayNum === 1 || i === 0)
@@ -3039,19 +3049,19 @@ if (viewCalendarBtn) {
 }
 if (calPrevWeek) {
   calPrevWeek.addEventListener("click", () => {
-    calendarWeekOffset -= 1;
+    calendarMonthOffset -= 1;
     renderCalendarView(lastScheduleItems);
   });
 }
 if (calNextWeek) {
   calNextWeek.addEventListener("click", () => {
-    calendarWeekOffset += 1;
+    calendarMonthOffset += 1;
     renderCalendarView(lastScheduleItems);
   });
 }
 if (calTodayBtn) {
   calTodayBtn.addEventListener("click", () => {
-    calendarWeekOffset = 0;
+    calendarMonthOffset = 0;
     renderCalendarView(lastScheduleItems);
   });
 }
