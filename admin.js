@@ -14,6 +14,7 @@ import {
   getDoc,
   getDocs,
   getFirestore,
+  limit,
   onSnapshot,
   orderBy,
   query,
@@ -43,6 +44,7 @@ const raidSizeInput = document.getElementById("raidSize");
 const tankSlotsInput = document.getElementById("tankSlots");
 const healerSlotsInput = document.getElementById("healerSlots");
 const dpsSlotsInput = document.getElementById("dpsSlots");
+const raidLeaderInput = document.getElementById("raidLeader");
 const saveRaidButton = document.getElementById("saveRaidButton");
 const cancelRaidEditButton = document.getElementById("cancelRaidEditButton");
 const currentAdminRows = document.getElementById("currentAdminRows");
@@ -81,6 +83,7 @@ const RAID_PRESETS_BY_PHASE = {
 let authUid = null;
 let isAdmin = false;
 let isDemoMode = false;
+let adminMainCharName = "";
 let db = null;
 let currentRaids = [];
 let currentSignups = [];
@@ -264,6 +267,7 @@ function buildAdminRaidRows(items) {
         <td>${escapeHtml(formatMonthDayYear(item.raidDate))}</td>
         <td class="raid-time-cell">${windowText}</td>
         <td>${escapeHtml(item.runType)}</td>
+        <td>${escapeHtml(item.raidLeader || "—")}</td>
         <td>${escapeHtml(item.raidSize || "—")}${slotLabel}</td>
         <td>
           <div class="row-actions">
@@ -465,11 +469,11 @@ function renderAdminRaids(items) {
 
   currentAdminRows.innerHTML = grouped.currentUpcoming.length
     ? buildAdminRaidRows(grouped.currentUpcoming)
-    : `<tr><td colspan="7">No current or up-coming raids.</td></tr>`;
+    : `<tr><td colspan="8">No current or up-coming raids.</td></tr>`;
 
   pastAdminRows.innerHTML = grouped.past.length
     ? buildAdminRaidRows(grouped.past)
-    : `<tr><td colspan="7">No past raids.</td></tr>`;
+    : `<tr><td colspan="8">No past raids.</td></tr>`;
 }
 
 function resetRaidForm() {
@@ -480,6 +484,7 @@ function resetRaidForm() {
   populateRaidPhaseOptions();
   refreshRaidTemplateOptions();
   raidEventDateInput.value = toDateOnlyString(new Date());
+  raidLeaderInput.value = adminMainCharName;
   tankSlotsInput.value = "";
   healerSlotsInput.value = "";
   dpsSlotsInput.value = "";
@@ -496,6 +501,7 @@ function loadRaidForm(item) {
   refreshRaidTemplateOptions(item.raidName);
   raidEventDateInput.value = item.raidDate;
   raidRunTypeInput.value = item.runType;
+  raidLeaderInput.value = item.raidLeader || "";
   raidStartInput.value = String(item.raidStart);
   raidEndInput.value = String(item.raidEnd);
   syncRaidSize();
@@ -612,6 +618,7 @@ raidForm.addEventListener("submit", async (event) => {
   const raidName = raidTemplateInput.value;
   const raidDate = raidEventDateInput.value;
   const runType = raidRunTypeInput.value;
+  const raidLeader = raidLeaderInput.value.trim();
   const raidStart = parseHourValue(raidStartInput.value);
   const raidEnd = parseHourValue(raidEndInput.value);
   const raidSize = raidSizeInput.value;
@@ -642,6 +649,7 @@ raidForm.addEventListener("submit", async (event) => {
     raidName,
     raidDate,
     runType,
+    raidLeader,
     raidStart,
     raidEnd,
     raidSize,
@@ -791,6 +799,7 @@ if (!hasConfigValues()) {
     if (!user) {
       authUid = null;
       isAdmin = false;
+      adminMainCharName = "";
       currentRaids = [];
       currentSignups = [];
       setAdminVisibility();
@@ -826,6 +835,22 @@ if (!hasConfigValues()) {
 
     updatePendingBadge(currentSignups);
     authStatus.textContent = `Signed in (${userLabel}) — Raid management enabled`;
+
+    // Fetch admin's main character name for pre-populating Raid Leader field
+    adminMainCharName = "";
+    try {
+      const charQuery = query(
+        collection(db, "characters"),
+        where("ownerUid", "==", authUid),
+        limit(1)
+      );
+      const charSnap = await getDocs(charQuery);
+      if (!charSnap.empty) {
+        adminMainCharName = charSnap.docs[0].data().characterName || "";
+      }
+    } catch {
+      // Non-critical — leave field blank
+    }
 
     const raidsQuery = query(raidsRef, orderBy("raidDate", "asc"));
     unsubscribeRaids = onSnapshot(

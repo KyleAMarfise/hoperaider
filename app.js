@@ -2405,7 +2405,7 @@ function renderAdminRaids(items) {
   }
 
   if (!items.length) {
-    raidAdminRows.innerHTML = `<tr><td colspan="7">No raids created yet.</td></tr>`;
+    raidAdminRows.innerHTML = `<tr><td colspan="8">No raids created yet.</td></tr>`;
     setMessage(raidAdminMessage, "");
     return;
   }
@@ -2419,6 +2419,7 @@ function renderAdminRaids(items) {
         <td>${escapeHtml(formatMonthDayYear(item.raidDate))}</td>
         <td class="raid-time-cell">${windowText}</td>
         <td>${escapeHtml(item.runType)}</td>
+        <td>${escapeHtml(item.raidLeader || "—")}</td>
         <td>${escapeHtml(item.raidSize || "—")}</td>
         <td>
           <div class="row-actions">
@@ -2817,7 +2818,7 @@ function renderCategoryRows(targetElement, rows, rosterMap) {
           </td>
           <td class="raid-time-cell">${renderRaidWindowMultiline(item.raidStart, item.raidEnd, { highlightLocal: true })}</td>
           <td>${escapeHtml(item.phase ? `Phase ${String(item.phase)}` : "—")}</td>
-          <td>${escapeHtml(item.raidName || "—")}</td>
+          <td>${escapeHtml(item.raidName || "—")}${item.raidLeader ? `<br><span class="raid-leader-label">RL: ${escapeHtml(item.raidLeader)}</span>` : ""}</td>
           <td>${escapeHtml(item.runType || "—")}</td>
           <td>${escapeHtml(item.raidSize || "—")}</td>
           <td>${renderRosterProgress(item, rosterMap, resolvedSignups)}</td>
@@ -3009,10 +3010,11 @@ function renderCalendarView(scheduleItems) {
       const timeStr = startHour ? `<span class="chip-time">${escapeHtml(startHour)} ST</span>` : "";
       const raidLabel = escapeHtml(raid.raidName || "Raid");
       const runType = raid.runType ? ` (${escapeHtml(raid.runType)})` : "";
+      const leaderStr = raid.raidLeader ? ` — RL: ${escapeHtml(raid.raidLeader)}` : "";
       const signupCount = raidSignups.length;
       const sizeStr = raid.raidSize ? `/${raid.raidSize}` : "";
       const countLabel = `<span class="chip-time">${signupCount}${sizeStr} signed</span>`;
-      return `<div class="${chipClass}" title="${raidLabel}${runType} — ${signupCount} signups">${raidLabel}${runType}${timeStr}${countLabel}</div>`;
+      return `<div class="${chipClass}" title="${raidLabel}${runType}${leaderStr} — ${signupCount} signups">${raidLabel}${runType}${timeStr}${countLabel}</div>`;
     }).join("");
 
     const overflow = raids.length > MAX_CHIPS

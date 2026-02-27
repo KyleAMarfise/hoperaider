@@ -275,6 +275,7 @@ service cloud.firestore {
           'tankSlots',
           'healerSlots',
           'dpsSlots',
+          'raidLeader',
           'createdByUid',
           'createdAt',
           'updatedAt'
@@ -292,6 +293,7 @@ service cloud.firestore {
         && (!('tankSlots' in data) || validSlotCount(data.tankSlots))
         && (!('healerSlots' in data) || validSlotCount(data.healerSlots))
         && (!('dpsSlots' in data) || validSlotCount(data.dpsSlots))
+        && (!('raidLeader' in data) || (data.raidLeader is string && data.raidLeader.size() <= 40))
         && data.createdByUid is string
         && data.createdByUid == request.auth.uid;
     }
