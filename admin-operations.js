@@ -106,6 +106,7 @@ const SPEC_ICONS = {
 
 let authUid = null;
 let isAdmin = false;
+let isOwner = false;
 let isDemoMode = false;
 let db = null;
 let currentCharacters = [];
@@ -116,14 +117,16 @@ let currentAdminUids = [];
 let currentMemberUids = [];
 let currentAdminDirectory = new Map();
 let currentMemberDirectory = new Map();
+let currentOwnerUids = [];
 let unsubscribeCharacters = null;
 let unsubscribeSignups = null;
 let unsubscribeRaids = null;
 let unsubscribeAdmins = null;
 let unsubscribeMembers = null;
+let unsubscribeOwners = null;
 
 if (siteTitleEl) {
-  siteTitleEl.textContent = `${appSettings.siteTitle || "Hope Raid Tracker"} - Admin Requests & Audit`;
+  siteTitleEl.textContent = appSettings.siteTitle || "Hope Raid Tracker";
 }
 if (guildDiscordLink) {
   guildDiscordLink.href = appSettings.discordInviteUrl || "https://discord.gg/xYtxu6Yj";
@@ -748,7 +751,7 @@ function buildUserAuditRows(signups) {
     const email = String(source.email || emailsByUid.get(normalizedUid) || "").trim();
     const emailLocalPart = email.includes("@") ? email.split("@")[0] : "";
     const profileName = String(source.profileName || profileNamesByUid.get(normalizedUid) || source.displayName || emailLocalPart || "No Profile Name").trim();
-    const role = adminSet.has(normalizedUid) ? "admin" : memberSet.has(normalizedUid) ? "member" : "remove";
+    const role = currentOwnerUids.includes(normalizedUid) ? "owner" : adminSet.has(normalizedUid) ? "admin" : memberSet.has(normalizedUid) ? "member" : "remove";
     const acceptedTotal = acceptedTotals.get(normalizedUid) || 0;
     const characterEntries = Array.from(characterSummariesByUid.get(normalizedUid)?.values() || [])
       .sort((left, right) => left.characterName.localeCompare(right.characterName, undefined, { sensitivity: "base" }));
@@ -1036,11 +1039,14 @@ function renderCharacterAuditTable() {
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.logsUrl, "Logs")) : "—"}</td>
         <td class="audit-history-col">${escapeHtml(`${row.acceptedTotal} accepted raid${row.acceptedTotal === 1 ? "" : "s"}`)}</td>
         <td>
-          <select data-role-uid="${escapeHtml(row.uid)}" data-role-current="${escapeHtml(row.role)}">
-            <option value="member" ${row.role === "member" ? "selected" : ""}>Member</option>
-            <option value="admin" ${row.role === "admin" ? "selected" : ""}>Admin</option>
-            <option value="remove" ${row.role === "remove" ? "selected" : ""}>Remove Access</option>
+          <select data-role-uid="${escapeHtml(row.uid)}" data-role-current="${escapeHtml(row.role)}" title="Change this user's access role">
+            <option value="member" ${row.role === "member" ? "selected" : ""} title="Standard access — can sign up for raids.">Member</option>
+            <option value="admin" ${row.role === "admin" ? "selected" : ""} title="Full admin access — can manage raids, approve signups, and change roles.">Admin</option>
+            <option value="remove" ${row.role === "remove" ? "selected" : ""} title="Revokes all access. Signups and profiles are preserved.">⛔ Soft Ban</option>
+            ${isOwner ? `<option value="owner" ${row.role === "owner" ? "selected" : ""} title="Full owner access — can manage admins, assign owners, and nuke accounts.">Owner</option>` : ""}
+            ${isOwner ? `<option value="nuke" title="PERMANENT: Deletes ALL access, signups, and character profiles. Cannot be undone.">☢ Nuke Account</option>` : ""}
           </select>
+          <small class="audit-role-hint">${row.role === "remove" ? "⚠ Soft-banned" : row.role === "owner" ? "⭐ Owner" : ""}</small>
         </td>
         <td class="audit-assign-col">${renderAuditAssignmentControl(row, entries, upcomingRaids)}</td>
       </tr>`;
@@ -1106,6 +1112,25 @@ async function upsertAccessUid(uid, accessType) {
 async function removeAccessUid(uid, accessType) {
   const targetCollection = accessType === "admin" ? "admins" : "members";
   await deleteDoc(doc(db, targetCollection, uid));
+}
+
+async function nukeAccountByUid(uid) {
+  // 1. Delete access docs (owners + admins + members)
+  await Promise.allSettled([
+    deleteDoc(doc(db, "owners", uid)),
+    deleteDoc(doc(db, "admins", uid)),
+    deleteDoc(doc(db, "members", uid))
+  ]);
+
+  // 2. Delete all signups owned by this user
+  const signupsSnap = await getDocs(query(collection(db, "signups"), where("ownerUid", "==", uid)));
+  const signupDeletes = signupsSnap.docs.map((d) => deleteDoc(doc(db, "signups", d.id)));
+  await Promise.allSettled(signupDeletes);
+
+  // 3. Delete all character profiles owned by this user
+  const charsSnap = await getDocs(query(collection(db, "characters"), where("ownerUid", "==", uid)));
+  const charDeletes = charsSnap.docs.map((d) => deleteDoc(doc(db, "characters", d.id)));
+  await Promise.allSettled(charDeletes);
 }
 
 function updateAuthActionButtons(user) {
@@ -1225,7 +1250,19 @@ characterAuditSection.addEventListener("change", async (event) => {
   }
   const nextRole = String(target.value || "");
   const previousRole = String(target.dataset.roleCurrent || "");
-  if (!uid || !isAdmin || !db || !["member", "admin", "remove"].includes(nextRole)) {
+  if (!uid || !isAdmin || !db || !["member", "admin", "remove", "nuke", "owner"].includes(nextRole)) {
+    return;
+  }
+
+  if (nextRole === "nuke" && !isOwner) {
+    setMessage(characterAuditMessage, "Only owners can nuke accounts.", true);
+    target.value = previousRole || "member";
+    return;
+  }
+
+  if (nextRole === "owner" && !isOwner) {
+    setMessage(characterAuditMessage, "Only owners can assign the owner role.", true);
+    target.value = previousRole || "member";
     return;
   }
 
@@ -1240,6 +1277,7 @@ characterAuditSection.addEventListener("change", async (event) => {
         createdAt: serverTimestamp()
       }, { merge: true });
       await deleteDoc(doc(db, "admins", uid)).catch(() => {});
+      await deleteDoc(doc(db, "owners", uid)).catch(() => {});
       setMessage(characterAuditMessage, "Role updated to member.");
     } else if (nextRole === "admin") {
       await setDoc(doc(db, "admins", uid), {
@@ -1256,13 +1294,49 @@ characterAuditSection.addEventListener("change", async (event) => {
         updatedByUid: authUid,
         createdAt: serverTimestamp()
       }, { merge: true });
+      await deleteDoc(doc(db, "owners", uid)).catch(() => {});
       setMessage(characterAuditMessage, "Role updated to admin.");
-    } else {
+    } else if (nextRole === "remove") {
       await Promise.allSettled([
+        deleteDoc(doc(db, "owners", uid)),
         deleteDoc(doc(db, "admins", uid)),
         deleteDoc(doc(db, "members", uid))
       ]);
-      setMessage(characterAuditMessage, "Access removed.");
+      setMessage(characterAuditMessage, "Soft ban applied — access revoked. Signups and profiles preserved.");
+    } else if (nextRole === "nuke") {
+      const confirmed = window.confirm(
+        "NUKE ACCOUNT: This will permanently delete this user's access, ALL signups, and ALL character profiles. This cannot be undone. Continue?"
+      );
+      if (!confirmed) {
+        target.value = previousRole || "member";
+        target.disabled = false;
+        return;
+      }
+      await nukeAccountByUid(uid);
+      setMessage(characterAuditMessage, "Account nuked — all data permanently deleted.");
+    } else if (nextRole === "owner") {
+      await setDoc(doc(db, "owners", uid), {
+        uid,
+        role: "owner",
+        updatedAt: serverTimestamp(),
+        updatedByUid: authUid,
+        createdAt: serverTimestamp()
+      }, { merge: true });
+      await setDoc(doc(db, "admins", uid), {
+        uid,
+        role: "admin",
+        updatedAt: serverTimestamp(),
+        updatedByUid: authUid,
+        createdAt: serverTimestamp()
+      }, { merge: true });
+      await setDoc(doc(db, "members", uid), {
+        uid,
+        role: "member",
+        updatedAt: serverTimestamp(),
+        updatedByUid: authUid,
+        createdAt: serverTimestamp()
+      }, { merge: true });
+      setMessage(characterAuditMessage, "Role updated to owner.");
     }
   } catch (error) {
     setMessage(characterAuditMessage, error.message, true);
@@ -1480,6 +1554,7 @@ if (accessManagerSection) {
 if (!hasConfigValues()) {
   isDemoMode = true;
   isAdmin = true;
+  isOwner = true;
   setAuthGateState(true);
   setAdminVisibility();
   updateAuthActionButtons({ uid: "demo" });
@@ -1522,6 +1597,7 @@ if (!hasConfigValues()) {
   const charactersRef = collection(db, "characters");
   const adminsRef = collection(db, "admins");
   const membersRef = collection(db, "members");
+  const ownersRef = collection(db, "owners");
 
   setAuthPendingState();
   updateAuthActionButtons(null);
@@ -1600,16 +1676,22 @@ if (!hasConfigValues()) {
       unsubscribeMembers();
       unsubscribeMembers = null;
     }
+    if (unsubscribeOwners) {
+      unsubscribeOwners();
+      unsubscribeOwners = null;
+    }
 
     if (!user) {
       authUid = null;
       isAdmin = false;
+      isOwner = false;
       currentCharacters = [];
       currentUserDirectory = new Map();
       currentSignups = [];
       currentRaids = [];
       currentAdminUids = [];
       currentMemberUids = [];
+      currentOwnerUids = [];
       currentAdminDirectory = new Map();
       currentMemberDirectory = new Map();
       setAdminVisibility();
@@ -1630,12 +1712,19 @@ if (!hasConfigValues()) {
     authUid = user.uid;
     const inStaticAdminAllowlist = Array.isArray(appSettings.adminUids) && appSettings.adminUids.includes(authUid);
     let hasAdminDoc = false;
+    let hasOwnerDoc = false;
     try {
       hasAdminDoc = (await getDoc(doc(db, "admins", authUid))).exists();
     } catch {
       hasAdminDoc = false;
     }
-    isAdmin = inStaticAdminAllowlist || hasAdminDoc;
+    try {
+      hasOwnerDoc = (await getDoc(doc(db, "owners", authUid))).exists();
+    } catch {
+      hasOwnerDoc = false;
+    }
+    isOwner = hasOwnerDoc;
+    isAdmin = inStaticAdminAllowlist || hasAdminDoc || isOwner;
     setAuthGateState(true);
     updateAuthActionButtons(user);
     updateUidDisplay(authUid);
@@ -1733,6 +1822,20 @@ if (!hasConfigValues()) {
       },
       (error) => {
         setMessage(accessManagerMessage, error.message, true);
+      }
+    );
+
+    unsubscribeOwners = onSnapshot(
+      ownersRef,
+      (snapshot) => {
+        currentOwnerUids = snapshot.docs
+          .map((docItem) => String(docItem.id || "").trim())
+          .filter(Boolean);
+        // Re-render audit table so owner badges and options update
+        renderCharacterAuditTable();
+      },
+      (error) => {
+        console.warn("[OWNERS] snapshot error:", error.message);
       }
     );
   });

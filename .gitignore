@@ -4,6 +4,8 @@
 !.env.example
 config/local/app-config.local.js
 config/prod/app-config.github.js
+TODO
+TODO.txt
 
 # OS/editor noise
 .DS_Store
@@ -11,3 +13,4 @@ config/prod/app-config.github.js
 
 # Optional runtime artifacts
 node_modules/
+dist/

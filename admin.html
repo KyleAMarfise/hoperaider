@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hope Raid Tracker - Admin Raids</title>
-  <link rel="icon" type="image/webp" href="assets/images/alliance-img.webp" />
-  <link rel="apple-touch-icon" href="assets/images/alliance-img.webp" />
+  <title>Hope Raid Tracker</title>
+  <link rel="icon" type="image/x-icon" href="assets/images/World%20of%20Warcraft%20Alliance.ico" />
+  <link rel="apple-touch-icon" href="assets/images/World%20of%20Warcraft%20Alliance.PNG" />
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
+<body class="admin-page admin-raids-page" data-nav-page="admin-raids">
   <section id="authGate" class="auth-gate" hidden>
     <div class="auth-gate-card">
       <h1>Hope Raid Tracker</h1>
@@ -19,45 +19,10 @@
 
   <main class="container" id="appShell" hidden>
     <header class="header">
-      <nav class="top-nav" aria-label="Primary navigation">
-        <div class="nav-actions">
-          <a class="nav-button" href="index.html">Signup Page</a>
-          <a class="nav-button" href="admin.html">Admin: Raids</a>
-          <a id="adminOpsLink" class="nav-button" href="admin-operations.html">
-            Admin: Requests &amp; Audit
-            <span id="adminOpsBadge" class="nav-mini-badge" hidden>0</span>
-          </a>
-          <a
-            id="guildDiscordLink"
-            class="nav-button discord-button"
-            href="https://discord.gg/xYtxu6Yj"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Guild Discord"
-            title="Guild Discord"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <path d="M19.54 4.53A16.86 16.86 0 0 0 15.49 3c-.18.32-.4.75-.55 1.09a15.58 15.58 0 0 0-5.88 0c-.16-.34-.37-.77-.56-1.09a16.79 16.79 0 0 0-4.06 1.54C1.92 8.38 1.24 12.14 1.58 15.85A17 17 0 0 0 6.56 18.4c.4-.55.76-1.14 1.06-1.76a10.95 10.95 0 0 1-1.67-.8c.14-.1.28-.22.42-.33a12.03 12.03 0 0 0 11.25 0c.14.12.28.23.42.33-.53.31-1.09.58-1.68.8.31.62.66 1.21 1.06 1.76a16.94 16.94 0 0 0 4.99-2.55c.4-4.3-.68-8.02-2.87-11.32ZM8.96 13.58c-.9 0-1.63-.82-1.63-1.84 0-1.01.72-1.84 1.63-1.84.91 0 1.64.83 1.63 1.84 0 1.02-.72 1.84-1.63 1.84Zm6.08 0c-.9 0-1.63-.82-1.63-1.84 0-1.01.72-1.84 1.63-1.84.91 0 1.64.83 1.63 1.84 0 1.02-.72 1.84-1.63 1.84Z"/>
-            </svg>
-            Discord
-          </a>
-        </div>
-      </nav>
-      <div class="brand">
-        <img class="brand-icon" src="assets/images/alliance-img.webp" alt="Alliance crest" />
-        <h1 id="siteTitle">Hope Raid Tracker - Admin Raids</h1>
-      </div>
-      <p id="adminAuthStatus" class="auth-status">Connecting...</p>
-      <div class="auth-meta">
-        <span id="currentUid" class="uid-chip" hidden></span>
-        <button type="button" id="copyUidButton" class="secondary" hidden>Copy UID</button>
-      </div>
-      <div class="auth-actions">
-        <button type="button" id="signOutButton" class="secondary" hidden>Sign Out</button>
-      </div>
+      <div id="sharedNavRoot"></div>
     </header>
 
-    <section class="card" id="adminRaidSection" hidden>
+    <section class="card admin-raid-section-compact" id="adminRaidSection" hidden>
       <div class="list-header">
         <h2>Raid Creation (Admin)</h2>
       </div>
@@ -144,7 +109,7 @@
 
         <details class="raid-group past-raids admin-past-details">
           <summary class="list-header">
-            <h3>Previous / Past Raids</h3>
+            <h3>Previous / Past Raids <span class="past-toggle-hint">(expand / collapse)</span></h3>
             <span id="pastAdminCountBadge" class="badge">0</span>
           </summary>
           <div class="table-wrap">
@@ -177,6 +142,7 @@
       document.head.appendChild(script);
     }
   </script>
+  <script src="nav-component.js"></script>
   <script src="config/prod/app-config.github.js"></script>
   <script type="module" src="admin.js"></script>
 </body>

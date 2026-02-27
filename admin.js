@@ -83,7 +83,7 @@ let unsubscribeRaids = null;
 let unsubscribeSignups = null;
 
 if (siteTitleEl) {
-  siteTitleEl.textContent = `${appSettings.siteTitle || "Hope Raid Tracker"} - Admin Raids`;
+  siteTitleEl.textContent = appSettings.siteTitle || "Hope Raid Tracker";
 }
 if (guildDiscordLink) {
   guildDiscordLink.href = appSettings.discordInviteUrl || "https://discord.gg/xYtxu6Yj";

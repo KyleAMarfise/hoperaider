@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hope Raid Tracker</title>
-  <link rel="icon" type="image/webp" href="assets/images/alliance-img.webp" />
-  <link rel="apple-touch-icon" href="assets/images/alliance-img.webp" />
+  <link rel="icon" type="image/x-icon" href="assets/images/World%20of%20Warcraft%20Alliance.ico" />
+  <link rel="apple-touch-icon" href="assets/images/World%20of%20Warcraft%20Alliance.PNG" />
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
+<body class="signup-page" data-nav-page="signup">
   <section id="authGate" class="auth-gate" hidden>
     <div class="auth-gate-card">
       <h1>Hope Raid Tracker</h1>
@@ -19,261 +19,177 @@
 
   <main class="container" id="appShell" hidden>
     <header class="header">
-      <nav class="top-nav" aria-label="Primary navigation">
-        <div class="nav-actions">
-          <a id="adminRaidsLink" class="nav-button" href="admin.html" hidden>Admin: Raids</a>
-          <a id="adminOpsLink" class="nav-button" href="admin-operations.html" hidden>
-            Admin: Requests &amp; Audit
-            <span id="adminOpsBadge" class="nav-mini-badge" hidden>0</span>
-          </a>
-          <a
-            id="guildDiscordLink"
-            class="nav-button discord-button"
-            href="https://discord.gg/xYtxu6Yj"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Guild Discord"
-            title="Guild Discord"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <path d="M19.54 4.53A16.86 16.86 0 0 0 15.49 3c-.18.32-.4.75-.55 1.09a15.58 15.58 0 0 0-5.88 0c-.16-.34-.37-.77-.56-1.09a16.79 16.79 0 0 0-4.06 1.54C1.92 8.38 1.24 12.14 1.58 15.85A17 17 0 0 0 6.56 18.4c.4-.55.76-1.14 1.06-1.76a10.95 10.95 0 0 1-1.67-.8c.14-.1.28-.22.42-.33a12.03 12.03 0 0 0 11.25 0c.14.12.28.23.42.33-.53.31-1.09.58-1.68.8.31.62.66 1.21 1.06 1.76a16.94 16.94 0 0 0 4.99-2.55c.4-4.3-.68-8.02-2.87-11.32ZM8.96 13.58c-.9 0-1.63-.82-1.63-1.84 0-1.01.72-1.84 1.63-1.84.91 0 1.64.83 1.63 1.84 0 1.02-.72 1.84-1.63 1.84Zm6.08 0c-.9 0-1.63-.82-1.63-1.84 0-1.01.72-1.84 1.63-1.84.91 0 1.64.83 1.63 1.84 0 1.02-.72 1.84-1.63 1.84Z"/>
-            </svg>
-            Discord
-          </a>
-        </div>
-      </nav>
-      <div class="brand">
-        <img class="brand-icon" src="assets/images/alliance-img.webp" alt="Alliance crest" />
-        <h1 id="siteTitle">Hope Raid Tracker</h1>
-      </div>
-      <p class="subtitle">Sign up for the next World of Warcraft raid.</p>
-      <p id="authStatus" class="auth-status">Connecting...</p>
-      <div class="auth-meta">
-        <span id="currentUid" class="uid-chip" hidden></span>
-        <button type="button" id="copyUidButton" class="secondary" hidden>Copy UID</button>
-      </div>
-      <div class="auth-actions">
-        <button type="button" id="signOutButton" class="secondary" hidden>Sign Out</button>
-      </div>
+      <div id="sharedNavRoot"></div>
+      <!-- Hidden form for nav-component.js Save/Cancel buttons -->
+      <form id="signupForm" style="display:none"></form>
+      <!-- Hidden inputs required by app.js logic -->
+      <input type="hidden" id="signupId" />
+      <input type="hidden" id="selectedRaidId" />
     </header>
 
-    <section class="card">
-      <h2 id="formHeading">Character Setup</h2>
-      <form id="signupForm" class="form">
-        <input type="hidden" id="signupId" />
-        <input type="hidden" id="selectedRaidId" />
-
-        <div class="signup-top-grid">
-          <section class="profile-module">
-            <div class="profile-workflow">
-              <label>
-                Profile
-                <select id="characterProfileSelect" name="characterProfileSelect">
-                  <option value="">Select profile</option>
-                </select>
-              </label>
-              <div class="profile-workflow-actions">
-                <button type="button" id="addCharacterButton" class="secondary">Create Profile</button>
-                <button type="button" id="editProfileButton" class="secondary">Edit Profile</button>
-              </div>
-              <small class="help-text">Create or edit a profile in the modal. Then use the Signup dropdown on a raid row.</small>
-            </div>
-          </section>
-
-          <section class="raid-clock-module" aria-live="polite">
-            <div class="raid-clock-header">
-              <img src="assets/images/alliance-img.webp" alt="Alliance crest" class="raid-clock-icon" />
-              <h3>Alliance Raid Clock</h3>
-            </div>
-            <p id="nextRaidLabel" class="raid-clock-label">Next raid pending…</p>
-            <div class="raid-clock-digits">
-              <div class="clock-digit"><strong id="clockDays">00</strong><span>Days</span></div>
-              <div class="clock-digit"><strong id="clockHours">00</strong><span>Hours</span></div>
-              <div class="clock-digit"><strong id="clockMinutes">00</strong><span>Mins</span></div>
-              <div class="clock-digit"><strong id="clockSeconds">00</strong><span>Secs</span></div>
-            </div>
-            <p id="nextRaidSubLabel" class="raid-clock-sub">Awaiting raid schedule…</p>
-          </section>
+    <dialog id="profileModal" class="profile-modal profile-modal-large">
+      <form id="profileModalForm" class="profile-modal-content" method="dialog">
+        <div class="profile-modal-header">
+          <h3 id="profileModalHeading">Create Profile</h3>
         </div>
+        <div class="primary-fields">
+          <label>
+            Discord Name (Required)
+            <input id="profileName" name="profileName" type="text" maxlength="60" required />
+            <small class="help-text">Use your Discord display name to group your characters during signup.</small>
+          </label>
+          <label>
+            Character Name (Required)
+            <input id="characterName" name="characterName" type="text" maxlength="24" required />
+            <small class="help-text">Must exactly match your in-game main raiding character name.</small>
+          </label>
+          <label>
+            Class
+            <select id="wowClass" name="wowClass" required>
+              <option value="">Select class</option>
+              <option value="Druid">Druid</option>
+              <option value="Hunter">Hunter</option>
+              <option value="Mage">Mage</option>
+              <option value="Paladin">Paladin</option>
+              <option value="Priest">Priest</option>
+              <option value="Rogue">Rogue</option>
+              <option value="Shaman">Shaman</option>
+              <option value="Warlock">Warlock</option>
+              <option value="Warrior">Warrior</option>
+            </select>
+          </label>
 
-        <div class="actions">
-          <button type="submit" id="saveButton">Save Signup</button>
-          <button type="button" id="cancelEditButton" class="secondary" hidden>Cancel Edit</button>
+          <!-- Added for JS compatibility: wowClassPicker -->
+          <label style="display:none">
+            Class Picker (JS)
+            <select id="wowClassPicker">
+              <option value="">Select Class</option>
+              <option value="Druid">Druid</option>
+              <option value="Hunter">Hunter</option>
+              <option value="Mage">Mage</option>
+              <option value="Paladin">Paladin</option>
+              <option value="Priest">Priest</option>
+              <option value="Rogue">Rogue</option>
+              <option value="Shaman">Shaman</option>
+              <option value="Warlock">Warlock</option>
+              <option value="Warrior">Warrior</option>
+            </select>
+          </label>
         </div>
-      </form>
-
-      <dialog id="profileModal" class="profile-modal">
-        <form id="profileModalForm" class="profile-modal-content" method="dialog">
-          <div class="profile-modal-header">
-            <h3 id="profileModalHeading">Create Profile</h3>
+        <div class="spec-pair">
+        <fieldset class="spec-role-group">
+          <legend>Main Setup</legend>
+          <label>
+            Main Role
+            <select id="mainRole" name="mainRole" required>
+              <option value="">Select role</option>
+              <option value="Tank">🛡 Tank</option>
+              <option value="Healer">✚ Healer</option>
+              <option value="DPS">⚔ DPS</option>
+            </select>
+          </label>
+          <label>
+            Main Specialization (MS)
+            <select id="mainSpecialization" name="mainSpecialization" required>
+              <option value="">Select class and role first</option>
+            </select>
+          </label>
+        </fieldset>
+        <fieldset class="spec-role-group">
+          <legend>Off Setup</legend>
+          <label>
+            Off Role
+            <select id="offRole" name="offRole" required>
+              <option value="">Select role</option>
+              <option value="Tank">🛡 Tank</option>
+              <option value="Healer">✚ Healer</option>
+              <option value="DPS">⚔ DPS</option>
+            </select>
+          </label>
+          <label>
+            Off Specialization (OS)
+            <select id="offSpecialization" name="offSpecialization" required>
+              <option value="">Select class and role first</option>
+            </select>
+          </label>
+        </fieldset>
+        </div>
+        <section class="alt-characters-section">
+          <div class="alt-characters-header">
+            <h4>Alt Characters</h4>
+            <button type="button" id="addAltCharacterButton" class="secondary">+ Add Alt</button>
           </div>
-
-          <div class="primary-fields">
+          <div id="altCharactersContainer" class="alt-characters-list"></div>
+          <small class="help-text">Add as many alts as needed. Each alt requires MS and OS setup.</small>
+        </section>
+        <div class="time-slots">
+          <fieldset class="slot-group">
+            <legend>Preferred Raiding Time 1</legend>
             <label>
-              Discord Name (Required)
-              <input id="profileName" name="profileName" type="text" maxlength="60" required />
-              <small class="help-text">Use your Discord display name to group your characters during signup.</small>
-            </label>
-
-            <label>
-              Character Name (Required)
-              <input id="characterName" name="characterName" type="text" maxlength="24" required />
-              <small class="help-text">Must exactly match your in-game main raiding character name.</small>
-            </label>
-
-            <label>
-              Class
-              <div id="wowClassPicker" class="wow-class-picker" data-open="false">
-                <button
-                  type="button"
-                  id="wowClassTrigger"
-                  class="wow-class-trigger"
-                  aria-haspopup="listbox"
-                  aria-expanded="false"
-                >
-                  <span id="wowClassTriggerText">Select class</span>
-                  <span aria-hidden="true">▾</span>
-                </button>
-                <div id="wowClassMenu" class="wow-class-menu" role="listbox" hidden></div>
-              </div>
-              <select id="wowClass" name="wowClass" class="visually-hidden-select" required>
-                <option value="">Select class</option>
-                <option value="Druid">Druid</option>
-                <option value="Hunter">Hunter</option>
-                <option value="Mage">Mage</option>
-                <option value="Paladin">Paladin</option>
-                <option value="Priest">Priest</option>
-                <option value="Rogue">Rogue</option>
-                <option value="Shaman">Shaman</option>
-                <option value="Warlock">Warlock</option>
-                <option value="Warrior">Warrior</option>
+              Day of Week
+              <select id="preferredDay1" name="preferredDay1" required>
+                <option value="">Select day</option>
+                <option>Monday</option>
+                <option>Tuesday</option>
+                <option>Wednesday</option>
+                <option>Thursday</option>
+                <option>Friday</option>
+                <option>Saturday</option>
+                <option>Sunday</option>
               </select>
             </label>
-
-            <fieldset class="spec-role-group">
-              <legend>Main Setup</legend>
+            <div class="slot-range">
               <label>
-                Main Role
-                <select id="mainRole" name="mainRole" required>
-                  <option value="">Select role</option>
-                  <option value="Tank">🛡 Tank</option>
-                  <option value="Healer">✚ Healer</option>
-                  <option value="DPS">⚔ DPS</option>
-                </select>
+                Start Time
+                <select id="preferredStart1" name="preferredStart1" required></select>
               </label>
-
               <label>
-                Main Specialization (MS)
-                <select id="mainSpecialization" name="mainSpecialization" required>
-                  <option value="">Select class and role first</option>
-                </select>
+                End Time
+                <select id="preferredEnd1" name="preferredEnd1" required></select>
               </label>
-            </fieldset>
-
-            <fieldset class="spec-role-group">
-              <legend>Off Setup</legend>
-              <label>
-                Off Role
-                <select id="offRole" name="offRole" required>
-                  <option value="">Select role</option>
-                  <option value="Tank">🛡 Tank</option>
-                  <option value="Healer">✚ Healer</option>
-                  <option value="DPS">⚔ DPS</option>
-                </select>
-              </label>
-
-              <label>
-                Off Specialization (OS)
-                <select id="offSpecialization" name="offSpecialization" required>
-                  <option value="">Select class and role first</option>
-                </select>
-              </label>
-            </fieldset>
-          </div>
-
-          <section class="alt-characters-section">
-            <div class="alt-characters-header">
-              <h4>Alt Characters</h4>
-              <button type="button" id="addAltCharacterButton" class="secondary">+ Add Alt</button>
             </div>
-            <div id="altCharactersContainer" class="alt-characters-list"></div>
-            <small class="help-text">Add as many alts as needed. Each alt requires MS and OS setup.</small>
-          </section>
-
-          <div class="time-slots">
-            <fieldset class="slot-group">
-              <legend>Preferred Raiding Time 1</legend>
+            <small class="help-text">Select a start and end time (12-hour format).</small>
+          </fieldset>
+          <fieldset class="slot-group">
+            <legend>Preferred Raiding Time 2</legend>
+            <label>
+              Day of Week
+              <select id="preferredDay2" name="preferredDay2" required>
+                <option value="">Select day</option>
+                <option>Monday</option>
+                <option>Tuesday</option>
+                <option>Wednesday</option>
+                <option>Thursday</option>
+                <option>Friday</option>
+                <option>Saturday</option>
+                <option>Sunday</option>
+              </select>
+            </label>
+            <div class="slot-range">
               <label>
-                Day of Week
-                <select id="preferredDay1" name="preferredDay1" required>
-                  <option value="">Select day</option>
-                  <option>Monday</option>
-                  <option>Tuesday</option>
-                  <option>Wednesday</option>
-                  <option>Thursday</option>
-                  <option>Friday</option>
-                  <option>Saturday</option>
-                  <option>Sunday</option>
-                </select>
+                Start Time
+                <select id="preferredStart2" name="preferredStart2" required></select>
               </label>
-              <div class="slot-range">
-                <label>
-                  Start Time
-                  <select id="preferredStart1" name="preferredStart1" required></select>
-                </label>
-                <label>
-                  End Time
-                  <select id="preferredEnd1" name="preferredEnd1" required></select>
-                </label>
-              </div>
-              <small class="help-text">Select a start and end time (12-hour format).</small>
-            </fieldset>
-
-            <fieldset class="slot-group">
-              <legend>Preferred Raiding Time 2</legend>
               <label>
-                Day of Week
-                <select id="preferredDay2" name="preferredDay2" required>
-                  <option value="">Select day</option>
-                  <option>Monday</option>
-                  <option>Tuesday</option>
-                  <option>Wednesday</option>
-                  <option>Thursday</option>
-                  <option>Friday</option>
-                  <option>Saturday</option>
-                  <option>Sunday</option>
-                </select>
+                End Time
+                <select id="preferredEnd2" name="preferredEnd2" required></select>
               </label>
-              <div class="slot-range">
-                <label>
-                  Start Time
-                  <select id="preferredStart2" name="preferredStart2" required></select>
-                </label>
-                <label>
-                  End Time
-                  <select id="preferredEnd2" name="preferredEnd2" required></select>
-                </label>
-              </div>
-              <small class="help-text">Select a start and end time (12-hour format).</small>
-            </fieldset>
-          </div>
-
-          <div class="actions">
-            <button type="button" id="saveProfileButton">Save Profile</button>
-            <button type="button" id="deleteProfileButton" class="danger" hidden>Delete Profile</button>
-            <button type="button" id="closeProfileModalButton" class="secondary">Close</button>
-          </div>
-        </form>
-      </dialog>
-
-      <p id="formMessage" class="message"></p>
-    </section>
+            </div>
+            <small class="help-text">Select a start and end time (12-hour format).</small>
+          </fieldset>
+        </div>
+        <div class="actions">
+          <button type="button" id="saveProfileButton">Save Profile</button>
+          <button type="button" id="deleteProfileButton" class="danger" hidden>Delete Profile</button>
+          <button type="button" id="closeProfileModalButton" class="secondary">Close</button>
+        </div>
+      </form>
+    </dialog>
 
     <section class="card" id="raidSections">
       <div class="list-header">
         <h2>Raid Schedule</h2>
       </div>
-
       <div class="raid-groups">
         <section class="raid-group current-raids">
           <div class="list-header">
@@ -329,7 +245,7 @@
 
         <details class="raid-group past-raids past-details" open>
           <summary class="list-header">
-            <h3>Past Raids <span class="past-toggle-hint">(click to collapse/expand)</span></h3>
+            <h3>Past Raids <span class="past-toggle-hint">(expand / collapse)</span></h3>
             <span id="pastCountBadge" class="badge">0</span>
           </summary>
           <div class="table-wrap">
@@ -356,16 +272,17 @@
 
       <p id="listMessage" class="message"></p>
     </section>
+
+    <section class="xp-bar-panel" aria-label="Motivation bar">
+      <div class="xp-bar-track">
+        <div class="xp-bar-fill" style="width: 80%"></div>
+        <span class="xp-bar-text">The Grind Don't Stop!</span>
+      </div>
+    </section>
   </main>
 
-  <script>
-    if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-      const script = document.createElement("script");
-      script.src = "config/local/app-config.local.js";
-      document.head.appendChild(script);
-    }
-  </script>
-  <script src="config/prod/app-config.github.js"></script>
-  <script type="module" src="app.js"></script>
+  <!-- Synchronously load config for local or production before app.js -->
+  <script src="nav-component.js"></script>
+  <script type="module" src="main.js"></script>
 </body>
 </html>

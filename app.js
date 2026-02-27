@@ -1,3 +1,9 @@
+// Role icons (fix ReferenceError)
+const ROLE_ICONS = {
+  Tank: "🛡",
+  Healer: "✚",
+  DPS: "⚔"
+};
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
   GoogleAuthProvider,
@@ -23,7 +29,153 @@ import {
   updateDoc,
   where
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+let db = null;
+let authUid = null;
+let authEmail = "";
+let hasAdminUI = false;
+// Global fields object for form fields
+const fields = {
+  wowClass: document.getElementById("wowClassPicker"),
+  mainRole: document.getElementById("mainRole"),
+  offRole: document.getElementById("offRole"),
+  mainSpecialization: document.getElementById("mainSpecialization"),
+  offSpecialization: document.getElementById("offSpecialization"),
+  profileName: document.getElementById("profileName"),
+  characterName: document.getElementById("characterName"),
+  preferredStart1: document.getElementById("preferredStart1"),
+  preferredEnd1: document.getElementById("preferredEnd1"),
+  preferredStart2: document.getElementById("preferredStart2"),
+  preferredEnd2: document.getElementById("preferredEnd2"),
+  preferredDay1: document.getElementById("preferredDay1"),
+  preferredDay2: document.getElementById("preferredDay2"),
+};
+// Raid row containers for renderRows (fix ReferenceError)
+const raidRows = {
+  current: document.getElementById("currentRaidRows"),
+  upcoming: document.getElementById("upcomingRaidRows"),
+  past: document.getElementById("pastRaidRows")
+};
+
+// WoW class colors (fix ReferenceError)
+const WOW_CLASS_COLORS = {
+  Druid: "#FF7D0A",
+  Hunter: "#ABD473",
+  Mage: "#69CCF0",
+  Paladin: "#F58CBA",
+  Priest: "#FFFFFF",
+  Rogue: "#FFF569",
+  Shaman: "#0070DE",
+  Warlock: "#9482C9",
+  Warrior: "#C79C6E"
+};
+
+// Raid count badges (fix ReferenceError)
+const raidCountBadges = {
+  current: document.getElementById("currentCountBadge"),
+  upcoming: document.getElementById("upcomingCountBadge"),
+  past: document.getElementById("pastCountBadge")
+};
 import { appSettings, firebaseConfig } from "./config/prod/firebase-config.js";
+
+const START_HOURS = Array.from({ length: 24 }, (_, index) => index);
+const END_HOURS = Array.from({ length: 24 }, (_, index) => index + 1);
+
+const RAID_PRESETS_BY_PHASE = {
+  1: [
+    { name: "Karazhan", size: "10" },
+    { name: "Gruul's Lair", size: "25" },
+    { name: "Magtheridon's Lair", size: "25" }
+  ],
+  2: [
+    { name: "Serpentshrine Cavern", size: "25" },
+    { name: "The Eye", size: "25" }
+  ],
+  3: [
+    { name: "Hyjal Summit", size: "25" },
+    { name: "Black Temple", size: "25" }
+  ],
+  4: [{ name: "Zul'Aman", size: "10" }],
+  5: [{ name: "Sunwell Plateau", size: "25" }]
+};
+
+const SPEC_ICONS = {
+  "Feral (Bear)": "🐻",
+  Restoration: "💧",
+  Balance: "🌙",
+  "Feral (Cat)": "🐈",
+  "Beast Mastery": "🐾",
+  Marksmanship: "🎯",
+  Survival: "🪤",
+  Arcane: "✨",
+  Fire: "🔥",
+  Frost: "❄",
+  Protection: "🛡",
+  Holy: "✚",
+  Retribution: "⚔",
+  Discipline: "📿",
+  Shadow: "🕯",
+  Assassination: "🗡",
+  Combat: "⚔",
+  Subtlety: "🌑",
+  Elemental: "⚡",
+  Enhancement: "🔨",
+  Affliction: "☠",
+  Demonology: "👹",
+  Destruction: "💥",
+  Arms: "🪓",
+  Fury: "💢"
+};
+
+// Safeguard: Prevent mass destructive actions if using prod DB
+const PROD_DB_SAFEGUARD = typeof window !== 'undefined' && window.__HOPE_RAID_CONFIG && window.__HOPE_RAID_CONFIG.APP_PROD_DB_SAFEGUARD;
+
+const SIGNUP_STATUSES = ["requested", "tentative", "decline"];
+
+const TBC_SPECS_BY_CLASS_ROLE = {
+  Druid: {
+    Tank: ["Feral (Bear)"],
+    Healer: ["Restoration"],
+    DPS: ["Balance", "Feral (Cat)"]
+  },
+  Hunter: {
+    DPS: ["Beast Mastery", "Marksmanship", "Survival"]
+  },
+  Mage: {
+    DPS: ["Arcane", "Fire", "Frost"]
+  },
+  Paladin: {
+    Tank: ["Protection"],
+    Healer: ["Holy"],
+    DPS: ["Retribution"]
+  },
+  Priest: {
+    Healer: ["Discipline", "Holy"],
+    DPS: ["Shadow"]
+  },
+  Rogue: {
+    DPS: ["Assassination", "Combat", "Subtlety"]
+  },
+  Shaman: {
+    Healer: ["Restoration"],
+    DPS: ["Elemental", "Enhancement"]
+  },
+  Warlock: {
+    DPS: ["Affliction", "Demonology", "Destruction"]
+  },
+  Warrior: {
+    Tank: ["Protection"],
+    DPS: ["Arms", "Fury"]
+  }
+};
+
+const ARMORY_BASE_URL = "https://classic-armory.org/character/us/tbc-anniversary/dreamscythe";
+const LOGS_BASE_URL = "https://fresh.warcraftlogs.com/character/us/dreamscythe";
+
+const clockDaysEl = document.getElementById("clockDays");
+const clockHoursEl = document.getElementById("clockHours");
+const clockMinutesEl = document.getElementById("clockMinutes");
+const clockSecondsEl = document.getElementById("clockSeconds");
 
 const form = document.getElementById("signupForm");
 const signupIdInput = document.getElementById("signupId");
@@ -71,180 +223,19 @@ const guildDiscordLink = document.getElementById("guildDiscordLink");
 const adminRaidsLink = document.getElementById("adminRaidsLink");
 const adminOpsLink = document.getElementById("adminOpsLink");
 const adminOpsBadge = document.getElementById("adminOpsBadge");
+const adminMenu = document.getElementById("adminMenu");
 const wowClassPicker = document.getElementById("wowClassPicker");
 const wowClassTrigger = document.getElementById("wowClassTrigger");
-const wowClassTriggerText = document.getElementById("wowClassTriggerText");
 const wowClassMenu = document.getElementById("wowClassMenu");
-const nextRaidLabel = document.getElementById("nextRaidLabel");
-const nextRaidSubLabel = document.getElementById("nextRaidSubLabel");
-const clockDaysEl = document.getElementById("clockDays");
-const clockHoursEl = document.getElementById("clockHours");
-const clockMinutesEl = document.getElementById("clockMinutes");
-const clockSecondsEl = document.getElementById("clockSeconds");
-const raidRows = {
-  current: document.getElementById("currentRaidRows"),
-  upcoming: document.getElementById("upcomingRaidRows"),
-  past: document.getElementById("pastRaidRows")
-};
-const raidCountBadges = {
-  current: document.getElementById("currentCountBadge"),
-  upcoming: document.getElementById("upcomingCountBadge"),
-  past: document.getElementById("pastCountBadge")
-};
-const DEMO_STORAGE_KEY = "hopeRaidSignupDemoRows";
-const DEMO_RAID_STORAGE_KEY = "hopeRaidTrackerDemoRaids";
-const DEMO_CHARACTER_STORAGE_KEY = "hopeRaidTrackerDemoCharacters";
-const ARMORY_BASE_URL = "https://classic-armory.org/character/us/tbc-anniversary/dreamscythe";
-const LOGS_BASE_URL = "https://fresh.warcraftlogs.com/character/us/dreamscythe";
-const START_HOURS = Array.from({ length: 24 }, (_, index) => index);
-const END_HOURS = Array.from({ length: 24 }, (_, index) => index + 1);
-const SIGNUP_STATUSES = ["requested", "tentative", "decline"];
-const RAID_PRESETS_BY_PHASE = {
-  1: [
-    { name: "Karazhan", size: "10" },
-    { name: "Gruul's Lair", size: "25" },
-    { name: "Magtheridon's Lair", size: "25" }
-  ],
-  2: [
-    { name: "Serpentshrine Cavern", size: "25" },
-    { name: "The Eye", size: "25" }
-  ],
-  3: [
-    { name: "Hyjal Summit", size: "25" },
-    { name: "Black Temple", size: "25" }
-  ],
-  4: [
-    { name: "Zul'Aman", size: "10" }
-  ],
-  5: [
-    { name: "Sunwell Plateau", size: "25" }
-  ]
-};
+const wowClassTriggerText = document.getElementById("wowClassTriggerText")
+  || (wowClassTrigger ? wowClassTrigger.querySelector("[data-wow-class-trigger-text]") : null);
 
-const TBC_SPECS_BY_CLASS_ROLE = {
-  Druid: {
-    Tank: ["Feral (Bear)"],
-    Healer: ["Restoration"],
-    DPS: ["Balance", "Feral (Cat)"]
-  },
-  Hunter: {
-    DPS: ["Beast Mastery", "Marksmanship", "Survival"]
-  },
-  Mage: {
-    DPS: ["Arcane", "Fire", "Frost"]
-  },
-  Paladin: {
-    Tank: ["Protection"],
-    Healer: ["Holy"],
-    DPS: ["Retribution"]
-  },
-  Priest: {
-    Healer: ["Discipline", "Holy"],
-    DPS: ["Shadow"]
-  },
-  Rogue: {
-    DPS: ["Assassination", "Combat", "Subtlety"]
-  },
-  Shaman: {
-    Healer: ["Restoration"],
-    DPS: ["Elemental", "Enhancement"]
-  },
-  Warlock: {
-    DPS: ["Affliction", "Demonology", "Destruction"]
-  },
-  Warrior: {
-    Tank: ["Protection"],
-    DPS: ["Arms", "Fury"]
-  }
-};
-
-const WOW_CLASS_COLORS = {
-  Druid: "#FF7D0A",
-  Hunter: "#ABD473",
-  Mage: "#69CCF0",
-  Paladin: "#F58CBA",
-  Priest: "#FFFFFF",
-  Rogue: "#FFF569",
-  Shaman: "#0070DE",
-  Warlock: "#9482C9",
-  Warrior: "#C79C6E"
-};
-
-const ROLE_ICONS = {
-  Tank: "🛡",
-  Healer: "✚",
-  DPS: "⚔"
-};
-
-const SPEC_ICONS = {
-  "Feral (Bear)": "🐻",
-  Restoration: "💧",
-  Balance: "🌙",
-  "Feral (Cat)": "🐈",
-  "Beast Mastery": "🐾",
-  Marksmanship: "🎯",
-  Survival: "🪤",
-  Arcane: "✨",
-  Fire: "🔥",
-  Frost: "❄",
-  Protection: "🛡",
-  Holy: "✚",
-  Retribution: "⚔",
-  Discipline: "📿",
-  Shadow: "🕯",
-  Assassination: "🗡",
-  Combat: "⚔",
-  Subtlety: "🌑",
-  Elemental: "⚡",
-  Enhancement: "🔨",
-  Affliction: "☠",
-  Demonology: "👹",
-  Destruction: "💥",
-  Arms: "🪓",
-  Fury: "💢"
-};
-
-const fields = {
-  profileName: document.getElementById("profileName"),
-  characterName: document.getElementById("characterName"),
-  wowClass: document.getElementById("wowClass"),
-  mainRole: document.getElementById("mainRole"),
-  offRole: document.getElementById("offRole"),
-  preferredDay1: document.getElementById("preferredDay1"),
-  preferredStart1: document.getElementById("preferredStart1"),
-  preferredEnd1: document.getElementById("preferredEnd1"),
-  preferredDay2: document.getElementById("preferredDay2"),
-  preferredStart2: document.getElementById("preferredStart2"),
-  preferredEnd2: document.getElementById("preferredEnd2"),
-  mainSpecialization: document.getElementById("mainSpecialization"),
-  offSpecialization: document.getElementById("offSpecialization")
-};
-
-const hasAdminUI = Boolean(
-  adminRaidSection
-  && raidForm
-  && raidPhaseInput
-  && raidTemplateInput
-  && raidEventDateInput
-  && raidRunTypeInput
-  && raidStartInput
-  && raidEndInput
-  && raidSizeInput
-  && saveRaidButton
-  && cancelRaidEditButton
-  && raidAdminRows
-  && raidAdminMessage
-);
-
-let authUid = null;
-let authEmail = "";
 let isAdmin = false;
 let currentRows = [];
 let currentRaids = [];
 let currentCharacters = [];
 let allCharacters = [];
 let isDemoMode = false;
-let db = null;
 let pendingSignupStatus = "tentative";
 let profileModalMode = "create";
 const expandedRaidGroups = new Set();
@@ -2074,13 +2065,16 @@ function closeProfileModal() {
 }
 
 function setAdminRaidVisibility() {
-  if (!hasAdminUI) {
+  if (!hasAdminUI || !adminRaidSection) {
     return;
   }
   adminRaidSection.hidden = !isAdmin;
 }
 
 function setAdminNavVisibility() {
+  if (adminMenu) {
+    adminMenu.hidden = !isAdmin;
+  }
   if (adminRaidsLink) {
     adminRaidsLink.hidden = !isAdmin;
   }
@@ -2972,31 +2966,23 @@ raidSectionsEl.addEventListener("click", async (event) => {
   if (!item || !canEdit(item)) {
     return;
   }
-  if (action === "edit") {
-    loadFormFromDoc(item);
-    fields.characterName.focus();
-    return;
-  }
   if (action === "delete") {
+    if (PROD_DB_SAFEGUARD) {
+      setMessage(formMessage, "Mass delete actions are disabled in production safeguard mode.", true);
+      return;
+    }
     const confirmed = window.confirm(`Delete signup for ${item.characterName}?`);
     if (!confirmed) {
       return;
     }
     try {
-      if (isDemoMode) {
-        currentRows = sortRows(currentRows.filter((entry) => entry.id !== id));
-        saveDemoRows(currentRows);
-        renderRows(currentRows);
-      } else {
-        await deleteDoc(doc(db, "signups", id));
-      }
-      if (signupIdInput.value === id) {
-        resetForm();
-      }
+      await deleteDoc(doc(db, "signups", id));
       setMessage(formMessage, "Signup deleted.");
+      renderRows(currentRows);
     } catch (error) {
       setMessage(formMessage, error.message, true);
     }
+    return;
   }
 });
 
@@ -3321,6 +3307,13 @@ if (!hasConfigValues()) {
       await signInWithPopup(auth, googleProvider);
       setAuthGateState(true);
     } catch (error) {
+      if (error && typeof error === "object" && ["auth/popup-blocked", "auth/popup-closed-by-user", "auth/cancelled-popup-request"].includes(error.code)) {
+        const localUrl = `${location.protocol}//${location.host}${location.pathname}`;
+        const msg = `Popups are blocked in this browser. Open this URL in Chrome or Safari to sign in: ${localUrl}`;
+        authStatus.textContent = msg;
+        setAuthGateState(false, msg, true);
+        return;
+      }
       const errorText = getGoogleAuthErrorMessage(error);
       authStatus.textContent = errorText;
       setAuthGateState(false, errorText, true);
@@ -3403,39 +3396,34 @@ if (!hasConfigValues()) {
     }
 
     authUid = user.uid;
-  authEmail = String(user.email || "").trim();
+    authEmail = String(user.email || "").trim();
     const inStaticAdminAllowlist = Array.isArray(appSettings.adminUids) && appSettings.adminUids.includes(authUid);
-    let hasAdminDoc = false;
+    isAdmin = inStaticAdminAllowlist;
+    hasAdminUI = isAdmin && !!adminRaidSection;
+    console.log("[AUTH] uid:", authUid, "isAdmin:", isAdmin, "email:", authEmail);
     try {
-      hasAdminDoc = (await getDoc(doc(db, "admins", authUid))).exists();
-    } catch {
-      hasAdminDoc = false;
-    }
-    isAdmin = inStaticAdminAllowlist || hasAdminDoc;
-
-    if (!isAdmin) {
-      try {
-        await setDoc(
-          doc(membersRef, authUid),
-          {
-            uid: authUid,
-            role: "member",
-            displayName: String(user.displayName || "").trim(),
-            email: authEmail || "",
-            updatedAt: serverTimestamp(),
-            createdAt: serverTimestamp()
-          },
-          { merge: true }
-        );
-      } catch (error) {
-        const fallback = "Signed in, but unable to initialize member access. Ask an admin to add your UID in Access Manager.";
-        setAuthGateState(false, fallback, true);
-        updateAuthActionButtons(user);
-        updateUidDisplay(authUid);
-        authStatus.textContent = fallback;
-        setMessage(formMessage, error?.message || fallback, true);
-        return;
-      }
+      await setDoc(
+        doc(membersRef, authUid),
+        {
+          uid: authUid,
+          role: "member",
+          displayName: String(user.displayName || "").trim(),
+          email: authEmail || "",
+          updatedAt: serverTimestamp(),
+          createdAt: serverTimestamp()
+        },
+        { merge: true }
+      );
+      console.log("[AUTH] setDoc members OK");
+    } catch (error) {
+      console.error("[AUTH] setDoc members FAILED:", error?.code, error?.message);
+      const fallback = "Signed in, but unable to initialize member access. Ask an admin to add your UID in Access Manager.";
+      setAuthGateState(false, fallback, true);
+      updateAuthActionButtons(user);
+      updateUidDisplay(authUid);
+      authStatus.textContent = fallback;
+      setMessage(formMessage, error?.message || fallback, true);
+      return;
     }
 
     setAuthGateState(true);
@@ -3454,6 +3442,7 @@ if (!hasConfigValues()) {
     unsubscribeSignups = onSnapshot(
       q,
       (snapshot) => {
+        console.log("[SIGNUPS] snapshot received, count:", snapshot.docs.length);
         currentRows = snapshot.docs.map((docItem) => ({
           id: docItem.id,
           ...docItem.data()
@@ -3462,6 +3451,7 @@ if (!hasConfigValues()) {
         renderRows(currentRows);
       },
       (error) => {
+        console.error("[SIGNUPS] error:", error.code, error.message);
         setMessage(listMessage, error.message, true);
       }
     );
@@ -3471,6 +3461,7 @@ if (!hasConfigValues()) {
       unsubscribeRaids = onSnapshot(
         raidsQuery,
         (snapshot) => {
+          console.log("[RAIDS] snapshot received, count:", snapshot.docs.length);
           currentRaids = snapshot.docs.map((docItem) => ({
             id: docItem.id,
             ...docItem.data()

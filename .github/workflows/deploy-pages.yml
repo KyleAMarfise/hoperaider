@@ -24,10 +24,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
 
-      - name: Generate runtime config for Pages
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate runtime config from secrets
         env:
           FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
           FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
@@ -54,34 +60,24 @@ jobs:
           };
           EOF
 
-      - name: Prepare deploy bundle (no local/dev secrets)
-        run: |
-          rm -rf .deploy
-          mkdir -p .deploy
-          rsync -av --delete \
-            --exclude ".git/" \
-            --exclude ".github/" \
-            --exclude ".vscode/" \
-            --exclude ".env" \
-            --exclude ".env.*" \
-            --exclude "config/local/" \
-            --exclude "scripts/" \
-            --exclude "README.md" \
-            --exclude "TODO" \
-            ./ .deploy/
+      - name: Build production bundle (obfuscate + minify)
+        run: npm run build
 
-      - name: Verify bundle has no local secrets
+      - name: Verify dist has no local secrets
         run: |
-          if find .deploy -type f \( -name ".env" -o -name ".env.*" -o -path "*/config/local/*" \) | grep -q .; then
-            echo "Blocked: deploy bundle includes local secret files."
-            find .deploy -type f \( -name ".env" -o -name ".env.*" -o -path "*/config/local/*" \)
+          if find dist -type f \( -name ".env" -o -name ".env.*" -o -path "*/config/local/*" \) | grep -q .; then
+            echo "Blocked: dist bundle includes local secret files."
+            find dist -type f \( -name ".env" -o -name ".env.*" -o -path "*/config/local/*" \)
             exit 1
           fi
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .deploy
+          path: dist
 
       - name: Deploy to GitHub Pages
         id: deployment
