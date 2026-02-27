@@ -343,18 +343,7 @@ service cloud.firestore {
     }
 
     match /characters/{characterId} {
-      allow read: if isAdmin()
-        || (
-          signedIn()
-          && (
-            resource.data.ownerUid == request.auth.uid
-            || (
-              request.auth.token.email is string
-              && resource.data.ownerEmail is string
-              && resource.data.ownerEmail == request.auth.token.email
-            )
-          )
-        );
+      allow read: if isApprovedUser();
 
       allow create: if isApprovedUser()
         && validCharacterData(request.resource.data)

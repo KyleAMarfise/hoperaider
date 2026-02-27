@@ -2136,7 +2136,7 @@ async function upsertCharacterProfile(profile, selectedCharacterId) {
 function refreshCharacterProfileOptions(selectedValue = "") {
   const options = [
     `<option value="">Select profile</option>`,
-    ...allCharacters.map(
+    ...currentCharacters.map(
       (character) =>
         `<option value="${character.id}">${escapeHtml(getProfileLabel(character))} (${escapeHtml(
           character.characterName
@@ -2147,7 +2147,7 @@ function refreshCharacterProfileOptions(selectedValue = "") {
   ];
 
   characterProfileSelect.innerHTML = options.join("");
-  const hasSelectedCharacter = allCharacters.some((character) => character.id === selectedValue);
+  const hasSelectedCharacter = currentCharacters.some((character) => character.id === selectedValue);
   characterProfileSelect.value = hasSelectedCharacter ? selectedValue : "";
   updateSignupActionState();
 }
@@ -3904,9 +3904,7 @@ if (!hasConfigValues()) {
       );
     }
 
-    const charactersQuery = isAdmin
-      ? query(charactersRef)
-      : query(charactersRef, where("ownerUid", "==", authUid));
+    const charactersQuery = query(charactersRef);
 
     unsubscribeCharacters = onSnapshot(
       charactersQuery,
@@ -3915,7 +3913,9 @@ if (!hasConfigValues()) {
           id: docItem.id,
           ...docItem.data()
         }));
-        currentCharacters = sortCharacters(allCharacters);
+        currentCharacters = sortCharacters(
+          allCharacters.filter((c) => c.ownerUid === authUid)
+        );
         refreshCharacterProfileOptions(characterProfileSelect.value);
         updateSignupActionState();
         renderRows(currentRows);
