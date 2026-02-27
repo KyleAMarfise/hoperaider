@@ -12,12 +12,14 @@ import {
   deleteDoc,
   doc,
   getDoc,
+  getDocs,
   getFirestore,
   onSnapshot,
   orderBy,
   query,
   serverTimestamp,
-  updateDoc
+  updateDoc,
+  where
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 import { appSettings, firebaseConfig } from "./config/prod/firebase-config.js";
 
@@ -563,7 +565,7 @@ adminRaidSection.addEventListener("click", async (event) => {
   }
 
   if (action === "delete") {
-    const confirmed = window.confirm(`Delete raid ${item.raidName} on ${item.raidDate}?`);
+    const confirmed = window.confirm(`Delete raid ${item.raidName} on ${item.raidDate}? This also deletes all signups for this raid.`);
     if (!confirmed) {
       return;
     }
@@ -575,13 +577,23 @@ adminRaidSection.addEventListener("click", async (event) => {
         saveDemoRaids(currentRaids);
         renderAdminRaids(currentRaids);
       } else {
+        /* Delete all signups referencing this raid first */
+        const signupsQuery = query(collection(db, "signups"), where("raidId", "==", id));
+        const signupsSnapshot = await getDocs(signupsQuery);
+        const deleteResults = await Promise.allSettled(
+          signupsSnapshot.docs.map((signupDoc) => deleteDoc(signupDoc.ref))
+        );
+        const failedDeletes = deleteResults.filter((r) => r.status === "rejected").length;
         await deleteDoc(doc(db, "raids", id));
+        if (failedDeletes > 0) {
+          console.warn(`[RAID DELETE] ${failedDeletes} signup(s) could not be deleted for raid ${id}`);
+        }
       }
 
       if (raidIdInput.value === id) {
         resetRaidForm();
       }
-      setMessage(raidAdminMessage, "Raid deleted.");
+      setMessage(raidAdminMessage, "Raid and associated signups deleted.");
     } catch (error) {
       setMessage(raidAdminMessage, error.message, true);
     }

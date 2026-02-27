@@ -748,7 +748,11 @@ function buildRosterMap(items) {
 }
 
 function buildScheduleItems(signups) {
-  const signupItems = hydrateRowsWithRaidWindow(signups).map((entry) => ({
+  /* Only include signups whose raid still exists */
+  const activeRaidIds = new Set(currentRaids.map((r) => r.id));
+  const activeSignups = signups.filter((s) => !s.raidId || activeRaidIds.has(s.raidId));
+
+  const signupItems = hydrateRowsWithRaidWindow(activeSignups).map((entry) => ({
     ...entry,
     __isSignup: true
   }));
