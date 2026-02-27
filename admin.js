@@ -517,6 +517,7 @@ function loadRaidForm(item) {
   raidRunTypeInput.value = item.runType;
   raidLeaderInput.value = item.raidLeader || "";
   raidStartInput.value = String(item.raidStart);
+  refreshEndHourOptions();
   raidEndInput.value = String(item.raidEnd);
   syncRaidSize();
 
@@ -533,6 +534,25 @@ function loadRaidForm(item) {
 
 populateHourOptions(raidStartInput, START_HOURS, "Select CST start");
 populateHourOptions(raidEndInput, END_HOURS, "Select CST end");
+
+function refreshEndHourOptions() {
+  const startVal = parseHourValue(raidStartInput.value);
+  if (!Number.isInteger(startVal)) {
+    populateHourOptions(raidEndInput, END_HOURS, "Select CST end");
+    return;
+  }
+  const previousEnd = raidEndInput.value;
+  const validEnds = END_HOURS.filter((h) => h > startVal);
+  populateHourOptions(raidEndInput, validEnds, "Select CST end");
+  if (validEnds.includes(Number(previousEnd))) {
+    raidEndInput.value = previousEnd;
+  }
+}
+
+raidStartInput.addEventListener("change", () => {
+  refreshEndHourOptions();
+});
+
 populateRaidPhaseOptions();
 refreshRaidTemplateOptions();
 raidEventDateInput.value = toDateOnlyString(new Date());
@@ -643,18 +663,32 @@ raidForm.addEventListener("submit", async (event) => {
   const phaseRaids = RAID_PRESETS_BY_PHASE[phase] || [];
   const isValidRaid = phaseRaids.some((raid) => raid.name === raidName);
 
-  if (
-    !Number.isInteger(phase)
-    || phase < 1
-    || phase > 5
-    || !isValidRaid
-    || !parseDateOnly(raidDate)
-    || !runType
-    || !Number.isInteger(raidStart)
-    || !Number.isInteger(raidEnd)
-    || raidStart >= raidEnd
-  ) {
-    setMessage(raidAdminMessage, "Please fill all raid fields correctly.", true);
+  if (!Number.isInteger(phase) || phase < 1 || phase > 5) {
+    setMessage(raidAdminMessage, "Please select a valid raid phase.", true);
+    return;
+  }
+  if (!isValidRaid) {
+    setMessage(raidAdminMessage, "Please select a valid raid for the chosen phase.", true);
+    return;
+  }
+  if (!parseDateOnly(raidDate)) {
+    setMessage(raidAdminMessage, "Please select a valid raid date.", true);
+    return;
+  }
+  if (!runType) {
+    setMessage(raidAdminMessage, "Please select a run type.", true);
+    return;
+  }
+  if (!Number.isInteger(raidStart)) {
+    setMessage(raidAdminMessage, "Please select a start time.", true);
+    return;
+  }
+  if (!Number.isInteger(raidEnd)) {
+    setMessage(raidAdminMessage, "Please select an end time.", true);
+    return;
+  }
+  if (raidEnd <= raidStart) {
+    setMessage(raidAdminMessage, "End time must be after the start time.", true);
     return;
   }
 
