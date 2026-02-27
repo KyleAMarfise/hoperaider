@@ -808,6 +808,117 @@ function buildRoleSummary(signups) {
   return roleTotals;
 }
 
+/* ── Role Composition Targets ── */
+function getRoleTargets(raidSize) {
+  const size = parseRaidSlots(raidSize);
+  if (size >= 25) {
+    return { Tank: 3, Healer: 6, DPS: size - 9 };
+  }
+  if (size >= 10) {
+    return { Tank: 2, Healer: 3, DPS: size - 5 };
+  }
+  return { Tank: 2, Healer: 3, DPS: 5 };
+}
+
+function renderRoleCompositionBar(resolvedSignups, raidSize) {
+  const targets = getRoleTargets(raidSize);
+  const totals = buildRoleSummary(resolvedSignups);
+  const totalSize = parseRaidSlots(raidSize) || (targets.Tank + targets.Healer + targets.DPS);
+
+  const roles = [
+    { key: "Tank", icon: "🛡", label: "Tank", cssClass: "role-bar-tank" },
+    { key: "Healer", icon: "✚", label: "Healer", cssClass: "role-bar-healer" },
+    { key: "DPS", icon: "⚔", label: "DPS", cssClass: "role-bar-dps" }
+  ];
+
+  const bars = roles.map((role) => {
+    const filled = totals[role.key] || 0;
+    const target = targets[role.key] || 0;
+    const open = Math.max(0, target - filled);
+    const over = Math.max(0, filled - target);
+    const filledClamped = Math.min(filled, target);
+    const filledPct = totalSize > 0 ? (filledClamped / totalSize) * 100 : 0;
+    const openPct = totalSize > 0 ? (open / totalSize) * 100 : 0;
+    const overPct = totalSize > 0 ? (over / totalSize) * 100 : 0;
+
+    const overLabel = over > 0 ? `<span class="role-bar-over-label">+${over} over</span>` : "";
+    const openLabel = open > 0 ? `<span class="role-bar-open-label">${open} open</span>` : "";
+    const statusText = open === 0 && over === 0 ? "Full" : "";
+
+    return `<div class="role-bar-row">
+      <span class="role-bar-label">${role.icon} ${role.label}</span>
+      <div class="role-bar-track">
+        <div class="role-bar-filled ${role.cssClass}" style="width: ${filledPct.toFixed(1)}%"></div>
+        <div class="role-bar-open" style="width: ${openPct.toFixed(1)}%"></div>
+        ${over > 0 ? `<div class="role-bar-overflow ${role.cssClass}" style="width: ${overPct.toFixed(1)}%"></div>` : ""}
+      </div>
+      <span class="role-bar-count">${filled}/${target}</span>
+      ${overLabel}${openLabel}${statusText ? `<span class="role-bar-full-label">${statusText}</span>` : ""}
+    </div>`;
+  }).join("");
+
+  const totalFilled = totals.Tank + totals.Healer + totals.DPS;
+  const totalTarget = totalSize;
+  const totalOpen = Math.max(0, totalTarget - totalFilled);
+  const totalOver = Math.max(0, totalFilled - totalTarget);
+  const totalLabel = totalOver > 0
+    ? `${totalFilled}/${totalTarget} (+${totalOver} over)`
+    : totalOpen > 0
+      ? `${totalFilled}/${totalTarget} (${totalOpen} open)`
+      : `${totalFilled}/${totalTarget} Full`;
+
+  return `<div class="role-composition-panel">
+    <div class="role-composition-header">
+      <span class="role-composition-title">Role Composition</span>
+      <span class="role-composition-total">${escapeHtml(totalLabel)}</span>
+    </div>
+    ${bars}
+  </div>`;
+}
+
+function renderRosterTable(resolvedSignups) {
+  if (!resolvedSignups.length) {
+    return `<p class="roster-empty">No signups yet.</p>`;
+  }
+
+  const accepted = resolvedSignups.filter((s) => normalizeSignupStatus(s.status) === "accept");
+  const pending = resolvedSignups.filter((s) => normalizeSignupStatus(s.status) !== "accept" && normalizeSignupStatus(s.status) !== "decline" && normalizeSignupStatus(s.status) !== "withdrawn" && normalizeSignupStatus(s.status) !== "denied");
+  const declined = resolvedSignups.filter((s) => ["decline", "withdrawn", "denied"].includes(normalizeSignupStatus(s.status)));
+
+  function rosterRows(signups, sectionLabel) {
+    if (!signups.length) return "";
+    const rows = signups.map((signup) => {
+      const role = signup.mainRole || signup.role || "";
+      const roleIcon = ROLE_ICONS[role] || "";
+      const wowClass = signup.wowClass || "";
+      const classColor = WOW_CLASS_COLORS[wowClass] || "";
+      const charName = signup.characterName || signup.profileCharacterName || "Unknown";
+      const spec = signup.mainSpecialization || signup.specialization || "";
+      const statusNorm = normalizeSignupStatus(signup.status);
+      return `<tr class="roster-row roster-status-${statusNorm}">
+        <td><span class="roster-role-icon">${roleIcon}</span></td>
+        <td style="${classColor ? `color: ${classColor}; font-weight: 600` : ""}">${escapeHtml(charName)}</td>
+        <td style="${classColor ? `color: ${classColor}` : ""}">${escapeHtml(wowClass)}</td>
+        <td>${escapeHtml(spec)}</td>
+        <td><span class="signup-status-badge status-${statusNorm}">${escapeHtml(statusLabel(signup.status))}</span></td>
+      </tr>`;
+    }).join("");
+
+    return `<tr class="roster-section-header"><td colspan="5">${escapeHtml(sectionLabel)} (${signups.length})</td></tr>${rows}`;
+  }
+
+  return `<table class="roster-table">
+    <thead>
+      <tr><th></th><th>Character</th><th>Class</th><th>Spec</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      ${rosterRows(accepted, "Accepted")}
+      ${rosterRows(pending, "Pending")}
+      ${rosterRows(declined, "Declined / Withdrawn")}
+    </tbody>
+  </table>`;
+}
+
 function getCharacterById(characterId) {
   if (!characterId) {
     return null;
@@ -2658,20 +2769,25 @@ function renderCategoryRows(targetElement, rows, rosterMap) {
         <tr id="${detailId}" class="raid-detail-row" ${isExpanded ? "" : "hidden"}>
           <td colspan="10">
             <div class="raid-detail-wrap">
-              <table class="detail-table">
-                <thead>
-                  <tr>
-                    <th>Character</th>
-                    <th>MS (Role)</th>
-                    <th>OS (Role)</th>
-                    <th>Status</th>
-                    <th>Gear</th>
-                    <th>Logs</th>
-                    <th>Raid Progression</th>
-                  </tr>
-                </thead>
-                <tbody>${detailRows}</tbody>
-              </table>
+              ${renderRoleCompositionBar(resolvedSignups, item.raidSize)}
+              ${renderRosterTable(resolvedSignups)}
+              <details class="raid-detail-signups-details">
+                <summary class="raid-detail-signups-summary">Full Signup Details</summary>
+                <table class="detail-table">
+                  <thead>
+                    <tr>
+                      <th>Character</th>
+                      <th>MS (Role)</th>
+                      <th>OS (Role)</th>
+                      <th>Status</th>
+                      <th>Gear</th>
+                      <th>Logs</th>
+                      <th>Raid Progression</th>
+                    </tr>
+                  </thead>
+                  <tbody>${detailRows}</tbody>
+                </table>
+              </details>
             </div>
           </td>
         </tr>`;

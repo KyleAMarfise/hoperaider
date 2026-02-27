@@ -2035,6 +2035,201 @@ tbody tr:hover {
   color: #a9ceff;
 }
 
+/* ── Role Composition Bar Graph ── */
+.role-composition-panel {
+  background: rgba(10, 10, 12, 0.5);
+  border: 1px solid #2a2a30;
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+  margin-bottom: 0.6rem;
+}
+
+.role-composition-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.role-composition-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.role-composition-total {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+
+.role-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.35rem;
+}
+
+.role-bar-row:last-child {
+  margin-bottom: 0;
+}
+
+.role-bar-label {
+  flex: 0 0 5rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.role-bar-track {
+  flex: 1;
+  display: flex;
+  height: 1.1rem;
+  background: #1a1a1e;
+  border: 1px solid #2a2a30;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.role-bar-filled {
+  transition: width 0.3s ease;
+}
+
+.role-bar-tank {
+  background: linear-gradient(180deg, #5a7cb5, #3a5580);
+}
+
+.role-bar-healer {
+  background: linear-gradient(180deg, #4a9a5a, #2d6b3a);
+}
+
+.role-bar-dps {
+  background: linear-gradient(180deg, #b56a4a, #804530);
+}
+
+.role-bar-open {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.03),
+    rgba(255, 255, 255, 0.03) 4px,
+    transparent 4px,
+    transparent 8px
+  );
+}
+
+.role-bar-overflow {
+  opacity: 0.5;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(255, 255, 255, 0.12) 3px,
+    transparent 3px,
+    transparent 6px
+  );
+}
+
+.role-bar-overflow.role-bar-tank {
+  background-color: #5a7cb5;
+}
+
+.role-bar-overflow.role-bar-healer {
+  background-color: #4a9a5a;
+}
+
+.role-bar-overflow.role-bar-dps {
+  background-color: #b56a4a;
+}
+
+.role-bar-count {
+  flex: 0 0 2.8rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-main);
+  text-align: right;
+}
+
+.role-bar-over-label {
+  font-size: 0.68rem;
+  color: #e8a848;
+  font-weight: 600;
+}
+
+.role-bar-open-label {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+}
+
+.role-bar-full-label {
+  font-size: 0.68rem;
+  color: #6abf7a;
+  font-weight: 600;
+}
+
+/* ── Roster Table ── */
+.roster-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 0.5rem;
+}
+
+.roster-table th,
+.roster-table td {
+  padding: 0.34rem 0.4rem;
+  border-bottom: 1px solid #2a261e;
+  font-size: 0.82rem;
+}
+
+.roster-table th {
+  background: rgba(50, 34, 14, 0.18);
+  font-size: 0.74rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.roster-section-header td {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--gold);
+  background: rgba(50, 34, 14, 0.12);
+  border-bottom: 1px solid #3a3020;
+  padding: 0.4rem;
+}
+
+.roster-role-icon {
+  font-size: 0.9rem;
+}
+
+.roster-row.roster-status-decline td,
+.roster-row.roster-status-withdrawn td,
+.roster-row.roster-status-denied td {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+.roster-empty {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  margin: 0.3rem 0;
+}
+
+/* ── Detail Signups collapsible ── */
+.raid-detail-signups-details {
+  margin-top: 0.4rem;
+}
+
+.raid-detail-signups-summary {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 0.3rem 0;
+  user-select: none;
+}
+
+.raid-detail-signups-summary:hover {
+  color: var(--text-main);
+}
+
 td .row-actions {
   display: flex;
   gap: 0.5rem;
