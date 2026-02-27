@@ -3,3 +3,6 @@
 # Ensure important secrets are stored in github variables for the database and that the pipeline doesn't expose them
 # expand website to cover heroic signups
 # ensure the firebase setup is fully secured along with the code and how it's used
+
+
+# Phil Feedback

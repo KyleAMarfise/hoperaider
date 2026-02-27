@@ -2721,6 +2721,160 @@ function renderRows(items) {
   renderCategoryRows(raidRows.past, grouped.past, rosterMap);
 
   setMessage(listMessage, scheduleItems.length ? "" : "No raids scheduled yet.");
+
+  renderCalendarView(scheduleItems);
+}
+
+/* ── Calendar View ── */
+const calendarView = document.getElementById("calendarView");
+const listView = document.getElementById("listView");
+const viewListBtn = document.getElementById("viewListBtn");
+const viewCalendarBtn = document.getElementById("viewCalendarBtn");
+const calendarGrid = document.getElementById("calendarGrid");
+const calRangeLabel = document.getElementById("calRangeLabel");
+const calPrevWeek = document.getElementById("calPrevWeek");
+const calNextWeek = document.getElementById("calNextWeek");
+const calTodayBtn = document.getElementById("calToday");
+
+let calendarWeekOffset = 0;
+let lastScheduleItems = [];
+
+function getCalendarStartDate(weekOffset) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const dayOfWeek = today.getDay();
+  const sunday = new Date(today);
+  sunday.setDate(today.getDate() - dayOfWeek + weekOffset * 7);
+  return sunday;
+}
+
+function formatCalendarRangeLabel(startDate) {
+  const endDate = new Date(startDate);
+  endDate.setDate(startDate.getDate() + 13);
+  const opts = { month: "short", day: "numeric" };
+  const startLabel = startDate.toLocaleDateString("en-US", opts);
+  const endLabel = endDate.toLocaleDateString("en-US", { ...opts, year: "numeric" });
+  return `${startLabel} — ${endLabel}`;
+}
+
+function renderCalendarView(scheduleItems) {
+  lastScheduleItems = scheduleItems;
+  if (!calendarGrid || calendarView?.hidden) {
+    return;
+  }
+
+  const startDate = getCalendarStartDate(calendarWeekOffset);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (calRangeLabel) {
+    calRangeLabel.textContent = formatCalendarRangeLabel(startDate);
+  }
+
+  const raidGroups = groupRowsByRaid(scheduleItems);
+  const raidsByDate = new Map();
+  raidGroups.forEach((group) => {
+    const dateStr = getRaidDateString(group.summary);
+    if (!dateStr) return;
+    if (!raidsByDate.has(dateStr)) {
+      raidsByDate.set(dateStr, []);
+    }
+    raidsByDate.get(dateStr).push(group);
+  });
+
+  const viewerOwnerUid = getViewerOwnerUid();
+  const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const headerCells = DAY_NAMES
+    .map((name) => `<div class="calendar-day-header">${name}</div>`)
+    .join("");
+
+  const dayCells = [];
+  for (let i = 0; i < 14; i++) {
+    const cellDate = new Date(startDate);
+    cellDate.setDate(startDate.getDate() + i);
+    const dateStr = toDateOnlyString(cellDate);
+    const isToday = cellDate.getTime() === today.getTime();
+    const isPast = cellDate.getTime() < today.getTime();
+    const raids = raidsByDate.get(dateStr) || [];
+
+    const dayClasses = ["calendar-day"];
+    if (isToday) dayClasses.push("is-today");
+    if (isPast && !isToday) dayClasses.push("is-past");
+
+    const dayNum = cellDate.getDate();
+    const monthLabel = (dayNum === 1 || i === 0)
+      ? cellDate.toLocaleDateString("en-US", { month: "short" }) + " "
+      : "";
+
+    const MAX_CHIPS = 3;
+    const raidChips = raids.slice(0, MAX_CHIPS).map((group) => {
+      const raid = group.summary;
+      const raidSignups = group.signups.filter((s) => s.__isSignup !== false && s.characterId);
+      const viewerSignedUp = viewerOwnerUid
+        ? raidSignups.some((s) => s.ownerUid === viewerOwnerUid)
+        : false;
+      const chipClass = viewerSignedUp ? "calendar-raid-chip has-signup" : "calendar-raid-chip";
+      const startHour = raid.raidStart != null ? hourLabel(raid.raidStart) : "";
+      const timeStr = startHour ? `<span class="chip-time">${escapeHtml(startHour)} ST</span>` : "";
+      const raidLabel = escapeHtml(raid.raidName || "Raid");
+      const runType = raid.runType ? ` (${escapeHtml(raid.runType)})` : "";
+      const signupCount = raidSignups.length;
+      const sizeStr = raid.raidSize ? `/${raid.raidSize}` : "";
+      const countLabel = `<span class="chip-time">${signupCount}${sizeStr} signed</span>`;
+      return `<div class="${chipClass}" title="${raidLabel}${runType} — ${signupCount} signups">${raidLabel}${runType}${timeStr}${countLabel}</div>`;
+    }).join("");
+
+    const overflow = raids.length > MAX_CHIPS
+      ? `<div class="calendar-raid-more">+${raids.length - MAX_CHIPS} more</div>`
+      : "";
+
+    dayCells.push(`<div class="${dayClasses.join(" ")}">
+      <div class="calendar-day-number">${monthLabel}${dayNum}</div>
+      ${raidChips}${overflow}
+    </div>`);
+  }
+
+  calendarGrid.innerHTML = headerCells + dayCells.join("");
+}
+
+function setScheduleView(mode) {
+  if (mode === "calendar") {
+    if (listView) listView.hidden = true;
+    if (calendarView) calendarView.hidden = false;
+    viewListBtn?.classList.remove("active");
+    viewCalendarBtn?.classList.add("active");
+    renderCalendarView(lastScheduleItems);
+  } else {
+    if (calendarView) calendarView.hidden = true;
+    if (listView) listView.hidden = false;
+    viewCalendarBtn?.classList.remove("active");
+    viewListBtn?.classList.add("active");
+  }
+}
+
+if (viewListBtn) {
+  viewListBtn.addEventListener("click", () => setScheduleView("list"));
+}
+if (viewCalendarBtn) {
+  viewCalendarBtn.addEventListener("click", () => setScheduleView("calendar"));
+}
+if (calPrevWeek) {
+  calPrevWeek.addEventListener("click", () => {
+    calendarWeekOffset -= 1;
+    renderCalendarView(lastScheduleItems);
+  });
+}
+if (calNextWeek) {
+  calNextWeek.addEventListener("click", () => {
+    calendarWeekOffset += 1;
+    renderCalendarView(lastScheduleItems);
+  });
+}
+if (calTodayBtn) {
+  calTodayBtn.addEventListener("click", () => {
+    calendarWeekOffset = 0;
+    renderCalendarView(lastScheduleItems);
+  });
 }
 
 fields.wowClass.addEventListener("change", () => {

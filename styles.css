@@ -996,6 +996,11 @@ textarea {
   padding: 0.48rem 0.6rem;
 }
 
+select option {
+  background: #0b0b0e;
+  color: var(--text-main);
+}
+
 input:focus,
 select:focus,
 textarea:focus {
@@ -1647,6 +1652,11 @@ th {
   font-size: 0.82rem;
 }
 
+.raid-signup-select option {
+  background: #111a29;
+  color: #f2f5ff;
+}
+
 .raid-signup-controls {
   display: grid;
   gap: 0.3rem;
@@ -1725,6 +1735,173 @@ th {
   border: 1px solid #5b4930;
   font-size: 0.76rem;
   line-height: 1.1;
+}
+
+/* ── View Toggle ── */
+.view-toggle-group {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.view-toggle {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+  border: 1px solid #5e4b2a;
+  border-radius: 8px;
+  background: #131316;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.view-toggle:hover {
+  border-color: var(--gold);
+  color: var(--text-main);
+}
+
+.view-toggle.active {
+  background: linear-gradient(180deg, #bc8f45, #896021);
+  color: #f8f1df;
+  border-color: #8c652d;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.45);
+}
+
+/* ── Raid Calendar ── */
+.raid-calendar {
+  margin-top: 0.5rem;
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.calendar-range-label {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-main);
+  min-width: 14ch;
+  text-align: center;
+}
+
+.calendar-nav {
+  padding: 0.28rem 0.6rem;
+  font-size: 0.82rem;
+  border: 1px solid #5e4b2a;
+  border-radius: 8px;
+  background: #131316;
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+.calendar-nav:hover {
+  border-color: var(--gold);
+  background: #1a1a1e;
+}
+
+.calendar-today-btn {
+  margin-left: auto;
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.35rem;
+}
+
+.calendar-day-header {
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.25rem 0;
+}
+
+.calendar-day {
+  border: 1px solid #2a2a30;
+  border-radius: 8px;
+  background: var(--bg-panel);
+  min-height: 5.5rem;
+  padding: 0.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  position: relative;
+  transition: border-color 0.15s;
+}
+
+.calendar-day:hover {
+  border-color: #5e4b2a;
+}
+
+.calendar-day.is-today {
+  border-color: var(--gold);
+  box-shadow: 0 0 6px rgba(209, 167, 84, 0.25);
+  background: color-mix(in srgb, var(--gold) 6%, var(--bg-panel));
+}
+
+.calendar-day.is-empty {
+  opacity: 0.35;
+  background: transparent;
+  border-color: transparent;
+}
+
+.calendar-day-number {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  padding: 0.1rem 0.2rem;
+}
+
+.calendar-day.is-today .calendar-day-number {
+  color: var(--gold);
+}
+
+.calendar-day.is-past {
+  opacity: 0.55;
+}
+
+.calendar-raid-chip {
+  display: block;
+  padding: 0.2rem 0.32rem;
+  border-radius: 5px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.25;
+  border: 1px solid #4a3e2a;
+  background: linear-gradient(180deg, #2a2210, #1a1608);
+  color: #f1deb5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.calendar-raid-chip .chip-time {
+  font-weight: 400;
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  display: block;
+}
+
+.calendar-raid-chip.has-signup {
+  border-color: #3e8a50;
+  background: linear-gradient(180deg, #1f3e2a, #162d1f);
+  color: #d9ffe2;
+}
+
+.calendar-raid-more {
+  font-size: 0.64rem;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 0.1rem;
 }
 
 .status-accept {
@@ -2285,6 +2462,38 @@ td .row-actions button {
   /* List header */
   .list-header h2 {
     font-size: 1rem;
+  }
+
+  /* Calendar responsive */
+  .calendar-grid {
+    gap: 0.2rem;
+  }
+
+  .calendar-day {
+    min-height: 4rem;
+    padding: 0.2rem;
+  }
+
+  .calendar-day-number {
+    font-size: 0.64rem;
+  }
+
+  .calendar-raid-chip {
+    font-size: 0.58rem;
+    padding: 0.14rem 0.22rem;
+  }
+
+  .calendar-raid-chip .chip-time {
+    font-size: 0.54rem;
+  }
+
+  .calendar-range-label {
+    font-size: 0.82rem;
+  }
+
+  .view-toggle {
+    font-size: 0.72rem;
+    padding: 0.24rem 0.5rem;
   }
 }
 
