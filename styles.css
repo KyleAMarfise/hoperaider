@@ -1809,13 +1809,13 @@ th {
 .calendar-header {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.6rem;
+  gap: 0.6rem;
+  margin-bottom: 0.75rem;
   flex-wrap: wrap;
 }
 
 .calendar-range-label {
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: var(--text-main);
   min-width: 16ch;
@@ -1823,8 +1823,8 @@ th {
 }
 
 .calendar-nav {
-  padding: 0.35rem 0.75rem;
-  font-size: 0.88rem;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.95rem;
   border: 1px solid #5e4b2a;
   border-radius: 8px;
   background: #131316;
@@ -1846,28 +1846,28 @@ th {
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 0.45rem;
+  gap: 0.55rem;
 }
 
 .calendar-day-header {
   text-align: center;
-  font-size: 0.82rem;
+  font-size: 0.92rem;
   font-weight: 700;
   color: var(--text-dim);
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  padding: 0.35rem 0;
+  padding: 0.4rem 0;
 }
 
 .calendar-day {
   border: 1px solid #2a2a30;
   border-radius: 8px;
   background: var(--bg-panel);
-  min-height: 7rem;
-  padding: 0.4rem;
+  min-height: 9rem;
+  padding: 0.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.3rem;
   position: relative;
   transition: border-color 0.15s;
 }
@@ -1889,10 +1889,10 @@ th {
 }
 
 .calendar-day-number {
-  font-size: 0.82rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: var(--text-dim);
-  padding: 0.15rem 0.25rem;
+  padding: 0.15rem 0.3rem;
 }
 
 .calendar-day.is-today .calendar-day-number {
@@ -1905,11 +1905,11 @@ th {
 
 .calendar-raid-chip {
   display: block;
-  padding: 0.25rem 0.38rem;
+  padding: 0.3rem 0.45rem;
   border-radius: 5px;
-  font-size: 0.76rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  line-height: 1.3;
+  line-height: 1.35;
   border: 1px solid #4a3e2a;
   background: linear-gradient(180deg, #2a2210, #1a1608);
   color: #f1deb5;
@@ -1921,7 +1921,7 @@ th {
 
 .calendar-raid-chip .chip-time {
   font-weight: 400;
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   color: var(--text-dim);
   display: block;
 }
@@ -1933,10 +1933,10 @@ th {
 }
 
 .calendar-raid-more {
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   color: var(--text-dim);
   text-align: center;
-  padding: 0.15rem;
+  padding: 0.2rem;
 }
 
 .status-accept {
