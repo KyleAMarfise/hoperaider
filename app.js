@@ -36,7 +36,7 @@ let authEmail = "";
 let hasAdminUI = false;
 // Global fields object for form fields
 const fields = {
-  wowClass: document.getElementById("wowClassPicker"),
+  wowClass: document.getElementById("wowClass"),
   mainRole: document.getElementById("mainRole"),
   offRole: document.getElementById("offRole"),
   mainSpecialization: document.getElementById("mainSpecialization"),
