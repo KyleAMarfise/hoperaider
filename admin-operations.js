@@ -1039,7 +1039,7 @@ function renderCharacterAuditTable() {
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.logsUrl, "Logs")) : "—"}</td>
         <td class="audit-history-col">${escapeHtml(`${row.acceptedTotal} accepted raid${row.acceptedTotal === 1 ? "" : "s"}`)}</td>
         <td>
-          <select data-role-uid="${escapeHtml(row.uid)}" data-role-current="${escapeHtml(row.role)}" title="Change this user's access role">
+          <select data-role-uid="${escapeHtml(row.uid)}" data-role-current="${escapeHtml(row.role)}" title="Change this user's access role" ${row.role === "owner" && !isOwner ? "disabled" : ""}>
             <option value="member" ${row.role === "member" ? "selected" : ""} title="Standard access — can sign up for raids.">Member</option>
             <option value="admin" ${row.role === "admin" ? "selected" : ""} title="Full admin access — can manage raids, approve signups, and change roles.">Admin</option>
             <option value="remove" ${row.role === "remove" ? "selected" : ""} title="Revokes all access. Signups and profiles are preserved.">⛔ Soft Ban</option>
@@ -1334,6 +1334,12 @@ characterAuditSection.addEventListener("change", async (event) => {
   if (nextRole === "owner" && !isOwner) {
     setMessage(characterAuditMessage, "Only owners can assign the owner role.", true);
     target.value = previousRole || "member";
+    return;
+  }
+
+  if (previousRole === "owner" && !isOwner) {
+    setMessage(characterAuditMessage, "Only owners can modify another owner's role.", true);
+    target.value = previousRole;
     return;
   }
 
