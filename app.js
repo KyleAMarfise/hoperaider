@@ -1199,8 +1199,8 @@ function renderRaidProfileControl(raidId, signup) {
   const selectedCharacterId = signup?.characterId || "";
   const selectedCharacterKey = signup?.profileCharacterKey || "main";
   const signupStatus = normalizeSignupStatus(signup?.status || "");
-  const isEditableRequested = Boolean(signup) && signupStatus === "requested";
-  const isDisabled = Boolean(signup) && !isEditableRequested;
+  const isEditable = !signup || signupStatus === "requested" || signupStatus === "withdrawn";
+  const isDisabled = !isEditable;
   return `<select class="raid-profile-select" data-raid-profile-select="true" data-raid-id="${escapeHtml(raidId)}" ${isDisabled ? "disabled" : ""}>
       ${renderRaidProfileOptions(selectedCharacterId, selectedCharacterKey)}
     </select>`;
@@ -3316,6 +3316,34 @@ raidSectionsEl.addEventListener("change", async (event) => {
   applySignupSelectStatusClass(target, nextStatus);
 
   if (signupId) {
+    const existingSignup = currentRows.find((e) => e.id === signupId);
+    const row = target.closest("tr");
+    const rowProfileSelect = row
+      ? row.querySelector('[data-raid-profile-select="true"]')
+      : null;
+    const selectedProfileValue = rowProfileSelect instanceof HTMLSelectElement
+      ? rowProfileSelect.value
+      : "";
+    const selectedProfileRef = parseRaidProfileSelection(selectedProfileValue);
+    const characterChanged = selectedProfileRef.profileId
+      && (selectedProfileRef.profileId !== existingSignup?.characterId
+        || selectedProfileRef.characterKey !== (existingSignup?.profileCharacterKey || "main"));
+
+    if (characterChanged) {
+      const selectedProfile = getCharacterById(selectedProfileRef.profileId);
+      const selectedCharacterEntry = findProfileCharacterEntry(selectedProfile, selectedProfileRef.characterKey);
+      const selectedRaid = currentRaids.find((raid) => raid.id === raidId);
+      if (selectedProfile && selectedCharacterEntry && selectedRaid) {
+        try {
+          await upsertRaidSignupForProfile(existingSignup, selectedRaid, selectedProfile, selectedCharacterEntry, nextStatus);
+          setMessage(formMessage, `Signup updated with new character and status set to ${statusLabel(nextStatus)}.`);
+        } catch (error) {
+          setMessage(formMessage, error.message, true);
+        }
+        return;
+      }
+    }
+
     try {
       await updateSignupStatus(signupId, nextStatus);
     } catch (error) {
