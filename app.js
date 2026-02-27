@@ -3398,9 +3398,21 @@ if (!hasConfigValues()) {
     authUid = user.uid;
     authEmail = String(user.email || "").trim();
     const inStaticAdminAllowlist = Array.isArray(appSettings.adminUids) && appSettings.adminUids.includes(authUid);
-    isAdmin = inStaticAdminAllowlist;
+    let hasAdminDoc = false;
+    let hasOwnerDoc = false;
+    try {
+      hasAdminDoc = (await getDoc(doc(db, "admins", authUid))).exists();
+    } catch {
+      hasAdminDoc = false;
+    }
+    try {
+      hasOwnerDoc = (await getDoc(doc(db, "owners", authUid))).exists();
+    } catch {
+      hasOwnerDoc = false;
+    }
+    isAdmin = inStaticAdminAllowlist || hasAdminDoc || hasOwnerDoc;
     hasAdminUI = isAdmin && !!adminRaidSection;
-    console.log("[AUTH] uid:", authUid, "isAdmin:", isAdmin, "email:", authEmail);
+    console.log("[AUTH] uid:", authUid, "isAdmin:", isAdmin, "hasAdminDoc:", hasAdminDoc, "hasOwnerDoc:", hasOwnerDoc, "email:", authEmail);
     try {
       await setDoc(
         doc(membersRef, authUid),
