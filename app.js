@@ -52,7 +52,6 @@ const fields = {
 };
 // Raid row containers for renderRows (fix ReferenceError)
 const raidRows = {
-  current: document.getElementById("currentRaidRows"),
   upcoming: document.getElementById("upcomingRaidRows"),
   past: document.getElementById("pastRaidRows")
 };
@@ -72,7 +71,6 @@ const WOW_CLASS_COLORS = {
 
 // Raid count badges (fix ReferenceError)
 const raidCountBadges = {
-  current: document.getElementById("currentCountBadge"),
   upcoming: document.getElementById("upcomingCountBadge"),
   past: document.getElementById("pastCountBadge")
 };
@@ -2864,14 +2862,8 @@ function renderCategoryRows(targetElement, rows, rosterMap) {
 function renderRows(items) {
   const scheduleItems = buildScheduleItems(items);
   const now = new Date();
-  const startOfToday = new Date(now);
-  startOfToday.setHours(0, 0, 0, 0);
-  const plusThree = new Date(startOfToday);
-  plusThree.setDate(startOfToday.getDate() + 3);
-  const plusSeven = new Date(startOfToday);
-  plusSeven.setDate(startOfToday.getDate() + 7);
 
-  const grouped = { current: [], upcoming: [], past: [] };
+  const grouped = { upcoming: [], past: [] };
 
   scheduleItems.forEach((item) => {
     const cutoffDate = getRaidCutoffDateTime(item);
@@ -2879,26 +2871,18 @@ function renderRows(items) {
       grouped.past.push(item);
       return;
     }
-
-    const raidDate = parseDateOnly(getRaidDateString(item));
-    if (!raidDate) {
-      grouped.upcoming.push(item);
-      return;
-    }
-    if (raidDate <= plusThree) {
-      grouped.current.push(item);
-      return;
-    }
     grouped.upcoming.push(item);
   });
 
-  raidCountBadges.current.textContent = String(groupRowsByRaid(grouped.current).length);
-  raidCountBadges.upcoming.textContent = String(groupRowsByRaid(grouped.upcoming).length);
-  raidCountBadges.past.textContent = String(groupRowsByRaid(grouped.past).length);
+  if (raidCountBadges.upcoming) {
+    raidCountBadges.upcoming.textContent = String(groupRowsByRaid(grouped.upcoming).length);
+  }
+  if (raidCountBadges.past) {
+    raidCountBadges.past.textContent = String(groupRowsByRaid(grouped.past).length);
+  }
 
   const rosterMap = buildRosterMap(scheduleItems);
 
-  renderCategoryRows(raidRows.current, grouped.current, rosterMap);
   renderCategoryRows(raidRows.upcoming, grouped.upcoming, rosterMap);
   renderCategoryRows(raidRows.past, grouped.past, rosterMap);
 
@@ -2919,6 +2903,7 @@ const calNextWeek = document.getElementById("calNextWeek");
 const calTodayBtn = document.getElementById("calToday");
 
 let calendarMonthOffset = 0;
+let calendarUserNavigated = false;
 let lastScheduleItems = [];
 
 function getCalendarMonth(monthOffset) {
@@ -2947,10 +2932,43 @@ function formatCalendarRangeLabel(monthOffset) {
   return d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 }
 
+function getSmartCalendarOffset(scheduleItems) {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  const todayYear = now.getFullYear();
+  const todayMonth = now.getMonth();
+
+  // Find the nearest upcoming (non-past) raid date
+  let nearestFutureDate = null;
+  for (const item of scheduleItems) {
+    const cutoff = getRaidCutoffDateTime(item);
+    if (!cutoff || cutoff.getTime() < Date.now()) continue;
+    const rd = parseDateOnly(getRaidDateString(item));
+    if (!rd) continue;
+    if (!nearestFutureDate || rd < nearestFutureDate) {
+      nearestFutureDate = rd;
+    }
+  }
+
+  if (!nearestFutureDate) return 0;
+
+  // Calculate month offset from today to that raid's month
+  return (nearestFutureDate.getFullYear() - todayYear) * 12
+    + (nearestFutureDate.getMonth() - todayMonth);
+}
+
 function renderCalendarView(scheduleItems) {
   lastScheduleItems = scheduleItems;
   if (!calendarGrid || calendarView?.hidden) {
     return;
+  }
+
+  // Auto-navigate to the month of the nearest upcoming raid
+  if (!calendarUserNavigated && scheduleItems.length) {
+    const smartOffset = getSmartCalendarOffset(scheduleItems);
+    if (smartOffset !== calendarMonthOffset) {
+      calendarMonthOffset = smartOffset;
+    }
   }
 
   const { startDate, totalCells, firstOfMonth, lastOfMonth } = getCalendarMonthGrid(calendarMonthOffset);
@@ -3053,18 +3071,21 @@ if (viewCalendarBtn) {
 }
 if (calPrevWeek) {
   calPrevWeek.addEventListener("click", () => {
+    calendarUserNavigated = true;
     calendarMonthOffset -= 1;
     renderCalendarView(lastScheduleItems);
   });
 }
 if (calNextWeek) {
   calNextWeek.addEventListener("click", () => {
+    calendarUserNavigated = true;
     calendarMonthOffset += 1;
     renderCalendarView(lastScheduleItems);
   });
 }
 if (calTodayBtn) {
   calTodayBtn.addEventListener("click", () => {
+    calendarUserNavigated = false;
     calendarMonthOffset = 0;
     renderCalendarView(lastScheduleItems);
   });
