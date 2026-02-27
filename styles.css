@@ -1804,18 +1804,19 @@ th {
 /* ── Raid Calendar ── */
 .raid-calendar {
   margin-top: 0.5rem;
+  width: 100%;
 }
 
 .calendar-header {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  margin-bottom: 0.75rem;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
   flex-wrap: wrap;
 }
 
 .calendar-range-label {
-  font-size: 1.15rem;
+  font-size: clamp(1.1rem, 1.4vw, 1.5rem);
   font-weight: 700;
   color: var(--text-main);
   min-width: 16ch;
@@ -1823,8 +1824,8 @@ th {
 }
 
 .calendar-nav {
-  padding: 0.4rem 0.85rem;
-  font-size: 0.95rem;
+  padding: 0.45rem 1rem;
+  font-size: clamp(0.9rem, 1.1vw, 1.1rem);
   border: 1px solid #5e4b2a;
   border-radius: 8px;
   background: #131316;
@@ -1846,28 +1847,29 @@ th {
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 0.55rem;
+  gap: clamp(0.3rem, 0.6vw, 0.75rem);
+  width: 100%;
 }
 
 .calendar-day-header {
   text-align: center;
-  font-size: 0.92rem;
+  font-size: clamp(0.82rem, 1vw, 1.1rem);
   font-weight: 700;
   color: var(--text-dim);
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  padding: 0.4rem 0;
+  padding: 0.45rem 0;
 }
 
 .calendar-day {
   border: 1px solid #2a2a30;
   border-radius: 8px;
   background: var(--bg-panel);
-  min-height: 9rem;
-  padding: 0.5rem;
+  min-height: clamp(6rem, 11vw, 14rem);
+  padding: clamp(0.35rem, 0.5vw, 0.7rem);
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.35rem;
   position: relative;
   transition: border-color 0.15s;
 }
@@ -1889,7 +1891,7 @@ th {
 }
 
 .calendar-day-number {
-  font-size: 0.95rem;
+  font-size: clamp(0.85rem, 1.05vw, 1.2rem);
   font-weight: 700;
   color: var(--text-dim);
   padding: 0.15rem 0.3rem;
@@ -1905,9 +1907,9 @@ th {
 
 .calendar-raid-chip {
   display: block;
-  padding: 0.3rem 0.45rem;
+  padding: clamp(0.2rem, 0.4vw, 0.45rem) clamp(0.3rem, 0.5vw, 0.6rem);
   border-radius: 5px;
-  font-size: 0.85rem;
+  font-size: clamp(0.72rem, 0.95vw, 1.05rem);
   font-weight: 600;
   line-height: 1.35;
   border: 1px solid #4a3e2a;
@@ -1921,7 +1923,7 @@ th {
 
 .calendar-raid-chip .chip-time {
   font-weight: 400;
-  font-size: 0.78rem;
+  font-size: clamp(0.62rem, 0.85vw, 0.95rem);
   color: var(--text-dim);
   display: block;
 }
@@ -1933,7 +1935,7 @@ th {
 }
 
 .calendar-raid-more {
-  font-size: 0.8rem;
+  font-size: clamp(0.7rem, 0.9vw, 1rem);
   color: var(--text-dim);
   text-align: center;
   padding: 0.2rem;
@@ -2700,29 +2702,33 @@ td .row-actions button {
 
   /* Calendar responsive */
   .calendar-grid {
-    gap: 0.2rem;
+    gap: 0.15rem;
   }
 
   .calendar-day {
-    min-height: 4rem;
-    padding: 0.2rem;
+    min-height: 3.5rem;
+    padding: 0.15rem;
   }
 
   .calendar-day-number {
-    font-size: 0.64rem;
+    font-size: 0.62rem;
   }
 
   .calendar-raid-chip {
-    font-size: 0.58rem;
-    padding: 0.14rem 0.22rem;
+    font-size: 0.56rem;
+    padding: 0.12rem 0.2rem;
   }
 
   .calendar-raid-chip .chip-time {
-    font-size: 0.54rem;
+    font-size: 0.5rem;
   }
 
   .calendar-range-label {
     font-size: 0.82rem;
+  }
+
+  .calendar-day-header {
+    font-size: 0.6rem;
   }
 
   .view-toggle {
