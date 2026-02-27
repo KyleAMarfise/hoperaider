@@ -13,4 +13,4 @@ TODO.txt
 
 # Optional runtime artifacts
 node_modules/
-dist/
+dist/firebase-debug.log
