@@ -77,6 +77,26 @@
           </fieldset>
         </div>
 
+        <div class="time-slots">
+          <fieldset class="slot-group">
+            <legend>Role Slots</legend>
+            <div class="slot-range slot-range-3col">
+              <label>
+                🛡 Tanks
+                <input id="tankSlots" name="tankSlots" type="number" min="0" max="25" />
+              </label>
+              <label>
+                ✚ Healers
+                <input id="healerSlots" name="healerSlots" type="number" min="0" max="25" />
+              </label>
+              <label>
+                ⚔ DPS
+                <input id="dpsSlots" name="dpsSlots" type="number" min="0" max="25" />
+              </label>
+            </div>
+          </fieldset>
+        </div>
+
         <div class="actions">
           <button type="submit" id="saveRaidButton">Save Raid</button>
           <button type="button" id="cancelRaidEditButton" class="secondary" hidden>Cancel Edit</button>

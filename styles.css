@@ -973,6 +973,18 @@ label {
   color: var(--gold);
 }
 
+.slot-range-3col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+}
+
+.raid-slot-mini {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
 .help-text {
   color: var(--text-dim);
   font-size: 0.82rem;
@@ -2368,6 +2380,10 @@ td .row-actions button {
 
   .slot-range {
     grid-template-columns: 1fr;
+  }
+
+  .slot-range-3col {
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .audit-filters {

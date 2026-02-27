@@ -38,6 +38,9 @@ const raidRunTypeInput = document.getElementById("raidRunType");
 const raidStartInput = document.getElementById("raidStart");
 const raidEndInput = document.getElementById("raidEnd");
 const raidSizeInput = document.getElementById("raidSize");
+const tankSlotsInput = document.getElementById("tankSlots");
+const healerSlotsInput = document.getElementById("healerSlots");
+const dpsSlotsInput = document.getElementById("dpsSlots");
 const saveRaidButton = document.getElementById("saveRaidButton");
 const cancelRaidEditButton = document.getElementById("cancelRaidEditButton");
 const currentAdminRows = document.getElementById("currentAdminRows");
@@ -248,13 +251,18 @@ function buildAdminRaidRows(items) {
   return items
     .map((item) => {
       const windowText = renderRaidWindowMultiline(item.raidStart, item.raidEnd);
+      const slotParts = [];
+      if (item.tankSlots != null) { slotParts.push(`🛡${item.tankSlots}`); }
+      if (item.healerSlots != null) { slotParts.push(`✚${item.healerSlots}`); }
+      if (item.dpsSlots != null) { slotParts.push(`⚔${item.dpsSlots}`); }
+      const slotLabel = slotParts.length ? `<br><span class="raid-slot-mini">${slotParts.join(" ")}</span>` : "";
       return `<tr>
         <td>${escapeHtml(`Phase ${String(item.phase)}`)}</td>
         <td>${escapeHtml(item.raidName)}</td>
         <td>${escapeHtml(formatMonthDayYear(item.raidDate))}</td>
         <td class="raid-time-cell">${windowText}</td>
         <td>${escapeHtml(item.runType)}</td>
-        <td>${escapeHtml(item.raidSize || "—")}</td>
+        <td>${escapeHtml(item.raidSize || "—")}${slotLabel}</td>
         <td>
           <div class="row-actions">
             <button type="button" data-raid-action="edit" data-raid-id="${item.id}">Edit</button>
@@ -374,12 +382,34 @@ function populateRaidPhaseOptions() {
   }
 }
 
+function getDefaultRoleSlots(raidSizeStr) {
+  const size = parseInt(String(raidSizeStr).replace(/\D/g, ""), 10) || 0;
+  if (size >= 25) {
+    return { tank: 3, healer: 6, dps: size - 9 };
+  }
+  if (size >= 10) {
+    return { tank: 2, healer: 3, dps: size - 5 };
+  }
+  return { tank: 2, healer: 3, dps: 5 };
+}
+
+function syncRoleSlotDefaults() {
+  const sizeStr = raidSizeInput.value;
+  const defaults = getDefaultRoleSlots(sizeStr);
+  if (!tankSlotsInput.value && !healerSlotsInput.value && !dpsSlotsInput.value) {
+    tankSlotsInput.value = defaults.tank;
+    healerSlotsInput.value = defaults.healer;
+    dpsSlotsInput.value = defaults.dps;
+  }
+}
+
 function syncRaidSize() {
   const selectedPhase = Number(raidPhaseInput.value);
   const selectedRaid = raidTemplateInput.value;
   const phaseRaids = RAID_PRESETS_BY_PHASE[selectedPhase] || [];
   const matched = phaseRaids.find((raid) => raid.name === selectedRaid);
   raidSizeInput.value = matched ? `${matched.size}-man` : "";
+  syncRoleSlotDefaults();
 }
 
 function refreshRaidTemplateOptions(selectedRaid = "") {
@@ -448,6 +478,10 @@ function resetRaidForm() {
   populateRaidPhaseOptions();
   refreshRaidTemplateOptions();
   raidEventDateInput.value = toDateOnlyString(new Date());
+  tankSlotsInput.value = "";
+  healerSlotsInput.value = "";
+  dpsSlotsInput.value = "";
+  syncRoleSlotDefaults();
   setMessage(raidAdminMessage, "");
 }
 
@@ -463,6 +497,16 @@ function loadRaidForm(item) {
   raidStartInput.value = String(item.raidStart);
   raidEndInput.value = String(item.raidEnd);
   syncRaidSize();
+
+  if (item.tankSlots != null) {
+    tankSlotsInput.value = String(item.tankSlots);
+  }
+  if (item.healerSlots != null) {
+    healerSlotsInput.value = String(item.healerSlots);
+  }
+  if (item.dpsSlots != null) {
+    dpsSlotsInput.value = String(item.dpsSlots);
+  }
 }
 
 populateHourOptions(raidStartInput, START_HOURS, "Select CST start");
@@ -547,6 +591,9 @@ raidForm.addEventListener("submit", async (event) => {
   const raidStart = parseHourValue(raidStartInput.value);
   const raidEnd = parseHourValue(raidEndInput.value);
   const raidSize = raidSizeInput.value;
+  const tankSlots = Number(tankSlotsInput.value) || 0;
+  const healerSlots = Number(healerSlotsInput.value) || 0;
+  const dpsSlots = Number(dpsSlotsInput.value) || 0;
 
   const phaseRaids = RAID_PRESETS_BY_PHASE[phase] || [];
   const isValidRaid = phaseRaids.some((raid) => raid.name === raidName);
@@ -574,6 +621,9 @@ raidForm.addEventListener("submit", async (event) => {
     raidStart,
     raidEnd,
     raidSize,
+    tankSlots,
+    healerSlots,
+    dpsSlots,
     createdByUid: isDemoMode ? "demo-local" : authUid,
     updatedAt: serverTimestamp()
   };

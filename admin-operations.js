@@ -1181,6 +1181,65 @@ function getGoogleAuthErrorMessage(error) {
   return error?.message || "Google sign-in failed.";
 }
 
+/* ── Role Slot Constraint Check ── */
+function resolveSignupRole(signup) {
+  const profilesById = getCharacterMapById();
+  const profile = resolveProfileForSignup(signup, profilesById);
+  const selectedEntry = profile
+    ? findProfileCharacterEntry(
+      profile,
+      String(signup.profileCharacterKey || "main"),
+      String(signup.profileCharacterName || signup.characterName || "")
+    )
+    : null;
+  return String(
+    signup.mainRole || signup.role
+    || selectedEntry?.mainRole || selectedEntry?.role
+    || profile?.mainRole || profile?.role
+    || ""
+  ).trim();
+}
+
+function checkRoleSlotConstraint(signup) {
+  const raidId = String(signup.raidId || "");
+  if (!raidId) {
+    return null;
+  }
+
+  const raid = currentRaids.find((r) => r.id === raidId);
+  if (!raid) {
+    return null;
+  }
+
+  const hasCfg = raid.tankSlots != null || raid.healerSlots != null || raid.dpsSlots != null;
+  if (!hasCfg) {
+    return null;
+  }
+
+  const limits = {
+    Tank: Number(raid.tankSlots) || 0,
+    Healer: Number(raid.healerSlots) || 0,
+    DPS: Number(raid.dpsSlots) || 0
+  };
+
+  const role = resolveSignupRole(signup);
+  if (!role || !(role in limits)) {
+    return null;
+  }
+
+  const acceptedForRole = currentSignups.filter((s) => {
+    return String(s.raidId || "") === raidId
+      && normalizeSignupStatus(s.status) === "accept"
+      && resolveSignupRole(s) === role;
+  }).length;
+
+  if (acceptedForRole >= limits[role]) {
+    return `Cannot accept: ${role} slots are full (${acceptedForRole}/${limits[role]}). Remove an accepted ${role} first.`;
+  }
+
+  return null;
+}
+
 signupRequestsSection.addEventListener("click", async (event) => {
   const target = event.target;
   if (!(target instanceof HTMLButtonElement)) {
@@ -1191,6 +1250,18 @@ signupRequestsSection.addEventListener("click", async (event) => {
   const signupId = target.dataset.signupId;
   if (!action || !signupId || !isAdmin) {
     return;
+  }
+
+  /* ── Enforce role slot constraint on accept ── */
+  if (action === "accept") {
+    const signup = currentSignups.find((s) => s.id === signupId);
+    if (signup) {
+      const constraintMsg = checkRoleSlotConstraint(signup);
+      if (constraintMsg) {
+        setMessage(signupRequestMessage, constraintMsg, true);
+        return;
+      }
+    }
   }
 
   const nextStatus = action === "accept" ? "accept" : "denied";

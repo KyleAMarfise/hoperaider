@@ -809,8 +809,22 @@ function buildRoleSummary(signups) {
 }
 
 /* ── Role Composition Targets ── */
-function getRoleTargets(raidSize) {
+function getRoleTargets(raidItem) {
+  const raidSize = typeof raidItem === "string" ? raidItem : (raidItem?.raidSize || "");
   const size = parseRaidSlots(raidSize);
+
+  /* Use raid-specific slot config if saved, otherwise fall back to defaults */
+  if (typeof raidItem === "object" && raidItem !== null) {
+    const hasCfg = raidItem.tankSlots != null || raidItem.healerSlots != null || raidItem.dpsSlots != null;
+    if (hasCfg) {
+      return {
+        Tank: Number(raidItem.tankSlots) || 0,
+        Healer: Number(raidItem.healerSlots) || 0,
+        DPS: Number(raidItem.dpsSlots) || 0
+      };
+    }
+  }
+
   if (size >= 25) {
     return { Tank: 3, Healer: 6, DPS: size - 9 };
   }
@@ -820,8 +834,9 @@ function getRoleTargets(raidSize) {
   return { Tank: 2, Healer: 3, DPS: 5 };
 }
 
-function renderRoleCompositionBar(resolvedSignups, raidSize) {
-  const targets = getRoleTargets(raidSize);
+function renderRoleCompositionBar(resolvedSignups, raidItem) {
+  const targets = getRoleTargets(raidItem);
+  const raidSize = typeof raidItem === "string" ? raidItem : (raidItem?.raidSize || "");
   const totals = buildRoleSummary(resolvedSignups);
   const totalSize = parseRaidSlots(raidSize) || (targets.Tank + targets.Healer + targets.DPS);
 
@@ -2769,7 +2784,7 @@ function renderCategoryRows(targetElement, rows, rosterMap) {
         <tr id="${detailId}" class="raid-detail-row" ${isExpanded ? "" : "hidden"}>
           <td colspan="10">
             <div class="raid-detail-wrap">
-              ${renderRoleCompositionBar(resolvedSignups, item.raidSize)}
+              ${renderRoleCompositionBar(resolvedSignups, item)}
               ${renderRosterTable(resolvedSignups)}
               <details class="raid-detail-signups-details">
                 <summary class="raid-detail-signups-summary">Full Signup Details</summary>
