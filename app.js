@@ -2748,25 +2748,27 @@ function hydrateRowsWithRaidWindow(rows) {
   const raidsById = new Map(currentRaids.map((raid) => [raid.id, raid]));
 
   return rows.map((row) => {
-    const hasWindow = Number.isInteger(row.raidStart) && Number.isInteger(row.raidEnd);
-    if (hasWindow) {
-      return row;
-    }
-
     const matchedRaid = (row.raidId && raidsById.get(row.raidId)) || null;
     if (!matchedRaid) {
       return row;
     }
 
+    // Always prefer the current raid document values so admin edits
+    // (date, name, time, size, leader, slots, etc.) are reflected
+    // immediately without needing to update every signup.
     return {
       ...row,
-      raidStart: Number.isInteger(matchedRaid.raidStart) ? matchedRaid.raidStart : row.raidStart,
-      raidEnd: Number.isInteger(matchedRaid.raidEnd) ? matchedRaid.raidEnd : row.raidEnd,
       raidDate: matchedRaid.raidDate || row.raidDate,
       raidName: matchedRaid.raidName || row.raidName,
       phase: matchedRaid.phase ?? row.phase,
       runType: matchedRaid.runType || row.runType,
-      raidSize: matchedRaid.raidSize || row.raidSize
+      raidSize: matchedRaid.raidSize || row.raidSize,
+      raidStart: Number.isInteger(matchedRaid.raidStart) ? matchedRaid.raidStart : row.raidStart,
+      raidEnd: Number.isInteger(matchedRaid.raidEnd) ? matchedRaid.raidEnd : row.raidEnd,
+      raidLeader: matchedRaid.raidLeader ?? row.raidLeader ?? "",
+      tankSlots: matchedRaid.tankSlots ?? row.tankSlots ?? 0,
+      healerSlots: matchedRaid.healerSlots ?? row.healerSlots ?? 0,
+      dpsSlots: matchedRaid.dpsSlots ?? row.dpsSlots ?? 0
     };
   });
 }
