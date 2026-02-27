@@ -1272,12 +1272,19 @@ function applySignupSelectStatusClass(selectElement, statusValue) {
   selectElement.classList.add(`status-${normalized}`);
 }
 
+function autoApproveIfAdmin(status) {
+  if (isAdmin && status === "requested") {
+    return "accept";
+  }
+  return status;
+}
+
 async function updateSignupStatus(signupId, nextStatus) {
   if (!signupId) {
     return;
   }
 
-  const normalizedStatus = normalizeSignupStatus(nextStatus);
+  const normalizedStatus = autoApproveIfAdmin(normalizeSignupStatus(nextStatus));
   const existingEntry = currentRows.find((entry) => entry.id === signupId);
   if (!existingEntry) {
     throw new Error("Signup record not found.");
@@ -1320,7 +1327,7 @@ async function updateSignupStatus(signupId, nextStatus) {
 }
 
 async function createRaidSignup(raid, selectedProfile, selectedCharacterEntry, statusValue) {
-  const normalizedStatus = normalizeSignupStatus(statusValue);
+  const normalizedStatus = autoApproveIfAdmin(normalizeSignupStatus(statusValue));
   const rawPayload = {
     characterId: selectedProfile.id,
     profileCharacterKey: selectedCharacterEntry.key,
@@ -1371,7 +1378,7 @@ async function createRaidSignup(raid, selectedProfile, selectedCharacterEntry, s
 }
 
 async function upsertRaidSignupForProfile(existingSignup, raid, selectedProfile, selectedCharacterEntry, statusValue) {
-  const normalizedStatus = normalizeSignupStatus(statusValue);
+  const normalizedStatus = autoApproveIfAdmin(normalizeSignupStatus(statusValue));
   const rawPayload = {
     characterId: selectedProfile.id,
     profileCharacterKey: selectedCharacterEntry.key,
