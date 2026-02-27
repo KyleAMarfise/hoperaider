@@ -2802,7 +2802,6 @@ function renderCategoryRows(targetElement, rows, rosterMap) {
             <td><span class="signup-status-badge status-${normalizeSignupStatus(signup.status)}">${escapeHtml(statusLabel(signup.status))}</span></td>
             <td>${buildExternalLink(signup.armoryUrl, "Gear")}</td>
             <td>${buildExternalLink(signup.logsUrl || buildLogsUrl(signup.characterName || signup.profileCharacterName || ""), "Logs")}</td>
-            <td>${signup.progressionUrl ? buildExternalLink(signup.progressionUrl, "Progress") : "TBD"}</td>
           </tr>`)
         .join("");
 
@@ -2849,7 +2848,6 @@ function renderCategoryRows(targetElement, rows, rosterMap) {
                       <th>Status</th>
                       <th>Gear</th>
                       <th>Logs</th>
-                      <th>Raid Progression</th>
                     </tr>
                   </thead>
                   <tbody>${detailRows}</tbody>
