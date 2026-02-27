@@ -515,6 +515,18 @@ populateRaidPhaseOptions();
 refreshRaidTemplateOptions();
 raidEventDateInput.value = toDateOnlyString(new Date());
 
+raidEventDateInput.addEventListener("click", () => {
+  if (typeof raidEventDateInput.showPicker === "function") {
+    try { raidEventDateInput.showPicker(); } catch { /* already open or not supported */ }
+  }
+});
+
+raidEventDateInput.addEventListener("focus", () => {
+  if (typeof raidEventDateInput.showPicker === "function") {
+    try { raidEventDateInput.showPicker(); } catch { /* already open or not supported */ }
+  }
+});
+
 raidPhaseInput.addEventListener("change", () => {
   refreshRaidTemplateOptions();
 });
