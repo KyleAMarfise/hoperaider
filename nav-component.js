@@ -53,16 +53,13 @@
       </div>
     </details>
 
-    <details id="adminMenu" class="nav-menu" hidden>
-      <summary class="nav-button">Admin Panel</summary>
-      <div class="nav-menu-panel">
-        <a id="adminRaidsLink" class="nav-button" href="admin.html" hidden>Raid Creator</a>
-        <a id="adminOpsLink" class="nav-button" href="admin-operations.html" hidden>
-          Requests &amp; Audit
-          <span id="adminOpsBadge" class="nav-mini-badge" hidden>0</span>
-        </a>
-      </div>
-    </details>
+    <div id="adminMenu" class="nav-admin-links" hidden>
+      <a id="adminRaidsLink" class="nav-button" href="admin.html" hidden>Raid Creator</a>
+      <a id="adminOpsLink" class="nav-button" href="admin-operations.html" hidden>
+        Requests &amp; Audit
+        <span id="adminOpsBadge" class="nav-mini-badge" hidden>0</span>
+      </a>
+    </div>
   `;
 
   const adminActions = `

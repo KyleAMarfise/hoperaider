@@ -264,6 +264,10 @@ body {
   position: relative;
 }
 
+.nav-admin-links {
+  display: contents;
+}
+
 .nav-menu > summary {
   list-style: none;
 }
