@@ -64,20 +64,20 @@ const END_HOURS = Array.from({ length: 24 }, (_, index) => index + 1);
 
 const RAID_PRESETS_BY_PHASE = {
   1: [
-    { name: "Karazhan", size: "10" },
-    { name: "Gruul's Lair", size: "25" },
-    { name: "Magtheridon's Lair", size: "25" }
+    { name: "Karazhan", size: "10", tanks: 2, healers: 3, dps: 5 },
+    { name: "Gruul's Lair", size: "25", tanks: 2, healers: 6, dps: 17 },
+    { name: "Magtheridon's Lair", size: "25", tanks: 3, healers: 6, dps: 16 }
   ],
   2: [
-    { name: "Serpentshrine Cavern", size: "25" },
-    { name: "The Eye", size: "25" }
+    { name: "Serpentshrine Cavern", size: "25", tanks: 3, healers: 7, dps: 15 },
+    { name: "The Eye", size: "25", tanks: 3, healers: 7, dps: 15 }
   ],
   3: [
-    { name: "Hyjal Summit", size: "25" },
-    { name: "Black Temple", size: "25" }
+    { name: "Hyjal Summit", size: "25", tanks: 3, healers: 7, dps: 15 },
+    { name: "Black Temple", size: "25", tanks: 3, healers: 7, dps: 15 }
   ],
-  4: [{ name: "Zul'Aman", size: "10" }],
-  5: [{ name: "Sunwell Plateau", size: "25" }]
+  4: [{ name: "Zul'Aman", size: "10", tanks: 2, healers: 3, dps: 5 }],
+  5: [{ name: "Sunwell Plateau", size: "25", tanks: 3, healers: 7, dps: 15 }]
 };
 
 let authUid = null;
@@ -391,7 +391,7 @@ function populateRaidPhaseOptions() {
 function getDefaultRoleSlots(raidSizeStr) {
   const size = parseInt(String(raidSizeStr).replace(/\D/g, ""), 10) || 0;
   if (size >= 25) {
-    return { tank: 3, healer: 6, dps: size - 9 };
+    return { tank: 3, healer: 7, dps: size - 10 };
   }
   if (size >= 10) {
     return { tank: 2, healer: 3, dps: size - 5 };
@@ -399,9 +399,19 @@ function getDefaultRoleSlots(raidSizeStr) {
   return { tank: 2, healer: 3, dps: 5 };
 }
 
+function getRaidPresetDefaults() {
+  const selectedPhase = Number(raidPhaseInput.value);
+  const selectedRaid = raidTemplateInput.value;
+  const phaseRaids = RAID_PRESETS_BY_PHASE[selectedPhase] || [];
+  const matched = phaseRaids.find((raid) => raid.name === selectedRaid);
+  if (matched && matched.tanks != null) {
+    return { tank: matched.tanks, healer: matched.healers, dps: matched.dps };
+  }
+  return getDefaultRoleSlots(raidSizeInput.value);
+}
+
 function syncRoleSlotDefaults() {
-  const sizeStr = raidSizeInput.value;
-  const defaults = getDefaultRoleSlots(sizeStr);
+  const defaults = getRaidPresetDefaults();
   if (!tankSlotsInput.value && !healerSlotsInput.value && !dpsSlotsInput.value) {
     tankSlotsInput.value = defaults.tank;
     healerSlotsInput.value = defaults.healer;
@@ -415,6 +425,10 @@ function syncRaidSize() {
   const phaseRaids = RAID_PRESETS_BY_PHASE[selectedPhase] || [];
   const matched = phaseRaids.find((raid) => raid.name === selectedRaid);
   raidSizeInput.value = matched ? `${matched.size}-man` : "";
+  // Reset role slots to the new raid's defaults when raid selection changes
+  tankSlotsInput.value = "";
+  healerSlotsInput.value = "";
+  dpsSlotsInput.value = "";
   syncRoleSlotDefaults();
 }
 

@@ -81,20 +81,20 @@ const END_HOURS = Array.from({ length: 24 }, (_, index) => index + 1);
 
 const RAID_PRESETS_BY_PHASE = {
   1: [
-    { name: "Karazhan", size: "10" },
-    { name: "Gruul's Lair", size: "25" },
-    { name: "Magtheridon's Lair", size: "25" }
+    { name: "Karazhan", size: "10", tanks: 2, healers: 3, dps: 5 },
+    { name: "Gruul's Lair", size: "25", tanks: 2, healers: 6, dps: 17 },
+    { name: "Magtheridon's Lair", size: "25", tanks: 3, healers: 6, dps: 16 }
   ],
   2: [
-    { name: "Serpentshrine Cavern", size: "25" },
-    { name: "The Eye", size: "25" }
+    { name: "Serpentshrine Cavern", size: "25", tanks: 3, healers: 7, dps: 15 },
+    { name: "The Eye", size: "25", tanks: 3, healers: 7, dps: 15 }
   ],
   3: [
-    { name: "Hyjal Summit", size: "25" },
-    { name: "Black Temple", size: "25" }
+    { name: "Hyjal Summit", size: "25", tanks: 3, healers: 7, dps: 15 },
+    { name: "Black Temple", size: "25", tanks: 3, healers: 7, dps: 15 }
   ],
-  4: [{ name: "Zul'Aman", size: "10" }],
-  5: [{ name: "Sunwell Plateau", size: "25" }]
+  4: [{ name: "Zul'Aman", size: "10", tanks: 2, healers: 3, dps: 5 }],
+  5: [{ name: "Sunwell Plateau", size: "25", tanks: 3, healers: 7, dps: 15 }]
 };
 
 const SPEC_ICONS = {
