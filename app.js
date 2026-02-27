@@ -1272,11 +1272,42 @@ function applySignupSelectStatusClass(selectElement, statusValue) {
   selectElement.classList.add(`status-${normalized}`);
 }
 
-function autoApproveIfAdmin(status) {
+function autoApproveIfAdmin(status, raidId, role) {
   if (isAdmin && status === "requested") {
+    if (raidId && role && !hasRoleSlotCapacity(raidId, role)) {
+      return "requested";
+    }
     return "accept";
   }
   return status;
+}
+
+/**
+ * Returns true if the given role still has capacity for a new accepted signup
+ * in the specified raid. Returns true when no slot config exists (unconstrained).
+ */
+function hasRoleSlotCapacity(raidId, role) {
+  if (!raidId || !role) return true;
+  const raid = currentRaids.find((r) => r.id === raidId);
+  if (!raid) return true;
+  const hasCfg = raid.tankSlots != null || raid.healerSlots != null || raid.dpsSlots != null;
+  if (!hasCfg) return true;
+  const limits = {
+    Tank: Number(raid.tankSlots) || 0,
+    Healer: Number(raid.healerSlots) || 0,
+    DPS: Number(raid.dpsSlots) || 0
+  };
+  if (!(role in limits)) return true;
+  let acceptedCount = 0;
+  for (const s of currentRows) {
+    if (String(s.raidId || "") !== raidId) continue;
+    if (normalizeSignupStatus(s.status) !== "accept") continue;
+    const resolved = resolveSignupCharacterData(s);
+    if ((resolved.mainRole || resolved.role) === role) {
+      acceptedCount++;
+    }
+  }
+  return acceptedCount < limits[role];
 }
 
 async function updateSignupStatus(signupId, nextStatus) {
@@ -1284,11 +1315,13 @@ async function updateSignupStatus(signupId, nextStatus) {
     return;
   }
 
-  const normalizedStatus = autoApproveIfAdmin(normalizeSignupStatus(nextStatus));
   const existingEntry = currentRows.find((entry) => entry.id === signupId);
   if (!existingEntry) {
     throw new Error("Signup record not found.");
   }
+  const resolved = resolveSignupCharacterData(existingEntry);
+  const signupRole = resolved.mainRole || resolved.role || "";
+  const normalizedStatus = autoApproveIfAdmin(normalizeSignupStatus(nextStatus), String(existingEntry.raidId || ""), signupRole);
   const normalizedPayload = normalizeSignupPayloadForRules(existingEntry);
   if (!normalizedPayload) {
     throw new Error("Signup has invalid raid data. Re-select this raid and save again.");
@@ -1323,11 +1356,16 @@ async function updateSignupStatus(signupId, nextStatus) {
   );
   currentRows = sortRows(currentRows);
   renderRows(currentRows);
-  setMessage(formMessage, `Signup status set to ${statusLabel(normalizedStatus)}.`);
+  if (isAdmin && normalizeSignupStatus(nextStatus) === "requested" && normalizedStatus === "requested" && signupRole) {
+    setMessage(formMessage, `${signupRole} slots are full \u2014 signup submitted as a request.`);
+  } else {
+    setMessage(formMessage, `Signup status set to ${statusLabel(normalizedStatus)}.`);
+  }
 }
 
 async function createRaidSignup(raid, selectedProfile, selectedCharacterEntry, statusValue) {
-  const normalizedStatus = autoApproveIfAdmin(normalizeSignupStatus(statusValue));
+  const signupRole = selectedCharacterEntry.mainRole || selectedCharacterEntry.role || "";
+  const normalizedStatus = autoApproveIfAdmin(normalizeSignupStatus(statusValue), raid.id, signupRole);
   const rawPayload = {
     characterId: selectedProfile.id,
     profileCharacterKey: selectedCharacterEntry.key,
@@ -1360,7 +1398,7 @@ async function createRaidSignup(raid, selectedProfile, selectedCharacterEntry, s
     currentRows = sortRows(currentRows);
     saveDemoRows(currentRows);
     renderRows(currentRows);
-    return;
+    return normalizedStatus;
   }
 
   const createdDoc = await addDoc(collection(db, "signups"), {
@@ -1375,10 +1413,12 @@ async function createRaidSignup(raid, selectedProfile, selectedCharacterEntry, s
   });
   currentRows = sortRows(currentRows);
   renderRows(currentRows);
+  return normalizedStatus;
 }
 
 async function upsertRaidSignupForProfile(existingSignup, raid, selectedProfile, selectedCharacterEntry, statusValue) {
-  const normalizedStatus = autoApproveIfAdmin(normalizeSignupStatus(statusValue));
+  const signupRole = selectedCharacterEntry.mainRole || selectedCharacterEntry.role || "";
+  const normalizedStatus = autoApproveIfAdmin(normalizeSignupStatus(statusValue), raid.id, signupRole);
   const rawPayload = {
     characterId: selectedProfile.id,
     profileCharacterKey: selectedCharacterEntry.key,
@@ -1409,7 +1449,7 @@ async function upsertRaidSignupForProfile(existingSignup, raid, selectedProfile,
     currentRows = sortRows(currentRows);
     saveDemoRows(currentRows);
     renderRows(currentRows);
-    return;
+    return normalizedStatus;
   }
 
   await updateDoc(doc(db, "signups", existingSignup.id), {
@@ -1424,6 +1464,7 @@ async function upsertRaidSignupForProfile(existingSignup, raid, selectedProfile,
   );
   currentRows = sortRows(currentRows);
   renderRows(currentRows);
+  return normalizedStatus;
 }
 
 function getViewerOwnerUid() {
@@ -3342,8 +3383,13 @@ raidSectionsEl.addEventListener("change", async (event) => {
       const selectedRaid = currentRaids.find((raid) => raid.id === raidId);
       if (selectedProfile && selectedCharacterEntry && selectedRaid) {
         try {
-          await upsertRaidSignupForProfile(existingSignup, selectedRaid, selectedProfile, selectedCharacterEntry, nextStatus);
-          setMessage(formMessage, `Signup updated with new character and status set to ${statusLabel(nextStatus)}.`);
+          const effectiveCharStatus = await upsertRaidSignupForProfile(existingSignup, selectedRaid, selectedProfile, selectedCharacterEntry, nextStatus);
+          if (isAdmin && normalizeSignupStatus(nextStatus) === "requested" && effectiveCharStatus === "requested") {
+            const charRole = selectedCharacterEntry.mainRole || selectedCharacterEntry.role || "";
+            setMessage(formMessage, `${charRole} slots are full \u2014 signup submitted as a request.`);
+          } else {
+            setMessage(formMessage, `Signup updated with new character and status set to ${statusLabel(effectiveCharStatus || nextStatus)}.`);
+          }
         } catch (error) {
           setMessage(formMessage, error.message, true);
         }
@@ -3399,12 +3445,18 @@ raidSectionsEl.addEventListener("change", async (event) => {
   );
 
   try {
+    let effectiveStatus;
     if (existingForProfile) {
-      await upsertRaidSignupForProfile(existingForProfile, selectedRaid, selectedProfile, selectedCharacterEntry, nextStatus);
+      effectiveStatus = await upsertRaidSignupForProfile(existingForProfile, selectedRaid, selectedProfile, selectedCharacterEntry, nextStatus);
     } else {
-      await createRaidSignup(selectedRaid, selectedProfile, selectedCharacterEntry, nextStatus);
+      effectiveStatus = await createRaidSignup(selectedRaid, selectedProfile, selectedCharacterEntry, nextStatus);
     }
-    setMessage(formMessage, `Signup status set to ${statusLabel(nextStatus)}.`);
+    if (isAdmin && normalizeSignupStatus(nextStatus) === "requested" && effectiveStatus === "requested") {
+      const signupRole = selectedCharacterEntry.mainRole || selectedCharacterEntry.role || "";
+      setMessage(formMessage, `${signupRole} slots are full \u2014 signup submitted as a request.`);
+    } else {
+      setMessage(formMessage, `Signup status set to ${statusLabel(effectiveStatus || nextStatus)}.`);
+    }
   } catch (error) {
     setMessage(formMessage, error.message, true);
   }
