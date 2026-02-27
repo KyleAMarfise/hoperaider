@@ -913,22 +913,27 @@ function renderRosterTable(resolvedSignups) {
       const classColor = WOW_CLASS_COLORS[wowClass] || "";
       const charName = signup.characterName || signup.profileCharacterName || "Unknown";
       const spec = signup.mainSpecialization || signup.specialization || "";
+      const offSpec = signup.offSpecialization || "";
+      const offRole = signup.offRole || "";
       const statusNorm = normalizeSignupStatus(signup.status);
       return `<tr class="roster-row roster-status-${statusNorm}">
         <td><span class="roster-role-icon">${roleIcon}</span></td>
         <td style="${classColor ? `color: ${classColor}; font-weight: 600` : ""}">${escapeHtml(charName)}</td>
         <td style="${classColor ? `color: ${classColor}` : ""}">${escapeHtml(wowClass)}</td>
-        <td>${escapeHtml(spec)}</td>
+        <td>${escapeHtml(formatSpecDisplay(spec, "", role))}</td>
+        <td>${escapeHtml(formatSpecDisplay(offSpec, "", offRole))}</td>
         <td><span class="signup-status-badge status-${statusNorm}">${escapeHtml(statusLabel(signup.status))}</span></td>
+        <td>${buildExternalLink(signup.armoryUrl, "Gear")}</td>
+        <td>${buildExternalLink(signup.logsUrl || buildLogsUrl(charName), "Logs")}</td>
       </tr>`;
     }).join("");
 
-    return `<tr class="roster-section-header"><td colspan="5">${escapeHtml(sectionLabel)} (${signups.length})</td></tr>${rows}`;
+    return `<tr class="roster-section-header"><td colspan="8">${escapeHtml(sectionLabel)} (${signups.length})</td></tr>${rows}`;
   }
 
   return `<table class="roster-table">
     <thead>
-      <tr><th></th><th>Character</th><th>Class</th><th>Spec</th><th>Status</th></tr>
+      <tr><th></th><th>Character</th><th>Class</th><th>Main Spec</th><th>Off Spec</th><th>Status</th><th>Gear</th><th>Logs</th></tr>
     </thead>
     <tbody>
       ${rosterRows(accepted, "Accepted")}
@@ -2806,17 +2811,6 @@ function renderCategoryRows(targetElement, rows, rosterMap) {
         : null;
       const selectedRaid = findRaidFromSummary(item);
 
-      const detailRows = resolvedSignups
-        .map((signup) => `<tr>
-            <td>${renderCharacterDisplay(signup)}</td>
-            <td>${escapeHtml(formatSpecDisplay(signup.mainSpecialization || signup.specialization || "", signup.wowClass || "", signup.mainRole || signup.role || ""))}</td>
-            <td>${escapeHtml(formatSpecDisplay(signup.offSpecialization || "", signup.wowClass || "", signup.offRole || ""))}</td>
-            <td><span class="signup-status-badge status-${normalizeSignupStatus(signup.status)}">${escapeHtml(statusLabel(signup.status))}</span></td>
-            <td>${buildExternalLink(signup.armoryUrl, "Gear")}</td>
-            <td>${buildExternalLink(signup.logsUrl || buildLogsUrl(signup.characterName || signup.profileCharacterName || ""), "Logs")}</td>
-          </tr>`)
-        .join("");
-
       return `<tr class="raid-summary-row">
           <td>
             ${renderRaidCharacterControl(selectedRaid?.id || "", viewerSignup)}
@@ -2849,22 +2843,6 @@ function renderCategoryRows(targetElement, rows, rosterMap) {
             <div class="raid-detail-wrap">
               ${renderRoleCompositionBar(resolvedSignups, item)}
               ${renderRosterTable(resolvedSignups)}
-              <details class="raid-detail-signups-details">
-                <summary class="raid-detail-signups-summary">Full Signup Details</summary>
-                <table class="detail-table">
-                  <thead>
-                    <tr>
-                      <th>Character</th>
-                      <th>MS (Role)</th>
-                      <th>OS (Role)</th>
-                      <th>Status</th>
-                      <th>Gear</th>
-                      <th>Logs</th>
-                    </tr>
-                  </thead>
-                  <tbody>${detailRows}</tbody>
-                </table>
-              </details>
             </div>
           </td>
         </tr>`;
