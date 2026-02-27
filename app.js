@@ -3222,7 +3222,9 @@ if (saveProfileButton) {
       };
       const withoutCurrent = allCharacters.filter((character) => character.id !== characterId);
       allCharacters = sortCharacters([localCharacterRecord, ...withoutCurrent]);
-      currentCharacters = sortCharacters(allCharacters);
+      currentCharacters = sortCharacters(
+        allCharacters.filter((c) => c.ownerUid === authUid)
+      );
 
       characterProfileSelect.value = characterId;
       refreshCharacterProfileOptions(characterId);
@@ -3672,27 +3674,37 @@ if (!hasConfigValues()) {
       return;
     }
     try {
-      const ownedSnapshot = await getDocs(query(charactersRef, where("ownerUid", "==", authUid)));
-      let docs = ownedSnapshot.docs;
+      // Load ALL characters so signup resolution works for every member.
+      const allSnapshot = await getDocs(query(charactersRef));
+      let allDocs = allSnapshot.docs;
 
-      if (!docs.length && authEmail) {
-        const legacySnapshot = await getDocs(query(charactersRef, where("ownerEmail", "==", authEmail)));
-        docs = legacySnapshot.docs;
-
-        await Promise.allSettled(
-          docs.map((docItem) => updateDoc(docItem.ref, {
-            ownerUid: authUid,
-            ownerEmail: authEmail,
-            updatedAt: serverTimestamp()
-          }))
+      // Check if this user has any characters; migrate legacy email-only docs.
+      const ownDocs = allDocs.filter((d) => d.data().ownerUid === authUid);
+      if (!ownDocs.length && authEmail) {
+        const legacyDocs = allDocs.filter(
+          (d) => d.data().ownerEmail === authEmail && d.data().ownerUid !== authUid
         );
+        if (legacyDocs.length) {
+          await Promise.allSettled(
+            legacyDocs.map((docItem) => updateDoc(docItem.ref, {
+              ownerUid: authUid,
+              ownerEmail: authEmail,
+              updatedAt: serverTimestamp()
+            }))
+          );
+          // Re-fetch after migration so allCharacters is current.
+          const refreshed = await getDocs(query(charactersRef));
+          allDocs = refreshed.docs;
+        }
       }
 
-      allCharacters = docs.map((docItem) => ({
+      allCharacters = allDocs.map((docItem) => ({
         id: docItem.id,
         ...docItem.data()
       }));
-      currentCharacters = sortCharacters(allCharacters);
+      currentCharacters = sortCharacters(
+        allCharacters.filter((c) => c.ownerUid === authUid)
+      );
       refreshCharacterProfileOptions(characterProfileSelect.value);
       updateSignupActionState();
       renderRows(currentRows);
