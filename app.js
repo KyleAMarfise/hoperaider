@@ -169,7 +169,73 @@ const TBC_SPECS_BY_CLASS_ROLE = {
 };
 
 const ARMORY_BASE_URL = "https://classic-armory.org/character/us/tbc-anniversary/dreamscythe";
+const ARMORY_API_URL = "https://classic-armory.org/api/v1/character";
+const ARMORY_REGION = "us";
+const ARMORY_REALM = "dreamscythe";
+const ARMORY_FLAVOR = "tbc-anniversary";
 const LOGS_BASE_URL = "https://fresh.warcraftlogs.com/character/us/dreamscythe";
+
+const armoryDataCache = new Map();
+
+function fetchArmoryData(characterName) {
+  const slug = String(characterName || "").trim().toLowerCase();
+  if (!slug) return Promise.resolve(null);
+  if (armoryDataCache.has(slug)) return Promise.resolve(armoryDataCache.get(slug));
+
+  return fetch(ARMORY_API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ region: ARMORY_REGION, realm: ARMORY_REALM, name: characterName.trim(), flavor: ARMORY_FLAVOR })
+  })
+    .then((res) => (res.ok ? res.json() : null))
+    .then((data) => {
+      if (data?.character) {
+        const result = {
+          guildName: data.character.guild_name || "",
+          itemLevel: data.character.item_level || 0
+        };
+        armoryDataCache.set(slug, result);
+        return result;
+      }
+      armoryDataCache.set(slug, null);
+      return null;
+    })
+    .catch(() => {
+      armoryDataCache.set(slug, null);
+      return null;
+    });
+}
+
+function enrichArmoryColumns(containerEl) {
+  if (!containerEl) return;
+  const cells = containerEl.querySelectorAll("[data-armory-char]");
+  const uniqueNames = new Set();
+  cells.forEach((cell) => uniqueNames.add(cell.dataset.armoryChar));
+  uniqueNames.forEach((name) => {
+    fetchArmoryData(name).then((data) => {
+      if (!data) return;
+      containerEl.querySelectorAll(`[data-armory-char="${CSS.escape(name)}"]`).forEach((cell) => {
+        if (cell.dataset.armoryField === "guild") {
+          if (data.guildName) {
+            const guildUrl = `https://classic-armory.org/guild/us/tbc-anniversary/dreamscythe/${encodeURIComponent(data.guildName)}`;
+            cell.innerHTML = `<a href="${guildUrl}" target="_blank" rel="noreferrer">${escapeHtml(data.guildName)}</a>`;
+            cell.title = data.guildName;
+          } else {
+            cell.textContent = "—";
+            cell.title = "";
+          }
+        } else if (cell.dataset.armoryField === "ilvl") {
+          const armoryUrl = `${ARMORY_BASE_URL}/${encodeURIComponent(name)}`;
+          if (data.itemLevel) {
+            cell.innerHTML = `<a href="${armoryUrl}" target="_blank" rel="noreferrer">${escapeHtml(String(data.itemLevel))}</a>`;
+          } else {
+            cell.innerHTML = `<a href="${armoryUrl}" target="_blank" rel="noreferrer">—</a>`;
+          }
+        }
+      });
+    });
+  });
+}
 
 const clockDaysEl = document.getElementById("clockDays");
 const clockHoursEl = document.getElementById("clockHours");
@@ -919,6 +985,7 @@ function renderRosterTable(resolvedSignups) {
       const offSpec = signup.offSpecialization || "";
       const offRole = signup.offRole || "";
       const statusNorm = normalizeSignupStatus(signup.status);
+      const charSlug = String(charName || "").trim().toLowerCase();
       return `<tr class="roster-row roster-status-${statusNorm}">
         <td><span class="roster-role-icon">${roleIcon}</span></td>
         <td style="${classColor ? `color: ${classColor}; font-weight: 600` : ""}">${escapeHtml(charName)}</td>
@@ -926,17 +993,19 @@ function renderRosterTable(resolvedSignups) {
         <td>${escapeHtml(formatSpecDisplay(spec, "", role))}</td>
         <td>${escapeHtml(formatSpecDisplay(offSpec, "", offRole))}</td>
         <td><span class="signup-status-badge status-${statusNorm}">${escapeHtml(statusLabel(signup.status))}</span></td>
+        <td class="armory-col-narrow" data-armory-char="${escapeHtml(charSlug)}" data-armory-field="guild">…</td>
+        <td class="armory-col-narrow" data-armory-char="${escapeHtml(charSlug)}" data-armory-field="ilvl">…</td>
         <td>${buildExternalLink(signup.armoryUrl, "Gear")}</td>
         <td>${buildExternalLink(signup.logsUrl || buildLogsUrl(charName), "Logs")}</td>
       </tr>`;
     }).join("");
 
-    return `<tr class="roster-section-header"><td colspan="8">${escapeHtml(sectionLabel)} (${signups.length})</td></tr>${rows}`;
+    return `<tr class="roster-section-header"><td colspan="10">${escapeHtml(sectionLabel)} (${signups.length})</td></tr>${rows}`;
   }
 
   return `<table class="roster-table">
     <thead>
-      <tr><th></th><th>Character</th><th>Class</th><th>Main Spec</th><th>Off Spec</th><th>Status</th><th>Gear</th><th>Logs</th></tr>
+      <tr><th></th><th>Character</th><th>Class</th><th>Main Spec</th><th>Off Spec</th><th>Status</th><th class="armory-col-narrow">Guild</th><th class="armory-col-narrow">iLvl</th><th>Gear</th><th>Logs</th></tr>
     </thead>
     <tbody>
       ${rosterRows(accepted, "Accepted")}
@@ -2931,6 +3000,9 @@ function renderRows(items) {
   renderCategoryRows(raidRows.upcoming, grouped.upcoming, rosterMap);
   renderCategoryRows(raidRows.past, grouped.past, rosterMap);
 
+  enrichArmoryColumns(raidRows.upcoming);
+  enrichArmoryColumns(raidRows.past);
+
   setMessage(listMessage, scheduleItems.length ? "" : "No raids scheduled yet.");
 
   renderCalendarView(scheduleItems);
@@ -3364,6 +3436,9 @@ raidSectionsEl.addEventListener("click", async (event) => {
     if (detailRow) {
       const shouldOpen = detailRow.hidden;
       detailRow.hidden = !shouldOpen;
+      if (shouldOpen) {
+        enrichArmoryColumns(detailRow);
+      }
       if (raidGroupKey) {
         if (shouldOpen) {
           expandedRaidGroups.add(raidGroupKey);

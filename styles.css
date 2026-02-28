@@ -2309,6 +2309,19 @@ tbody tr:hover {
   font-size: 0.9rem;
 }
 
+/* Armory-fetched narrow columns (Guild, iLvl) */
+.armory-col-narrow {
+  white-space: nowrap;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.8rem;
+}
+
+th.armory-col-narrow {
+  font-size: 0.74rem;
+}
+
 .roster-row.roster-status-decline td,
 .roster-row.roster-status-withdrawn td,
 .roster-row.roster-status-denied td {

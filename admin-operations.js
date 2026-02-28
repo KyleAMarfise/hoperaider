@@ -57,7 +57,73 @@ const signOutButton = document.getElementById("signOutButton");
 const DEMO_CHARACTER_STORAGE_KEY = "hopeRaidTrackerDemoCharacters";
 const DEMO_SIGNUP_STORAGE_KEY = "hopeRaidSignupDemoRows";
 const ARMORY_BASE_URL = "https://classic-armory.org/character/us/tbc-anniversary/dreamscythe";
+const ARMORY_API_URL = "https://classic-armory.org/api/v1/character";
+const ARMORY_REGION = "us";
+const ARMORY_REALM = "dreamscythe";
+const ARMORY_FLAVOR = "tbc-anniversary";
 const LOGS_BASE_URL = "https://fresh.warcraftlogs.com/character/us/dreamscythe";
+
+const armoryDataCache = new Map();
+
+function fetchArmoryData(characterName) {
+  const slug = String(characterName || "").trim().toLowerCase();
+  if (!slug) return Promise.resolve(null);
+  if (armoryDataCache.has(slug)) return Promise.resolve(armoryDataCache.get(slug));
+
+  return fetch(ARMORY_API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ region: ARMORY_REGION, realm: ARMORY_REALM, name: characterName.trim(), flavor: ARMORY_FLAVOR })
+  })
+    .then((res) => (res.ok ? res.json() : null))
+    .then((data) => {
+      if (data?.character) {
+        const result = {
+          guildName: data.character.guild_name || "",
+          itemLevel: data.character.item_level || 0
+        };
+        armoryDataCache.set(slug, result);
+        return result;
+      }
+      armoryDataCache.set(slug, null);
+      return null;
+    })
+    .catch(() => {
+      armoryDataCache.set(slug, null);
+      return null;
+    });
+}
+
+function enrichArmoryColumns(containerEl) {
+  if (!containerEl) return;
+  const cells = containerEl.querySelectorAll("[data-armory-char]");
+  const uniqueNames = new Set();
+  cells.forEach((cell) => uniqueNames.add(cell.dataset.armoryChar));
+  uniqueNames.forEach((name) => {
+    fetchArmoryData(name).then((data) => {
+      if (!data) return;
+      containerEl.querySelectorAll(`[data-armory-char="${CSS.escape(name)}"]`).forEach((cell) => {
+        if (cell.dataset.armoryField === "guild") {
+          if (data.guildName) {
+            const guildUrl = `https://classic-armory.org/guild/us/tbc-anniversary/dreamscythe/${encodeURIComponent(data.guildName)}`;
+            cell.innerHTML = `<a href="${guildUrl}" target="_blank" rel="noreferrer">${escapeHtml(data.guildName)}</a>`;
+            cell.title = data.guildName;
+          } else {
+            cell.textContent = "—";
+            cell.title = "";
+          }
+        } else if (cell.dataset.armoryField === "ilvl") {
+          const armoryUrl = `${ARMORY_BASE_URL}/${encodeURIComponent(name)}`;
+          if (data.itemLevel) {
+            cell.innerHTML = `<a href="${armoryUrl}" target="_blank" rel="noreferrer">${escapeHtml(String(data.itemLevel))}</a>`;
+          } else {
+            cell.innerHTML = `<a href="${armoryUrl}" target="_blank" rel="noreferrer">—</a>`;
+          }
+        }
+      });
+    });
+  });
+}
 
 const WOW_CLASS_COLORS = {
   Druid: "#FF7D0A",
@@ -297,6 +363,7 @@ function buildRequestQueueRows(rows, profilesById, actionMode = "full") {
               <button type="button" data-request-action="accept" data-signup-id="${escapeHtml(signup.id)}">Accept</button>
             </div>`
           : `<span class="request-action-na">Record only</span>`;
+      const charSlug = String(characterName || "").trim().toLowerCase();
       return `<tr>
         <td>${escapeHtml(formatMonthDayYear(signup.raidDate || ""))}</td>
         <td>${escapeHtml(signup.raidName || "—")}</td>
@@ -304,6 +371,8 @@ function buildRequestQueueRows(rows, profilesById, actionMode = "full") {
         <td>${escapeHtml(characterName)}</td>
         <td>${renderClassText(attributes.wowClass)}</td>
         <td>${escapeHtml(attributes.specialization)}</td>
+        <td class="armory-col-narrow" data-armory-char="${escapeHtml(charSlug)}" data-armory-field="guild">…</td>
+        <td class="armory-col-narrow" data-armory-char="${escapeHtml(charSlug)}" data-armory-field="ilvl">…</td>
         <td>${renderGearLink(gearUrl)}</td>
         <td>${renderExternalLink(logsUrl, "Logs")}</td>
         <td><span class="signup-status-badge status-${escapeHtml(status)}">${escapeHtml(signupStatusLabel(signup.status))}</span></td>
@@ -530,23 +599,24 @@ function renderSignupRequestsTable() {
   authStatus.textContent = `${existingAuthText} • Pending requests: ${activeItems.length}`;
 
   if (!activeItems.length) {
-    signupRequestRows.innerHTML = `<tr><td colspan="10">No active signup request records.</td></tr>`;
+    signupRequestRows.innerHTML = `<tr><td colspan="12">No active signup request records.</td></tr>`;
     setMessage(signupRequestMessage, "");
     return;
   }
 
   const profilesById = getCharacterMapById();
   const requestedHeader = requested.length
-    ? `<tr class="request-group-row"><td colspan="10"><strong>Signup Requests (${requested.length})</strong></td></tr>${buildRequestQueueRows(requested, profilesById, "full")}`
+    ? `<tr class="request-group-row"><td colspan="12"><strong>Signup Requests (${requested.length})</strong></td></tr>${buildRequestQueueRows(requested, profilesById, "full")}`
     : "";
   const benchedHeader = benched.length
-    ? `<tr class="request-group-row"><td colspan="10"><strong>Benched Themselves (${benched.length})</strong></td></tr>${buildRequestQueueRows(benched, profilesById, "accept-only")}`
+    ? `<tr class="request-group-row"><td colspan="12"><strong>Benched Themselves (${benched.length})</strong></td></tr>${buildRequestQueueRows(benched, profilesById, "accept-only")}`
     : "";
   const withdrewHeader = withdrew.length
-    ? `<tr class="request-group-row"><td colspan="10"><strong>Accepted Then Withdrew (${withdrew.length})</strong></td></tr>${buildRequestQueueRows(withdrew, profilesById, "none")}`
+    ? `<tr class="request-group-row"><td colspan="12"><strong>Accepted Then Withdrew (${withdrew.length})</strong></td></tr>${buildRequestQueueRows(withdrew, profilesById, "none")}`
     : "";
 
   signupRequestRows.innerHTML = `${requestedHeader}${benchedHeader}${withdrewHeader}`;
+  enrichArmoryColumns(signupRequestRows);
 
   setMessage(signupRequestMessage, `${activeItems.length} active signup record(s) across requests, benches, and withdrawals.`);
 }
@@ -1016,13 +1086,13 @@ function renderCharacterAuditTable() {
   auditCountBadge.textContent = String(filteredRows.length);
 
   if (!allRows.length) {
-    characterAuditRows.innerHTML = `<tr><td colspan="10">No user records found yet.</td></tr>`;
+    characterAuditRows.innerHTML = `<tr><td colspan="12">No user records found yet.</td></tr>`;
     setMessage(characterAuditMessage, "");
     return;
   }
 
   if (!filteredRows.length) {
-    characterAuditRows.innerHTML = `<tr><td colspan="10">No matches for current search/filter.</td></tr>`;
+    characterAuditRows.innerHTML = `<tr><td colspan="12">No matches for current search/filter.</td></tr>`;
     setMessage(characterAuditMessage, "");
     return;
   }
@@ -1038,6 +1108,8 @@ function renderCharacterAuditTable() {
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderRoleSpec(entry.offRole, entry.offSpecialization)) : "—"}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.armoryUrl, "Gear")) : "—"}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.logsUrl, "Logs")) : "—"}</td>
+        <td class="audit-stack-cell armory-col-narrow">${entries.length ? renderAuditEntryLines(entries, (entry) => `<span data-armory-char="${escapeHtml(String(entry.characterName || "").trim().toLowerCase())}" data-armory-field="guild">…</span>`) : "—"}</td>
+        <td class="audit-stack-cell armory-col-narrow">${entries.length ? renderAuditEntryLines(entries, (entry) => `<span data-armory-char="${escapeHtml(String(entry.characterName || "").trim().toLowerCase())}" data-armory-field="ilvl">…</span>`) : "—"}</td>
         <td class="audit-history-col">${escapeHtml(`${row.acceptedTotal} accepted raid${row.acceptedTotal === 1 ? "" : "s"}`)}</td>
         <td>
           <select data-role-uid="${escapeHtml(row.uid)}" data-role-current="${escapeHtml(row.role)}" title="Change this user's access role" ${row.role === "owner" && !isOwner ? "disabled" : ""}>
@@ -1055,6 +1127,7 @@ function renderCharacterAuditTable() {
     .join("");
 
   setMessage(characterAuditMessage, `${filteredRows.length} user access record(s) shown.`);
+  enrichArmoryColumns(characterAuditRows);
 }
 
 function setAdminVisibility() {
