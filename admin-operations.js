@@ -1,3 +1,8 @@
+// Utility: truncate text to maxLen, add ellipsis if needed
+function truncateText(str, maxLen) {
+  if (!str) return "";
+  return str.length > maxLen ? str.slice(0, maxLen - 1) + "…" : str;
+}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
   GoogleAuthProvider,
