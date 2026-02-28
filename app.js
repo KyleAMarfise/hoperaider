@@ -627,8 +627,8 @@ function formatSpecDisplay(specName, wowClass, roleName = "") {
     return "—";
   }
   // Show as DPSMarksmanship, DPSBeast Mastery, etc.
-  const roleText = roleName ? `<span class=\"audit-role-main\">${escapeHtml(roleName)}</span>` : "";
-  const specText = specName ? `<span class=\"audit-spec-muted\">${escapeHtml(specName)}</span>` : "";
+  const roleText = roleName ? `<span class="audit-role-main"> ${escapeHtml(roleName)}</span>` : "";
+  const specText = specName ? `<span class="audit-spec-muted">${escapeHtml(specName)}</span>` : "";
   return `${roleText}${specText}`;
 }
 
@@ -3535,7 +3535,7 @@ raidSectionsEl.addEventListener("change", async (event) => {
       : "";
     const selectedProfileRef = parseRaidProfileSelection(selectedProfileValue);
     const characterChanged = selectedProfileRef.profileId
-      && (selectedProfileRef.profileId !== existingSignup?.characterId
+      && (selectedProfileRef.profileId !== existingSignup?.id
         || selectedProfileRef.characterKey !== (existingSignup?.profileCharacterKey || "main"));
 
     if (characterChanged) {
