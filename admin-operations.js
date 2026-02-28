@@ -754,7 +754,6 @@ function buildUserAuditRows(signups) {
         offSpecialization: String(signup.offSpecialization || selectedEntry?.offSpecialization || profile?.offSpecialization || previous?.offSpecialization || "").trim() || "—",
         armoryUrl: String(signup.armoryUrl || previous?.armoryUrl || buildArmoryUrl(characterName)).trim(),
         logsUrl: String(signup.logsUrl || selectedEntry?.logsUrl || previous?.logsUrl || buildLogsUrl(characterName)).trim(),
-        // guildName removed
         acceptedCount: acceptedForCharacter
       });
     }
@@ -1110,8 +1109,7 @@ function renderCharacterAuditTable() {
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderRoleSpec(entry.offRole, entry.offSpecialization)) : "—"}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.armoryUrl, "Gear")) : "—"}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.logsUrl, "Logs")) : "—"}</td>
-        <!-- Guild column removed -->
-        <td class="audit-history-col">(${escapeHtml(row.acceptedTotal)})</td>
+        <td class="audit-history-col">${escapeHtml(row.acceptedTotal)}</td>
         <td>
           <select data-role-uid="${escapeHtml(row.uid)}" data-role-current="${escapeHtml(row.role)}" title="Change this user's access role" ${row.role === "owner" && !isOwner ? "disabled" : ""}>
             <option value="member" ${row.role === "member" ? "selected" : ""} title="Standard access — can sign up for raids.">Member</option>

@@ -1353,11 +1353,12 @@ button:disabled {
 }
 
 .admin-operations-page #characterAuditSection .audit-stack-cell {
-  min-width: 110px;
+  min-width: 100%;
 }
 
 .admin-operations-page #characterAuditSection .audit-history-col {
   min-width: 150px;
+  text-align: center;
 }
 
 .admin-operations-page #characterAuditSection th:last-child,
