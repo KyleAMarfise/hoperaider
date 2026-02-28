@@ -1418,6 +1418,8 @@ async function createRaidSignup(raid, selectedProfile, selectedCharacterEntry, s
     createdAt: serverTimestamp()
   });
 
+  sendDiscordSignupNotification(payload, selectedCharacterEntry);
+
   currentRows.push({
     id: createdDoc.id,
     ...payload,
@@ -2327,6 +2329,46 @@ function getAuthErrorMessage(error) {
     return `Sign-in is blocked for ${host}. Add it in Firebase Console → Authentication → Settings → Authorized domains.`;
   }
   return error?.message || "Sign-in failed.";
+}
+
+// ── Discord webhook notification (fire-and-forget) ──
+
+const ROLE_EMOJI = { Tank: "\u{1F6E1}\uFE0F", Healer: "\u2695\uFE0F", DPS: "\u2694\uFE0F" };
+
+function sendDiscordSignupNotification(payload, characterEntry) {
+  const webhookUrl = appSettings.discordWebhookUrl;
+  if (!webhookUrl) return;
+
+  const charName = characterEntry?.characterName || payload.profileCharacterName || "Unknown";
+  const charClass = characterEntry?.className || "";
+  const mainSpec = characterEntry?.mainSpec || "";
+  const role = characterEntry?.mainRole || characterEntry?.role || "";
+  const roleEmoji = ROLE_EMOJI[role] || "\u{1F464}";
+  const raidName = payload.raidName || "a raid";
+  const raidDate = payload.raidDate || "";
+  const status = payload.status || "requested";
+
+  const description = [
+    `${roleEmoji} **${charName}**` + (mainSpec || charClass ? ` (${[mainSpec, charClass].filter(Boolean).join(" ")})` : ""),
+    `wants to join **${raidName}**` + (raidDate ? ` on ${raidDate}` : ""),
+    status === "requested" ? "_Awaiting admin approval_" : `_Status: ${status}_`
+  ].join("\n");
+
+  const body = JSON.stringify({
+    embeds: [{
+      title: "New Raid Signup Request",
+      description,
+      color: status === "requested" ? 0xf0b232 : 0x43b581,
+      timestamp: new Date().toISOString()
+    }]
+  });
+
+  // Fire-and-forget — don't block the UI or show errors for webhook failures
+  fetch(webhookUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body
+  }).catch(() => {});
 }
 
 function updateAdminOpsPendingBadge(rows = []) {
@@ -3631,6 +3673,7 @@ form.addEventListener("submit", async (event) => {
           ...payload,
           createdAt: serverTimestamp()
         });
+        sendDiscordSignupNotification(payload, selectedCharacter);
         setMessage(formMessage, "Signup created.");
       }
     }

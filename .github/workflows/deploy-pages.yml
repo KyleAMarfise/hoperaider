@@ -44,6 +44,7 @@ jobs:
           APP_SITE_TITLE: ${{ vars.APP_SITE_TITLE }}
           APP_ADMIN_UIDS: ${{ vars.APP_ADMIN_UIDS }}
           APP_DISCORD_INVITE_URL: ${{ vars.APP_DISCORD_INVITE_URL }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
           mkdir -p config/prod
           node -e "
@@ -59,7 +60,8 @@ jobs:
               '  FIREBASE_APP_ID: ' + s('FIREBASE_APP_ID') + ',\n' +
               '  APP_SITE_TITLE: ' + s('APP_SITE_TITLE', 'Hope Raid Tracker') + ',\n' +
               '  APP_ADMIN_UIDS: ' + s('APP_ADMIN_UIDS') + ',\n' +
-              '  APP_DISCORD_INVITE_URL: ' + s('APP_DISCORD_INVITE_URL', 'https://discord.gg/YOUR_INVITE_CODE') + '\n' +
+              '  APP_DISCORD_INVITE_URL: ' + s('APP_DISCORD_INVITE_URL', 'https://discord.gg/YOUR_INVITE_CODE') + ',\n' +
+              '  DISCORD_WEBHOOK_URL: ' + s('DISCORD_WEBHOOK_URL') + '\n' +
               '};\n'
             );
           "

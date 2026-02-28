@@ -37,5 +37,6 @@ export const firebaseConfig = {
 export const appSettings = {
   siteTitle: readConfigValue("APP_SITE_TITLE", "Hope Raid Tracker"),
   adminUids: readAdminUids(),
-  discordInviteUrl: readConfigValue("APP_DISCORD_INVITE_URL", "https://discord.gg/xYtxu6Yj")
+  discordInviteUrl: readConfigValue("APP_DISCORD_INVITE_URL", "https://discord.gg/xYtxu6Yj"),
+  discordWebhookUrl: readConfigValue("DISCORD_WEBHOOK_URL")
 };
