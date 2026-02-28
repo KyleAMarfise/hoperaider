@@ -84,7 +84,7 @@ function fetchArmoryData(characterName) {
     .then((data) => {
       if (data?.character) {
         const result = {
-          guildName: data.character.guild_name || "",
+          // guildName removed
           itemLevel: data.character.item_level || 0
         };
         armoryDataCache.set(slug, result);
@@ -108,15 +108,8 @@ function enrichArmoryColumns(containerEl) {
     fetchArmoryData(name).then((data) => {
       if (!data) return;
       containerEl.querySelectorAll(`[data-armory-char="${CSS.escape(name)}"]`).forEach((cell) => {
-        if (cell.dataset.armoryField === "guild") {
-          if (data.guildName) {
-            cell.textContent = truncateText(data.guildName, 16);
-            cell.title = data.guildName;
-          } else {
-            cell.textContent = "—";
-            cell.title = "";
-          }
-        } else if (cell.dataset.armoryField === "ilvl") {
+        // guild enrichment removed
+        if (cell.dataset.armoryField === "ilvl") {
           if (data.itemLevel) {
             cell.textContent = String(data.itemLevel);
             cell.title = `Item Level: ${data.itemLevel}`;
