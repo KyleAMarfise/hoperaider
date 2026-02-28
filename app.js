@@ -223,14 +223,6 @@ function enrichArmoryColumns(containerEl) {
             cell.textContent = "—";
             cell.title = "";
           }
-        } else if (cell.dataset.armoryField === "ilvl") {
-          if (data.itemLevel) {
-            cell.textContent = String(data.itemLevel);
-            cell.title = `Item Level: ${data.itemLevel}`;
-          } else {
-            cell.textContent = "—";
-            cell.title = "";
-          }
         }
       function truncateText(str, maxLen) {
         if (!str) return "";
@@ -1008,7 +1000,7 @@ function renderRosterTable(resolvedSignups) {
 
   return `<table class="roster-table">
     <thead>
-      <tr><th>Character</th><th>Class</th><th>Main Spec</th><th>Off Spec</th><th>Status</th><th class="armory-col-narrow">Guild</th><th class="armory-col-narrow">iLvl</th><th>Gear</th><th>Logs</th></tr>
+      <tr><th>Character</th><th>Class</th><th>Main Spec</th><th>Off Spec</th><th>Status</th><th class="armory-col-narrow">Guild</th><th>Gear</th><th>Logs</th></tr>
     </thead>
     <tbody>
       ${rosterRows(accepted, "Accepted")}
