@@ -13,6 +13,70 @@ Static TBC Classic raid signup site for GitHub Pages with Firebase Auth + Firest
 - Responsive design for desktop, tablet, and mobile
 - Production build with JS obfuscation + CSS/HTML minification
 
+## Architecture
+
+```mermaid
+flowchart TB
+    subgraph Browser["Browser (Client)"]
+        direction TB
+        main["main.js\n(config router)"]
+        nav["nav-component.js\n(shared nav bar)"]
+
+        subgraph Pages["Pages"]
+            direction LR
+            index["index.html\n+ app.js"]
+            admin["admin.html\n+ admin.js"]
+            ops["admin-operations.html\n+ admin-operations.js"]
+        end
+
+        main -->|localhost| localCfg["config/local/\napp-config.local.js"]
+        main -->|production| prodCfg["config/prod/\napp-config.github.js"]
+        localCfg --> fbCfg["firebase-config.js\n→ firebaseConfig + appSettings"]
+        prodCfg --> fbCfg
+        fbCfg --> Pages
+        nav --- Pages
+    end
+
+    subgraph Firebase["Firebase (Spark Plan)"]
+        direction TB
+        auth["Authentication\n(Google Sign-In)"]
+        fs["Cloud Firestore"]
+
+        subgraph Collections["Firestore Collections"]
+            direction LR
+            raids["raids"]
+            signups["signups"]
+            characters["characters"]
+            members["members"]
+            admins["admins"]
+            owners["owners"]
+        end
+
+        rules["firestore.rules\n(server-side enforcement)"]
+        rules -.- fs
+        fs --- Collections
+    end
+
+    subgraph CI["GitHub Actions CI/CD"]
+        direction LR
+        push["Push to main"] --> secrets["Inject GitHub\nSecrets → config"]
+        secrets --> build["build.js\n(obfuscate + minify)"]
+        build --> dist["dist/"]
+        dist --> deploy["Deploy to\nGitHub Pages"]
+    end
+
+    Pages <-->|Firebase SDK v10\nESM via CDN| auth
+    Pages <-->|realtime listeners\n+ CRUD ops| fs
+    deploy -.->|serves static files| Browser
+
+    subgraph Roles["Role Hierarchy"]
+        direction LR
+        owner["Owner 👑"] --> adminRole["Admin ⚔️"] --> member["Member 🛡️"]
+    end
+
+    rules -.- Roles
+```
+
 ## Project structure
 
 ```
