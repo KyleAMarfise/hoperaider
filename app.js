@@ -994,8 +994,8 @@ function renderRosterTable(resolvedSignups) {
         <td><span class="roster-role-icon">${roleIcon}</span></td>
         <td style="${classColor ? `color: ${classColor}; font-weight: 600` : ""}">${escapeHtml(charName)}</td>
         <td style="${classColor ? `color: ${classColor}` : ""}">${escapeHtml(wowClass)}</td>
-        <td>${escapeHtml(formatSpecDisplay(spec, "", role))}</td>
-        <td>${escapeHtml(formatSpecDisplay(offSpec, "", offRole))}</td>
+        <td>${formatSpecDisplay(spec, "", role)}</td>
+        <td>${formatSpecDisplay(offSpec, "", offRole)}</td>
         <td><span class="signup-status-badge status-${statusNorm}">${escapeHtml(statusLabel(signup.status))}</span></td>
         <td class="armory-col-narrow guild-muted" data-armory-char="${escapeHtml(charSlug)}" data-armory-field="guild">…</td>
         <td class="armory-col-narrow" data-armory-char="${escapeHtml(charSlug)}" data-armory-field="ilvl">…</td>
