@@ -66,7 +66,8 @@ const RAID_PRESETS_BY_PHASE = {
   1: [
     { name: "Karazhan", size: "10", tanks: 2, healers: 3, dps: 5 },
     { name: "Gruul's Lair", size: "25", tanks: 2, healers: 6, dps: 17 },
-    { name: "Magtheridon's Lair", size: "25", tanks: 3, healers: 6, dps: 16 }
+    { name: "Magtheridon's Lair", size: "25", tanks: 3, healers: 6, dps: 16 },
+    { name: "Gruul's + Mag's", size: "25", tanks: 3, healers: 6, dps: 16 }
   ],
   2: [
     { name: "Serpentshrine Cavern", size: "25", tanks: 3, healers: 7, dps: 15 },
