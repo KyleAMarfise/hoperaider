@@ -103,6 +103,41 @@ body {
 .auth-gate-message.error {
   color: #ff9c9c;
 }
+.auth-gate-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  align-items: center;
+}
+.auth-btn {
+  width: 100%;
+  max-width: 20rem;
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.15s, box-shadow 0.15s;
+}
+.auth-btn:hover:not(:disabled) {
+  filter: brightness(1.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+.auth-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.auth-btn-google {
+  background: #4285f4;
+  color: #fff;
+  border-color: #3367d6;
+}
+.auth-btn-yahoo {
+  background: #720e9e;
+  color: #fff;
+  border-color: #5c0b80;
+}
 
 /* ── Onboarding Banner ── */
 .onboarding-banner {

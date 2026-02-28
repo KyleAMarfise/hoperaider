@@ -7,6 +7,7 @@ const ROLE_ICONS = {
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
   GoogleAuthProvider,
+  OAuthProvider,
   getAuth,
   onAuthStateChanged,
   signInWithPopup,
@@ -2320,12 +2321,12 @@ function setAuthPendingState() {
   }
 }
 
-function getGoogleAuthErrorMessage(error) {
+function getAuthErrorMessage(error) {
   if (error?.code === "auth/unauthorized-domain") {
     const host = window.location.hostname || "this domain";
-    return `Google sign-in is blocked for ${host}. Add it in Firebase Console → Authentication → Settings → Authorized domains.`;
+    return `Sign-in is blocked for ${host}. Add it in Firebase Console → Authentication → Settings → Authorized domains.`;
   }
-  return error?.message || "Google sign-in failed.";
+  return error?.message || "Sign-in failed.";
 }
 
 function updateAdminOpsPendingBadge(rows = []) {
@@ -3673,6 +3674,7 @@ if (!hasConfigValues()) {
   const auth = getAuth(app);
   const googleProvider = new GoogleAuthProvider();
   googleProvider.setCustomParameters({ prompt: "select_account" });
+  const yahooProvider = new OAuthProvider("yahoo.com");
   db = getFirestore(app);
   const signupsRef = collection(db, "signups");
   const raidsRef = collection(db, "raids");
@@ -3729,12 +3731,13 @@ if (!hasConfigValues()) {
   updateUidDisplay("");
   authStatus.textContent = "Checking sign-in status...";
 
-  async function performGoogleSignIn() {
-    if (authGateSignInButton) {
-      authGateSignInButton.disabled = true;
-    }
+  const authGateYahooButton = document.getElementById("authGateYahooButton");
+
+  async function performSignIn(provider) {
+    const buttons = [authGateSignInButton, authGateYahooButton].filter(Boolean);
+    buttons.forEach((b) => (b.disabled = true));
     try {
-      await signInWithPopup(auth, googleProvider);
+      await signInWithPopup(auth, provider);
       setAuthGateState(true);
     } catch (error) {
       if (error && typeof error === "object" && ["auth/popup-blocked", "auth/popup-closed-by-user", "auth/cancelled-popup-request"].includes(error.code)) {
@@ -3744,19 +3747,20 @@ if (!hasConfigValues()) {
         setAuthGateState(false, msg, true);
         return;
       }
-      const errorText = getGoogleAuthErrorMessage(error);
+      const errorText = getAuthErrorMessage(error);
       authStatus.textContent = errorText;
       setAuthGateState(false, errorText, true);
       setMessage(formMessage, errorText, true);
     } finally {
-      if (authGateSignInButton) {
-        authGateSignInButton.disabled = false;
-      }
+      buttons.forEach((b) => (b.disabled = false));
     }
   }
 
   if (authGateSignInButton) {
-    authGateSignInButton.addEventListener("click", performGoogleSignIn);
+    authGateSignInButton.addEventListener("click", () => performSignIn(googleProvider));
+  }
+  if (authGateYahooButton) {
+    authGateYahooButton.addEventListener("click", () => performSignIn(yahooProvider));
   }
 
   if (signOutButton) {
