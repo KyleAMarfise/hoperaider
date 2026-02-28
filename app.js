@@ -630,12 +630,13 @@ function formatSpecDisplay(specName, wowClass, roleName = "") {
   if (!specName) {
     return "—";
   }
-  const specSpan = `<span class=\"audit-role-main\">${escapeHtml(specName)}</span>`;
-  if (!roleName) {
-    return specSpan;
+  if (!specName && !roleName) {
+    return "—";
   }
-  const roleIcon = ROLE_ICONS[roleName] || "•";
-  return `${specSpan}<span class=\"audit-spec-muted\" style=\"margin-left:0.35rem;\">${escapeHtml(roleIcon + " " + roleName)}</span>`;
+  // Show as DPSMarksmanship, DPSBeast Mastery, etc.
+  const roleText = roleName ? `<span class=\"audit-role-main\">${escapeHtml(roleName)}</span>` : "";
+  const specText = specName ? `<span class=\"audit-spec-muted\">${escapeHtml(specName)}</span>` : "";
+  return `${roleText}${specText}`;
 }
 
 function renderCharacterDisplay(signup) {
