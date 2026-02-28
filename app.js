@@ -989,7 +989,7 @@ function renderRosterTable(resolvedSignups) {
         <td>${formatSpecDisplay(spec, "", role)}</td>
         <td>${formatSpecDisplay(offSpec, "", offRole)}</td>
         <td><span class="signup-status-badge status-${statusNorm}">${escapeHtml(statusLabel(signup.status))}</span></td>
-        <td class="armory-col-narrow guild-muted">${signup.guildName ? `<a href="https://classic-armory.org/guild/us/tbc-anniversary/dreamscythe/${encodeURIComponent(signup.guildName)}" target="_blank" rel="noopener" class="guild-link" title="${escapeHtml(signup.guildName)}">${escapeHtml(truncateText(signup.guildName, 16))}</a>` : "—"}</td>
+        <td class="armory-col-narrow guild-muted"><a href="https://classic-armory.org/guild/us/tbc-anniversary/dreamscythe/${encodeURIComponent(signup.guildName || charName)}" target="_blank" rel="noopener" class="guild-link" title="${escapeHtml(signup.guildName || charName)}">${escapeHtml(truncateText(signup.guildName || charName, 16))}</a></td>
         <td>${buildExternalLink(signup.armoryUrl, "Gear")}</td>
         <td>${buildExternalLink(signup.logsUrl || buildLogsUrl(charName), "Logs")}</td>
       </tr>`;
