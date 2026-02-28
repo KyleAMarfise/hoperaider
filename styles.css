@@ -1,3 +1,12 @@
+/* Skinny attended/history column for audit/request tables */
+.audit-history-col {
+  width: 3.5rem;
+  min-width: 2.5rem;
+  max-width: 4.5rem;
+  text-align: center;
+  padding-left: 0.1rem;
+  padding-right: 0.1rem;
+}
 /* Larger section header for signup status */
 .roster-section-header {
   font-size: 1.18rem;
