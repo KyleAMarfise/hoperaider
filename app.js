@@ -987,7 +987,7 @@ function renderRosterTable(resolvedSignups) {
       </tr>`;
     }).join("");
 
-    return `<tr class="roster-section-header"><td colspan="10">${escapeHtml(sectionLabel)} (${signups.length})</td></tr>${rows}`;
+    return `<tr class="roster-section-header"><td colspan="7">${escapeHtml(sectionLabel)} (${signups.length})</td></tr>${rows}`;
   }
 
   return `<table class="roster-table">
