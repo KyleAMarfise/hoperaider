@@ -1337,11 +1337,13 @@ button:disabled {
 
 
 .admin-operations-page #characterAuditSection {
-  width: 85vw;
-  max-width: 90vw;
-  min-width: 80vw;
+  width: 100%;
+  max-width: 1200px;
+  min-width: 320px;
   margin-left: auto;
   margin-right: auto;
+  padding-left: 2vw;
+  padding-right: 2vw;
 }
 
 .admin-operations-page #characterAuditSection table {
