@@ -1,3 +1,8 @@
+// Utility: truncate text to maxLen, add ellipsis
+function truncateText(str, maxLen) {
+  if (!str) return "";
+  return str.length > maxLen ? str.slice(0, maxLen - 1) + "…" : str;
+}
 // Role icons (fix ReferenceError)
 const ROLE_ICONS = {
   Tank: "🛡",
@@ -224,10 +229,6 @@ function enrichArmoryColumns(containerEl) {
             cell.title = "";
           }
         }
-      function truncateText(str, maxLen) {
-        if (!str) return "";
-        return str.length > maxLen ? str.slice(0, maxLen - 1) + "…" : str;
-      }
       });
     });
   });
