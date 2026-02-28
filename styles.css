@@ -1,3 +1,9 @@
+.guild-muted {
+  color: var(--text-dim);
+  font-size: 0.78rem;
+  font-style: italic;
+  letter-spacing: 0.01em;
+}
 /* Larger profile modal for creation */
 .profile-modal.profile-modal-large {
   width: min(1020px, 96vw);
@@ -1386,7 +1392,13 @@ button:disabled {
 }
 
 .audit-stack-cell {
-  min-width: 140px;
+  min-width: 110px;
+}
+.audit-stack-cell.role-col,
+.audit-stack-cell.class-col {
+  min-width: 80px;
+  font-size: 0.78rem;
+  text-align: center;
 }
 
 .audit-entry-line {

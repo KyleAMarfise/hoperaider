@@ -217,21 +217,25 @@ function enrichArmoryColumns(containerEl) {
       containerEl.querySelectorAll(`[data-armory-char="${CSS.escape(name)}"]`).forEach((cell) => {
         if (cell.dataset.armoryField === "guild") {
           if (data.guildName) {
-            const guildUrl = `https://classic-armory.org/guild/us/tbc-anniversary/dreamscythe/${encodeURIComponent(data.guildName)}`;
-            cell.innerHTML = `<a href="${guildUrl}" target="_blank" rel="noreferrer">${escapeHtml(data.guildName)}</a>`;
+            cell.textContent = truncateText(data.guildName, 16);
             cell.title = data.guildName;
           } else {
             cell.textContent = "—";
             cell.title = "";
           }
         } else if (cell.dataset.armoryField === "ilvl") {
-          const armoryUrl = `${ARMORY_BASE_URL}/${encodeURIComponent(name)}`;
           if (data.itemLevel) {
-            cell.innerHTML = `<a href="${armoryUrl}" target="_blank" rel="noreferrer">${escapeHtml(String(data.itemLevel))}</a>`;
+            cell.textContent = String(data.itemLevel);
+            cell.title = `Item Level: ${data.itemLevel}`;
           } else {
-            cell.innerHTML = `<a href="${armoryUrl}" target="_blank" rel="noreferrer">—</a>`;
+            cell.textContent = "—";
+            cell.title = "";
           }
         }
+      function truncateText(str, maxLen) {
+        if (!str) return "";
+        return str.length > maxLen ? str.slice(0, maxLen - 1) + "…" : str;
+      }
       });
     });
   });
@@ -993,7 +997,7 @@ function renderRosterTable(resolvedSignups) {
         <td>${escapeHtml(formatSpecDisplay(spec, "", role))}</td>
         <td>${escapeHtml(formatSpecDisplay(offSpec, "", offRole))}</td>
         <td><span class="signup-status-badge status-${statusNorm}">${escapeHtml(statusLabel(signup.status))}</span></td>
-        <td class="armory-col-narrow" data-armory-char="${escapeHtml(charSlug)}" data-armory-field="guild">…</td>
+        <td class="armory-col-narrow guild-muted" data-armory-char="${escapeHtml(charSlug)}" data-armory-field="guild">…</td>
         <td class="armory-col-narrow" data-armory-char="${escapeHtml(charSlug)}" data-armory-field="ilvl">…</td>
         <td>${buildExternalLink(signup.armoryUrl, "Gear")}</td>
         <td>${buildExternalLink(signup.logsUrl || buildLogsUrl(charName), "Logs")}</td>

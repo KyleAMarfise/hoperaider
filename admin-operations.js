@@ -105,21 +105,25 @@ function enrichArmoryColumns(containerEl) {
       containerEl.querySelectorAll(`[data-armory-char="${CSS.escape(name)}"]`).forEach((cell) => {
         if (cell.dataset.armoryField === "guild") {
           if (data.guildName) {
-            const guildUrl = `https://classic-armory.org/guild/us/tbc-anniversary/dreamscythe/${encodeURIComponent(data.guildName)}`;
-            cell.innerHTML = `<a href="${guildUrl}" target="_blank" rel="noreferrer">${escapeHtml(data.guildName)}</a>`;
+            cell.textContent = truncateText(data.guildName, 16);
             cell.title = data.guildName;
           } else {
             cell.textContent = "—";
             cell.title = "";
           }
         } else if (cell.dataset.armoryField === "ilvl") {
-          const armoryUrl = `${ARMORY_BASE_URL}/${encodeURIComponent(name)}`;
           if (data.itemLevel) {
-            cell.innerHTML = `<a href="${armoryUrl}" target="_blank" rel="noreferrer">${escapeHtml(String(data.itemLevel))}</a>`;
+            cell.textContent = String(data.itemLevel);
+            cell.title = `Item Level: ${data.itemLevel}`;
           } else {
-            cell.innerHTML = `<a href="${armoryUrl}" target="_blank" rel="noreferrer">—</a>`;
+            cell.textContent = "—";
+            cell.title = "";
           }
         }
+      function truncateText(str, maxLen) {
+        if (!str) return "";
+        return str.length > maxLen ? str.slice(0, maxLen - 1) + "…" : str;
+      }
       });
     });
   });
@@ -1108,7 +1112,7 @@ function renderCharacterAuditTable() {
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderRoleSpec(entry.offRole, entry.offSpecialization)) : "—"}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.armoryUrl, "Gear")) : "—"}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.logsUrl, "Logs")) : "—"}</td>
-        <td class="audit-stack-cell armory-col-narrow">${entries.length ? renderAuditEntryLines(entries, (entry) => `<span data-armory-char="${escapeHtml(String(entry.characterName || "").trim().toLowerCase())}" data-armory-field="guild">…</span>`) : "—"}</td>
+        <td class="audit-stack-cell armory-col-narrow">${entries.length ? renderAuditEntryLines(entries, (entry) => `<span class="guild-muted" data-armory-char="${escapeHtml(String(entry.characterName || "").trim().toLowerCase())}" data-armory-field="guild" title="${escapeHtml(entry.guildName || "")}">${escapeHtml(truncateText(entry.guildName || "", 16))}</span>`) : "—"}</td>
         <td class="audit-stack-cell armory-col-narrow">${entries.length ? renderAuditEntryLines(entries, (entry) => `<span data-armory-char="${escapeHtml(String(entry.characterName || "").trim().toLowerCase())}" data-armory-field="ilvl">…</span>`) : "—"}</td>
         <td class="audit-history-col">${escapeHtml(`${row.acceptedTotal} accepted raid${row.acceptedTotal === 1 ? "" : "s"}`)}</td>
         <td>
