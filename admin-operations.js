@@ -380,7 +380,6 @@ function buildRequestQueueRows(rows, profilesById, actionMode = "full") {
         <td>${escapeHtml(characterName)}</td>
         <td>${renderClassText(attributes.wowClass)}</td>
         <td>${escapeHtml(attributes.specialization)}</td>
-        <td class="armory-col-narrow" data-armory-char="${escapeHtml(charSlug)}" data-armory-field="guild">…</td>
         <td class="armory-col-narrow" data-armory-char="${escapeHtml(charSlug)}" data-armory-field="ilvl">…</td>
         <td>${renderGearLink(gearUrl)}</td>
         <td>${renderExternalLink(logsUrl, "Logs")}</td>
@@ -762,7 +761,7 @@ function buildUserAuditRows(signups) {
         offSpecialization: String(signup.offSpecialization || selectedEntry?.offSpecialization || profile?.offSpecialization || previous?.offSpecialization || "").trim() || "—",
         armoryUrl: String(signup.armoryUrl || previous?.armoryUrl || buildArmoryUrl(characterName)).trim(),
         logsUrl: String(signup.logsUrl || selectedEntry?.logsUrl || previous?.logsUrl || buildLogsUrl(characterName)).trim(),
-        guildName: String(signup.guildName || selectedEntry?.guildName || profile?.guildName || previous?.guildName || "").trim(),
+        // guildName removed
         acceptedCount: acceptedForCharacter
       });
     }
@@ -1118,7 +1117,7 @@ function renderCharacterAuditTable() {
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderRoleSpec(entry.offRole, entry.offSpecialization)) : "—"}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.armoryUrl, "Gear")) : "—"}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.logsUrl, "Logs")) : "—"}</td>
-        <td class="audit-stack-cell armory-col-narrow">${entries.length ? renderAuditEntryLines(entries, (entry) => `<a href="https://classic-armory.org/guild/us/tbc-anniversary/dreamscythe/${encodeURIComponent(entry.guildName || 'unknown')}" target="_blank" rel="noopener" class="guild-link guild-muted" title="${escapeHtml(entry.guildName || 'unknown')}">${escapeHtml(truncateText(entry.guildName || 'unknown', 16))}</a>`) : "—"}</td>
+        <!-- Guild column removed -->
         <td class="audit-history-col">(${escapeHtml(row.acceptedTotal)})</td>
         <td>
           <select data-role-uid="${escapeHtml(row.uid)}" data-role-current="${escapeHtml(row.role)}" title="Change this user's access role" ${row.role === "owner" && !isOwner ? "disabled" : ""}>
