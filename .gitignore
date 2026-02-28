@@ -15,3 +15,5 @@ TODO.txt
 node_modules/
 dist/
 firebase-debug.log
+backups/
+scripts/backup_firestore.py
