@@ -630,12 +630,12 @@ function formatSpecDisplay(specName, wowClass, roleName = "") {
   if (!specName) {
     return "—";
   }
-  const specWithClass = wowClass ? `${specName} - ${wowClass}` : specName;
+  const specSpan = `<span>${escapeHtml(specName)}</span>`;
   if (!roleName) {
-    return specWithClass;
+    return specSpan;
   }
   const roleIcon = ROLE_ICONS[roleName] || "•";
-  return `${specWithClass} (${roleIcon} ${roleName})`;
+  return `${specSpan}<span class=\"audit-spec-muted\" style=\"margin-left:0.35rem;\">${escapeHtml(roleIcon + " " + roleName)}</span>`;
 }
 
 function renderCharacterDisplay(signup) {
