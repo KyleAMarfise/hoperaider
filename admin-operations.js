@@ -757,6 +757,7 @@ function buildUserAuditRows(signups) {
         offSpecialization: String(signup.offSpecialization || selectedEntry?.offSpecialization || profile?.offSpecialization || previous?.offSpecialization || "").trim() || "—",
         armoryUrl: String(signup.armoryUrl || previous?.armoryUrl || buildArmoryUrl(characterName)).trim(),
         logsUrl: String(signup.logsUrl || selectedEntry?.logsUrl || previous?.logsUrl || buildLogsUrl(characterName)).trim(),
+        guildName: String(signup.guildName || selectedEntry?.guildName || profile?.guildName || previous?.guildName || "").trim(),
         acceptedCount: acceptedForCharacter
       });
     }
