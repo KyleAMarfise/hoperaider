@@ -1,3 +1,21 @@
+/* Glowing effect for raid name */
+.raid-name-glow {
+  color: var(--gold);
+  font-weight: 700;
+  font-size: 1.08rem;
+  text-shadow:
+    0 0 9px rgba(209, 167, 84, 0.34),
+    0 0 18px rgba(209, 167, 84, 0.2),
+    0 0 28px rgba(79, 110, 168, 0.14);
+  animation: title-glow 1.8s ease-in-out infinite alternate;
+  letter-spacing: 0.02em;
+  background: linear-gradient(90deg, rgba(209,167,84,0.09) 0%, var(--bg-panel-top) 100%);
+  border: 1.5px solid var(--gold-soft);
+  border-radius: 7px;
+  padding: 0.18em 0.55em;
+  display: inline-block;
+  box-shadow: 0 2px 8px 0 rgba(209,167,84,0.13);
+}
 .roster-char-indent {
   padding-left: 5em !important;
   text-align: left !important;
@@ -5,8 +23,18 @@
 /* Larger section header for signup status */
 .roster-section-header {
   font-size: 1.18rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.01em;
+  background: linear-gradient(90deg, var(--bg-panel-top) 60%, var(--bg-panel) 100%);
+  border-top: 1px solid var(--gold-soft);
+  border-bottom: 2px solid var(--line-muted);
+  color: var(--gold);
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.12);
+  text-shadow: 0 1px 2px #000a;
+  padding: 0.7em 0.5em;
+  margin-top: 1em;
+  margin-bottom: 0.2em;
+  border-radius: 6px;
 }
 
 /* Indent character rows in signup table */

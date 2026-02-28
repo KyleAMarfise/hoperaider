@@ -2530,7 +2530,7 @@ function renderAdminRaids(items) {
       const windowText = renderRaidWindowMultiline(item.raidStart, item.raidEnd);
       return `<tr>
         <td>${escapeHtml(`Phase ${String(item.phase)}`)}</td>
-        <td>${escapeHtml(item.raidName)}</td>
+        <td><span class="raid-name-glow">${escapeHtml(item.raidName)}</span></td>
         <td>${escapeHtml(formatMonthDayYear(item.raidDate))}</td>
         <td class="raid-time-cell">${windowText}</td>
         <td>${escapeHtml(item.runType)}</td>
@@ -2924,7 +2924,7 @@ function renderCategoryRows(targetElement, rows, rosterMap) {
           </td>
           <td class="raid-time-cell">${renderRaidWindowMultiline(item.raidStart, item.raidEnd, { highlightLocal: true })}</td>
           <td>${escapeHtml(item.phase ? `Phase ${String(item.phase)}` : "—")}</td>
-          <td>${escapeHtml(item.raidName || "—")}${item.raidLeader ? `<br><span class="raid-leader-label">RL: ${escapeHtml(item.raidLeader)}</span>` : ""}</td>
+          <td><span class="raid-name-glow">${escapeHtml(item.raidName || "—")}</span>${item.raidLeader ? `<br><span class="raid-leader-label">RL: ${escapeHtml(item.raidLeader)}</span>` : ""}</td>
           <td>${escapeHtml(item.runType || "—")}</td>
           <td>${escapeHtml(item.raidSize || "—")}</td>
           <td>${renderRosterProgress(item, rosterMap, resolvedSignups)}</td>
