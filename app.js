@@ -630,7 +630,7 @@ function formatSpecDisplay(specName, wowClass, roleName = "") {
   if (!specName) {
     return "—";
   }
-  const specSpan = `<span>${escapeHtml(specName)}</span>`;
+  const specSpan = `<span class=\"audit-role-main\">${escapeHtml(specName)}</span>`;
   if (!roleName) {
     return specSpan;
   }
