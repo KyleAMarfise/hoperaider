@@ -1118,7 +1118,7 @@ function renderCharacterAuditTable() {
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderRoleSpec(entry.offRole, entry.offSpecialization)) : "—"}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.armoryUrl, "Gear")) : "—"}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.logsUrl, "Logs")) : "—"}</td>
-        <td class="audit-stack-cell armory-col-narrow">${entries.length ? renderAuditEntryLines(entries, (entry) => entry.guildName ? `<a href="https://classic-armory.org/guild/us/tbc-anniversary/dreamscythe/${encodeURIComponent(entry.guildName)}" target="_blank" rel="noopener" class="guild-link guild-muted" title="${escapeHtml(entry.guildName)}">${escapeHtml(truncateText(entry.guildName, 16))}</a>` : "—") : "—"}</td>
+        <td class="audit-stack-cell armory-col-narrow">${entries.length ? renderAuditEntryLines(entries, (entry) => `<a href="https://classic-armory.org/guild/us/tbc-anniversary/dreamscythe/${encodeURIComponent(entry.guildName || 'unknown')}" target="_blank" rel="noopener" class="guild-link guild-muted" title="${escapeHtml(entry.guildName || 'unknown')}">${escapeHtml(truncateText(entry.guildName || 'unknown', 16))}</a>`) : "—"}</td>
         <td class="audit-history-col">(${escapeHtml(row.acceptedTotal)})</td>
         <td>
           <select data-role-uid="${escapeHtml(row.uid)}" data-role-current="${escapeHtml(row.role)}" title="Change this user's access role" ${row.role === "owner" && !isOwner ? "disabled" : ""}>
