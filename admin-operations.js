@@ -1118,8 +1118,7 @@ function renderCharacterAuditTable() {
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderRoleSpec(entry.offRole, entry.offSpecialization)) : "—"}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.armoryUrl, "Gear")) : "—"}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.logsUrl, "Logs")) : "—"}</td>
-        <td class="audit-stack-cell armory-col-narrow">${entries.length ? renderAuditEntryLines(entries, (entry) => `<span class="guild-muted" data-armory-char="${escapeHtml(String(entry.characterName || "").trim().toLowerCase())}" data-armory-field="guild" title="${escapeHtml(entry.guildName || "")}">${escapeHtml(truncateText(entry.guildName || "", 16))}</span>`) : "—"}</td>
-        <td class="audit-stack-cell armory-col-narrow">${entries.length ? renderAuditEntryLines(entries, (entry) => `<span data-armory-char="${escapeHtml(String(entry.characterName || "").trim().toLowerCase())}" data-armory-field="ilvl">…</span>`) : "—"}</td>
+        <td class="audit-stack-cell armory-col-narrow">${entries.length ? renderAuditEntryLines(entries, (entry) => entry.guildName ? `<a href="https://classic-armory.org/guild/us/tbc-anniversary/dreamscythe/${encodeURIComponent(entry.guildName)}" target="_blank" rel="noopener" class="guild-link guild-muted" title="${escapeHtml(entry.guildName)}">${escapeHtml(truncateText(entry.guildName, 16))}</a>` : "—") : "—"}</td>
         <td class="audit-history-col">${escapeHtml(`${row.acceptedTotal} accepted raid${row.acceptedTotal === 1 ? "" : "s"}`)}</td>
         <td>
           <select data-role-uid="${escapeHtml(row.uid)}" data-role-current="${escapeHtml(row.role)}" title="Change this user's access role" ${row.role === "owner" && !isOwner ? "disabled" : ""}>
