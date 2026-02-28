@@ -1,11 +1,6 @@
-/* Skinny attended/history column for audit/request tables */
-.audit-history-col {
-  width: 3.5rem;
-  min-width: 2.5rem;
-  max-width: 4.5rem;
-  text-align: center;
-  padding-left: 0.1rem;
-  padding-right: 0.1rem;
+.roster-char-indent {
+  padding-left: 5em !important;
+  text-align: left !important;
 }
 /* Larger section header for signup status */
 .roster-section-header {
@@ -15,8 +10,8 @@
 }
 
 /* Indent character rows in signup table */
-.roster-row td {
-  padding-left: 1.5rem;
+.roster-row td:first-child {
+  padding-left: 5em;
 }
 .guild-muted {
   color: var(--text-dim);
@@ -1338,8 +1333,8 @@ button:disabled {
 
 .admin-operations-page #characterAuditSection {
   width: 100%;
-  max-width: 1200px;
-  min-width: 320px;
+  max-width: 100%;
+  min-width: 50%;
   margin-left: auto;
   margin-right: auto;
   padding-left: 2vw;
@@ -2728,9 +2723,9 @@ td .row-actions button {
     min-width: 80px;
   }
 
-  .audit-history-col {
+  /* .audit-history-col {
     min-width: 100px;
-  }
+  } */
 
   .audit-assign-col {
     min-width: 180px;

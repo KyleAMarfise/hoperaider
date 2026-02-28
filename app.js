@@ -977,7 +977,7 @@ function renderRosterTable(resolvedSignups) {
       const statusNorm = normalizeSignupStatus(signup.status);
       const charSlug = String(charName || "").trim().toLowerCase();
       return `<tr class="roster-row roster-status-${statusNorm}">
-        <td style="${classColor ? `color: ${classColor}; font-weight: 600` : ""}">${escapeHtml(charName)}</td>
+        <td class="roster-char-indent" style="${classColor ? `color: ${classColor}; font-weight: 600` : ""}">${escapeHtml(charName)}</td>
         <td style="${classColor ? `color: ${classColor}` : ""}">${escapeHtml(wowClass)}</td>
         <td>${formatSpecDisplay(spec, "", role)}</td>
         <td>${formatSpecDisplay(offSpec, "", offRole)}</td>
@@ -992,7 +992,7 @@ function renderRosterTable(resolvedSignups) {
 
   return `<table class="roster-table">
     <thead>
-      <tr><th>Character</th><th>Class</th><th>Main Spec</th><th>Off Spec</th><th>Status</th><th>Gear</th><th>Logs</th></tr>
+      <tr><th class="roster-char-indent">Character</th><th>Class</th><th>Main Spec</th><th>Off Spec</th><th>Status</th><th>Gear</th><th>Logs</th></tr>
     </thead>
     <tbody>
       ${rosterRows(accepted, "Accepted")}
