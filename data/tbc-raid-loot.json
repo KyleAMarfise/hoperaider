@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-01T17:11:57.536Z",
+  "generatedAt": "2026-03-01T23:38:54.143Z",
   "raids": [
     {
       "zoneId": 3457,
@@ -4010,6 +4010,96 @@
               ]
             },
             {
+              "itemId": 29760,
+              "name": "Helm of the Fallen Champion",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_helmet_24.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.3124,
+              "tooltip": [
+                {
+                  "label": "Helm of the Fallen Champion",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Paladin, Rogue, Shaman"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 29761,
+              "name": "Helm of the Fallen Defender",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_helmet_24.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.3201,
+              "tooltip": [
+                {
+                  "label": "Helm of the Fallen Defender",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Warrior, Priest, Druid"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 29759,
+              "name": "Helm of the Fallen Hero",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_helmet_24.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.3303,
+              "tooltip": [
+                {
+                  "label": "Helm of the Fallen Hero",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Hunter, Mage, Warlock"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
               "itemId": 28773,
               "name": "Gorehowl",
               "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_axe_60.jpg",
@@ -6639,6 +6729,96 @@
               ]
             },
             {
+              "itemId": 29757,
+              "name": "Gloves of the Fallen Champion",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_27.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.3268,
+              "tooltip": [
+                {
+                  "label": "Gloves of the Fallen Champion",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Paladin, Rogue, Shaman"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 29758,
+              "name": "Gloves of the Fallen Defender",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_27.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.3286,
+              "tooltip": [
+                {
+                  "label": "Gloves of the Fallen Defender",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Warrior, Priest, Druid"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 29756,
+              "name": "Gloves of the Fallen Hero",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_27.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.3255,
+              "tooltip": [
+                {
+                  "label": "Gloves of the Fallen Hero",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Hunter, Mage, Warlock"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
               "itemId": 28633,
               "name": "Staff of Infinite Mysteries",
               "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_weapon_halberd17.jpg",
@@ -7255,6 +7435,96 @@
               ]
             },
             {
+              "itemId": 29766,
+              "name": "Leggings of the Fallen Champion",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_pants_plate_17.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.4326,
+              "tooltip": [
+                {
+                  "label": "Leggings of the Fallen Champion",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Paladin, Rogue, Shaman"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 29767,
+              "name": "Leggings of the Fallen Defender",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_pants_plate_17.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.4482,
+              "tooltip": [
+                {
+                  "label": "Leggings of the Fallen Defender",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Warrior, Priest, Druid"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 29765,
+              "name": "Leggings of the Fallen Hero",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_pants_plate_17.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.4461,
+              "tooltip": [
+                {
+                  "label": "Leggings of the Fallen Hero",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Hunter, Mage, Warlock"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
               "itemId": 28830,
               "name": "Dragonspine Trophy",
               "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_bone_03.jpg",
@@ -7632,6 +7902,96 @@
                 {
                   "label": "Equip: Increases attack power by 86.",
                   "format": "Uncommon"
+                }
+              ]
+            },
+            {
+              "itemId": 29763,
+              "name": "Pauldrons of the Fallen Champion",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_shoulder_22.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.4437,
+              "tooltip": [
+                {
+                  "label": "Pauldrons of the Fallen Champion",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Paladin, Rogue, Shaman"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 29764,
+              "name": "Pauldrons of the Fallen Defender",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_shoulder_22.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.4449,
+              "tooltip": [
+                {
+                  "label": "Pauldrons of the Fallen Defender",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Warrior, Priest, Druid"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 29762,
+              "name": "Pauldrons of the Fallen Hero",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_shoulder_22.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.4399,
+              "tooltip": [
+                {
+                  "label": "Pauldrons of the Fallen Hero",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Hunter, Mage, Warlock"
+                },
+                {
+                  "label": "Requires Level 70"
                 }
               ]
             },
@@ -8256,6 +8616,96 @@
               ]
             },
             {
+              "itemId": 29754,
+              "name": "Chestguard of the Fallen Champion",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_chest_chain_03.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.3813,
+              "tooltip": [
+                {
+                  "label": "Chestguard of the Fallen Champion",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Paladin, Rogue, Shaman"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 29753,
+              "name": "Chestguard of the Fallen Defender",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_chest_chain_03.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.3821,
+              "tooltip": [
+                {
+                  "label": "Chestguard of the Fallen Defender",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Warrior, Priest, Druid"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 29755,
+              "name": "Chestguard of the Fallen Hero",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_chest_chain_03.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.3985,
+              "tooltip": [
+                {
+                  "label": "Chestguard of the Fallen Hero",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Hunter, Mage, Warlock"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
               "itemId": 28789,
               "name": "Eye of Magtheridon",
               "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_elemental_mote_life01.jpg",
@@ -8775,6 +9225,96 @@
                 {
                   "label": "Equip: Improves hit rating by 18.",
                   "format": "Uncommon"
+                }
+              ]
+            },
+            {
+              "itemId": 30245,
+              "name": "Leggings of the Vanquished Champion",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_pants_plate_17.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.5694,
+              "tooltip": [
+                {
+                  "label": "Leggings of the Vanquished Champion",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Paladin, Rogue, Shaman"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 30246,
+              "name": "Leggings of the Vanquished Defender",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_pants_plate_17.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.5644,
+              "tooltip": [
+                {
+                  "label": "Leggings of the Vanquished Defender",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Warrior, Priest, Druid"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 30247,
+              "name": "Leggings of the Vanquished Hero",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_pants_plate_17.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.564,
+              "tooltip": [
+                {
+                  "label": "Leggings of the Vanquished Hero",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Hunter, Mage, Warlock"
+                },
+                {
+                  "label": "Requires Level 70"
                 }
               ]
             },
@@ -10348,6 +10888,96 @@
               ]
             },
             {
+              "itemId": 30242,
+              "name": "Helm of the Vanquished Champion",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_helmet_24.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.5596,
+              "tooltip": [
+                {
+                  "label": "Helm of the Vanquished Champion",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Paladin, Rogue, Shaman"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 30243,
+              "name": "Helm of the Vanquished Defender",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_helmet_24.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.5548,
+              "tooltip": [
+                {
+                  "label": "Helm of the Vanquished Defender",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Warrior, Priest, Druid"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 30244,
+              "name": "Helm of the Vanquished Hero",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_helmet_24.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.5703,
+              "tooltip": [
+                {
+                  "label": "Helm of the Vanquished Hero",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Hunter, Mage, Warlock"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
               "itemId": 30621,
               "name": "Prism of Inner Calm",
               "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_gem_diamond_07.jpg",
@@ -10662,6 +11292,96 @@
                 {
                   "label": "Equip: Increases spell power by 39.",
                   "format": "Uncommon"
+                }
+              ]
+            },
+            {
+              "itemId": 30239,
+              "name": "Gloves of the Vanquished Champion",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_27.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.5453,
+              "tooltip": [
+                {
+                  "label": "Gloves of the Vanquished Champion",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Paladin, Rogue, Shaman"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 30240,
+              "name": "Gloves of the Vanquished Defender",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_27.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.5533,
+              "tooltip": [
+                {
+                  "label": "Gloves of the Vanquished Defender",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Warrior, Priest, Druid"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 30241,
+              "name": "Gloves of the Vanquished Hero",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_27.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.5731,
+              "tooltip": [
+                {
+                  "label": "Gloves of the Vanquished Hero",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Hunter, Mage, Warlock"
+                },
+                {
+                  "label": "Requires Level 70"
                 }
               ]
             },
@@ -14059,6 +14779,101 @@
           ]
         },
         {
+          "name": "Kael'thas Sunstrider",
+          "items": [
+            {
+              "itemId": 30236,
+              "name": "Chestguard of the Vanquished Champion",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_chest_chain_03.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.6183,
+              "tooltip": [
+                {
+                  "label": "Chestguard of the Vanquished Champion",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Paladin, Rogue, Shaman"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 30237,
+              "name": "Chestguard of the Vanquished Defender",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_chest_chain_03.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.6046,
+              "tooltip": [
+                {
+                  "label": "Chestguard of the Vanquished Defender",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Warrior, Priest, Druid"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 30238,
+              "name": "Chestguard of the Vanquished Hero",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_chest_chain_03.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.633,
+              "tooltip": [
+                {
+                  "label": "Chestguard of the Vanquished Hero",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Hunter, Mage, Warlock"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "name": "Netherstrand Longbow",
           "items": [
             {
@@ -14497,6 +15312,96 @@
                 {
                   "label": "Equip: Increases attack power by 88.",
                   "format": "Uncommon"
+                }
+              ]
+            },
+            {
+              "itemId": 30248,
+              "name": "Pauldrons of the Vanquished Champion",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_shoulder_22.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.5791,
+              "tooltip": [
+                {
+                  "label": "Pauldrons of the Vanquished Champion",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Paladin, Rogue, Shaman"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 30249,
+              "name": "Pauldrons of the Vanquished Defender",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_shoulder_22.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.5741,
+              "tooltip": [
+                {
+                  "label": "Pauldrons of the Vanquished Defender",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Warrior, Priest, Druid"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 30250,
+              "name": "Pauldrons of the Vanquished Hero",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_shoulder_22.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.5758,
+              "tooltip": [
+                {
+                  "label": "Pauldrons of the Vanquished Hero",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Hunter, Mage, Warlock"
+                },
+                {
+                  "label": "Requires Level 70"
                 }
               ]
             },
@@ -16199,6 +17104,99 @@
               ]
             },
             {
+              "itemId": 31097,
+              "name": "Helm of the Forgotten Conqueror",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_helmet_24.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.5076,
+              "tooltip": [
+                {
+                  "label": "Helm of the Forgotten Conqueror"
+                },
+                {
+                  "label": "Phase 2",
+                  "format": "alignRight"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Paladin, Priest, Warlock"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 31095,
+              "name": "Helm of the Forgotten Protector",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_helmet_24.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.5248,
+              "tooltip": [
+                {
+                  "label": "Helm of the Forgotten Protector",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Warrior, Hunter, Shaman"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 31096,
+              "name": "Helm of the Forgotten Vanquisher",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_helmet_24.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.4917,
+              "tooltip": [
+                {
+                  "label": "Helm of the Forgotten Vanquisher",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Rogue, Mage, Druid"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
               "itemId": 30908,
               "name": "Apostle of Argus",
               "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_staff_54.jpg",
@@ -16643,6 +17641,99 @@
                 {
                   "label": "Equip: Increases armor penetration rating by 30.",
                   "format": "Uncommon"
+                }
+              ]
+            },
+            {
+              "itemId": 31092,
+              "name": "Gloves of the Forgotten Conqueror",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_27.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.5353,
+              "tooltip": [
+                {
+                  "label": "Gloves of the Forgotten Conqueror"
+                },
+                {
+                  "label": "Phase 2",
+                  "format": "alignRight"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Paladin, Priest, Warlock"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 31094,
+              "name": "Gloves of the Forgotten Protector",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_27.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.5327,
+              "tooltip": [
+                {
+                  "label": "Gloves of the Forgotten Protector",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Warrior, Hunter, Shaman"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 31093,
+              "name": "Gloves of the Forgotten Vanquisher",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_27.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.5321,
+              "tooltip": [
+                {
+                  "label": "Gloves of the Forgotten Vanquisher",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Rogue, Mage, Druid"
+                },
+                {
+                  "label": "Requires Level 70"
                 }
               ]
             },
@@ -21923,6 +23014,99 @@
               ]
             },
             {
+              "itemId": 31089,
+              "name": "Chestguard of the Forgotten Conqueror",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_chest_chain_03.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.5057,
+              "tooltip": [
+                {
+                  "label": "Chestguard of the Forgotten Conqueror"
+                },
+                {
+                  "label": "Phase 2",
+                  "format": "alignRight"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Paladin, Priest, Warlock"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 31091,
+              "name": "Chestguard of the Forgotten Protector",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_chest_chain_03.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.5388,
+              "tooltip": [
+                {
+                  "label": "Chestguard of the Forgotten Protector",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Warrior, Hunter, Shaman"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 31090,
+              "name": "Chestguard of the Forgotten Vanquisher",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_chest_chain_03.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.5161,
+              "tooltip": [
+                {
+                  "label": "Chestguard of the Forgotten Vanquisher",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Rogue, Mage, Druid"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
               "itemId": 32496,
               "name": "Memento of Tyrande",
               "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_summerfest_fireflower.jpg",
@@ -22444,6 +23628,99 @@
                 {
                   "label": "Equip: Your Judgement ability also increases your shield block value by 186 for 10 sec.",
                   "format": "Uncommon"
+                }
+              ]
+            },
+            {
+              "itemId": 31101,
+              "name": "Pauldrons of the Forgotten Conqueror",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_shoulder_22.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.5108,
+              "tooltip": [
+                {
+                  "label": "Pauldrons of the Forgotten Conqueror"
+                },
+                {
+                  "label": "Phase 2",
+                  "format": "alignRight"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Paladin, Priest, Warlock"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 31103,
+              "name": "Pauldrons of the Forgotten Protector",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_shoulder_22.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.5195,
+              "tooltip": [
+                {
+                  "label": "Pauldrons of the Forgotten Protector",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Warrior, Hunter, Shaman"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 31102,
+              "name": "Pauldrons of the Forgotten Vanquisher",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_shoulder_22.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.5463,
+              "tooltip": [
+                {
+                  "label": "Pauldrons of the Forgotten Vanquisher",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Rogue, Mage, Druid"
+                },
+                {
+                  "label": "Requires Level 70"
                 }
               ]
             }
@@ -24037,6 +25314,104 @@
                 {
                   "label": "Equip: Increases attack power by 58.",
                   "format": "Uncommon"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "The Illidari Council",
+          "items": [
+            {
+              "itemId": 31098,
+              "name": "Leggings of the Forgotten Conqueror",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_pants_plate_17.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.3258,
+              "tooltip": [
+                {
+                  "label": "Leggings of the Forgotten Conqueror"
+                },
+                {
+                  "label": "Phase 2",
+                  "format": "alignRight"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Paladin, Priest, Warlock"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 31100,
+              "name": "Leggings of the Forgotten Protector",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_pants_plate_17.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.3075,
+              "tooltip": [
+                {
+                  "label": "Leggings of the Forgotten Protector",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Warrior, Hunter, Shaman"
+                },
+                {
+                  "label": "Requires Level 70"
+                }
+              ]
+            },
+            {
+              "itemId": 31099,
+              "name": "Leggings of the Forgotten Vanquisher",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_pants_plate_17.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.3651,
+              "tooltip": [
+                {
+                  "label": "Leggings of the Forgotten Vanquisher",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Classes: Rogue, Mage, Druid"
+                },
+                {
+                  "label": "Requires Level 70"
                 }
               ]
             }

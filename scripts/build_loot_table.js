@@ -31,14 +31,49 @@ const EQUIP_SLOTS = new Set([
   'Held In Off-hand','Ranged','Thrown','Relic'
 ]);
 
+// Regex to identify tier token items (T4 Fallen, T5 Vanquished, T6 Forgotten)
+const TIER_TOKEN_RE = /^(Chestguard|Gloves|Helm|Leggings|Pauldrons) of the (Fallen|Vanquished|Forgotten) /;
+
+// Some tier tokens have incomplete source data in the database — fill in the gaps
+const TIER_TOKEN_SOURCE_OVERRIDES = {
+  // T5 Chest — Kael'thas Sunstrider, Tempest Keep
+  30236: { zone: 3845, name: "Kael'thas Sunstrider" },
+  30237: { zone: 3845, name: "Kael'thas Sunstrider" },
+  30238: { zone: 3845, name: "Kael'thas Sunstrider" },
+  // T6 Legs — The Illidari Council, Black Temple
+  31098: { zone: 3959, name: "The Illidari Council" },
+  31099: { zone: 3959, name: "The Illidari Council" },
+  31100: { zone: 3959, name: "The Illidari Council" },
+};
+
+function isTierToken(item) {
+  return item.name && TIER_TOKEN_RE.test(item.name) &&
+    item.quality === 'Epic' && item.class === 'Miscellaneous';
+}
+
 // Filter for reservable items: boss drops from TBC raids, epic+ quality, equippable
-const raidItems = items.filter(i =>
-  i.source &&
-  i.source.category === 'Boss Drop' &&
-  zoneIdSet.has(i.source.zone) &&
-  (EQUIP_SLOTS.has(i.slot) || i.class === 'Weapon') &&
-  (i.quality === 'Epic' || i.quality === 'Legendary')
-);
+const raidItems = items.filter(i => {
+  if (!i.source) return false;
+  if (i.quality !== 'Epic' && i.quality !== 'Legendary') return false;
+
+  // Tier tokens — allow any source category since some have "Rare Drop" / "Zone Drop"
+  if (isTierToken(i)) {
+    const override = TIER_TOKEN_SOURCE_OVERRIDES[i.itemId];
+    if (override) {
+      i.source.zone = override.zone;
+      i.source.name = override.name;
+      i.source.category = 'Boss Drop';
+    }
+    return zoneIdSet.has(i.source.zone) && i.source.name;
+  }
+
+  // Standard equippable gear — must be a boss drop from a TBC raid zone
+  if (i.source.category !== 'Boss Drop') return false;
+  if (!zoneIdSet.has(i.source.zone)) return false;
+  if (EQUIP_SLOTS.has(i.slot) || i.class === 'Weapon') return true;
+
+  return false;
+});
 
 // Build structured output grouped by raid -> boss -> items
 const output = {
@@ -70,7 +105,7 @@ for (const raid of TBC_RAIDS) {
       icon: item.icon,
       quality: item.quality,
       itemLevel: item.itemLevel,
-      slot: item.slot,
+      slot: isTierToken(item) ? 'Tier Token' : item.slot,
       class: item.class,
       subclass: item.subclass || null,
       dropChance: item.source.dropChance || null,

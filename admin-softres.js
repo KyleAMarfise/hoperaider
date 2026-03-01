@@ -124,7 +124,7 @@ const BOSS_KILL_ORDER = {
     "Al'ar", "Void Reaver", "High Astromancer Solarian",
     "Cosmic Infuser", "Devastation", "Infinity Blades",
     "Netherstrand Longbow", "Phaseshift Bulwark", "Staff of Disintegration",
-    "Warp Slicer"
+    "Warp Slicer", "Kael'thas Sunstrider"
   ],
   "Hyjal Summit": [
     "Rage Winterchill", "Anetheron", "Kaz'rogal", "Azgalor", "Archimonde"
@@ -134,6 +134,7 @@ const BOSS_KILL_ORDER = {
     "Ashtongue Channeler",
     "Gurtogg Bloodboil",
     "Essence of Anger", "High Nethermancer Zerevor",
+    "The Illidari Council",
     "Mother Shahraz", "Illidan Stormrage"
   ],
   "Zul'Aman": [
@@ -213,9 +214,32 @@ const CLASS_WEAPONS = {
 const SHIELD_CLASSES = new Set(["Warrior", "Paladin", "Shaman"]);
 const RELIC_CLASS = { Idol: "Druid", Libram: "Paladin", Totem: "Shaman" };
 
+// Tier token → eligible classes  (T4 Fallen, T5 Vanquished share the same grouping)
+const TIER_TOKEN_CLASSES = {
+  "Hero":       new Set(["Hunter", "Mage", "Warlock"]),
+  "Champion":   new Set(["Rogue", "Shaman", "Warrior"]),
+  "Defender":   new Set(["Druid", "Paladin", "Priest"]),
+  // T6 uses different group names
+  "Conqueror":  new Set(["Paladin", "Priest", "Warlock"]),
+  "Protector":  new Set(["Hunter", "Shaman", "Warrior"]),
+  "Vanquisher": new Set(["Druid", "Mage", "Rogue"]),
+};
+
+function getTierTokenGroup(itemName) {
+  if (!itemName) return null;
+  const m = itemName.match(/of the (?:Fallen|Vanquished|Forgotten) (\w+)$/);
+  return m ? m[1] : null;
+}
+
 function canClassUseItem(wowClass, item) {
   if (!wowClass) return true;
   if (GENERIC_SLOTS.has(item.slot)) return true;
+  // Tier tokens are class-specific
+  if (item.slot === "Tier Token") {
+    const group = getTierTokenGroup(item.name);
+    if (group && TIER_TOKEN_CLASSES[group]) return TIER_TOKEN_CLASSES[group].has(wowClass);
+    return true; // fallback if pattern doesn't match
+  }
   if (item.class === "Armor") {
     if (item.subclass === "Shield") return SHIELD_CLASSES.has(wowClass);
     if (RELIC_CLASS[item.subclass]) return RELIC_CLASS[item.subclass] === wowClass;
@@ -229,6 +253,7 @@ function canClassUseItem(wowClass, item) {
 
 // Derive a user-friendly type label from item class/subclass
 function getItemType(item) {
+  if (item.slot === "Tier Token") return "Tier Token";
   if (item.class === "Weapon") return item.subclass || "Weapon";
   if (item.class === "Armor") {
     if (item.subclass === "Miscellaneous") return "Misc";
@@ -617,6 +642,9 @@ function getItemSortScore(item, wowClass) {
 
     // Generic slots — trinkets, rings, necklaces, cloaks, off-hands
     if (GENERIC_SLOTS.has(item.slot)) return 25;
+
+    // Tier tokens are high priority when usable
+    if (item.slot === "Tier Token") return 15;
 
     return 50; // any other usable item
   }
