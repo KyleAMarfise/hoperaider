@@ -23,18 +23,20 @@ const JS_FILES = [
   "app.js",
   "admin.js",
   "admin-operations.js",
+  "admin-softres.js",
   "nav-component.js",
   "main.js",
 ];
 
 const CSS_FILES = ["styles.css"];
 
-const HTML_FILES = ["index.html", "admin.html", "admin-operations.html"];
+const HTML_FILES = ["index.html", "admin.html", "admin-operations.html", "admin-softres.html"];
 
 // Directories + files to copy as-is (no transformation)
 const COPY_ITEMS = [
   "assets",
   "config/prod",           // only prod config — never copy config/local (secrets)
+  "data",
   "firebase.json",
   "firestore.rules",
   "firestore.indexes.json",
