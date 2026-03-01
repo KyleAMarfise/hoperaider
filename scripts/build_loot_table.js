@@ -72,6 +72,12 @@ const raidItems = items.filter(i => {
   if (!zoneIdSet.has(i.source.zone)) return false;
   if (EQUIP_SLOTS.has(i.slot) || i.class === 'Weapon') return true;
 
+  // Bags (e.g. Pit Lord's Satchel)
+  if (i.slot === 'Bag' && i.class === 'Container') return true;
+
+  // Mounts (e.g. Fiery Warhorse's Reins)
+  if (i.subclass === 'Mount') return true;
+
   return false;
 });
 

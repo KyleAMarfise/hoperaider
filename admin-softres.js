@@ -102,6 +102,7 @@ const TOOLTIP_FORMAT_COLORS = {
 // Canonical boss kill order for each TBC raid (common raid pathway)
 const BOSS_KILL_ORDER = {
   "Karazhan": [
+    "Attumen the Huntsman",
     "Hyakiss the Lurker", "Rokad the Ravager", "Shadikith the Glider",
     "Moroes", "Maiden of Virtue",
     "The Big Bad Wolf", "Julianne", "The Crone", "Echo of Medivh",
@@ -254,6 +255,8 @@ function canClassUseItem(wowClass, item) {
 // Derive a user-friendly type label from item class/subclass
 function getItemType(item) {
   if (item.slot === "Tier Token") return "Tier Token";
+  if (item.slot === "Bag") return "Bag";
+  if (item.subclass === "Mount") return "Mount";
   if (item.class === "Weapon") return item.subclass || "Weapon";
   if (item.class === "Armor") {
     if (item.subclass === "Miscellaneous") return "Misc";

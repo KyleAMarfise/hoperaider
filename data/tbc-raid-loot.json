@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-01T23:38:54.143Z",
+  "generatedAt": "2026-03-01T23:50:56.163Z",
   "raids": [
     {
       "zoneId": 3457,
@@ -7,6 +7,52 @@
       "phase": 1,
       "size": 10,
       "bosses": [
+        {
+          "name": "Attumen the Huntsman",
+          "items": [
+            {
+              "itemId": 30480,
+              "name": "Fiery Warhorse's Reins",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/ability_mount_dreadsteed.jpg",
+              "quality": "Epic",
+              "itemLevel": 40,
+              "slot": "Non-equippable",
+              "class": "Miscellaneous",
+              "subclass": "Mount",
+              "dropChance": 0.0098,
+              "tooltip": [
+                {
+                  "label": "Fiery Warhorse's Reins",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 40",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Unique\nMount"
+                },
+                {
+                  "label": "Requires Level 40"
+                },
+                {
+                  "label": "Requires Riding (150)"
+                },
+                {
+                  "label": "Use: Teaches you how to summon Attumen the Huntsman's steed.  This is a very fast mount.",
+                  "format": "Uncommon"
+                },
+                {
+                  "label": "Summons and dismisses Attumen the Huntsman's steed.  This is a very fast mount.",
+                  "format": "Uncommon"
+                }
+              ]
+            }
+          ]
+        },
         {
           "name": "Echo of Medivh",
           "items": [
@@ -8261,6 +8307,33 @@
                 {
                   "label": "Equip: Increases attack power by 56.",
                   "format": "Uncommon"
+                }
+              ]
+            },
+            {
+              "itemId": 34845,
+              "name": "Pit Lord's Satchel",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_bag_enchantedrunecloth.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Bag",
+              "class": "Container",
+              "subclass": "Bag",
+              "dropChance": 0.8322,
+              "tooltip": [
+                {
+                  "label": "Pit Lord's Satchel",
+                  "format": "Epic"
+                },
+                {
+                  "label": "Item Level 70",
+                  "format": "Misc"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Unique\n20 Slot Bag"
                 }
               ]
             },
