@@ -3378,3 +3378,10 @@ td .row-actions button {
 .softres-loot-row:hover {
   background: rgba(209, 167, 84, 0.06);
 }
+/* Unusable items (class can't equip) — dimmed at the bottom of the list */
+.softres-loot-unusable {
+  opacity: 0.35;
+}
+.softres-loot-unusable:hover {
+  opacity: 0.55;
+}

@@ -474,6 +474,50 @@ function renderCharacterReserves() {
   filterLootTable();
 }
 
+// ── Class-based loot sorting ────────────────────────────────────────────────
+// Returns a numeric sort score for an item based on the character's class.
+// Lower score = higher relevance. Items the class can't use sort to the bottom.
+function getItemSortScore(item, wowClass) {
+  if (!wowClass) return 0; // no class selected — no reordering
+
+  const canUse = canClassUseItem(wowClass, item);
+
+  // ── Usable items ──────────────────────────────────────────────────────────
+  if (canUse) {
+    // Weapons the class can wield
+    if (item.class === "Weapon") return 10;
+
+    // Shields / relics — very class-specific
+    if (item.class === "Armor" && item.subclass === "Shield") return 20;
+    if (item.class === "Armor" && RELIC_CLASS[item.subclass]) return 20;
+
+    // Armor — order by the class's preference list (plate → mail → leather → cloth)
+    if (item.class === "Armor") {
+      const armorOrder = CLASS_ARMOR[wowClass] || [];
+      const idx = armorOrder.indexOf(item.subclass);
+      if (idx >= 0) return 30 + idx; // e.g. Warrior: Plate=30, Mail=31, Leather=32, Cloth=33
+      return 39; // other usable armor
+    }
+
+    // Generic slots — trinkets, rings, necklaces, cloaks, off-hands
+    if (GENERIC_SLOTS.has(item.slot)) return 25;
+
+    return 50; // any other usable item
+  }
+
+  // ── Unusable items (shown at the bottom, dimmed) ──────────────────────────
+  if (item.class === "Weapon") return 110;
+  if (item.class === "Armor" && item.subclass === "Shield") return 120;
+  if (item.class === "Armor" && RELIC_CLASS[item.subclass]) return 120;
+  if (item.class === "Armor") {
+    // Keep the same armor-type ordering even for unusable tiers
+    const allArmor = ["Plate", "Mail", "Leather", "Cloth"];
+    const idx = allArmor.indexOf(item.subclass);
+    return 130 + (idx >= 0 ? idx : 4);
+  }
+  return 150;
+}
+
 // ── Loot browser ────────────────────────────────────────────────────────────
 function renderLootBrowser() {
   if (!selectedRaidLoot) {
@@ -520,39 +564,56 @@ function filterLootTable() {
   const raid = currentRaids.find(r => r.id === selectedRaidId);
   const isLocked = raid?.softresLocked;
 
-  let rows = '';
+  // Collect all matching items into an array so we can sort by class relevance
+  const itemList = [];
   for (const boss of selectedRaidLoot.bosses) {
     if (bossFilter && boss.name !== bossFilter) continue;
     for (const item of boss.items) {
       if (slotFilter && item.slot !== slotFilter) continue;
       if (searchFilter && !item.name.toLowerCase().includes(searchFilter)) continue;
-      if (wowClass && !canClassUseItem(wowClass, item)) continue;
-      const qualityColor = QUALITY_COLORS[item.quality] || "#ccc";
-      const dropPct = item.dropChance != null ? `${(item.dropChance * 100).toFixed(1)}%` : "—";
-      const isReserved = reservedItemIds.has(item.itemId);
-      const rowClass = isReserved ? "softres-loot-row softres-loot-reserved" : "softres-loot-row";
-
-      // +/- button: admins can always act; members only when unlocked and own character
-      let actionHtml = '';
-      const canModify = ch && (isAdmin || (!isLocked && ch.ownerUid === authUid));
-      if (canModify) {
-        if (isReserved) {
-          actionHtml = `<button class="softres-reserve-btn softres-remove-btn" data-reserve-action="remove" data-item-id="${item.itemId}" title="Remove reserve">−</button>`;
-        } else if (reserveCount < maxReserves) {
-          actionHtml = `<button class="softres-reserve-btn softres-add-btn" data-reserve-action="add" data-item-id="${item.itemId}" title="Reserve this item">+</button>`;
-        }
-      }
-
-      rows += `<tr data-item-id="${item.itemId}" class="${rowClass}">
-        <td><img class="softres-item-icon" src="${escapeHtml(item.icon)}" alt="" loading="lazy" /></td>
-        <td style="color:${qualityColor};font-weight:600">${escapeHtml(item.name)}</td>
-        <td>${escapeHtml(item.slot)}</td>
-        <td>${item.itemLevel}</td>
-        <td>${escapeHtml(boss.name)}</td>
-        <td>${dropPct}</td>
-        <td>${actionHtml}</td>
-      </tr>`;
+      itemList.push({ item, bossName: boss.name });
     }
+  }
+
+  // Sort by class relevance (lower score = higher priority), then by item name
+  if (wowClass) {
+    itemList.sort((a, b) => {
+      const sa = getItemSortScore(a.item, wowClass);
+      const sb = getItemSortScore(b.item, wowClass);
+      if (sa !== sb) return sa - sb;
+      return (a.item.name || "").localeCompare(b.item.name || "");
+    });
+  }
+
+  let rows = '';
+  for (const { item, bossName } of itemList) {
+    const canUse = !wowClass || canClassUseItem(wowClass, item);
+    const qualityColor = QUALITY_COLORS[item.quality] || "#ccc";
+    const dropPct = item.dropChance != null ? `${(item.dropChance * 100).toFixed(1)}%` : "—";
+    const isReserved = reservedItemIds.has(item.itemId);
+    let rowClass = isReserved ? "softres-loot-row softres-loot-reserved" : "softres-loot-row";
+    if (!canUse) rowClass += " softres-loot-unusable";
+
+    // +/- button: admins can always act; members only when unlocked and own character
+    let actionHtml = '';
+    const canModify = ch && (isAdmin || (!isLocked && ch.ownerUid === authUid));
+    if (canModify && canUse) {
+      if (isReserved) {
+        actionHtml = `<button class="softres-reserve-btn softres-remove-btn" data-reserve-action="remove" data-item-id="${item.itemId}" title="Remove reserve">−</button>`;
+      } else if (reserveCount < maxReserves) {
+        actionHtml = `<button class="softres-reserve-btn softres-add-btn" data-reserve-action="add" data-item-id="${item.itemId}" title="Reserve this item">+</button>`;
+      }
+    }
+
+    rows += `<tr data-item-id="${item.itemId}" class="${rowClass}">
+      <td><img class="softres-item-icon" src="${escapeHtml(item.icon)}" alt="" loading="lazy" /></td>
+      <td style="color:${canUse ? qualityColor : '#666'};font-weight:600">${escapeHtml(item.name)}</td>
+      <td>${escapeHtml(item.slot)}</td>
+      <td>${item.itemLevel}</td>
+      <td>${escapeHtml(bossName)}</td>
+      <td>${dropPct}</td>
+      <td>${actionHtml}</td>
+    </tr>`;
   }
   if (!rows) rows = '<tr><td colspan="7" class="text-dim">No items match filters.</td></tr>';
   lootTableRows.innerHTML = rows;
@@ -1032,8 +1093,8 @@ if (!hasConfigValues()) {
   const yahooProvider = new OAuthProvider("yahoo.com");
   db = getFirestore(app);
 
-  // Auth gate pending state
-  authGate.hidden = false;
+  // Auth gate pending state — hide both so neither flashes while auth resolves
+  authGate.hidden = true;
   appShell.hidden = true;
   updateAuthActionButtons(null);
   updateUidDisplay("");
