@@ -57,6 +57,7 @@ const softresCharacterSelect = document.getElementById("softresCharacterSelect")
 const softresCharReserves = document.getElementById("softresCharReserves");
 const softresLootBrowser = document.getElementById("softresLootBrowser");
 const lootBossFilter = document.getElementById("lootBossFilter");
+const lootTypeFilter = document.getElementById("lootTypeFilter");
 const lootSlotFilter = document.getElementById("lootSlotFilter");
 const lootSearchFilter = document.getElementById("lootSearchFilter");
 const lootTableRows = document.getElementById("lootTableRows");
@@ -134,6 +135,16 @@ function canClassUseItem(wowClass, item) {
     return (CLASS_WEAPONS[wowClass] || []).includes(item.subclass);
   }
   return true;
+}
+
+// Derive a user-friendly type label from item class/subclass
+function getItemType(item) {
+  if (item.class === "Weapon") return item.subclass || "Weapon";
+  if (item.class === "Armor") {
+    if (item.subclass === "Miscellaneous") return "Misc";
+    return item.subclass || "Armor";
+  }
+  return item.class || "—";
 }
 
 // ── Tooltip system ──────────────────────────────────────────────────────────
@@ -531,18 +542,28 @@ function getItemSortScore(item, wowClass) {
 // ── Loot browser ────────────────────────────────────────────────────────────
 function renderLootBrowser() {
   if (!selectedRaidLoot) {
-    lootTableRows.innerHTML = '<tr><td colspan="6" class="text-dim">Select a raid to browse loot.</td></tr>';
+    lootTableRows.innerHTML = '<tr><td colspan="8" class="text-dim">Select a raid to browse loot.</td></tr>';
     return;
   }
 
   // Populate boss filter
   let bossHtml = '<option value="">All Bosses</option>';
   const slots = new Set();
+  const types = new Set();
   for (const boss of selectedRaidLoot.bosses) {
     bossHtml += `<option value="${escapeHtml(boss.name)}">${escapeHtml(boss.name)}</option>`;
-    for (const item of boss.items) slots.add(item.slot);
+    for (const item of boss.items) {
+      slots.add(item.slot);
+      types.add(getItemType(item));
+    }
   }
   lootBossFilter.innerHTML = bossHtml;
+
+  let typeHtml = '<option value="">All Types</option>';
+  for (const t of [...types].sort()) {
+    typeHtml += `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`;
+  }
+  lootTypeFilter.innerHTML = typeHtml;
 
   let slotHtml = '<option value="">All Slots</option>';
   for (const slot of [...slots].sort()) {
@@ -556,6 +577,7 @@ function renderLootBrowser() {
 function filterLootTable() {
   if (!selectedRaidLoot) return;
   const bossFilter = lootBossFilter.value;
+  const typeFilter = lootTypeFilter.value;
   const slotFilter = lootSlotFilter.value;
   const searchFilter = (lootSearchFilter.value || "").trim().toLowerCase();
 
@@ -579,6 +601,7 @@ function filterLootTable() {
   for (const boss of selectedRaidLoot.bosses) {
     if (bossFilter && boss.name !== bossFilter) continue;
     for (const item of boss.items) {
+      if (typeFilter && getItemType(item) !== typeFilter) continue;
       if (slotFilter && item.slot !== slotFilter) continue;
       if (searchFilter && !item.name.toLowerCase().includes(searchFilter)) continue;
       itemList.push({ item, bossName: boss.name });
@@ -618,6 +641,7 @@ function filterLootTable() {
     rows += `<tr data-item-id="${item.itemId}" class="${rowClass}">
       <td><img class="softres-item-icon" src="${escapeHtml(item.icon)}" alt="" loading="lazy" /></td>
       <td style="color:${canUse ? qualityColor : '#666'};font-weight:600">${escapeHtml(item.name)}</td>
+      <td>${escapeHtml(getItemType(item))}</td>
       <td>${escapeHtml(item.slot)}</td>
       <td>${item.itemLevel}</td>
       <td>${escapeHtml(bossName)}</td>
@@ -625,7 +649,7 @@ function filterLootTable() {
       <td>${actionHtml}</td>
     </tr>`;
   }
-  if (!rows) rows = '<tr><td colspan="7" class="text-dim">No items match filters.</td></tr>';
+  if (!rows) rows = '<tr><td colspan="8" class="text-dim">No items match filters.</td></tr>';
   lootTableRows.innerHTML = rows;
 }
 
@@ -1121,6 +1145,7 @@ softresToggleLockBtn.addEventListener("click", toggleLock);
 softresMaxReservesInput.addEventListener("change", updateMaxReserves);
 softresRows.addEventListener("click", handleReserveAction);
 lootBossFilter.addEventListener("change", filterLootTable);
+lootTypeFilter.addEventListener("change", filterLootTable);
 lootSlotFilter.addEventListener("change", filterLootTable);
 lootSearchFilter.addEventListener("input", filterLootTable);
 // Use multiple event types so mobile/predictive keyboards reliably trigger filtering
