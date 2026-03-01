@@ -278,6 +278,7 @@ const siteTitleEl = document.getElementById("siteTitle");
 const guildDiscordLink = document.getElementById("guildDiscordLink");
 const adminRaidsLink = document.getElementById("adminRaidsLink");
 const adminOpsLink = document.getElementById("adminOpsLink");
+const adminSoftresLink = document.getElementById("adminSoftresLink");
 const adminOpsBadge = document.getElementById("adminOpsBadge");
 const adminMenu = document.getElementById("adminMenu");
 const wowClassPicker = document.getElementById("wowClassPicker");
@@ -2325,14 +2326,19 @@ function setAdminRaidVisibility() {
 }
 
 function setAdminNavVisibility() {
+  // Show admin menu when user is signed in (Soft Reserves is available to all members)
+  const signedIn = !!authUid;
   if (adminMenu) {
-    adminMenu.hidden = !isAdmin;
+    adminMenu.hidden = !signedIn;
   }
   if (adminRaidsLink) {
     adminRaidsLink.hidden = !isAdmin;
   }
   if (adminOpsLink) {
     adminOpsLink.hidden = !isAdmin;
+  }
+  if (adminSoftresLink) {
+    adminSoftresLink.hidden = !signedIn;
   }
   if (!isAdmin && adminOpsBadge) {
     adminOpsBadge.hidden = true;

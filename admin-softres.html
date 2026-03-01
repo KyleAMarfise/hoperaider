@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hope Raid Tracker — Soft Reserves</title>
+  <link rel="icon" type="image/x-icon" href="assets/images/World%20of%20Warcraft%20Alliance.ico" />
+  <link rel="apple-touch-icon" href="assets/images/World%20of%20Warcraft%20Alliance.PNG" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="admin-page admin-softres-page" data-nav-page="admin-softres">
+  <section id="authGate" class="auth-gate" hidden>
+    <div class="auth-gate-card">
+      <h1>Hope Raid Tracker</h1>
+      <p id="authGateMessage" class="auth-gate-message">Sign in to continue.</p>
+      <div class="auth-gate-buttons">
+        <button type="button" id="authGateSignInButton" class="auth-btn auth-btn-google">Sign in with Google</button>
+        <button type="button" id="authGateYahooButton" class="auth-btn auth-btn-yahoo">Sign in with Yahoo</button>
+      </div>
+    </div>
+  </section>
+
+  <main class="container" id="appShell" hidden>
+    <header class="header">
+      <div id="sharedNavRoot"></div>
+    </header>
+
+    <!-- Raid Picker -->
+    <section class="card softres-section softres-picker-card" id="softresSection" hidden>
+      <div class="list-header">
+        <h2>Soft Reserves</h2>
+        <span id="softresRaidBadge" class="badge">0</span>
+      </div>
+
+      <!-- Raid Tile Grid -->
+      <div id="softresRaidGrid" class="softres-raid-grid">
+        <p class="text-dim">Loading raids…</p>
+      </div>
+    </section>
+
+    <!-- Raid Detail (shown after selecting a raid) -->
+    <section class="card softres-section softres-detail-card" id="softresDetail" hidden>
+
+      <div class="softres-controls">
+        <div class="softres-lock-controls" id="softresLockControls" hidden>
+          <label class="softres-max-reserves-label">
+            Max Reserves
+            <input type="number" id="softresMaxReservesInput" min="1" max="10" value="2" class="softres-max-reserves-input" />
+          </label>
+          <span id="softresLockStatus" class="softres-lock-badge">🔓 Open</span>
+          <button type="button" id="softresToggleLockBtn" class="secondary">Lock Reserves</button>
+        </div>
+      </div>
+
+      <!-- Active Reserves Overview -->
+      <div id="softresOverview" class="softres-overview" hidden>
+        <div class="softres-overview-header">
+          <h3 id="softresRaidTitle">Raid Reserves</h3>
+          <span id="softresReserveCount" class="badge">0</span>
+        </div>
+        <div class="table-wrap">
+          <table class="softres-table">
+            <thead>
+              <tr>
+                <th>Character</th>
+                <th>Class</th>
+                <th>Reserves</th>
+                <th>Updated</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="softresRows"></tbody>
+          </table>
+        </div>
+        <p id="softresMessage" class="message"></p>
+      </div>
+
+      <!-- Character selector + current reserves -->
+      <div id="softresAdminAdd" class="softres-character-bar" hidden>
+        <div class="softres-char-row">
+          <label>
+            Reserve as
+            <select id="softresCharacterSelect">
+              <option value="">— Select character —</option>
+            </select>
+          </label>
+          <div id="softresCharReserves" class="softres-char-reserves"></div>
+        </div>
+      </div>
+
+      <!-- Loot Table Browser (always visible) -->
+      <div class="softres-loot-browser" id="softresLootBrowser" hidden>
+        <div class="list-header">
+          <h3>Loot Table</h3>
+        </div>
+        <div class="softres-loot-filters">
+          <label>
+            Boss
+            <select id="lootBossFilter">
+              <option value="">All Bosses</option>
+            </select>
+          </label>
+          <label>
+            Slot
+            <select id="lootSlotFilter">
+              <option value="">All Slots</option>
+            </select>
+          </label>
+          <label>
+            Search
+            <input id="lootSearchFilter" type="text" placeholder="Item name…" />
+          </label>
+        </div>
+        <div class="table-wrap softres-loot-scroll">
+          <table class="softres-table softres-loot-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Item</th>
+                <th>Slot</th>
+                <th>iLvl</th>
+                <th>Boss</th>
+                <th>Drop %</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="lootTableRows"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <script>
+    if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+      const script = document.createElement("script");
+      script.src = "config/local/app-config.local.js";
+      document.head.appendChild(script);
+    }
+  </script>
+  <script src="nav-component.js"></script>
+  <script src="config/prod/app-config.github.js"></script>
+  <script type="module" src="admin-softres.js"></script>
+</body>
+</html>

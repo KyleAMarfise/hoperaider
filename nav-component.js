@@ -59,6 +59,7 @@
         Requests &amp; Audit
         <span id="adminOpsBadge" class="nav-mini-badge" hidden>0</span>
       </a>
+      <a id="adminSoftresLink" class="nav-button" href="admin-softres.html" hidden>Soft Reserves</a>
     </div>
   `;
 
@@ -69,6 +70,7 @@
       Requests &amp; Audit
       <span id="adminOpsBadge" class="nav-mini-badge" hidden>0</span>
     </a>
+    <a class="nav-button ${page === "admin-softres" ? "is-active" : ""}" href="admin-softres.html">Soft Reserves</a>
   `;
 
   const authStatusId = page === "signup" ? "authStatus" : "adminAuthStatus";

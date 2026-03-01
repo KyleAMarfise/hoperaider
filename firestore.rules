@@ -276,6 +276,8 @@ service cloud.firestore {
           'healerSlots',
           'dpsSlots',
           'raidLeader',
+          'softresLocked',
+          'softresMaxReserves',
           'createdByUid',
           'createdAt',
           'updatedAt'
@@ -294,8 +296,37 @@ service cloud.firestore {
         && (!('healerSlots' in data) || validSlotCount(data.healerSlots))
         && (!('dpsSlots' in data) || validSlotCount(data.dpsSlots))
         && (!('raidLeader' in data) || (data.raidLeader is string && data.raidLeader.size() <= 40))
+        && (!('softresLocked' in data) || data.softresLocked is bool)
+        && (!('softresMaxReserves' in data) || (data.softresMaxReserves is int && data.softresMaxReserves >= 1 && data.softresMaxReserves <= 10))
         && data.createdByUid is string
         && data.createdByUid == request.auth.uid;
+    }
+
+    function validSoftReserveData(data) {
+      return data.keys().hasOnly([
+          'raidId',
+          'raidName',
+          'raidDate',
+          'characterId',
+          'characterName',
+          'wowClass',
+          'ownerUid',
+          'items',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.raidId is string
+        && data.raidId.size() > 5
+        && data.raidName is string
+        && data.raidName.size() > 2
+        && data.raidName.size() <= 40
+        && data.characterId is string
+        && data.characterId.size() > 0
+        && data.characterName is string
+        && data.characterName.size() <= 24
+        && data.items is list
+        && data.items.size() >= 1
+        && data.items.size() <= 10;
     }
 
     match /signups/{signupId} {
@@ -340,6 +371,42 @@ service cloud.firestore {
         && request.resource.data.updatedAt is timestamp;
 
       allow delete: if isAdmin();
+    }
+
+    match /softreserves/{reserveId} {
+      allow read: if isApprovedUser();
+
+      allow create: if validSoftReserveData(request.resource.data)
+        && request.resource.data.createdAt is timestamp
+        && request.resource.data.updatedAt is timestamp
+        && (
+          isAdmin()
+          || (
+            isApprovedUser()
+            && request.resource.data.ownerUid == request.auth.uid
+            && !(get(/databases/$(database)/documents/raids/$(request.resource.data.raidId)).data.softresLocked == true)
+          )
+        );
+
+      allow update: if validSoftReserveData(request.resource.data)
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.updatedAt is timestamp
+        && (
+          isAdmin()
+          || (
+            isApprovedUser()
+            && resource.data.ownerUid == request.auth.uid
+            && request.resource.data.ownerUid == request.auth.uid
+            && !(get(/databases/$(database)/documents/raids/$(request.resource.data.raidId)).data.softresLocked == true)
+          )
+        );
+
+      allow delete: if isAdmin()
+        || (
+          isApprovedUser()
+          && resource.data.ownerUid == request.auth.uid
+          && !(get(/databases/$(database)/documents/raids/$(resource.data.raidId)).data.softresLocked == true)
+        );
     }
 
     match /characters/{characterId} {
