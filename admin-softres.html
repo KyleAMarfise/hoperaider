@@ -49,6 +49,10 @@
           </label>
           <span id="softresLockStatus" class="softres-lock-badge">🔓 Open</span>
           <button type="button" id="softresToggleLockBtn" class="secondary">Lock Reserves</button>
+          <div class="raid-mode-btn-group">
+            <button type="button" id="raidModeBtn" class="raid-mode-btn" title="Open Raid Loot Mode — boss-by-boss SR viewer for raid leaders">⚔️ Raid Loot Mode</button>
+            <span class="raid-mode-hint">View reserves by boss for loot distribution</span>
+          </div>
         </div>
       </div>
 
@@ -141,7 +145,25 @@
       </div>
 
     </section>
+
   </main>
+
+  <!-- Raid Mode Modal (outside <main> so it overlays everything) -->
+  <dialog id="raidModeDialog" class="raid-mode-dialog">
+    <div class="raid-mode-header">
+      <h2 id="raidModeTitle">⚔️ Raid Loot Mode</h2>
+      <div class="raid-mode-header-controls">
+        <label class="raid-mode-filter-label">
+          Filter Boss
+          <select id="raidModeBossFilter">
+            <option value="">All Bosses</option>
+          </select>
+        </label>
+        <button type="button" id="raidModeCloseBtn" class="raid-mode-close-btn" title="Close Raid Loot Mode">✕</button>
+      </div>
+    </div>
+    <div id="raidModeBody" class="raid-mode-body"></div>
+  </dialog>
 
   <script>
     if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {

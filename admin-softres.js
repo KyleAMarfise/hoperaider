@@ -60,6 +60,12 @@ const lootBossFilter = document.getElementById("lootBossFilter");
 const lootTypeFilter = document.getElementById("lootTypeFilter");
 const lootSlotFilter = document.getElementById("lootSlotFilter");
 const lootSearchFilter = document.getElementById("lootSearchFilter");
+const raidModeBtn = document.getElementById("raidModeBtn");
+const raidModeDialog = document.getElementById("raidModeDialog");
+const raidModeTitle = document.getElementById("raidModeTitle");
+const raidModeBody = document.getElementById("raidModeBody");
+const raidModeBossFilter = document.getElementById("raidModeBossFilter");
+const raidModeCloseBtn = document.getElementById("raidModeCloseBtn");
 const lootTableRows = document.getElementById("lootTableRows");
 
 // ── State ───────────────────────────────────────────────────────────────────
@@ -92,6 +98,90 @@ const TOOLTIP_FORMAT_COLORS = {
   Legendary: "#ff8000", Epic: "#a335ee", Rare: "#0070dd", Uncommon: "#1eff00",
   Common: "#fff", Poor: "#9d9d9d", Misc: "#ffd100", indent: "#9d9d9d"
 };
+
+// Canonical boss kill order for each TBC raid (common raid pathway)
+const BOSS_KILL_ORDER = {
+  "Karazhan": [
+    "Hyakiss the Lurker", "Rokad the Ravager", "Shadikith the Glider",
+    "Moroes", "Maiden of Virtue",
+    "The Big Bad Wolf", "Julianne", "The Crone", "Echo of Medivh",
+    "Nightbane",
+    "The Curator", "Shade of Aran", "Terestian Illhoof", "Netherspite",
+    "Prince Malchezaar", "Prince Tenris Mirkblood"
+  ],
+  "Gruul's Lair": [
+    "High King Maulgar", "Gruul the Dragonkiller"
+  ],
+  "Magtheridon's Lair": [
+    "Magtheridon"
+  ],
+  "Serpentshrine Cavern": [
+    "Hydross the Unstable", "The Lurker Below",
+    "Leotheras the Blind", "Fathom-Lord Karathress",
+    "Morogrim Tidewalker", "Lady Vashj"
+  ],
+  "Tempest Keep": [
+    "Al'ar", "Void Reaver", "High Astromancer Solarian",
+    "Cosmic Infuser", "Devastation", "Infinity Blades",
+    "Netherstrand Longbow", "Phaseshift Bulwark", "Staff of Disintegration",
+    "Warp Slicer"
+  ],
+  "Hyjal Summit": [
+    "Rage Winterchill", "Anetheron", "Kaz'rogal", "Azgalor", "Archimonde"
+  ],
+  "Black Temple": [
+    "High Warlord Naj'entus", "Supremus", "Shade of Akama",
+    "Ashtongue Channeler",
+    "Gurtogg Bloodboil",
+    "Essence of Anger", "High Nethermancer Zerevor",
+    "Mother Shahraz", "Illidan Stormrage"
+  ],
+  "Zul'Aman": [
+    "Nalorakk", "Akil'zon", "Jan'alai", "Halazzi",
+    "Hex Lord Malacrass", "Zul'jin"
+  ],
+  "Sunwell Plateau": [
+    "Brutallus", "Felmyst", "Kil'jaeden"
+  ]
+};
+
+function sortBossesByKillOrder(bosses, raidName) {
+  // Find the matching kill order list (fuzzy match on raid name)
+  const normalized = (raidName || "").trim().toLowerCase();
+  let orderList = null;
+  for (const [key, list] of Object.entries(BOSS_KILL_ORDER)) {
+    if (key.toLowerCase() === normalized || normalized.includes(key.toLowerCase().split("'")[0])) {
+      orderList = list;
+      break;
+    }
+  }
+  if (!orderList) return bosses; // no match, keep original order
+
+  // For compound raids, merge multiple kill orders
+  if (!orderList && raidName) {
+    const parts = raidName.split(/[+&,]/);
+    if (parts.length > 1) {
+      orderList = [];
+      for (const part of parts) {
+        const trimmed = part.trim().toLowerCase();
+        for (const [key, list] of Object.entries(BOSS_KILL_ORDER)) {
+          if (key.toLowerCase().includes(trimmed) || trimmed.includes(key.toLowerCase().split("'")[0])) {
+            orderList.push(...list);
+            break;
+          }
+        }
+      }
+    }
+  }
+  if (!orderList || !orderList.length) return bosses;
+
+  const orderMap = new Map(orderList.map((name, idx) => [name.toLowerCase(), idx]));
+  return [...bosses].sort((a, b) => {
+    const ia = orderMap.get(a.name.toLowerCase()) ?? 999;
+    const ib = orderMap.get(b.name.toLowerCase()) ?? 999;
+    return ia - ib;
+  });
+}
 
 // ── Class-based item filtering ──────────────────────────────────────────────
 const GENERIC_SLOTS = new Set(["Back", "Finger", "Neck", "Trinket", "Held In Off-hand"]);
@@ -169,6 +259,7 @@ function ensureTooltipEl() {
   if (tooltipEl) return tooltipEl;
   tooltipEl = document.createElement('div');
   tooltipEl.className = 'wow-tooltip';
+  tooltipEl.setAttribute('popover', 'manual');
   tooltipEl.hidden = true;
   document.body.appendChild(tooltipEl);
   return tooltipEl;
@@ -205,6 +296,7 @@ function showTooltip(itemId, x, y) {
   const el = ensureTooltipEl();
   el.innerHTML = renderTooltipHtml(item);
   el.hidden = false;
+  try { el.showPopover(); } catch {}
   positionTooltip(x, y);
 }
 
@@ -224,7 +316,10 @@ function positionTooltip(x, y) {
 }
 
 function hideTooltip() {
-  if (tooltipEl) tooltipEl.hidden = true;
+  if (tooltipEl) {
+    tooltipEl.hidden = true;
+    try { tooltipEl.hidePopover(); } catch {}
+  }
 }
 
 // Delegated mouse events for anything with data-item-id
@@ -772,6 +867,142 @@ function renderReserves() {
   // Update badge to reflect visible count when filtering
   softresReserveCount.textContent = itemDroppedFilter ? String(visibleCount) : String(raidReserves.length);
   softresRows.innerHTML = html;
+}
+
+// ── Raid Mode Modal ─────────────────────────────────────────────────────────
+function openRaidMode() {
+  if (!selectedRaidId || !raidModeDialog) return;
+
+  const raid = currentRaids.find(r => r.id === selectedRaidId);
+  if (!raid) return;
+
+  raidModeTitle.textContent = `⚔️ Raid Loot Mode — ${raid.raidName || "Raid"}`;
+
+  // Populate boss filter dropdown
+  const bosses = selectedRaidLoot?.bosses || [];
+  raidModeBossFilter.innerHTML = '<option value="">All Bosses</option>'
+    + bosses.map(b => `<option value="${escapeHtml(b.name)}">${escapeHtml(b.name)}</option>`).join("");
+
+  renderRaidModeBody("");
+  raidModeDialog.showModal();
+}
+
+function renderRaidModeBody(bossFilter) {
+  if (!raidModeBody) return;
+
+  const raidReserves = currentReserves.filter(r => r.raidId === selectedRaidId);
+  const raid = currentRaids.find(r => r.id === selectedRaidId);
+  const bosses = sortBossesByKillOrder(selectedRaidLoot?.bosses || [], raid?.raidName);
+
+  if (!bosses.length) {
+    raidModeBody.innerHTML = '<p class="text-dim">No loot table data available for this raid.</p>';
+    return;
+  }
+
+  // Build a map: itemId -> [{ characterName, wowClass }]
+  const itemReservers = new Map();
+  for (const res of raidReserves) {
+    const items = getReserveItems(res);
+    for (const it of items) {
+      const id = Number(it.itemId);
+      if (!itemReservers.has(id)) itemReservers.set(id, []);
+      itemReservers.get(id).push({
+        characterName: res.characterName || "?",
+        wowClass: res.wowClass || "?"
+      });
+    }
+  }
+
+  // Sort reservers alphabetically within each item
+  for (const [, list] of itemReservers) {
+    list.sort((a, b) => a.characterName.localeCompare(b.characterName));
+  }
+
+  const filteredBosses = bossFilter
+    ? bosses.filter(b => b.name === bossFilter)
+    : bosses;
+
+  if (!filteredBosses.length) {
+    raidModeBody.innerHTML = '<p class="text-dim">No bosses match the filter.</p>';
+    return;
+  }
+
+  let html = '<div class="raid-mode-bosses">';
+  for (const boss of filteredBosses) {
+    // Only show items that have at least one soft reserve
+    const reservedItems = boss.items.filter(item => itemReservers.has(item.itemId));
+
+    // Bosses with 5+ reserved items get a wider card
+    const spanClass = reservedItems.length >= 5 ? " boss-span-2" : "";
+
+    html += `<div class="raid-mode-boss-card${spanClass}">
+      <div class="raid-mode-boss-header">${escapeHtml(boss.name)}</div>`;
+
+    if (!reservedItems.length) {
+      html += '<div class="raid-mode-no-reserves">No soft reserves for this boss</div>';
+    } else {
+      for (const item of reservedItems) {
+        const color = QUALITY_COLORS[item.quality] || "#ccc";
+        const reservers = itemReservers.get(item.itemId) || [];
+        const dropPct = item.dropChance != null ? `<span class="softres-drop-pct">${(item.dropChance * 100).toFixed(1)}%</span>` : "";
+        const slotLabel = item.slot || "";
+        const typeName = getItemType(item);
+        const iLvl = item.itemLevel ? `<span class="raid-mode-item-ilvl">iLvl ${item.itemLevel}</span>` : "";
+        const iconUrl = item.icon ? `<img class="raid-mode-item-icon" src="${escapeHtml(item.icon)}" alt="" loading="lazy" />` : "";
+
+        const charChips = reservers.map(r => {
+          const classColor = WOW_CLASS_COLORS[r.wowClass] || "#ccc";
+          return `<span class="raid-mode-char-chip" style="border-color:${classColor}"><span class="raid-mode-char-name" style="color:${classColor}">${escapeHtml(r.characterName)}</span><span class="raid-mode-char-class">${escapeHtml(r.wowClass)}</span></span>`;
+        }).join("");
+
+        const contestLabel = reservers.length > 1
+          ? `<span class="softres-contention-badge" title="${reservers.length} characters reserved this">${reservers.length}</span>`
+          : "";
+
+        html += `<div class="raid-mode-item" data-item-id="${item.itemId}">
+          <div class="raid-mode-item-header">
+            ${iconUrl}
+            <div class="raid-mode-item-info">
+              <span class="raid-mode-item-name" style="color:${color}">${escapeHtml(item.name)}${contestLabel}</span>
+              <span class="raid-mode-item-meta">${escapeHtml(slotLabel)}${slotLabel && typeName ? ' · ' : ''}${escapeHtml(typeName)}${(slotLabel || typeName) && iLvl ? ' · ' : ''}${iLvl}${((slotLabel || typeName || iLvl) && dropPct) ? ' · ' : ''}${dropPct}</span>
+            </div>
+          </div>
+          <div class="raid-mode-char-list">${charChips}</div>
+        </div>`;
+      }
+    }
+
+    html += '</div>';
+  }
+  html += '</div>';
+
+  raidModeBody.innerHTML = html;
+}
+
+// Raid Mode event listeners
+if (raidModeBtn) {
+  raidModeBtn.addEventListener("click", openRaidMode);
+}
+if (raidModeCloseBtn) {
+  raidModeCloseBtn.addEventListener("click", () => {
+    raidModeDialog.close();
+  });
+}
+if (raidModeDialog) {
+  // Click on backdrop (::backdrop) closes the dialog
+  raidModeDialog.addEventListener("click", (e) => {
+    if (e.target === raidModeDialog) {
+      raidModeDialog.close();
+    }
+  });
+  raidModeDialog.addEventListener("close", () => {
+    hideTooltip();
+  });
+}
+if (raidModeBossFilter) {
+  raidModeBossFilter.addEventListener("change", () => {
+    renderRaidModeBody(raidModeBossFilter.value);
+  });
 }
 
 // ── Lock state ──────────────────────────────────────────────────────────────

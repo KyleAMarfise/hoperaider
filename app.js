@@ -547,6 +547,93 @@ function getRaidCutoffDateTime(raid) {
   return cutoff;
 }
 
+// ── .ics calendar file generation ───────────────────────────────────────────
+function toIcsDateString(date) {
+  // Format: YYYYMMDDTHHMMSS — in the original timezone (CST)
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  const h = String(date.getHours()).padStart(2, '0');
+  const min = String(date.getMinutes()).padStart(2, '0');
+  const s = String(date.getSeconds()).padStart(2, '0');
+  return `${y}${m}${d}T${h}${min}${s}`;
+}
+
+function generateRaidIcs(raid) {
+  const raidDateText = getRaidDateString(raid);
+  const raidDate = parseDateOnly(raidDateText);
+  if (!raidDate) return null;
+
+  const startHour = parseRaidHourValue(raid.raidStart);
+  const endHour = parseRaidEndHourValue(raid.raidEnd);
+  if (!Number.isInteger(startHour)) return null;
+
+  const dtStart = new Date(raidDate);
+  dtStart.setHours(startHour, 0, 0, 0);
+
+  const dtEnd = new Date(raidDate);
+  dtEnd.setHours(Number.isInteger(endHour) ? endHour : startHour + 3, 0, 0, 0);
+
+  const summary = `${raid.raidName || "Raid"} — ${raid.runType || "Raid"}`;
+  const description = [
+    `Raid: ${raid.raidName || "TBD"}`,
+    `Phase: ${raid.phase || "?"}`,
+    `Run Type: ${raid.runType || "?"}`,
+    `Size: ${raid.raidSize || "?"}`,
+    raid.raidLeader ? `Raid Leader: ${raid.raidLeader}` : ""
+  ].filter(Boolean).join("\\n");
+
+  const uid = `raid-${raid.id || raidDateText}@hope-raid-tracker`;
+  const now = toIcsDateString(new Date());
+
+  // Use America/Chicago (CST/CDT) as the timezone
+  const tzid = "America/Chicago";
+  const lines = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Hope Raid Tracker//EN",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    "BEGIN:VEVENT",
+    `UID:${uid}`,
+    `DTSTAMP:${now}`,
+    `DTSTART;TZID=${tzid}:${toIcsDateString(dtStart)}`,
+    `DTEND;TZID=${tzid}:${toIcsDateString(dtEnd)}`,
+    `SUMMARY:${summary}`,
+    `DESCRIPTION:${description}`,
+    // 2-hour reminder
+    "BEGIN:VALARM",
+    "TRIGGER:-PT2H",
+    "ACTION:DISPLAY",
+    "DESCRIPTION:Raid starts in 2 hours!",
+    "END:VALARM",
+    // 30-minute reminder
+    "BEGIN:VALARM",
+    "TRIGGER:-PT30M",
+    "ACTION:DISPLAY",
+    "DESCRIPTION:Raid starts in 30 minutes!",
+    "END:VALARM",
+    "END:VEVENT",
+    "END:VCALENDAR"
+  ];
+
+  return lines.join("\r\n");
+}
+
+function downloadRaidIcs(raid) {
+  const ics = generateRaidIcs(raid);
+  if (!ics) return;
+  const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${(raid.raidName || "raid").replace(/[^a-zA-Z0-9]+/g, "-")}-${getRaidDateString(raid) || "event"}.ics`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 function getNextRaid(raids) {
   const now = Date.now();
   const futureRaids = raids
@@ -2927,6 +3014,7 @@ function renderCategoryRows(targetElement, rows, rosterMap) {
           </td>
           <td>
             <div class="raid-date">${renderRaidDateWithTime(item)}</div>
+            ${selectedRaid ? `<button type="button" class="add-to-calendar-btn" data-calendar-raid-id="${escapeHtml(selectedRaid.id)}" title="Add to calendar with reminders">📅 Add to Cal</button>` : ""}
           </td>
           <td class="raid-time-cell">${renderRaidWindowMultiline(item.raidStart, item.raidEnd, { highlightLocal: true })}</td>
           <td>${escapeHtml(item.phase ? `Phase ${String(item.phase)}` : "—")}</td>
@@ -3133,6 +3221,10 @@ function renderCalendarView(scheduleItems) {
       const viewerSignedUp = viewerOwnerUid
         ? raidSignups.some((s) => s.ownerUid === viewerOwnerUid)
         : false;
+      const viewerSignup = viewerOwnerUid
+        ? raidSignups.find((s) => s.ownerUid === viewerOwnerUid)
+        : null;
+      const selectedRaid = findRaidFromSummary(raid);
       const chipClass = viewerSignedUp ? "calendar-raid-chip has-signup" : "calendar-raid-chip";
       const startHour = raid.raidStart != null ? hourLabel(raid.raidStart) : "";
       const timeStr = startHour ? `<span class="chip-time">${escapeHtml(startHour)} ST</span>` : "";
@@ -3142,7 +3234,16 @@ function renderCalendarView(scheduleItems) {
       const signupCount = raidSignups.length;
       const sizeStr = raid.raidSize ? `/${raid.raidSize}` : "";
       const countLabel = `<span class="chip-time">${signupCount}${sizeStr} signed</span>`;
-      return `<div class="${chipClass}" title="${raidLabel}${runType}${leaderStr} — ${signupCount} signups">${raidLabel}${runType}${timeStr}${countLabel}</div>`;
+      const raidId = selectedRaid?.id || "";
+      const charControl = raidId ? renderRaidCharacterControl(raidId, viewerSignup) : "";
+      const signupControl = raidId ? renderRaidSignupControl(raidId, viewerSignup) : "";
+      const calBtn = selectedRaid
+        ? `<button type="button" class="add-to-calendar-btn" data-calendar-raid-id="${escapeHtml(selectedRaid.id)}" title="Add to calendar with reminders">📅 Add to Cal</button>`
+        : "";
+      const controlsHtml = (charControl || signupControl || calBtn)
+        ? `<div class="chip-controls">${charControl}${signupControl}${calBtn}</div>`
+        : "";
+      return `<div class="${chipClass}" title="${raidLabel}${runType}${leaderStr} — ${signupCount} signups">${raidLabel}${runType}${timeStr}${countLabel}${controlsHtml}</div>`;
     }).join("");
 
     const overflow = raids.length > MAX_CHIPS
@@ -3422,6 +3523,13 @@ raidSectionsEl.addEventListener("click", async (event) => {
     return;
   }
 
+  // "Add to Calendar" button
+  const calRaidId = target.dataset.calendarRaidId;
+  if (calRaidId) {
+    const raid = currentRaids.find(r => r.id === calRaidId);
+    if (raid) downloadRaidIcs(raid);
+    return;
+  }
   const toggleTargetId = target.dataset.toggleRaid;
   if (toggleTargetId) {
     const detailRow = document.getElementById(toggleTargetId);
@@ -3523,7 +3631,7 @@ raidSectionsEl.addEventListener("change", async (event) => {
 
   if (signupId) {
     const existingSignup = currentRows.find((e) => e.id === signupId);
-    const row = target.closest("tr");
+    const row = target.closest("tr") || target.closest(".calendar-raid-chip");
     const rowProfileSelect = row
       ? row.querySelector('[data-raid-profile-select="true"]')
       : null;
@@ -3563,7 +3671,7 @@ raidSectionsEl.addEventListener("change", async (event) => {
     return;
   }
 
-  const row = target.closest("tr");
+  const row = target.closest("tr") || target.closest(".calendar-raid-chip");
   const rowProfileSelect = row
     ? row.querySelector('[data-raid-profile-select="true"]')
     : null;
