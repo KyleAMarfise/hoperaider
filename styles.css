@@ -3378,6 +3378,33 @@ td .row-actions button {
   color: var(--text-dim);
   opacity: 0.8;
 }
+/* Item Dropped filter bar */
+.softres-item-dropped-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.6rem 0;
+}
+.softres-item-dropped-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+.softres-item-dropped-input {
+  flex: 1;
+  max-width: 320px;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.9rem;
+  border: 1px solid var(--line-muted);
+  border-radius: 5px;
+  background: var(--bg-card, #1a1a2e);
+  color: var(--text-main, #e8dcc3);
+}
+.softres-item-dropped-input::placeholder {
+  color: var(--text-dim);
+  opacity: 0.6;
+}
 /* Contention badge — shows how many characters reserved the same item */
 .softres-contention-badge {
   display: inline-flex;

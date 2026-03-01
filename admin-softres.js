@@ -51,6 +51,7 @@ const softresRaidTitle = document.getElementById("softresRaidTitle");
 const softresReserveCount = document.getElementById("softresReserveCount");
 const softresRows = document.getElementById("softresRows");
 const softresMessage = document.getElementById("softresMessage");
+const softresItemDroppedFilter = document.getElementById("softresItemDroppedFilter");
 const softresAdminAdd = document.getElementById("softresAdminAdd");
 const softresCharacterSelect = document.getElementById("softresCharacterSelect");
 const softresCharReserves = document.getElementById("softresCharReserves");
@@ -639,6 +640,9 @@ function renderReserves() {
   const raidReserves = currentReserves.filter(r => r.raidId === selectedRaidId);
   softresReserveCount.textContent = String(raidReserves.length);
 
+  // Get item-dropped filter text
+  const itemDroppedFilter = (softresItemDroppedFilter?.value || "").trim().toLowerCase();
+
   if (raidReserves.length === 0) {
     softresRows.innerHTML = '<tr><td colspan="5" class="text-dim">No reserves yet for this raid.</td></tr>';
     return;
@@ -665,6 +669,7 @@ function renderReserves() {
   }
 
   let html = '';
+  let visibleCount = 0;
   const maxRes = getMaxReserves();
   for (const res of raidReserves) {
     const ch = charMap.get(res.characterId);
@@ -672,6 +677,12 @@ function renderReserves() {
     const wowClass = res.wowClass || ch?.wowClass || "—";
     const classColor = WOW_CLASS_COLORS[wowClass] || "#ccc";
     const items = Array.isArray(res.items) ? res.items : getReserveItems(res);
+
+    // If item-dropped filter is active, only show characters who reserved a matching item
+    if (itemDroppedFilter) {
+      const hasMatch = items.some(it => (it.name || "").toLowerCase().includes(itemDroppedFilter));
+      if (!hasMatch) continue;
+    }
     const isOverOrUnder = items.length !== maxRes;
     // Only highlight over/under limit for admins or the character's own owner
     const showLimitWarning = isOverOrUnder && (isAdmin || res.ownerUid === authUid);
@@ -710,6 +721,7 @@ function renderReserves() {
       actionsHtml = `<button class="secondary softres-action-btn" data-action="select" data-id="${escapeHtml(res.id)}">Select</button>`;
     }
 
+    visibleCount++;
     html += `<tr class="${rowClass}">
       <td style="color:${classColor};font-weight:600">${escapeHtml(charName)}</td>
       <td style="color:${classColor}">${escapeHtml(wowClass)}</td>
@@ -718,6 +730,11 @@ function renderReserves() {
       <td>${actionsHtml}</td>
     </tr>`;
   }
+  if (!html) {
+    html = '<tr><td colspan="5" class="text-dim">No characters reserved a matching item.</td></tr>';
+  }
+  // Update badge to reflect visible count when filtering
+  softresReserveCount.textContent = itemDroppedFilter ? String(visibleCount) : String(raidReserves.length);
   softresRows.innerHTML = html;
 }
 
@@ -1094,6 +1111,7 @@ softresRows.addEventListener("click", handleReserveAction);
 lootBossFilter.addEventListener("change", filterLootTable);
 lootSlotFilter.addEventListener("change", filterLootTable);
 lootSearchFilter.addEventListener("input", filterLootTable);
+softresItemDroppedFilter.addEventListener("input", renderReserves);
 lootTableRows.addEventListener("click", handleReserveButton);
 softresCharReserves.addEventListener("click", handleReserveButton);
 
