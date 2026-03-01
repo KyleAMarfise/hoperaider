@@ -457,6 +457,12 @@ function renderCharacterReserves() {
   }
   const res = getCharacterReserves(ch.id);
   const items = getReserveItems(res);
+
+  // Can this user modify reserves for the selected character?
+  const raid = currentRaids.find(r => r.id === selectedRaidId);
+  const isLocked = raid?.softresLocked;
+  const canModify = ch && (isAdmin || (!isLocked && ch.ownerUid === authUid));
+
   if (!items.length) {
     softresCharReserves.innerHTML = '<span class="text-dim">No reserves yet — click <strong>+</strong> on items below</span>';
   } else {
@@ -465,8 +471,11 @@ function renderCharacterReserves() {
       const color = QUALITY_COLORS[it.quality] || "#ccc";
       const lootItem = itemTooltipMap.get(Number(it.itemId));
       const dropPct = lootItem?.dropChance != null ? ` <span class="softres-drop-pct">${(lootItem.dropChance * 100).toFixed(1)}%</span>` : '';
+      const removeBtn = canModify
+        ? ` <button class="softres-reserve-btn softres-remove-btn softres-inline-remove" data-reserve-action="remove" data-item-id="${it.itemId}" title="Remove reserve">✕</button>`
+        : '';
       if (idx > 0) html += '<span class="softres-char-reserve-sep">&</span>';
-      html += `<span class="softres-char-reserve-item" style="color:${color}" data-item-id="${it.itemId}">${escapeHtml(it.name)}${dropPct}</span>`;
+      html += `<span class="softres-char-reserve-item" style="color:${color}" data-item-id="${it.itemId}">${escapeHtml(it.name)}${dropPct}${removeBtn}</span>`;
     });
     softresCharReserves.innerHTML = html;
   }
@@ -1074,6 +1083,7 @@ lootBossFilter.addEventListener("change", filterLootTable);
 lootSlotFilter.addEventListener("change", filterLootTable);
 lootSearchFilter.addEventListener("input", filterLootTable);
 lootTableRows.addEventListener("click", handleReserveButton);
+softresCharReserves.addEventListener("click", handleReserveButton);
 
 // ── Firebase init ───────────────────────────────────────────────────────────
 if (!hasConfigValues()) {

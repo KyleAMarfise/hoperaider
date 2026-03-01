@@ -3198,6 +3198,14 @@ td .row-actions button {
   cursor: default;
   border-bottom: 1px dotted currentColor;
 }
+/* Inline remove button next to reserved items in the character bar */
+.softres-inline-remove {
+  width: 18px;
+  height: 18px;
+  font-size: 0.7rem;
+  vertical-align: middle;
+  margin-left: 0.25rem;
+}
 .softres-char-reserve-sep {
   color: var(--text-dim);
   font-weight: 400;
