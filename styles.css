@@ -3405,6 +3405,13 @@ td .row-actions button {
   color: var(--text-dim);
   opacity: 0.6;
 }
+/* Highlight matching text in item names */
+.softres-highlight {
+  background: rgba(255, 210, 0, 0.35);
+  color: inherit;
+  border-radius: 2px;
+  padding: 0 1px;
+}
 /* Contention badge — shows how many characters reserved the same item */
 .softres-contention-badge {
   display: inline-flex;

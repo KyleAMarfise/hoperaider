@@ -704,7 +704,19 @@ function renderReserves() {
           const dropPct = lootItem?.dropChance != null ? ` <span class="softres-drop-pct">${(lootItem.dropChance * 100).toFixed(1)}%</span>` : '';
           const count = itemReserveCount.get(Number(it.itemId)) || 0;
           const countBadge = count > 1 ? ` <span class="softres-contention-badge" title="${count} characters reserved this item">${count}</span>` : '';
-          return `<span data-item-id="${it.itemId}" class="softres-item-hover" style="color:${c};font-weight:600">${escapeHtml(it.name || '—')}${dropPct}${countBadge}</span>`;
+          // Highlight matching portion of item name when filtering
+          const rawName = it.name || '—';
+          let nameHtml;
+          if (itemDroppedFilter && rawName.toLowerCase().includes(itemDroppedFilter)) {
+            const idx = rawName.toLowerCase().indexOf(itemDroppedFilter);
+            const before = rawName.slice(0, idx);
+            const match = rawName.slice(idx, idx + itemDroppedFilter.length);
+            const after = rawName.slice(idx + itemDroppedFilter.length);
+            nameHtml = `${escapeHtml(before)}<mark class="softres-highlight">${escapeHtml(match)}</mark>${escapeHtml(after)}`;
+          } else {
+            nameHtml = escapeHtml(rawName);
+          }
+          return `<span data-item-id="${it.itemId}" class="softres-item-hover" style="color:${c};font-weight:600">${nameHtml}${dropPct}${countBadge}</span>`;
         }).join('<span class="softres-reserve-sep-table"> · </span>')
       : '—') + limitMsg;
 
@@ -1111,7 +1123,11 @@ softresRows.addEventListener("click", handleReserveAction);
 lootBossFilter.addEventListener("change", filterLootTable);
 lootSlotFilter.addEventListener("change", filterLootTable);
 lootSearchFilter.addEventListener("input", filterLootTable);
+// Use multiple event types so mobile/predictive keyboards reliably trigger filtering
 softresItemDroppedFilter.addEventListener("input", renderReserves);
+softresItemDroppedFilter.addEventListener("keyup", renderReserves);
+softresItemDroppedFilter.addEventListener("change", renderReserves);
+softresItemDroppedFilter.addEventListener("compositionend", renderReserves);
 lootTableRows.addEventListener("click", handleReserveButton);
 softresCharReserves.addEventListener("click", handleReserveButton);
 
