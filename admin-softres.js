@@ -681,22 +681,8 @@ function renderLockState() {
   // Max reserves
   softresMaxReservesInput.value = raid.softresMaxReserves ?? 2;
 
-  // Check lock readiness: all characters must be at the limit
-  if (!isLocked) {
-    const maxRes = raid.softresMaxReserves ?? 2;
-    const raidReserves = currentReserves.filter(r => r.raidId === selectedRaidId);
-    const notReady = raidReserves.filter(r => getReserveItems(r).length !== maxRes);
-    if (notReady.length > 0) {
-      softresToggleLockBtn.disabled = true;
-      softresToggleLockBtn.title = `${notReady.length} character(s) not at ${maxRes} reserve(s)`;
-    } else {
-      softresToggleLockBtn.disabled = raidReserves.length === 0;
-      softresToggleLockBtn.title = raidReserves.length === 0 ? "No reserves to lock" : "";
-    }
-  } else {
-    softresToggleLockBtn.disabled = false;
-    softresToggleLockBtn.title = "";
-  }
+  softresToggleLockBtn.disabled = false;
+  softresToggleLockBtn.title = "";
 }
 
 // ── Raid selection handler ──────────────────────────────────────────────────
@@ -974,21 +960,6 @@ async function toggleLock() {
   if (!raid) return;
 
   const newLockState = !raid.softresLocked;
-
-  // Guard: don't allow locking unless all characters are at the limit
-  if (newLockState) {
-    const maxRes = raid.softresMaxReserves ?? 2;
-    const raidReserves = currentReserves.filter(r => r.raidId === selectedRaidId);
-    if (raidReserves.length === 0) {
-      setMsg("No reserves to lock.", true);
-      return;
-    }
-    const notReady = raidReserves.filter(r => getReserveItems(r).length !== maxRes);
-    if (notReady.length > 0) {
-      setMsg(`Cannot lock: ${notReady.length} character(s) don't have exactly ${maxRes} reserve(s).`, true);
-      return;
-    }
-  }
 
   try {
     const payload = buildRaidPayload(raid, { softresLocked: newLockState });
