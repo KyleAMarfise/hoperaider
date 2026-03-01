@@ -3407,8 +3407,8 @@ td .row-actions button {
 }
 /* Highlight matching text in item names */
 .softres-highlight {
-  background: rgba(255, 210, 0, 0.35);
-  color: inherit;
+  background: rgba(30, 255, 0, 0.25);
+  color: #5eff5e;
   border-radius: 2px;
   padding: 0 1px;
 }
