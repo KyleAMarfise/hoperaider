@@ -697,6 +697,46 @@ function renderLootBrowser() {
   filterLootTable();
 }
 
+/**
+ * Check whether an item matches a free-text search term.
+ * Searches across: item name, boss name, slot, type (subclass), quality,
+ * and special keywords like "tier", "token", "t4", "t5", "t6".
+ */
+function itemMatchesSearch(item, bossName, term) {
+  const fields = [
+    item.name,
+    bossName,
+    item.slot,
+    getItemType(item),
+    item.quality,
+    item.subclass,
+    item.class,
+  ];
+
+  // Direct match on any field
+  for (const f of fields) {
+    if (f && f.toLowerCase().includes(term)) return true;
+  }
+
+  // Keyword aliases — let users type intuitive terms
+  const isTierToken = item.slot === "Tier Token";
+  if (isTierToken) {
+    // "tier", "token", "set piece" all match tier tokens
+    if ("tier".includes(term) || "token".includes(term) || "set piece".includes(term)) return true;
+
+    // "t4" / "t5" / "t6" match the corresponding tier set
+    const name = (item.name || "").toLowerCase();
+    if (term === "t4" && name.includes("fallen")) return true;
+    if (term === "t5" && name.includes("vanquished")) return true;
+    if (term === "t6" && name.includes("forgotten")) return true;
+  }
+
+  // iLvl search — e.g. "120" matches items with that item level
+  if (item.itemLevel && String(item.itemLevel).includes(term)) return true;
+
+  return false;
+}
+
 function filterLootTable() {
   if (!selectedRaidLoot) return;
   const bossFilter = lootBossFilter.value;
@@ -726,7 +766,7 @@ function filterLootTable() {
     for (const item of boss.items) {
       if (typeFilter && getItemType(item) !== typeFilter) continue;
       if (slotFilter && item.slot !== slotFilter) continue;
-      if (searchFilter && !item.name.toLowerCase().includes(searchFilter)) continue;
+      if (searchFilter && !itemMatchesSearch(item, boss.name, searchFilter)) continue;
       itemList.push({ item, bossName: boss.name });
     }
   }
