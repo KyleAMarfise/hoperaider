@@ -654,6 +654,16 @@ function renderReserves() {
     return na.localeCompare(nb);
   });
 
+  // Build item reservation counts across all characters for this raid
+  const itemReserveCount = new Map();
+  for (const res of raidReserves) {
+    const items = Array.isArray(res.items) ? res.items : getReserveItems(res);
+    for (const it of items) {
+      const id = Number(it.itemId);
+      itemReserveCount.set(id, (itemReserveCount.get(id) || 0) + 1);
+    }
+  }
+
   let html = '';
   const maxRes = getMaxReserves();
   for (const res of raidReserves) {
@@ -681,7 +691,9 @@ function renderReserves() {
           const c = QUALITY_COLORS[it.quality] || "#ccc";
           const lootItem = itemTooltipMap.get(Number(it.itemId));
           const dropPct = lootItem?.dropChance != null ? ` <span class="softres-drop-pct">${(lootItem.dropChance * 100).toFixed(1)}%</span>` : '';
-          return `<span data-item-id="${it.itemId}" class="softres-item-hover" style="color:${c};font-weight:600">${escapeHtml(it.name || '—')}${dropPct}</span>`;
+          const count = itemReserveCount.get(Number(it.itemId)) || 0;
+          const countBadge = count > 1 ? ` <span class="softres-contention-badge" title="${count} characters reserved this item">${count}</span>` : '';
+          return `<span data-item-id="${it.itemId}" class="softres-item-hover" style="color:${c};font-weight:600">${escapeHtml(it.name || '—')}${dropPct}${countBadge}</span>`;
         }).join('<span class="softres-reserve-sep-table"> · </span>')
       : '—') + limitMsg;
 
