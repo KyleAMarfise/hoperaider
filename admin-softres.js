@@ -108,27 +108,33 @@ const BOSS_KILL_ORDER = {
     "The Big Bad Wolf", "Julianne", "The Crone", "Echo of Medivh",
     "Nightbane",
     "The Curator", "Shade of Aran", "Terestian Illhoof", "Netherspite",
-    "Prince Malchezaar", "Prince Tenris Mirkblood"
+    "Prince Malchezaar", "Prince Tenris Mirkblood",
+    "Trash Drops"
   ],
   "Gruul's Lair": [
-    "High King Maulgar", "Gruul the Dragonkiller"
+    "High King Maulgar", "Gruul the Dragonkiller",
+    "Trash Drops"
   ],
   "Magtheridon's Lair": [
-    "Magtheridon"
+    "Magtheridon",
+    "Trash Drops"
   ],
   "Serpentshrine Cavern": [
     "Hydross the Unstable", "The Lurker Below",
     "Leotheras the Blind", "Fathom-Lord Karathress",
-    "Morogrim Tidewalker", "Lady Vashj"
+    "Morogrim Tidewalker", "Lady Vashj",
+    "Trash Drops"
   ],
   "Tempest Keep": [
     "Al'ar", "Void Reaver", "High Astromancer Solarian",
     "Cosmic Infuser", "Devastation", "Infinity Blades",
     "Netherstrand Longbow", "Phaseshift Bulwark", "Staff of Disintegration",
-    "Warp Slicer", "Kael'thas Sunstrider"
+    "Warp Slicer", "Kael'thas Sunstrider",
+    "Trash Drops"
   ],
   "Hyjal Summit": [
-    "Rage Winterchill", "Anetheron", "Kaz'rogal", "Azgalor", "Archimonde"
+    "Rage Winterchill", "Anetheron", "Kaz'rogal", "Azgalor", "Archimonde",
+    "Trash Drops"
   ],
   "Black Temple": [
     "High Warlord Naj'entus", "Supremus", "Shade of Akama",
@@ -136,14 +142,17 @@ const BOSS_KILL_ORDER = {
     "Gurtogg Bloodboil",
     "Essence of Anger", "High Nethermancer Zerevor",
     "The Illidari Council",
-    "Mother Shahraz", "Illidan Stormrage"
+    "Mother Shahraz", "Illidan Stormrage",
+    "Trash Drops"
   ],
   "Zul'Aman": [
     "Nalorakk", "Akil'zon", "Jan'alai", "Halazzi",
-    "Hex Lord Malacrass", "Zul'jin"
+    "Hex Lord Malacrass", "Zul'jin",
+    "Trash Drops"
   ],
   "Sunwell Plateau": [
-    "Brutallus", "Felmyst", "Kil'jaeden"
+    "Brutallus", "Felmyst", "Kil'jaeden",
+    "Trash Drops"
   ]
 };
 
@@ -255,6 +264,7 @@ function canClassUseItem(wowClass, item) {
 // Derive a user-friendly type label from item class/subclass
 function getItemType(item) {
   if (item.slot === "Tier Token") return "Tier Token";
+  if (item.slot === "Recipe") return item.subclass || "Recipe";
   if (item.slot === "Bag") return "Bag";
   if (item.subclass === "Mount") return "Mount";
   if (item.class === "Weapon") return item.subclass || "Weapon";
@@ -648,6 +658,9 @@ function getItemSortScore(item, wowClass) {
 
     // Tier tokens are high priority when usable
     if (item.slot === "Tier Token") return 15;
+
+    // Recipes, bags, mounts — usable but lower priority than gear
+    if (item.slot === "Recipe" || item.slot === "Bag" || item.subclass === "Mount") return 60;
 
     return 50; // any other usable item
   }

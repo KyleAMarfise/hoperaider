@@ -32,7 +32,7 @@ const EQUIP_SLOTS = new Set([
 ]);
 
 // Regex to identify tier token items (T4 Fallen, T5 Vanquished, T6 Forgotten)
-const TIER_TOKEN_RE = /^(Chestguard|Gloves|Helm|Leggings|Pauldrons) of the (Fallen|Vanquished|Forgotten) /;
+const TIER_TOKEN_RE = /^(Belt|Boots|Bracers|Chestguard|Gloves|Helm|Leggings|Pauldrons) of the (Fallen|Vanquished|Forgotten) /;
 
 // Some tier tokens have incomplete source data in the database — fill in the gaps
 const TIER_TOKEN_SOURCE_OVERRIDES = {
@@ -44,6 +44,18 @@ const TIER_TOKEN_SOURCE_OVERRIDES = {
   31098: { zone: 3959, name: "The Illidari Council" },
   31099: { zone: 3959, name: "The Illidari Council" },
   31100: { zone: 3959, name: "The Illidari Council" },
+  // T6 Bracers — SWP trash
+  34848: { zone: 4075, name: "Trash Drops" },
+  34851: { zone: 4075, name: "Trash Drops" },
+  34852: { zone: 4075, name: "Trash Drops" },
+  // T6 Belt — SWP trash
+  34853: { zone: 4075, name: "Trash Drops" },
+  34854: { zone: 4075, name: "Trash Drops" },
+  34855: { zone: 4075, name: "Trash Drops" },
+  // T6 Boots — SWP trash
+  34856: { zone: 4075, name: "Trash Drops" },
+  34857: { zone: 4075, name: "Trash Drops" },
+  34858: { zone: 4075, name: "Trash Drops" },
 };
 
 function isTierToken(item) {
@@ -51,10 +63,14 @@ function isTierToken(item) {
     item.quality === 'Epic' && item.class === 'Miscellaneous';
 }
 
+// Label for the pseudo-boss used for zone/trash drops
+const TRASH_BOSS_NAME = 'Trash Drops';
+
 // Filter for reservable items: boss drops from TBC raids, epic+ quality, equippable
 const raidItems = items.filter(i => {
   if (!i.source) return false;
   if (i.quality !== 'Epic' && i.quality !== 'Legendary') return false;
+  if (!zoneIdSet.has(i.source.zone)) return false;
 
   // Tier tokens — allow any source category since some have "Rare Drop" / "Zone Drop"
   if (isTierToken(i)) {
@@ -64,19 +80,26 @@ const raidItems = items.filter(i => {
       i.source.name = override.name;
       i.source.category = 'Boss Drop';
     }
-    return zoneIdSet.has(i.source.zone) && i.source.name;
+    return !!i.source.name;
   }
 
-  // Standard equippable gear — must be a boss drop from a TBC raid zone
-  if (i.source.category !== 'Boss Drop') return false;
-  if (!zoneIdSet.has(i.source.zone)) return false;
-  if (EQUIP_SLOTS.has(i.slot) || i.class === 'Weapon') return true;
+  // Boss drops — equippable gear, weapons, bags, mounts, recipes
+  if (i.source.category === 'Boss Drop') {
+    if (EQUIP_SLOTS.has(i.slot) || i.class === 'Weapon') return true;
+    if (i.slot === 'Bag' && i.class === 'Container') return true;
+    if (i.subclass === 'Mount') return true;
+    if (i.class === 'Recipe') return true;
+    return false;
+  }
 
-  // Bags (e.g. Pit Lord's Satchel)
-  if (i.slot === 'Bag' && i.class === 'Container') return true;
-
-  // Mounts (e.g. Fiery Warhorse's Reins)
-  if (i.subclass === 'Mount') return true;
+  // Zone drops (trash) — equippable gear, weapons, and recipes
+  if (i.source.category === 'Zone Drop') {
+    // Assign to "Trash Drops" pseudo-boss
+    i.source.name = TRASH_BOSS_NAME;
+    if (EQUIP_SLOTS.has(i.slot) || i.class === 'Weapon') return true;
+    if (i.class === 'Recipe') return true;
+    return false;
+  }
 
   return false;
 });
@@ -111,7 +134,7 @@ for (const raid of TBC_RAIDS) {
       icon: item.icon,
       quality: item.quality,
       itemLevel: item.itemLevel,
-      slot: isTierToken(item) ? 'Tier Token' : item.slot,
+      slot: isTierToken(item) ? 'Tier Token' : (item.class === 'Recipe' ? 'Recipe' : item.slot),
       class: item.class,
       subclass: item.subclass || null,
       dropChance: item.source.dropChance || null,
