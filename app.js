@@ -16,6 +16,8 @@ import {
   getAuth,
   onAuthStateChanged,
   signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   signOut
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import {
@@ -3980,6 +3982,60 @@ if (!hasConfigValues()) {
   }
   if (authGateYahooButton) {
     authGateYahooButton.addEventListener("click", () => performSignIn(yahooProvider));
+  }
+
+  // ── Email / Password auth ────────────────────────────────────────────────
+  const authGateEmailForm = document.getElementById("authGateEmailForm");
+  const authGateEmail = document.getElementById("authGateEmail");
+  const authGatePassword = document.getElementById("authGatePassword");
+  const authGateCreateAccount = document.getElementById("authGateCreateAccount");
+
+  function getEmailAuthErrorMessage(error) {
+    const code = error && error.code;
+    switch (code) {
+      case "auth/invalid-email": return "Invalid email address.";
+      case "auth/user-disabled": return "This account has been disabled.";
+      case "auth/user-not-found": return "No account found with that email. Click Create Account to register.";
+      case "auth/wrong-password": return "Incorrect password.";
+      case "auth/invalid-credential": return "Invalid email or password. If you don't have an account, click Create Account.";
+      case "auth/email-already-in-use": return "An account with that email already exists. Try signing in instead.";
+      case "auth/weak-password": return "Password must be at least 6 characters.";
+      case "auth/too-many-requests": return "Too many attempts. Please try again later.";
+      default: return getAuthErrorMessage(error);
+    }
+  }
+
+  async function performEmailSignIn(isCreate) {
+    const email = authGateEmail ? authGateEmail.value.trim() : "";
+    const password = authGatePassword ? authGatePassword.value : "";
+    if (!email || !password) return;
+    const allBtns = [authGateSignInButton, authGateYahooButton, authGateEmailForm?.querySelector("[type=submit]"), authGateCreateAccount].filter(Boolean);
+    allBtns.forEach((b) => (b.disabled = true));
+    try {
+      if (isCreate) {
+        await createUserWithEmailAndPassword(auth, email, password);
+      } else {
+        await signInWithEmailAndPassword(auth, email, password);
+      }
+      setAuthGateState(true);
+    } catch (error) {
+      const errorText = getEmailAuthErrorMessage(error);
+      authStatus.textContent = errorText;
+      setAuthGateState(false, errorText, true);
+      setMessage(formMessage, errorText, true);
+    } finally {
+      allBtns.forEach((b) => (b.disabled = false));
+    }
+  }
+
+  if (authGateEmailForm) {
+    authGateEmailForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      performEmailSignIn(false);
+    });
+  }
+  if (authGateCreateAccount) {
+    authGateCreateAccount.addEventListener("click", () => performEmailSignIn(true));
   }
 
   if (signOutButton) {

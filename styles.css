@@ -187,6 +187,71 @@ body {
   color: #fff;
   border-color: #5c0b80;
 }
+.auth-btn-email {
+  background: #2d7d46;
+  color: #fff;
+  border-color: #236b38;
+}
+.auth-btn-create {
+  background: transparent;
+  color: var(--text-dim);
+  border-color: var(--line-strong);
+  font-weight: 500;
+}
+.auth-btn-create:hover:not(:disabled) {
+  color: var(--text-main);
+  border-color: var(--accent);
+}
+.auth-gate-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.85rem 0 0.65rem;
+  color: var(--text-dim);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.auth-gate-divider::before,
+.auth-gate-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line-strong);
+}
+.auth-gate-email-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  width: 100%;
+}
+.auth-input {
+  width: 100%;
+  max-width: 20rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--bg-input, #1a1a1d);
+  color: var(--text-main);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.auth-input:focus {
+  border-color: var(--accent);
+}
+.auth-input::placeholder {
+  color: var(--text-dim);
+  opacity: 0.7;
+}
+.auth-gate-email-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  align-items: center;
+  width: 100%;
+}
 
 /* ── Onboarding Banner ── */
 .onboarding-banner {

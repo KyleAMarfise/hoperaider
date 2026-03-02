@@ -17,6 +17,15 @@
         <button type="button" id="authGateSignInButton" class="auth-btn auth-btn-google">Sign in with Google</button>
         <button type="button" id="authGateYahooButton" class="auth-btn auth-btn-yahoo">Sign in with Yahoo</button>
       </div>
+      <div class="auth-gate-divider"><span>or</span></div>
+      <form class="auth-gate-email-form" id="authGateEmailForm">
+        <input type="email" id="authGateEmail" class="auth-input" placeholder="Email address" required autocomplete="email" />
+        <input type="password" id="authGatePassword" class="auth-input" placeholder="Password" required autocomplete="current-password" />
+        <div class="auth-gate-email-buttons">
+          <button type="submit" class="auth-btn auth-btn-email">Sign In with Email</button>
+          <button type="button" id="authGateCreateAccount" class="auth-btn auth-btn-create">Create Account</button>
+        </div>
+      </form>
     </div>
   </section>
 
