@@ -227,12 +227,12 @@ const RELIC_CLASS = { Idol: "Druid", Libram: "Paladin", Totem: "Shaman" };
 // Tier token → eligible classes  (T4 Fallen, T5 Vanquished share the same grouping)
 const TIER_TOKEN_CLASSES = {
   "Hero":       new Set(["Hunter", "Mage", "Warlock"]),
-  "Champion":   new Set(["Rogue", "Shaman", "Warrior"]),
-  "Defender":   new Set(["Druid", "Paladin", "Priest"]),
+  "Champion":   new Set(["Paladin", "Rogue", "Shaman"]),
+  "Defender":   new Set(["Warrior", "Priest", "Druid"]),
   // T6 uses different group names
   "Conqueror":  new Set(["Paladin", "Priest", "Warlock"]),
-  "Protector":  new Set(["Hunter", "Shaman", "Warrior"]),
-  "Vanquisher": new Set(["Druid", "Mage", "Rogue"]),
+  "Protector":  new Set(["Warrior", "Hunter", "Shaman"]),
+  "Vanquisher": new Set(["Rogue", "Mage", "Druid"]),
 };
 
 function getTierTokenGroup(itemName) {
