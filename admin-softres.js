@@ -478,64 +478,127 @@ function findRaidLoot(raidName) {
 }
 
 // ── Raid selector ───────────────────────────────────────────────────────────
-function renderRaidOptions() {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+function isRaidPast(raid) {
+  const rDate = parseDateOnly(raid.raidDate);
+  if (!rDate) return false;
+  const endHour = Number.isInteger(raid.raidEnd) ? raid.raidEnd : null;
+  const startHour = Number.isInteger(raid.raidStart) ? raid.raidStart : null;
+  const cutoffHour = endHour != null ? endHour : (startHour != null ? startHour : 0);
+  const cutoff = new Date(rDate);
+  cutoff.setHours(cutoffHour, 0, 0, 0);
+  return cutoff.getTime() < Date.now();
+}
 
-  // Sort raids by date ascending (nearest upcoming first), past raids after
-  const sorted = [...currentRaids].sort((a, b) => {
+function renderRaidOptions() {
+  const upcoming = [];
+  const past = [];
+
+  for (const raid of currentRaids) {
+    if (isRaidPast(raid)) {
+      past.push(raid);
+    } else {
+      upcoming.push(raid);
+    }
+  }
+
+  // Upcoming: nearest first
+  upcoming.sort((a, b) => {
     const da = parseDateOnly(a.raidDate)?.getTime() || 0;
     const db2 = parseDateOnly(b.raidDate)?.getTime() || 0;
-    const aIsPast = da < today.getTime();
-    const bIsPast = db2 < today.getTime();
-    if (aIsPast !== bIsPast) return aIsPast ? 1 : -1;
     return da - db2;
   });
 
-  softresRaidBadge.textContent = String(sorted.length);
+  // Past: most recent first
+  past.sort((a, b) => {
+    const da = parseDateOnly(a.raidDate)?.getTime() || 0;
+    const db2 = parseDateOnly(b.raidDate)?.getTime() || 0;
+    if (db2 !== da) return db2 - da;
+    return (b.raidStart ?? 0) - (a.raidStart ?? 0);
+  });
 
-  if (sorted.length === 0) {
+  softresRaidBadge.textContent = String(currentRaids.length);
+
+  if (!upcoming.length && !past.length) {
     softresRaidGrid.innerHTML = '<p class="text-dim">No raids scheduled.</p>';
     return;
   }
 
   let html = '';
-  for (const raid of sorted) {
-    const rDate = parseDateOnly(raid.raidDate);
-    const isPast = rDate && rDate.getTime() < today.getTime();
-    const isSelected = raid.id === selectedRaidId;
-    const isLocked = !!raid.softresLocked;
 
-    // Count reserves for this raid
-    const resCount = currentReserves.filter(r => r.raidId === raid.id).length;
-
-    const dateLabel = rDate
-      ? rDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
-      : '—';
-    const start = Number.isInteger(raid.raidStart) ? hourLabel(raid.raidStart) : '';
-    const end = Number.isInteger(raid.raidEnd) ? hourLabel(raid.raidEnd) : '';
-    const timeStr = start ? `${start}${end ? ' – ' + end : ''} ST` : '';
-    const runType = raid.runType ? ` (${escapeHtml(raid.runType)})` : '';
-    const size = raid.raidSize ? `${raid.raidSize}-man` : '';
-    const lockIcon = isLocked ? ' 🔒' : '';
-    const resLabel = resCount > 0 ? `${resCount} reserve${resCount !== 1 ? 's' : ''}` : 'No reserves';
-    const statusBadge = isPast
-      ? '<span class="srt-status srt-status-past">Past</span>'
-      : '<span class="srt-status srt-status-upcoming">Upcoming</span>';
-
-    const classes = ['softres-raid-tile'];
-    if (isSelected) classes.push('is-selected');
-    if (isPast) classes.push('is-past');
-
-    html += `<button type="button" class="${classes.join(' ')}" data-raid-id="${escapeHtml(raid.id)}">
-      ${statusBadge}
-      <span class="srt-name">${escapeHtml(raid.raidName || 'Raid')}${runType}${lockIcon}</span>
-      <span class="srt-date">${escapeHtml(dateLabel)}</span>
-      <span class="srt-time">${escapeHtml(timeStr)}${size ? ' · ' + escapeHtml(size) : ''}</span>
-      <span class="srt-reserves">${resLabel}</span>
-    </button>`;
+  // ── Upcoming / Current tiles (large) ──
+  for (const raid of upcoming) {
+    html += renderUpcomingTile(raid);
   }
+
+  // ── Past divider + compact rows ──
+  if (past.length) {
+    if (upcoming.length) {
+      html += '<div class="srt-divider"><span>Completed Raids</span></div>';
+    }
+    html += '<div class="srt-past-list">';
+    for (const raid of past) {
+      html += renderPastRow(raid);
+    }
+    html += '</div>';
+  }
+
   softresRaidGrid.innerHTML = html;
+}
+
+function renderUpcomingTile(raid) {
+  const rDate = parseDateOnly(raid.raidDate);
+  const isSelected = raid.id === selectedRaidId;
+  const isLocked = !!raid.softresLocked;
+  const resCount = currentReserves.filter(r => r.raidId === raid.id).length;
+
+  const dateLabel = rDate
+    ? rDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+    : '—';
+  const start = Number.isInteger(raid.raidStart) ? hourLabel(raid.raidStart) : '';
+  const end = Number.isInteger(raid.raidEnd) ? hourLabel(raid.raidEnd) : '';
+  const timeStr = start ? `${start}${end ? ' – ' + end : ''} ST` : '';
+  const runType = raid.runType ? ` (${escapeHtml(raid.runType)})` : '';
+  const size = raid.raidSize ? `${raid.raidSize}-man` : '';
+  const lockIcon = isLocked ? ' 🔒' : '';
+  const resLabel = resCount > 0 ? `${resCount} reserve${resCount !== 1 ? 's' : ''}` : 'No reserves';
+
+  const classes = ['softres-raid-tile'];
+  if (isSelected) classes.push('is-selected');
+
+  return `<button type="button" class="${classes.join(' ')}" data-raid-id="${escapeHtml(raid.id)}">
+    <span class="srt-status srt-status-upcoming">Upcoming</span>
+    <span class="srt-name">${escapeHtml(raid.raidName || 'Raid')}${runType}${lockIcon}</span>
+    <span class="srt-date">${escapeHtml(dateLabel)}</span>
+    <span class="srt-time">${escapeHtml(timeStr)}${size ? ' · ' + escapeHtml(size) : ''}</span>
+    <span class="srt-reserves">${resLabel}</span>
+  </button>`;
+}
+
+function renderPastRow(raid) {
+  const rDate = parseDateOnly(raid.raidDate);
+  const isSelected = raid.id === selectedRaidId;
+  const isLocked = !!raid.softresLocked;
+  const resCount = currentReserves.filter(r => r.raidId === raid.id).length;
+
+  const dateLabel = rDate
+    ? rDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+    : '—';
+  const start = Number.isInteger(raid.raidStart) ? hourLabel(raid.raidStart) : '';
+  const end = Number.isInteger(raid.raidEnd) ? hourLabel(raid.raidEnd) : '';
+  const timeStr = start ? `${start}${end ? ' – ' + end : ''} ST` : '';
+  const runType = raid.runType ? ` (${escapeHtml(raid.runType)})` : '';
+  const lockIcon = isLocked ? ' 🔒' : '';
+  const resLabel = resCount > 0 ? `${resCount} res` : '0 res';
+
+  const classes = ['srt-past-row'];
+  if (isSelected) classes.push('is-selected');
+
+  return `<button type="button" class="${classes.join(' ')}" data-raid-id="${escapeHtml(raid.id)}">
+    <span class="srt-past-name">${escapeHtml(raid.raidName || 'Raid')}${runType}${lockIcon}</span>
+    <span class="srt-past-date">${escapeHtml(dateLabel)}</span>
+    <span class="srt-past-time">${escapeHtml(timeStr)}</span>
+    <span class="srt-past-reserves">${resLabel}</span>
+  </button>`;
 }
 
 // ── Character dropdown ──────────────────────────────────────────────────────
