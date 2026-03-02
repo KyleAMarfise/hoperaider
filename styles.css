@@ -3555,6 +3555,43 @@ td .row-actions button {
   float: right;
   margin-left: 1.5em;
 }
+.wow-tt-wowhead {
+  margin-top: 6px;
+  padding-top: 5px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.78rem;
+}
+.wow-tt-wowhead a {
+  color: #71d5ff;
+  text-decoration: none;
+}
+.wow-tt-wowhead a:hover {
+  text-decoration: underline;
+}
+
+/* Inline Wowhead link next to item names */
+.wowhead-link {
+  display: inline-block;
+  margin-left: 0.35em;
+  font-size: 0.78rem;
+  color: #71d5ff;
+  text-decoration: none;
+  opacity: 0.55;
+  transition: opacity 0.15s;
+  vertical-align: baseline;
+}
+.wowhead-link:hover {
+  opacity: 1;
+  text-decoration: none;
+}
+
+/* Data accuracy disclaimer */
+.softres-loot-disclaimer {
+  color: var(--text-dim);
+  font-size: 0.82rem;
+  margin: 0.3em 0 0.8em;
+  opacity: 0.85;
+}
 
 /* Hoverable item names in reserve table */
 .softres-item-hover {

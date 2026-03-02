@@ -305,6 +305,10 @@ function ensureTooltipEl() {
   return tooltipEl;
 }
 
+function wowheadUrl(itemId) {
+  return `https://www.wowhead.com/tbc/item=${itemId}`;
+}
+
 function renderTooltipHtml(item) {
   if (!item?.tooltip?.length) return '';
   let lines = '';
@@ -326,6 +330,10 @@ function renderTooltipHtml(item) {
     const indent = fmt === 'indent' ? ' wow-tt-indent' : '';
     lines += `<div class="wow-tt-line${indent}" style="color:${color}">${escapeHtml(label)}</div>`;
     prevAlignRight = false;
+  }
+  // Wowhead link at the bottom of the tooltip
+  if (item.itemId) {
+    lines += `<div class="wow-tt-line wow-tt-wowhead"><a href="${wowheadUrl(item.itemId)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">View on Wowhead ↗</a></div>`;
   }
   return lines;
 }
@@ -884,7 +892,7 @@ function filterLootTable() {
 
     rows += `<tr data-item-id="${item.itemId}" class="${rowClass}">
       <td><img class="softres-item-icon" src="${escapeHtml(item.icon)}" alt="" loading="lazy" /></td>
-      <td style="color:${canUse ? qualityColor : '#666'};font-weight:600">${escapeHtml(item.name)}</td>
+      <td style="color:${canUse ? qualityColor : '#666'};font-weight:600">${escapeHtml(item.name)} <a href="${wowheadUrl(item.itemId)}" class="wowhead-link" target="_blank" rel="noopener" title="View on Wowhead" onclick="event.stopPropagation()">↗</a></td>
       <td>${escapeHtml(getItemType(item))}</td>
       <td>${escapeHtml(item.slot)}</td>
       <td>${item.itemLevel}</td>
@@ -1112,7 +1120,7 @@ function renderRaidModeBody(bossFilter) {
           <div class="raid-mode-item-header">
             ${iconUrl}
             <div class="raid-mode-item-info">
-              <span class="raid-mode-item-name" style="color:${color}">${escapeHtml(item.name)}${contestLabel}</span>
+              <span class="raid-mode-item-name" style="color:${color}">${escapeHtml(item.name)} <a href="${wowheadUrl(item.itemId)}" class="wowhead-link" target="_blank" rel="noopener" title="View on Wowhead" onclick="event.stopPropagation()">↗</a>${contestLabel}</span>
               <span class="raid-mode-item-meta">${escapeHtml(slotLabel)}${slotLabel && typeName ? ' · ' : ''}${escapeHtml(typeName)}${(slotLabel || typeName) && iLvl ? ' · ' : ''}${iLvl}${((slotLabel || typeName || iLvl) && dropPct) ? ' · ' : ''}${dropPct}</span>
             </div>
           </div>
