@@ -2544,6 +2544,9 @@ function updateAdminOpsPendingBadge(rows = []) {
   }).length;
   adminOpsBadge.textContent = String(pendingCount);
   adminOpsBadge.hidden = pendingCount <= 0;
+  // Update browser tab title with pending count
+  const baseTitle = document.title.replace(/^\(\d+\)\s*/, '');
+  document.title = pendingCount > 0 ? `(${pendingCount}) ${baseTitle}` : baseTitle;
 }
 
 function populateRaidPhaseOptions() {

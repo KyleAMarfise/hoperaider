@@ -269,6 +269,9 @@ function updatePendingBadge(signups = []) {
   }).length;
   adminOpsBadge.textContent = String(pending);
   adminOpsBadge.hidden = pending <= 0;
+  // Update browser tab title with pending count
+  const baseTitle = document.title.replace(/^\(\d+\)\s*/, '');
+  document.title = pending > 0 ? `(${pending}) ${baseTitle}` : baseTitle;
 }
 
 function buildAdminRaidRows(items) {
