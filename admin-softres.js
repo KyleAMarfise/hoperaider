@@ -310,28 +310,36 @@ function wowheadUrl(itemId) {
 }
 
 function renderTooltipHtml(item) {
-  if (!item?.tooltip?.length) return '';
   let lines = '';
-  let prevAlignRight = false;
-  for (const entry of item.tooltip) {
-    const label = (entry.label || '').replace(/^\n+|\n+$/g, '');
-    if (!label) continue;
-    const fmt = entry.format || '';
-    const color = TOOLTIP_FORMAT_COLORS[fmt] || '#e8dcc3';
-    if (fmt === 'alignRight') {
-      // Append to previous line as right-aligned span
-      if (lines.endsWith('</div>')) {
-        lines = lines.slice(0, -6) +
-          `<span class="wow-tt-right" style="color:${color}">${escapeHtml(label)}</span></div>`;
+
+  // Prefer Wowhead-sourced tooltip HTML (accurate TBC Classic stats)
+  if (item.wowheadTooltip) {
+    lines = `<div class="wow-tt-wowhead-body">${item.wowheadTooltip}</div>`;
+  } else if (item.tooltip?.length) {
+    // Fallback to wow-classic-items parsed tooltip
+    let prevAlignRight = false;
+    for (const entry of item.tooltip) {
+      const label = (entry.label || '').replace(/^\n+|\n+$/g, '');
+      if (!label) continue;
+      const fmt = entry.format || '';
+      const color = TOOLTIP_FORMAT_COLORS[fmt] || '#e8dcc3';
+      if (fmt === 'alignRight') {
+        if (lines.endsWith('</div>')) {
+          lines = lines.slice(0, -6) +
+            `<span class="wow-tt-right" style="color:${color}">${escapeHtml(label)}</span></div>`;
+        }
+        prevAlignRight = true;
+        continue;
       }
-      prevAlignRight = true;
-      continue;
+      const indent = fmt === 'indent' ? ' wow-tt-indent' : '';
+      lines += `<div class="wow-tt-line${indent}" style="color:${color}">${escapeHtml(label)}</div>`;
+      prevAlignRight = false;
     }
-    const indent = fmt === 'indent' ? ' wow-tt-indent' : '';
-    lines += `<div class="wow-tt-line${indent}" style="color:${color}">${escapeHtml(label)}</div>`;
-    prevAlignRight = false;
+  } else {
+    return '';
   }
-  // Wowhead link at the bottom of the tooltip
+
+  // Wowhead link at the bottom of every tooltip
   if (item.itemId) {
     lines += `<div class="wow-tt-line wow-tt-wowhead"><a href="${wowheadUrl(item.itemId)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">View on Wowhead ↗</a></div>`;
   }

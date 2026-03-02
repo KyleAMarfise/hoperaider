@@ -3555,6 +3555,38 @@ td .row-actions button {
   float: right;
   margin-left: 1.5em;
 }
+
+/* Wowhead-sourced tooltip HTML */
+.wow-tt-wowhead-body {
+  line-height: 1.45;
+}
+.wow-tt-wowhead-body table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.wow-tt-wowhead-body td,
+.wow-tt-wowhead-body th {
+  padding: 0;
+  text-align: left;
+  vertical-align: top;
+}
+.wow-tt-wowhead-body th {
+  text-align: right;
+  font-weight: normal;
+}
+.wow-tt-wowhead-body b {
+  font-size: 0.95rem;
+}
+/* Wowhead quality color classes */
+.wow-tooltip .q  { color: #ffd100; }
+.wow-tooltip .q0 { color: #9d9d9d; }
+.wow-tooltip .q1 { color: #ffffff; }
+.wow-tooltip .q2 { color: #1eff00; }
+.wow-tooltip .q3 { color: #0070dd; }
+.wow-tooltip .q4 { color: #a335ee; }
+.wow-tooltip .q5 { color: #ff8000; }
+.wow-tooltip .q6 { color: #e6cc80; }
+
 .wow-tt-wowhead {
   margin-top: 6px;
   padding-top: 5px;
