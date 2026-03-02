@@ -139,9 +139,11 @@ for (const raid of TBC_RAIDS) {
       subclass: item.subclass || null,
       dropChance: item.source.dropChance || null,
       tooltip: (item.tooltip || []).filter(t =>
-        // Strip "Sell Price:" and "Dropped by:" lines — we show those separately
+        // Strip "Sell Price:", "Dropped by:", "Drop Chance:" lines — we show those separately
+        // Strip feral AP line — derived stat from wow-classic-items, not on actual item tooltip
         t.label && !t.label.startsWith('Sell Price:') && !t.label.startsWith('Dropped by:')
         && !t.label.startsWith('Drop Chance:')
+        && !/attack power.+in Cat, Bear/i.test(t.label)
       )
     });
   }

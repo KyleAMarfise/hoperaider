@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-02T00:03:43.888Z",
+  "generatedAt": "2026-03-02T04:09:07.706Z",
   "raids": [
     {
       "zoneId": 3457,
@@ -499,10 +499,6 @@
                 },
                 {
                   "label": "Requires Level 70"
-                },
-                {
-                  "label": "Increases attack power by 457 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
                 },
                 {
                   "label": "Equip: Improves critical strike rating by 9.",
@@ -1720,10 +1716,6 @@
                 },
                 {
                   "label": "Requires Level 70"
-                },
-                {
-                  "label": "Increases attack power by 457 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
                 },
                 {
                   "label": "Equip: Increases attack power by 36.",
@@ -3443,10 +3435,6 @@
                   "label": "Requires Level 70"
                 },
                 {
-                  "label": "Increases attack power by 179 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
-                },
-                {
                   "label": "Equip: Increases spell power by 185.",
                   "format": "Uncommon"
                 }
@@ -4143,10 +4131,6 @@
                 },
                 {
                   "label": "Requires Level 70"
-                },
-                {
-                  "label": "Increases attack power by 519 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
                 },
                 {
                   "label": "Equip: Improves hit rating by 15.",
@@ -5787,10 +5771,6 @@
                   "label": "Requires Level 70"
                 },
                 {
-                  "label": "Increases attack power by 457 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
-                },
-                {
                   "label": "Equip: Improves critical strike rating by 24.",
                   "format": "Uncommon"
                 },
@@ -5951,10 +5931,6 @@
                 },
                 {
                   "label": "Requires Level 70"
-                },
-                {
-                  "label": "Increases attack power by 828 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
                 },
                 {
                   "label": "Equip: Improves hit rating by 25.",
@@ -6371,10 +6347,6 @@
                 },
                 {
                   "label": "Requires Level 70"
-                },
-                {
-                  "label": "Increases attack power by 459 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
                 },
                 {
                   "label": "Equip: Improves critical strike rating by 20.",
@@ -7135,10 +7107,6 @@
                 },
                 {
                   "label": "Requires Level 70"
-                },
-                {
-                  "label": "Increases attack power by 179 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
                 },
                 {
                   "label": "Equip: Improves hit rating by 23.",
@@ -9875,10 +9843,6 @@
                 },
                 {
                   "label": "Requires Level 70"
-                },
-                {
-                  "label": "Increases attack power by 911 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
                 }
               ]
             },
@@ -10639,10 +10603,6 @@
                   "label": "Requires Level 70"
                 },
                 {
-                  "label": "Increases attack power by 197 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
-                },
-                {
                   "label": "Equip: Increases spell power by 204.",
                   "format": "Uncommon"
                 },
@@ -10715,10 +10675,6 @@
                 },
                 {
                   "label": "Requires Level 70"
-                },
-                {
-                  "label": "Increases attack power by 908 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
                 },
                 {
                   "label": "Chance on hit: Steals 285 to 315 life from target enemy.",
@@ -11293,10 +11249,6 @@
                 },
                 {
                   "label": "Requires Level 70"
-                },
-                {
-                  "label": "Increases attack power by 989 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
                 },
                 {
                   "label": "Chance on hit: Increases the critical strike rating of your next attack made within 4 seconds by 900.",
@@ -12590,10 +12542,6 @@
                 },
                 {
                   "label": "Requires Level 70"
-                },
-                {
-                  "label": "Increases attack power by 637 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
                 },
                 {
                   "label": "Equip: Increases your expertise rating by 21.",
@@ -14561,10 +14509,6 @@
                   "label": "Requires Level 70"
                 },
                 {
-                  "label": "Increases attack power by 588 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
-                },
-                {
                   "label": "Equip: Increases defense rating by 16.",
                   "format": "Uncommon"
                 },
@@ -15167,10 +15111,6 @@
                   "label": "Requires Level 70"
                 },
                 {
-                  "label": "Increases attack power by 989 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
-                },
-                {
                   "label": "Equip: Increases your dodge rating by 54.",
                   "format": "Uncommon"
                 }
@@ -15543,10 +15483,6 @@
                   "label": "Requires Level 70"
                 },
                 {
-                  "label": "Increases attack power by 583 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
-                },
-                {
                   "label": "Equip: Improves critical strike rating by 19.",
                   "format": "Uncommon"
                 },
@@ -15613,10 +15549,6 @@
                 },
                 {
                   "label": "Requires Level 70"
-                },
-                {
-                  "label": "Increases attack power by 586 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
                 },
                 {
                   "label": "Equip: Increases attack power by 40.",
@@ -16510,10 +16442,6 @@
                   "label": "Requires Level 70"
                 },
                 {
-                  "label": "Increases attack power by 582 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
-                },
-                {
                   "label": "Chance on hit: Increases attack power by 270 for 10 sec.",
                   "format": "Uncommon"
                 }
@@ -16728,10 +16656,6 @@
                   "label": "Requires Level 70"
                 },
                 {
-                  "label": "Increases attack power by 217 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
-                },
-                {
                   "label": "Equip: Increases spell power by 221.",
                   "format": "Uncommon"
                 }
@@ -16913,10 +16837,6 @@
                 },
                 {
                   "label": "Requires Level 70"
-                },
-                {
-                  "label": "Increases attack power by 944 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
                 },
                 {
                   "label": "Equip: Improves critical strike rating by 25.",
@@ -17144,19 +17064,11 @@
                   "label": "Requires Level 70"
                 },
                 {
-                  "label": "Increases attack power by 333 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
-                },
-                {
                   "label": "Equip: Improves spell critical strike rating by 75.",
                   "format": "Uncommon"
                 },
                 {
                   "label": "Equip: Increases spell power by 325.",
-                  "format": "Uncommon"
-                },
-                {
-                  "label": "Equip: Increases attack power by 1459 in Cat, Bear, Dire Bear, and Moonkin forms only.",
                   "format": "Uncommon"
                 },
                 {
@@ -18750,10 +18662,6 @@
                   "label": "Requires Level 70"
                 },
                 {
-                  "label": "Increases attack power by 1059 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
-                },
-                {
                   "label": "Equip: Increases attack power by 94.",
                   "format": "Uncommon"
                 }
@@ -19671,10 +19579,6 @@
                   "label": "Requires Level 70"
                 },
                 {
-                  "label": "Increases attack power by 257 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
-                },
-                {
                   "label": "Equip: Increases spell power by 259.",
                   "format": "Uncommon"
                 },
@@ -20049,10 +19953,6 @@
                 },
                 {
                   "label": "Requires Level 70"
-                },
-                {
-                  "label": "Increases attack power by 637 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
                 },
                 {
                   "label": "Equip: Improves critical strike rating by 24.",
@@ -21142,10 +21042,6 @@
                 },
                 {
                   "label": "Requires Level 70"
-                },
-                {
-                  "label": "Increases attack power by 637 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
                 },
                 {
                   "label": "Equip: Improves critical strike rating by 23.",
@@ -22930,10 +22826,6 @@
                   "label": "Requires Level 70"
                 },
                 {
-                  "label": "Increases attack power by 1058 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
-                },
-                {
                   "label": "Equip: Improves critical strike rating by 38.",
                   "format": "Uncommon"
                 },
@@ -23390,10 +23282,6 @@
                   "label": "Requires Level 70"
                 },
                 {
-                  "label": "Increases attack power by 638 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
-                },
-                {
                   "label": "Equip: Increases attack power by 44.",
                   "format": "Uncommon"
                 }
@@ -23625,10 +23513,6 @@
                 },
                 {
                   "label": "Requires Level 70"
-                },
-                {
-                  "label": "Increases attack power by 233 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
                 },
                 {
                   "label": "Equip: Increases spell power by 236.",
@@ -25012,10 +24896,6 @@
                   "label": "Requires Level 70"
                 },
                 {
-                  "label": "Increases attack power by 1058 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
-                },
-                {
                   "label": "Equip: Improves hit rating by 30.",
                   "format": "Uncommon"
                 },
@@ -25775,10 +25655,6 @@
                   "label": "Requires Level 70"
                 },
                 {
-                  "label": "Increases attack power by 718 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
-                },
-                {
                   "label": "Equip: Increases attack power by 64.",
                   "format": "Uncommon"
                 },
@@ -26084,10 +25960,6 @@
                 },
                 {
                   "label": "Requires Level 70"
-                },
-                {
-                  "label": "Increases attack power by 257 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
                 },
                 {
                   "label": "Equip: Improves critical strike rating by 36.",
@@ -27688,10 +27560,6 @@
                   "label": "Requires Level 70"
                 },
                 {
-                  "label": "Increases attack power by 635 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
-                },
-                {
                   "label": "Equip: Increases attack power by 50.",
                   "format": "Uncommon"
                 },
@@ -28820,10 +28688,6 @@
                 },
                 {
                   "label": "Requires Level 70"
-                },
-                {
-                  "label": "Increases attack power by 637 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
                 },
                 {
                   "label": "Equip: Improves hit rating by 19.",
@@ -30172,10 +30036,6 @@
                   "label": "Requires Level 70"
                 },
                 {
-                  "label": "Increases attack power by 571 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
-                },
-                {
                   "label": "Equip: Increases attack power by 40.",
                   "format": "Uncommon"
                 },
@@ -30299,10 +30159,6 @@
                 },
                 {
                   "label": "Requires Level 70"
-                },
-                {
-                  "label": "Increases attack power by 572 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
                 },
                 {
                   "label": "Equip: Increases attack power by 42.",
@@ -30556,10 +30412,6 @@
                 },
                 {
                   "label": "Requires Level 70"
-                },
-                {
-                  "label": "Increases attack power by 972 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
                 },
                 {
                   "label": "Equip: Increases armor penetration rating by 45.",
@@ -31376,10 +31228,6 @@
                 },
                 {
                   "label": "Requires Level 70"
-                },
-                {
-                  "label": "Increases attack power by 571 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
                 },
                 {
                   "label": "Equip: Improves hit rating by 20.",
@@ -33135,10 +32983,6 @@
                   "label": "Requires Level 70"
                 },
                 {
-                  "label": "Increases attack power by 266 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
-                },
-                {
                   "label": "Equip: Improves critical strike rating by 49.",
                   "format": "Uncommon"
                 },
@@ -34284,10 +34128,6 @@
                   "label": "Requires Level 70"
                 },
                 {
-                  "label": "Increases attack power by 834 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
-                },
-                {
                   "label": "Equip: Increases attack power by 54.",
                   "format": "Uncommon"
                 },
@@ -34426,10 +34266,6 @@
                 },
                 {
                   "label": "Requires Level 70"
-                },
-                {
-                  "label": "Increases attack power by 831 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
                 },
                 {
                   "label": "Equip: Improves haste rating by 27.",
@@ -34674,10 +34510,6 @@
                 },
                 {
                   "label": "Requires Level 70"
-                },
-                {
-                  "label": "Increases attack power by 291 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
                 },
                 {
                   "label": "Equip: Improves haste rating by 32.",
@@ -36869,10 +36701,6 @@
                   "label": "Requires Level 70"
                 },
                 {
-                  "label": "Increases attack power by 744 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
-                },
-                {
                   "label": "Equip: Improves hit rating by 20.",
                   "format": "Uncommon"
                 },
@@ -36948,10 +36776,6 @@
                 },
                 {
                   "label": "Requires Level 70"
-                },
-                {
-                  "label": "Increases attack power by 743 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
                 },
                 {
                   "label": "Equip: Increases attack power by 46.",
@@ -37076,10 +36900,6 @@
                   "label": "Requires Level 70"
                 },
                 {
-                  "label": "Increases attack power by 744 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
-                },
-                {
                   "label": "Equip: Improves haste rating by 25.",
                   "format": "Uncommon"
                 },
@@ -37200,10 +37020,6 @@
                 },
                 {
                   "label": "Requires Level 70"
-                },
-                {
-                  "label": "Increases attack power by 746 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
                 },
                 {
                   "label": "Equip: Increases attack power by 42.",
@@ -40493,10 +40309,6 @@
                   "label": "Requires Level 70"
                 },
                 {
-                  "label": "Increases attack power by 1198 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
-                },
-                {
                   "label": "Equip: Improves haste rating by 53.",
                   "format": "Uncommon"
                 },
@@ -40559,10 +40371,6 @@
                 },
                 {
                   "label": "Requires Level 70"
-                },
-                {
-                  "label": "Increases attack power by 1195 in Cat, Bear, Dire Bear, and Moonkin forms only.",
-                  "format": "Uncommon"
                 },
                 {
                   "label": "Equip: Increases attack power by 94.",
