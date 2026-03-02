@@ -497,15 +497,23 @@ function renderAdminRaids(items) {
     grouped.currentUpcoming.push(item);
   });
 
+  // Sort past raids newest-first
+  const sortedPast = [...grouped.past].sort((a, b) => {
+    const aMs = parseDateOnly(a.raidDate)?.getTime() || 0;
+    const bMs = parseDateOnly(b.raidDate)?.getTime() || 0;
+    if (bMs !== aMs) return bMs - aMs;
+    return (b.raidStart ?? 0) - (a.raidStart ?? 0);
+  });
+
   currentAdminCountBadge.textContent = String(grouped.currentUpcoming.length);
-  pastAdminCountBadge.textContent = String(grouped.past.length);
+  pastAdminCountBadge.textContent = String(sortedPast.length);
 
   currentAdminRows.innerHTML = grouped.currentUpcoming.length
     ? buildAdminRaidRows(grouped.currentUpcoming)
     : `<tr><td colspan="8">No current or up-coming raids.</td></tr>`;
 
-  pastAdminRows.innerHTML = grouped.past.length
-    ? buildAdminRaidRows(grouped.past)
+  pastAdminRows.innerHTML = sortedPast.length
+    ? buildAdminRaidRows(sortedPast)
     : `<tr><td colspan="8">No past raids.</td></tr>`;
 }
 

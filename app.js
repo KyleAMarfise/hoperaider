@@ -2999,13 +2999,16 @@ function hydrateRowsWithRaidWindow(rows) {
   });
 }
 
-function renderCategoryRows(targetElement, rows, rosterMap) {
+function renderCategoryRows(targetElement, rows, rosterMap, reverse = false) {
   if (!rows.length) {
     targetElement.innerHTML = `<tr><td colspan="10">No raids in this window.</td></tr>`;
     return;
   }
 
-  const raidGroups = groupRowsByRaid(rows);
+  let raidGroups = groupRowsByRaid(rows);
+  if (reverse) {
+    raidGroups = raidGroups.slice().reverse();
+  }
 
   targetElement.innerHTML = raidGroups
     .map((group) => {
@@ -3095,7 +3098,7 @@ function renderRows(items) {
   }
 
   renderCategoryRows(raidRows.upcoming, grouped.upcoming, rosterMap);
-  renderCategoryRows(raidRows.past, grouped.past, rosterMap);
+  renderCategoryRows(raidRows.past, grouped.past, rosterMap, /* reverse */ true);
 
   enrichArmoryColumns(raidRows.upcoming);
   enrichArmoryColumns(raidRows.past);
