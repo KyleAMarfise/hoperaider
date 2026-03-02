@@ -103,6 +103,16 @@ async function main() {
 
   console.log('\n');
 
+  // Strip old tooltip array from items that now have wowheadTooltip
+  let stripped = 0;
+  for (const item of allItems) {
+    if (item.wowheadTooltip && item.tooltip) {
+      delete item.tooltip;
+      stripped++;
+    }
+  }
+  if (stripped) console.log(`Stripped old tooltip array from ${stripped} items (kept for ${allItems.length - stripped} fallback).`);
+
   // Write back
   fs.writeFileSync(DATA_PATH, JSON.stringify(data, null, 2));
   console.log(`Done! ${success} items enriched, ${failed} failures.`);
