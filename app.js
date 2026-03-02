@@ -2527,7 +2527,21 @@ function updateAdminOpsPendingBadge(rows = []) {
     return;
   }
 
-  const pendingCount = rows.filter((entry) => normalizeSignupStatus(entry.status) === "requested").length;
+  const now = Date.now();
+  const pendingCount = rows.filter((entry) => {
+    if (normalizeSignupStatus(entry.status) !== "requested") return false;
+    // Skip past raids so badge matches the operations table
+    const raidDate = parseDateOnly(entry.raidDate);
+    if (raidDate) {
+      const endHour = parseRaidEndHourValue(entry.raidEnd);
+      const fallbackHour = parseRaidHourValue(entry.raidStart);
+      const cutoffHour = Number.isInteger(endHour) ? endHour : (Number.isInteger(fallbackHour) ? fallbackHour : 0);
+      const cutoff = new Date(raidDate);
+      cutoff.setHours(cutoffHour, 0, 0, 0);
+      if (cutoff.getTime() < now) return false;
+    }
+    return true;
+  }).length;
   adminOpsBadge.textContent = String(pendingCount);
   adminOpsBadge.hidden = pendingCount <= 0;
 }

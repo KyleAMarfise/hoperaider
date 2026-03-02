@@ -251,7 +251,22 @@ function updatePendingBadge(signups = []) {
   if (!adminOpsBadge || !isAdmin) {
     return;
   }
-  const pending = signups.filter((signup) => normalizeSignupStatus(signup.status) === "requested").length;
+  const now = Date.now();
+  const pending = signups.filter((signup) => {
+    if (normalizeSignupStatus(signup.status) !== "requested") return false;
+    const raidDate = parseDateOnly(signup.raidDate);
+    if (raidDate) {
+      const endHour = Number(signup.raidEnd);
+      const startHour = Number(signup.raidStart);
+      const cutoffHour = Number.isInteger(endHour) && endHour >= 1 && endHour <= 24
+        ? endHour
+        : (Number.isInteger(startHour) && startHour >= 0 && startHour <= 23 ? startHour : 0);
+      const cutoff = new Date(raidDate);
+      cutoff.setHours(cutoffHour, 0, 0, 0);
+      if (cutoff.getTime() < now) return false;
+    }
+    return true;
+  }).length;
   adminOpsBadge.textContent = String(pending);
   adminOpsBadge.hidden = pending <= 0;
 }
