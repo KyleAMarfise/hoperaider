@@ -4035,7 +4035,17 @@ if (!hasConfigValues()) {
       if (isCreate) {
         await createUserWithEmailAndPassword(auth, email, password);
       } else {
-        await signInWithEmailAndPassword(auth, email, password);
+        try {
+          await signInWithEmailAndPassword(auth, email, password);
+        } catch (signInError) {
+          // Auto-create account if user doesn't exist yet
+          const code = signInError?.code;
+          if (code === "auth/user-not-found" || code === "auth/invalid-credential") {
+            await createUserWithEmailAndPassword(auth, email, password);
+          } else {
+            throw signInError;
+          }
+        }
       }
       setAuthGateState(true);
     } catch (error) {
