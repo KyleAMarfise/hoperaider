@@ -1697,7 +1697,14 @@ if (!hasConfigValues()) {
         } catch (signInError) {
           const code = signInError?.code;
           if (code === "auth/user-not-found" || code === "auth/invalid-credential") {
-            await createUserWithEmailAndPassword(auth, email, password);
+            try {
+              await createUserWithEmailAndPassword(auth, email, password);
+            } catch (createError) {
+              if (createError?.code === "auth/email-already-in-use") {
+                throw { code: "auth/wrong-password" };
+              }
+              throw createError;
+            }
           } else {
             throw signInError;
           }
