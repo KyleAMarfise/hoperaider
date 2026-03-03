@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-02T04:09:07.706Z",
+  "generatedAt": "2026-03-03T04:44:04.903Z",
   "raids": [
     {
       "zoneId": 3457,
@@ -11,6 +11,66 @@
           "name": "Attumen the Huntsman",
           "items": [
             {
+              "itemId": 28505,
+              "name": "Gauntlets of Renewed Hope",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_25.jpg",
+              "quality": "Epic",
+              "itemLevel": 115,
+              "slot": "Hands",
+              "class": "Armor",
+              "subclass": "Plate",
+              "dropChance": null,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Gauntlets of Renewed Hope</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<table width=\"100%\"><tr><td>Hands</td><th><span class=\"q1\">Plate</span></th></tr></table><span>906 Armor</span><br><span>+19 Stamina</span><br><span>+29 Intellect</span><br /><br>Blue Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +3 Intellect</span><br /><br />Durability 55 / 55</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Restores 5 mana per 5 sec.</span><br><span id=\"useText2\" class=\"q2\">Equip: Increases healing done by up to 62 and damage done by up to 21 for all magical spells and effects.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 28506,
+              "name": "Gloves of Dexterous Manipulation",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_28.jpg",
+              "quality": "Epic",
+              "itemLevel": 115,
+              "slot": "Hands",
+              "class": "Armor",
+              "subclass": "Leather",
+              "dropChance": null,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Gloves of Dexterous Manipulation</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<table width=\"100%\"><tr><td>Hands</td><th><span class=\"q1\">Leather</span></th></tr></table><span>228 Armor</span><br><span>+35 Agility</span><br><span>+22 Stamina</span><br /><br>Red Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +3 Critical Strike Rating</span><br /><br />Durability 40 / 40</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 42.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 28508,
+              "name": "Gloves of Saintly Blessings",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_17.jpg",
+              "quality": "Epic",
+              "itemLevel": 115,
+              "slot": "Hands",
+              "class": "Armor",
+              "subclass": "Cloth",
+              "dropChance": null,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Gloves of Saintly Blessings</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<table width=\"100%\"><tr><td>Hands</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>121 Armor</span><br><span>+27 Stamina</span><br><span>+25 Intellect</span><br><span>+25 Spirit</span><br /><br>Red Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +7 Healing +3 Spell Damage</span><br /><br />Durability 35 / 35</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 40 and damage done by up to 14 for all magical spells and effects.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 28507,
+              "name": "Handwraps of Flowing Thought",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_17.jpg",
+              "quality": "Epic",
+              "itemLevel": 115,
+              "slot": "Hands",
+              "class": "Armor",
+              "subclass": "Cloth",
+              "dropChance": null,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Handwraps of Flowing Thought</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<table width=\"100%\"><tr><td>Hands</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>121 Armor</span><br><span>+24 Stamina</span><br><span>+22 Intellect</span><br /><br>Yellow Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +3 Spell Hit Rating</span><br /><br />Durability 35 / 35</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell hit rating by 14.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 35.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 28509,
+              "name": "Worgen Claw Necklace",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_necklace_22.jpg",
+              "quality": "Epic",
+              "itemLevel": 115,
+              "slot": "Neck",
+              "class": "Armor",
+              "subclass": "Miscellaneous",
+              "dropChance": null,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Worgen Claw Necklace</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Neck</td><th><span class=\"q1\"></span></th></tr></table><span>+20 Agility</span><br><span>+21 Stamina</span></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves hit rating by 17.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 42.</span><br></td></tr></table>"
+            },
+            {
               "itemId": 30480,
               "name": "Fiery Warhorse's Reins",
               "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/ability_mount_dreadsteed.jpg",
@@ -21,11 +81,83 @@
               "subclass": "Mount",
               "dropChance": 0.0098,
               "wowheadTooltip": "<table><tr><td><b class=\"q4\">Fiery Warhorse's Reins</b><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 70</span><br>Binds when picked up<br>Unique<br />Mount</td></tr></table><table><tr><td>Requires Level 70<br>Requires Riding (150)<br><span id=\"useText1\" class=\"q2\">Use: Summons and dismisses Attumen the Huntsman's steed. &nbsp;This is a very fast mount. (3 Sec Cooldown)</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 28504,
+              "name": "Steelhawk Crossbow",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_weapon_crossbow_18.jpg",
+              "quality": "Epic",
+              "itemLevel": 115,
+              "slot": "Ranged",
+              "class": "Weapon",
+              "subclass": "Crossbow",
+              "dropChance": null,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Steelhawk Crossbow</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<table width=\"100%\"><tr><td>Ranged</td><th><span class=\"q1\">Crossbow</span></th></tr></table><table width=\"100%\"><tr><td><span>155 - 288 Damage</span></td><th>Speed 2.80</th></tr></table>(79.11 damage per second)<br>Durability 90 / 90</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves hit rating by 16.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 30.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 28453,
+              "name": "Bracers of the White Stag",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_bracer_02.jpg",
+              "quality": "Epic",
+              "itemLevel": 115,
+              "slot": "Wrist",
+              "class": "Armor",
+              "subclass": "Leather",
+              "dropChance": null,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Bracers of the White Stag</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<table width=\"100%\"><tr><td>Wrist</td><th><span class=\"q1\">Leather</span></th></tr></table><span>159 Armor</span><br><span>+16 Stamina</span><br><span>+18 Intellect</span><br><span>+22 Spirit</span><br>Durability 40 / 40</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 26.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 28477,
+              "name": "Harbinger Bands",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_bracer_13.jpg",
+              "quality": "Epic",
+              "itemLevel": 115,
+              "slot": "Wrist",
+              "class": "Armor",
+              "subclass": "Cloth",
+              "dropChance": null,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Harbinger Bands</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<table width=\"100%\"><tr><td>Wrist</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>85 Armor</span><br><span>+21 Stamina</span><br><span>+21 Intellect</span><br><span>+14 Spirit</span><br>Durability 35 / 35</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 26.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 28454,
+              "name": "Stalker's War Bands",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_bracer_02.jpg",
+              "quality": "Epic",
+              "itemLevel": 115,
+              "slot": "Wrist",
+              "class": "Armor",
+              "subclass": "Mail",
+              "dropChance": null,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Stalker's War Bands</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<table width=\"100%\"><tr><td>Wrist</td><th><span class=\"q1\">Mail</span></th></tr></table><span>355 Armor</span><br><span>+21 Agility</span><br><span>+18 Stamina</span><br><span>+17 Intellect</span><br>Durability 50 / 50</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 44.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 28502,
+              "name": "Vambraces of Courage",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_bracer_19.jpg",
+              "quality": "Epic",
+              "itemLevel": 115,
+              "slot": "Wrist",
+              "class": "Armor",
+              "subclass": "Plate",
+              "dropChance": null,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Vambraces of Courage</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<table width=\"100%\"><tr><td>Wrist</td><th><span class=\"q1\">Plate</span></th></tr></table><span>634 Armor</span><br><span>+33 Stamina</span><br /><br>Yellow Socket<br><span class=\"q0\">Socket Bonus: +2 Dodge Rating</span><br /><br />Durability 55 / 55</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Increases defense rating by 15.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases the block value of your shield by 33.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 28503,
+              "name": "Whirlwind Bracers",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_bracer_02.jpg",
+              "quality": "Epic",
+              "itemLevel": 115,
+              "slot": "Wrist",
+              "class": "Armor",
+              "subclass": "Mail",
+              "dropChance": null,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Whirlwind Bracers</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<table width=\"100%\"><tr><td>Wrist</td><th><span class=\"q1\">Mail</span></th></tr></table><span>355 Armor</span><br><span>+19 Stamina</span><br><span>+20 Intellect</span><br>Durability 50 / 50</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 46 and damage done by up to 16 for all magical spells and effects.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 7 mana per 5 sec.</span><br></td></tr></table>"
             }
           ]
         },
         {
-          "name": "Echo of Medivh",
+          "name": "Chess Event",
           "items": [
             {
               "itemId": 28748,
@@ -756,40 +888,6 @@
           ]
         },
         {
-          "name": "Phantom Attendant",
-          "items": [
-            {
-              "itemId": 21903,
-              "name": "Pattern: Soulcloth Shoulders",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_scroll_04.jpg",
-              "quality": "Epic",
-              "itemLevel": 73,
-              "slot": "Recipe",
-              "class": "Recipe",
-              "subclass": "Tailoring",
-              "dropChance": 0.1,
-              "wowheadTooltip": "<table><tr><td><b class=\"q4\">Pattern: Soulcloth Shoulders</b><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 73</span><br>Binds when picked up</td></tr></table><table><tr><td>Requires Tailoring (365)<br><span class=\"q2\">Use: Teaches you how to sew Soulcloth Shoulders.</span><br><br /><span class=\"q4\">Soulcloth Shoulders</span><span class=\"q\"><br>Item Level 100</span><br>Binds when equipped<table width=\"100%\"><tr><td>Shoulder</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>127 Armor</span><br><span>+30 Stamina</span><br><span>+15 Intellect</span><br><span>+11 Spirit</span><br>+30 Arcane Resistance<br /><br>Yellow Socket<br>Red Socket<br><span class=\"q0\">Socket Bonus: +3 Intellect</span><br /><br />Durability 60 / 60<br>Requires Level 70<br><br /><span class=\"q\">Soulcloth Embrace (0/3)</span><div class=\"q0 indent\"><span>Soulcloth Vest</span><br /><span>Soulcloth Shoulders</span><br /><span>Soulcloth Gloves</span></div><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Bolt of Soulcloth&nbsp;(6), Rune Thread&nbsp;(4)</div></td></tr></table>"
-            }
-          ]
-        },
-        {
-          "name": "Phantom Valet",
-          "items": [
-            {
-              "itemId": 21904,
-              "name": "Pattern: Soulcloth Vest",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_scroll_04.jpg",
-              "quality": "Epic",
-              "itemLevel": 75,
-              "slot": "Recipe",
-              "class": "Recipe",
-              "subclass": "Tailoring",
-              "dropChance": 0.2221,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Pattern: Soulcloth Vest</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 75</span><br>Binds when picked up</td></tr></table><table><tr><td>Requires Tailoring (375)<br><span class=\"q2\">Use: Teaches you how to sew a Soulcloth Vest.</span><br><br /><span class=\"q4\">Soulcloth Vest</span><span class=\"q\"><br>Item Level 100</span><br>Binds when equipped<table width=\"100%\"><tr><td>Chest</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>170 Armor</span><br><span>+24 Stamina</span><br><span>+20 Intellect</span><br><span>+16 Spirit</span><br>+45 Arcane Resistance<br /><br>Yellow Socket<br>Red Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +4 Intellect</span><br /><br />Durability 100 / 100<br>Requires Level 70<br><br /><span class=\"q\">Soulcloth Embrace (0/3)</span><div class=\"q0 indent\"><span>Soulcloth Vest</span><br /><span>Soulcloth Shoulders</span><br /><span>Soulcloth Gloves</span></div><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Bolt of Soulcloth&nbsp;(8), Rune Thread&nbsp;(4)</div></td></tr></table>"
-            }
-          ]
-        },
-        {
           "name": "Prince Malchezaar",
           "items": [
             {
@@ -971,79 +1069,6 @@
               "subclass": "Axe",
               "dropChance": 0.1581,
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Gorehowl</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 125</span><br>Binds when picked up<table width=\"100%\"><tr><td>Two-Hand</td><th><span class=\"q1\">Axe</span></th></tr></table><table width=\"100%\"><tr><td><span>345 - 518 Damage</span></td><th>Speed 3.60</th></tr></table>(119.86 damage per second)<br><span>+49 Strength</span><br><span>+43 Agility</span><br><span>+51 Stamina</span><br>Durability 120 / 120</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q\">&quot;The axe of Grom Hellscream has sown terror across hundreds of battlefields.&quot;</span><br></td></tr></table>"
-            }
-          ]
-        },
-        {
-          "name": "Prince Tenris Mirkblood",
-          "items": [
-            {
-              "itemId": 39769,
-              "name": "Arcanite Ripper",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_axe_09.jpg",
-              "quality": "Epic",
-              "itemLevel": 115,
-              "slot": "Two-Hand",
-              "class": "Weapon",
-              "subclass": "Axe",
-              "dropChance": 0.6667,
-              "tooltip": [
-                {
-                  "label": "Arcanite Ripper"
-                },
-                {
-                  "label": "Phase 1",
-                  "format": "alignRight"
-                },
-                {
-                  "label": "Item Level 115",
-                  "format": "Misc"
-                },
-                {
-                  "label": "Binds when picked up"
-                },
-                {
-                  "label": "Unique"
-                },
-                {
-                  "label": "Two-Hand"
-                },
-                {
-                  "label": "Axe",
-                  "format": "alignRight"
-                },
-                {
-                  "label": "325 - 542 Damage"
-                },
-                {
-                  "label": "Speed 3.80",
-                  "format": "alignRight"
-                },
-                {
-                  "label": "(114.08 damage per second)"
-                },
-                {
-                  "label": "+48 Stamina"
-                },
-                {
-                  "label": "Durability 120 / 120"
-                },
-                {
-                  "label": "Requires Level 70"
-                },
-                {
-                  "label": "Equip: Improves critical strike rating by 24.",
-                  "format": "Uncommon"
-                },
-                {
-                  "label": "Equip: Increases attack power by 112.",
-                  "format": "Uncommon"
-                },
-                {
-                  "label": "Use: Bust out a face melter. (1 Min Cooldown)",
-                  "format": "Uncommon"
-                }
-              ]
             }
           ]
         },
@@ -1734,42 +1759,6 @@
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Spectral Band of Innervation</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Finger</td><th><span class=\"q1\"></span></th></tr></table><span>+22 Stamina</span><br><span>+24 Intellect</span></td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 29.</span><br></td></tr></table>"
             },
             {
-              "itemId": 28505,
-              "name": "Gauntlets of Renewed Hope",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_25.jpg",
-              "quality": "Epic",
-              "itemLevel": 115,
-              "slot": "Hands",
-              "class": "Armor",
-              "subclass": "Plate",
-              "dropChance": null,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Gauntlets of Renewed Hope</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<table width=\"100%\"><tr><td>Hands</td><th><span class=\"q1\">Plate</span></th></tr></table><span>906 Armor</span><br><span>+19 Stamina</span><br><span>+29 Intellect</span><br /><br>Blue Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +3 Intellect</span><br /><br />Durability 55 / 55</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Restores 5 mana per 5 sec.</span><br><span id=\"useText2\" class=\"q2\">Equip: Increases healing done by up to 62 and damage done by up to 21 for all magical spells and effects.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 28506,
-              "name": "Gloves of Dexterous Manipulation",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_28.jpg",
-              "quality": "Epic",
-              "itemLevel": 115,
-              "slot": "Hands",
-              "class": "Armor",
-              "subclass": "Leather",
-              "dropChance": null,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Gloves of Dexterous Manipulation</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<table width=\"100%\"><tr><td>Hands</td><th><span class=\"q1\">Leather</span></th></tr></table><span>228 Armor</span><br><span>+35 Agility</span><br><span>+22 Stamina</span><br /><br>Red Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +3 Critical Strike Rating</span><br /><br />Durability 40 / 40</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 42.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 28508,
-              "name": "Gloves of Saintly Blessings",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_17.jpg",
-              "quality": "Epic",
-              "itemLevel": 115,
-              "slot": "Hands",
-              "class": "Armor",
-              "subclass": "Cloth",
-              "dropChance": null,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Gloves of Saintly Blessings</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<table width=\"100%\"><tr><td>Hands</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>121 Armor</span><br><span>+27 Stamina</span><br><span>+25 Intellect</span><br><span>+25 Spirit</span><br /><br>Red Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +7 Healing +3 Spell Damage</span><br /><br />Durability 35 / 35</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 40 and damage done by up to 14 for all magical spells and effects.</span><br></td></tr></table>"
-            },
-            {
               "itemId": 30668,
               "name": "Grasp of the Dead",
               "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_17.jpg",
@@ -1792,18 +1781,6 @@
               "subclass": "Leather",
               "dropChance": 0.0072,
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Grips of Deftness</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<table width=\"100%\"><tr><td>Hands</td><th><span class=\"q1\">Leather</span></th></tr></table><span>228 Armor</span><br><span>+29 Agility</span><br><span>+34 Stamina</span><br>Durability 40 / 40</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Increases your expertise rating by 15.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 60.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 28507,
-              "name": "Handwraps of Flowing Thought",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_17.jpg",
-              "quality": "Epic",
-              "itemLevel": 115,
-              "slot": "Hands",
-              "class": "Armor",
-              "subclass": "Cloth",
-              "dropChance": null,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Handwraps of Flowing Thought</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<table width=\"100%\"><tr><td>Hands</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>121 Armor</span><br><span>+24 Stamina</span><br><span>+22 Intellect</span><br /><br>Yellow Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +3 Spell Hit Rating</span><br /><br />Durability 35 / 35</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell hit rating by 14.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 35.</span><br></td></tr></table>"
             },
             {
               "itemId": 28593,
@@ -1854,28 +1831,28 @@
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Ritssyn's Lost Pendant</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<table width=\"100%\"><tr><td>Neck</td><th><span class=\"q1\"></span></th></tr></table><span>+24 Stamina</span></td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases damage done by Shadow spells and effects by up to 51.</span><br></td></tr></table>"
             },
             {
-              "itemId": 28509,
-              "name": "Worgen Claw Necklace",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_necklace_22.jpg",
+              "itemId": 21903,
+              "name": "Pattern: Soulcloth Shoulders",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_scroll_04.jpg",
               "quality": "Epic",
-              "itemLevel": 115,
-              "slot": "Neck",
-              "class": "Armor",
-              "subclass": "Miscellaneous",
-              "dropChance": null,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Worgen Claw Necklace</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Neck</td><th><span class=\"q1\"></span></th></tr></table><span>+20 Agility</span><br><span>+21 Stamina</span></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves hit rating by 17.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 42.</span><br></td></tr></table>"
+              "itemLevel": 73,
+              "slot": "Recipe",
+              "class": "Recipe",
+              "subclass": "Tailoring",
+              "dropChance": 0.1,
+              "wowheadTooltip": "<table><tr><td><b class=\"q4\">Pattern: Soulcloth Shoulders</b><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 73</span><br>Binds when picked up</td></tr></table><table><tr><td>Requires Tailoring (365)<br><span class=\"q2\">Use: Teaches you how to sew Soulcloth Shoulders.</span><br><br /><span class=\"q4\">Soulcloth Shoulders</span><span class=\"q\"><br>Item Level 100</span><br>Binds when equipped<table width=\"100%\"><tr><td>Shoulder</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>127 Armor</span><br><span>+30 Stamina</span><br><span>+15 Intellect</span><br><span>+11 Spirit</span><br>+30 Arcane Resistance<br /><br>Yellow Socket<br>Red Socket<br><span class=\"q0\">Socket Bonus: +3 Intellect</span><br /><br />Durability 60 / 60<br>Requires Level 70<br><br /><span class=\"q\">Soulcloth Embrace (0/3)</span><div class=\"q0 indent\"><span>Soulcloth Vest</span><br /><span>Soulcloth Shoulders</span><br /><span>Soulcloth Gloves</span></div><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Bolt of Soulcloth&nbsp;(6), Rune Thread&nbsp;(4)</div></td></tr></table>"
             },
             {
-              "itemId": 28504,
-              "name": "Steelhawk Crossbow",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_weapon_crossbow_18.jpg",
+              "itemId": 21904,
+              "name": "Pattern: Soulcloth Vest",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_scroll_04.jpg",
               "quality": "Epic",
-              "itemLevel": 115,
-              "slot": "Ranged",
-              "class": "Weapon",
-              "subclass": "Crossbow",
-              "dropChance": null,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Steelhawk Crossbow</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<table width=\"100%\"><tr><td>Ranged</td><th><span class=\"q1\">Crossbow</span></th></tr></table><table width=\"100%\"><tr><td><span>155 - 288 Damage</span></td><th>Speed 2.80</th></tr></table>(79.11 damage per second)<br>Durability 90 / 90</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves hit rating by 16.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 30.</span><br></td></tr></table>"
+              "itemLevel": 75,
+              "slot": "Recipe",
+              "class": "Recipe",
+              "subclass": "Tailoring",
+              "dropChance": 0.2221,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Pattern: Soulcloth Vest</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 75</span><br>Binds when picked up</td></tr></table><table><tr><td>Requires Tailoring (375)<br><span class=\"q2\">Use: Teaches you how to sew a Soulcloth Vest.</span><br><br /><span class=\"q4\">Soulcloth Vest</span><span class=\"q\"><br>Item Level 100</span><br>Binds when equipped<table width=\"100%\"><tr><td>Chest</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>170 Armor</span><br><span>+24 Stamina</span><br><span>+20 Intellect</span><br><span>+16 Spirit</span><br>+45 Arcane Resistance<br /><br>Yellow Socket<br>Red Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +4 Intellect</span><br /><br />Durability 100 / 100<br>Requires Level 70<br><br /><span class=\"q\">Soulcloth Embrace (0/3)</span><div class=\"q0 indent\"><span>Soulcloth Vest</span><br /><span>Soulcloth Shoulders</span><br /><span>Soulcloth Gloves</span></div><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Bolt of Soulcloth&nbsp;(8), Rune Thread&nbsp;(4)</div></td></tr></table>"
             },
             {
               "itemId": 28592,
@@ -1936,66 +1913,6 @@
               "subclass": "Cloth",
               "dropChance": 0.0066,
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Inferno Waist Cord</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<table width=\"100%\"><tr><td>Waist</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>109 Armor</span><br><span>+18 Intellect</span><br>Durability 35 / 35</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell critical strike rating by 24.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage done by Fire spells and effects by up to 59.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 28453,
-              "name": "Bracers of the White Stag",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_bracer_02.jpg",
-              "quality": "Epic",
-              "itemLevel": 115,
-              "slot": "Wrist",
-              "class": "Armor",
-              "subclass": "Leather",
-              "dropChance": null,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Bracers of the White Stag</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<table width=\"100%\"><tr><td>Wrist</td><th><span class=\"q1\">Leather</span></th></tr></table><span>159 Armor</span><br><span>+16 Stamina</span><br><span>+18 Intellect</span><br><span>+22 Spirit</span><br>Durability 40 / 40</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 26.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 28477,
-              "name": "Harbinger Bands",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_bracer_13.jpg",
-              "quality": "Epic",
-              "itemLevel": 115,
-              "slot": "Wrist",
-              "class": "Armor",
-              "subclass": "Cloth",
-              "dropChance": null,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Harbinger Bands</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<table width=\"100%\"><tr><td>Wrist</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>85 Armor</span><br><span>+21 Stamina</span><br><span>+21 Intellect</span><br><span>+14 Spirit</span><br>Durability 35 / 35</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 26.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 28454,
-              "name": "Stalker's War Bands",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_bracer_02.jpg",
-              "quality": "Epic",
-              "itemLevel": 115,
-              "slot": "Wrist",
-              "class": "Armor",
-              "subclass": "Mail",
-              "dropChance": null,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Stalker's War Bands</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<table width=\"100%\"><tr><td>Wrist</td><th><span class=\"q1\">Mail</span></th></tr></table><span>355 Armor</span><br><span>+21 Agility</span><br><span>+18 Stamina</span><br><span>+17 Intellect</span><br>Durability 50 / 50</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 44.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 28502,
-              "name": "Vambraces of Courage",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_bracer_19.jpg",
-              "quality": "Epic",
-              "itemLevel": 115,
-              "slot": "Wrist",
-              "class": "Armor",
-              "subclass": "Plate",
-              "dropChance": null,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Vambraces of Courage</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<table width=\"100%\"><tr><td>Wrist</td><th><span class=\"q1\">Plate</span></th></tr></table><span>634 Armor</span><br><span>+33 Stamina</span><br /><br>Yellow Socket<br><span class=\"q0\">Socket Bonus: +2 Dodge Rating</span><br /><br />Durability 55 / 55</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Increases defense rating by 15.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases the block value of your shield by 33.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 28503,
-              "name": "Whirlwind Bracers",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_bracer_02.jpg",
-              "quality": "Epic",
-              "itemLevel": 115,
-              "slot": "Wrist",
-              "class": "Armor",
-              "subclass": "Mail",
-              "dropChance": null,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Whirlwind Bracers</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<table width=\"100%\"><tr><td>Wrist</td><th><span class=\"q1\">Mail</span></th></tr></table><span>355 Armor</span><br><span>+19 Stamina</span><br><span>+20 Intellect</span><br>Durability 50 / 50</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 46 and damage done by up to 16 for all magical spells and effects.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 7 mana per 5 sec.</span><br></td></tr></table>"
             }
           ]
         }
@@ -3683,40 +3600,6 @@
           ]
         },
         {
-          "name": "Cosmic Infuser",
-          "items": [
-            {
-              "itemId": 30317,
-              "name": "Cosmic Infuser",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_mace_48.jpg",
-              "quality": "Legendary",
-              "itemLevel": 175,
-              "slot": "Main Hand",
-              "class": "Weapon",
-              "subclass": "Mace",
-              "dropChance": 0.9772,
-              "wowheadTooltip": "<table><tr><td><b class=\"q5\">Cosmic Infuser</b><span class=\"q\"><br>Item Level 175</span><br />Tempest Keep<br>Unique<br>Duration: 15 min (real time)<table width=\"100%\"><tr><td>Main Hand</td><th><span class=\"q1\">Mace</span></th></tr></table><table width=\"100%\"><tr><td><span>14 - 220 Damage</span></td><th>Speed 2.80</th></tr></table>(41.79 damage per second)<br><span>+40 Stamina</span><br><span>+40 Intellect</span><br><span>+40 Spirit</span><br>Durability 125 / 125</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Restores 30 mana per 5 sec.</span><br><span id=\"useText2\" class=\"q2\">Equip: Increases healing done by up to 600 and damage done by up to 200 for all magical spells and effects.</span><br><span id=\"useText3\" class=\"q2\">Equip: Friendly targets of the caster's heals gain an effect that reduces the damage taken by Fire and Shadow spells by 50% for 30 sec.</span><br></td></tr></table>"
-            }
-          ]
-        },
-        {
-          "name": "Devastation",
-          "items": [
-            {
-              "itemId": 30316,
-              "name": "Devastation",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_axe_68.jpg",
-              "quality": "Legendary",
-              "itemLevel": 175,
-              "slot": "Two-Hand",
-              "class": "Weapon",
-              "subclass": "Axe",
-              "dropChance": 0.9663,
-              "wowheadTooltip": "<table><tr><td><b class=\"q5\">Devastation</b><span class=\"q\"><br>Item Level 175</span><br />Tempest Keep<br>Unique<br>Duration: 15 min (real time)<table width=\"100%\"><tr><td>Two-Hand</td><th><span class=\"q1\">Axe</span></th></tr></table><table width=\"100%\"><tr><td><span>496 - 744 Damage</span></td><th>Speed 3.90</th></tr></table>(158.97 damage per second)<br><span>+75 Stamina</span><br>Durability 145 / 145</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves critical strike rating by 50.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 150.</span><br><span id=\"useText2\" class=\"q2\">Chance on hit: Increases your movement speed by 50%, and your melee attack speed by 20% for 30 sec.</span><br></td></tr></table>"
-            }
-          ]
-        },
-        {
           "name": "High Astromancer Solarian",
           "items": [
             {
@@ -3878,42 +3761,140 @@
           ]
         },
         {
-          "name": "Infinity Blades",
+          "name": "Kael'thas Sunstrider",
           "items": [
             {
-              "itemId": 30312,
-              "name": "Infinity Blade",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_weapon_shortblade_47.jpg",
-              "quality": "Legendary",
-              "itemLevel": 175,
-              "slot": "One-Hand",
-              "class": "Weapon",
-              "subclass": "Dagger",
-              "dropChance": 0.9734,
-              "wowheadTooltip": "<table><tr><td><b class=\"q5\">Infinity Blade</b><span class=\"q\"><br>Item Level 175</span><br />Tempest Keep<br>Unique<br>Duration: 15 min (real time)<table width=\"100%\"><tr><td>One-Hand</td><th><span class=\"q1\">Dagger</span></th></tr></table><table width=\"100%\"><tr><td><span>171 - 318 Damage</span></td><th>Speed 2.00</th></tr></table>(122.25 damage per second)<br><span>+35 Stamina</span><br>Durability 95 / 95</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves critical strike rating by 25.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 70.</span><br><span id=\"useText2\" class=\"q2\">Chance on hit: Increases magical damage taken by the target by 5%, and dispels Prince Kael'thas' Mind Control when a melee ability lands. Can be applied up to 5 times. Lasts 30 sec.</span><br></td></tr></table>"
-            }
-          ]
-        },
-        {
-          "name": "Netherstrand Longbow",
-          "items": [
+              "itemId": 29992,
+              "name": "Royal Cloak of the Sunstriders",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_cape_10.jpg",
+              "quality": "Epic",
+              "itemLevel": 138,
+              "slot": "Back",
+              "class": "Armor",
+              "subclass": "Cloth",
+              "dropChance": 0.1867,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Royal Cloak of the Sunstriders</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q\"><br>Item Level 138</span><br>Binds when picked up<table width=\"100%\"><tr><td>Back</td></tr></table><span>116 Armor</span><br><span>+27 Stamina</span><br><span>+22 Intellect</span></td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 44.</span><br></td></tr></table>"
+            },
             {
-              "itemId": 30318,
-              "name": "Netherstrand Longbow",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_weapon_bow_19.jpg",
+              "itemId": 29989,
+              "name": "Sunshower Light Cloak",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_cape_06.jpg",
+              "quality": "Epic",
+              "itemLevel": 138,
+              "slot": "Back",
+              "class": "Armor",
+              "subclass": "Cloth",
+              "dropChance": 0.1841,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Sunshower Light Cloak</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q\"><br>Item Level 138</span><br>Binds when picked up<table width=\"100%\"><tr><td>Back</td></tr></table><span>116 Armor</span><br><span>+18 Stamina</span><br><span>+24 Intellect</span><br><span>+20 Spirit</span></td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 77 and damage done by up to 26 for all magical spells and effects.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 29994,
+              "name": "Thalassian Wildercloak",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_cape_15.jpg",
+              "quality": "Epic",
+              "itemLevel": 138,
+              "slot": "Back",
+              "class": "Armor",
+              "subclass": "Cloth",
+              "dropChance": 0.2015,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Thalassian Wildercloak</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q\"><br>Item Level 138</span><br>Binds when picked up<table width=\"100%\"><tr><td>Back</td></tr></table><span>116 Armor</span><br><span>+28 Agility</span><br><span>+28 Stamina</span></td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 68.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 29997,
+              "name": "Band of the Ranger-General",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_ring_55.jpg",
+              "quality": "Epic",
+              "itemLevel": 138,
+              "slot": "Finger",
+              "class": "Armor",
+              "subclass": "Miscellaneous",
+              "dropChance": 0.1983,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Band of the Ranger-General</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q\"><br>Item Level 138</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Finger</td><th><span class=\"q1\"></span></th></tr></table><span>+27 Stamina</span></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves hit rating by 18.</span><br><span class=\"q2\">Equip: Improves critical strike rating by 28.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 56.</span><br><span class=\"q\">&quot;This ring was formerly held by Sylvanas Windrunner....&quot;</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 29987,
+              "name": "Gauntlets of the Sun King",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_17.jpg",
+              "quality": "Epic",
+              "itemLevel": 138,
+              "slot": "Hands",
+              "class": "Armor",
+              "subclass": "Cloth",
+              "dropChance": 0.2171,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Gauntlets of the Sun King</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q\"><br>Item Level 138</span><br>Binds when picked up<table width=\"100%\"><tr><td>Hands</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>145 Armor</span><br><span>+28 Stamina</span><br><span>+29 Intellect</span><br><span>+20 Spirit</span><br>Durability 35 / 35</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell critical strike rating by 28.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 42.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 29998,
+              "name": "Royal Gauntlets of Silvermoon",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_29.jpg",
+              "quality": "Epic",
+              "itemLevel": 138,
+              "slot": "Hands",
+              "class": "Armor",
+              "subclass": "Plate",
+              "dropChance": 0.1867,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Royal Gauntlets of Silvermoon</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q\"><br>Item Level 138</span><br>Binds when picked up<table width=\"100%\"><tr><td>Hands</td><th><span class=\"q1\">Plate</span></th></tr></table><span>1080 Armor</span><br><span>+57 Stamina</span><br /><br>Yellow Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +3 Dodge Rating</span><br /><br />Durability 55 / 55</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Increases defense rating by 24.</span><br><span class=\"q2\">Equip: Increases your dodge rating by 32.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 29990,
+              "name": "Crown of the Sun",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_helmet_32.jpg",
+              "quality": "Epic",
+              "itemLevel": 138,
+              "slot": "Head",
+              "class": "Armor",
+              "subclass": "Cloth",
+              "dropChance": 0.1982,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Crown of the Sun</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q\"><br>Item Level 138</span><br>Binds when picked up<table width=\"100%\"><tr><td>Head</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>188 Armor</span><br><span>+39 Stamina</span><br><span>+38 Intellect</span><br><span>+49 Spirit</span><br>Durability 60 / 60</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 108 and damage done by up to 36 for all magical spells and effects.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 29995,
+              "name": "Leggings of Murderous Intent",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_pants_leather_03.jpg",
+              "quality": "Epic",
+              "itemLevel": 138,
+              "slot": "Legs",
+              "class": "Armor",
+              "subclass": "Leather",
+              "dropChance": 0.1808,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Leggings of Murderous Intent</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q\"><br>Item Level 138</span><br>Binds when picked up<table width=\"100%\"><tr><td>Legs</td><th><span class=\"q1\">Leather</span></th></tr></table><span>380 Armor</span><br><span>+45 Agility</span><br><span>+31 Stamina</span><br>Durability 90 / 90</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves critical strike rating by 37.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 92.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 29991,
+              "name": "Sunhawk Leggings",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_pants_plate_07.jpg",
+              "quality": "Epic",
+              "itemLevel": 138,
+              "slot": "Legs",
+              "class": "Armor",
+              "subclass": "Mail",
+              "dropChance": 0.1743,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Sunhawk Leggings</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q\"><br>Item Level 138</span><br>Binds when picked up<table width=\"100%\"><tr><td>Legs</td><th><span class=\"q1\">Mail</span></th></tr></table><span>847 Armor</span><br><span>+39 Stamina</span><br><span>+31 Intellect</span><br /><br>Blue Socket<br>Blue Socket<br>Yellow Socket<br><span class=\"q0\">Socket Bonus: +9 Healing and +3 Spell Damage</span><br /><br />Durability 105 / 105</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 108 and damage done by up to 36 for all magical spells and effects.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 13 mana per 5 sec.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 30317,
+              "name": "Cosmic Infuser",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_mace_48.jpg",
               "quality": "Legendary",
               "itemLevel": 175,
-              "slot": "Ranged",
+              "slot": "Main Hand",
               "class": "Weapon",
-              "subclass": "Bow",
-              "dropChance": 0.984,
-              "wowheadTooltip": "<table><tr><td><b class=\"q5\">Netherstrand Longbow</b><span class=\"q\"><br>Item Level 175</span><br />Tempest Keep<br>Unique<br>Duration: 15 min (real time)<table width=\"100%\"><tr><td>Ranged</td><th><span class=\"q1\">Bow</span></th></tr></table><table width=\"100%\"><tr><td><span>256 - 385 Damage</span></td><th>Speed 2.90</th></tr></table>(110.52 damage per second)<br><span>+20 Stamina</span><br>Durability 110 / 110<div class=\"wowhead-tooltip-item-classes\">Classes: Hunter</div></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves ranged critical strike rating by 50.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases ranged attack power by 70.</span><br><span id=\"useText2\" class=\"q2\">Equip: Increases your ranged weapon critical strike damage bonus by 50%.</span><br><span id=\"useText3\" class=\"q2\">Use: Summons a bundle of Nether Spikes for use as ammo.</span><br><span id=\"useText4\" class=\"q2\">Chance on hit: Increases Physical damage taken by the target by 5%. Can be applied up to 5 times. Lasts 30 sec.</span><br></td></tr></table>"
-            }
-          ]
-        },
-        {
-          "name": "Phaseshift Bulwark",
-          "items": [
+              "subclass": "Mace",
+              "dropChance": 0.9772,
+              "wowheadTooltip": "<table><tr><td><b class=\"q5\">Cosmic Infuser</b><span class=\"q\"><br>Item Level 175</span><br />Tempest Keep<br>Unique<br>Duration: 15 min (real time)<table width=\"100%\"><tr><td>Main Hand</td><th><span class=\"q1\">Mace</span></th></tr></table><table width=\"100%\"><tr><td><span>14 - 220 Damage</span></td><th>Speed 2.80</th></tr></table>(41.79 damage per second)<br><span>+40 Stamina</span><br><span>+40 Intellect</span><br><span>+40 Spirit</span><br>Durability 125 / 125</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Restores 30 mana per 5 sec.</span><br><span id=\"useText2\" class=\"q2\">Equip: Increases healing done by up to 600 and damage done by up to 200 for all magical spells and effects.</span><br><span id=\"useText3\" class=\"q2\">Equip: Friendly targets of the caster's heals gain an effect that reduces the damage taken by Fire and Shadow spells by 50% for 30 sec.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32458,
+              "name": "Ashes of Al'ar",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_summerfest_brazierorange.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Non-equippable",
+              "class": "Miscellaneous",
+              "subclass": "Mount",
+              "dropChance": 0.0239,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Ashes of Al'ar</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 70</span><br>Binds when picked up<br>Unique<br />Mount</td></tr></table><table><tr><td>Requires Level 70<br>Requires Riding (300)<br><span id=\"useText1\" class=\"q2\">Use: Summons and dismisses a rideable phoenix. This is a very fast mount. This mount can only be summoned in Outland. (3 Sec Cooldown)</span><br><span class=\"q\">&quot;And from the ashes it was reborn...&quot;</span><br></td></tr></table>"
+            },
             {
               "itemId": 30314,
               "name": "Phaseshift Bulwark",
@@ -3925,12 +3906,67 @@
               "subclass": "Shield",
               "dropChance": 0.9764,
               "wowheadTooltip": "<table><tr><td><b class=\"q5\">Phaseshift Bulwark</b><span class=\"q\"><br>Item Level 175</span><br />Tempest Keep<br>Unique<br>Duration: 15 min (real time)<table width=\"100%\"><tr><td>Off Hand</td><th><span class=\"q1\">Shield</span></th></tr></table><span>7313 Armor</span><br>208 Block<br><span>+40 Stamina</span><br>Durability 145 / 145</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Increases defense rating by 40.</span><br><span id=\"useText1\" class=\"q2\">Use: Shields the caster, absorbing 100000 damage and making the caster immune to Fear and Snare effects for 4 sec. (30 Sec Cooldown)</span><br></td></tr></table>"
-            }
-          ]
-        },
-        {
-          "name": "Staff of Disintegration",
-          "items": [
+            },
+            {
+              "itemId": 30312,
+              "name": "Infinity Blade",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_weapon_shortblade_47.jpg",
+              "quality": "Legendary",
+              "itemLevel": 175,
+              "slot": "One-Hand",
+              "class": "Weapon",
+              "subclass": "Dagger",
+              "dropChance": 0.9734,
+              "wowheadTooltip": "<table><tr><td><b class=\"q5\">Infinity Blade</b><span class=\"q\"><br>Item Level 175</span><br />Tempest Keep<br>Unique<br>Duration: 15 min (real time)<table width=\"100%\"><tr><td>One-Hand</td><th><span class=\"q1\">Dagger</span></th></tr></table><table width=\"100%\"><tr><td><span>171 - 318 Damage</span></td><th>Speed 2.00</th></tr></table>(122.25 damage per second)<br><span>+35 Stamina</span><br>Durability 95 / 95</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves critical strike rating by 25.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 70.</span><br><span id=\"useText2\" class=\"q2\">Chance on hit: Increases magical damage taken by the target by 5%, and dispels Prince Kael'thas' Mind Control when a melee ability lands. Can be applied up to 5 times. Lasts 30 sec.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 29996,
+              "name": "Rod of the Sun King",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_mace_48.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "One-Hand",
+              "class": "Weapon",
+              "subclass": "Mace",
+              "dropChance": 0.1908,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Rod of the Sun King</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>One-Hand</td><th><span class=\"q1\">Mace</span></th></tr></table><table width=\"100%\"><tr><td><span>189 - 352 Damage</span></td><th>Speed 2.70</th></tr></table>(100.19 damage per second)<br>Durability 105 / 105</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Chance on hit: Chance on melee attack to gain 10 Energy or 5 Rage.</span><br><span id=\"useText2\" class=\"q2\">Equip: Increases attack power by 52.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 30311,
+              "name": "Warp Slicer",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_sword_69.jpg",
+              "quality": "Legendary",
+              "itemLevel": 175,
+              "slot": "One-Hand",
+              "class": "Weapon",
+              "subclass": "Sword",
+              "dropChance": 0.9648,
+              "wowheadTooltip": "<table><tr><td><b class=\"q5\">Warp Slicer</b><span class=\"q\"><br>Item Level 175</span><br />Tempest Keep<br>Unique<br>Duration: 15 min (real time)<table width=\"100%\"><tr><td>One-Hand</td><th><span class=\"q1\">Sword</span></th></tr></table><table width=\"100%\"><tr><td><span>248 - 461 Damage</span></td><th>Speed 2.90</th></tr></table>(122.24 damage per second)<br><span>+35 Stamina</span><br>Durability 125 / 125</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves critical strike rating by 25.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 70.</span><br><span id=\"useText2\" class=\"q2\">Chance on hit: Increases your movement speed by 50%, and your melee attack speed by 20% for 30 sec.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 30318,
+              "name": "Netherstrand Longbow",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_weapon_bow_19.jpg",
+              "quality": "Legendary",
+              "itemLevel": 175,
+              "slot": "Ranged",
+              "class": "Weapon",
+              "subclass": "Bow",
+              "dropChance": 0.984,
+              "wowheadTooltip": "<table><tr><td><b class=\"q5\">Netherstrand Longbow</b><span class=\"q\"><br>Item Level 175</span><br />Tempest Keep<br>Unique<br>Duration: 15 min (real time)<table width=\"100%\"><tr><td>Ranged</td><th><span class=\"q1\">Bow</span></th></tr></table><table width=\"100%\"><tr><td><span>256 - 385 Damage</span></td><th>Speed 2.90</th></tr></table>(110.52 damage per second)<br><span>+20 Stamina</span><br>Durability 110 / 110<div class=\"wowhead-tooltip-item-classes\">Classes: Hunter</div></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves ranged critical strike rating by 50.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases ranged attack power by 70.</span><br><span id=\"useText2\" class=\"q2\">Equip: Increases your ranged weapon critical strike damage bonus by 50%.</span><br><span id=\"useText3\" class=\"q2\">Use: Summons a bundle of Nether Spikes for use as ammo.</span><br><span id=\"useText4\" class=\"q2\">Chance on hit: Increases Physical damage taken by the target by 5%. Can be applied up to 5 times. Lasts 30 sec.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 30316,
+              "name": "Devastation",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_axe_68.jpg",
+              "quality": "Legendary",
+              "itemLevel": 175,
+              "slot": "Two-Hand",
+              "class": "Weapon",
+              "subclass": "Axe",
+              "dropChance": 0.9663,
+              "wowheadTooltip": "<table><tr><td><b class=\"q5\">Devastation</b><span class=\"q\"><br>Item Level 175</span><br />Tempest Keep<br>Unique<br>Duration: 15 min (real time)<table width=\"100%\"><tr><td>Two-Hand</td><th><span class=\"q1\">Axe</span></th></tr></table><table width=\"100%\"><tr><td><span>496 - 744 Damage</span></td><th>Speed 3.90</th></tr></table>(158.97 damage per second)<br><span>+75 Stamina</span><br>Durability 145 / 145</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves critical strike rating by 50.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 150.</span><br><span id=\"useText2\" class=\"q2\">Chance on hit: Increases your movement speed by 50%, and your melee attack speed by 20% for 30 sec.</span><br></td></tr></table>"
+            },
             {
               "itemId": 30313,
               "name": "Staff of Disintegration",
@@ -3942,6 +3978,30 @@
               "subclass": "Staff",
               "dropChance": 0.9828,
               "wowheadTooltip": "<table><tr><td><b class=\"q5\">Staff of Disintegration</b><span class=\"q\"><br>Item Level 175</span><br />Tempest Keep<br>Unique<br>Duration: 15 min (real time)<table width=\"100%\"><tr><td>Two-Hand</td><th><span class=\"q1\">Staff</span></th></tr></table><table width=\"100%\"><tr><td><span>131 - 309 Damage</span></td><th>Speed 2.80</th></tr></table>(78.57 damage per second)<br><span>+75 Stamina</span><br><span>+50 Intellect</span><br>Durability 145 / 145</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell critical strike rating by 75.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 325.</span><br><span id=\"useText2\" class=\"q2\">Equip: Increases attack power by 1459 in Cat, Bear, Dire Bear, and Moonkin forms only.</span><br><span id=\"useText3\" class=\"q2\">Use: Places a mental protection field on friendly targets within 30 yards, granting immunity to Stun, Silence, and Disorient effects.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 29988,
+              "name": "The Nexus Key",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_staff_43.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Two-Hand",
+              "class": "Weapon",
+              "subclass": "Staff",
+              "dropChance": 0.1884,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">The Nexus Key</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Two-Hand</td><th><span class=\"q1\">Staff</span></th></tr></table><table width=\"100%\"><tr><td><span>145 - 312 Damage</span></td><th>Speed 3.20</th></tr></table>(71.41 damage per second)<br><span>+76 Stamina</span><br><span>+52 Intellect</span><br>Durability 120 / 120</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell critical strike rating by 51.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 236.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 29993,
+              "name": "Twinblade of the Phoenix",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_sword_2h_blood_c_01.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Two-Hand",
+              "class": "Weapon",
+              "subclass": "Sword",
+              "dropChance": 0.1909,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Twinblade of the Phoenix</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Two-Hand</td><th><span class=\"q1\">Sword</span></th></tr></table><table width=\"100%\"><tr><td><span>375 - 564 Damage</span></td><th>Speed 3.60</th></tr></table>(130.42 damage per second)<br><span>+53 Stamina</span><br /><br>Red Socket<br>Yellow Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +8 Attack Power</span><br /><br />Durability 120 / 120</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves critical strike rating by 37.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 110.</span><br></td></tr></table>"
             }
           ]
         },
@@ -4144,23 +4204,6 @@
               "subclass": "Plate",
               "dropChance": 0.1446,
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Wristguards of Determination</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q\"><br>Item Level 128</span><br>Binds when picked up<table width=\"100%\"><tr><td>Wrist</td><th><span class=\"q1\">Plate</span></th></tr></table><span>703 Armor</span><br><span>+37 Stamina</span><br>Durability 55 / 55</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Increases defense rating by 24.</span><br><span class=\"q2\">Equip: Increases your dodge rating by 19.</span><br><span class=\"q2\">Equip: Increases your shield block rating by 13.</span><br></td></tr></table>"
-            }
-          ]
-        },
-        {
-          "name": "Warp Slicer",
-          "items": [
-            {
-              "itemId": 30311,
-              "name": "Warp Slicer",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_sword_69.jpg",
-              "quality": "Legendary",
-              "itemLevel": 175,
-              "slot": "One-Hand",
-              "class": "Weapon",
-              "subclass": "Sword",
-              "dropChance": 0.9648,
-              "wowheadTooltip": "<table><tr><td><b class=\"q5\">Warp Slicer</b><span class=\"q\"><br>Item Level 175</span><br />Tempest Keep<br>Unique<br>Duration: 15 min (real time)<table width=\"100%\"><tr><td>One-Hand</td><th><span class=\"q1\">Sword</span></th></tr></table><table width=\"100%\"><tr><td><span>248 - 461 Damage</span></td><th>Speed 2.90</th></tr></table>(122.24 damage per second)<br><span>+35 Stamina</span><br>Durability 125 / 125</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves critical strike rating by 25.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 70.</span><br><span id=\"useText2\" class=\"q2\">Chance on hit: Increases your movement speed by 50%, and your melee attack speed by 20% for 30 sec.</span><br></td></tr></table>"
             }
           ]
         }
@@ -5027,196 +5070,6 @@
       "size": 25,
       "bosses": [
         {
-          "name": "Ashtongue Channeler",
-          "items": [
-            {
-              "itemId": 32609,
-              "name": "Boots of the Divine Light",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_boots_cloth_08.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Feet",
-              "class": "Armor",
-              "subclass": "Cloth",
-              "dropChance": 0.01,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Boots of the Divine Light</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Feet</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>162 Armor</span><br><span>+47 Stamina</span><br><span>+24 Intellect</span><br><span>+24 Spirit</span><br /><br>Yellow Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +7 Healing +3 Spell Damage</span><br /><br />Durability 50 / 50</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 73 and damage done by up to 25 for all magical spells and effects.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 32591,
-              "name": "Choker of Serrated Blades",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_necklace_34.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Neck",
-              "class": "Armor",
-              "subclass": "Miscellaneous",
-              "dropChance": 0.01,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Choker of Serrated Blades</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Neck</td><th><span class=\"q1\"></span></th></tr></table><span>+37 Stamina</span></td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 70.</span><br><span id=\"useText2\" class=\"q2\">Equip: Your attacks ignore 175 of your opponent's armor.</span><br></td></tr></table>"
-            }
-          ]
-        },
-        {
-          "name": "Essence of Anger",
-          "items": [
-            {
-              "itemId": 32345,
-              "name": "Dreadboots of the Legion",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_boots_plate_02.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Feet",
-              "class": "Armor",
-              "subclass": "Plate",
-              "dropChance": 0.1595,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Dreadboots of the Legion</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Feet</td><th><span class=\"q1\">Plate</span></th></tr></table><span>1213 Armor</span><br><span>+38 Strength</span><br><span>+40 Stamina</span><br /><br>Yellow Socket<br>Yellow Socket<br><span class=\"q0\">Socket Bonus: +3 Strength</span><br /><br />Durability 75 / 75</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves hit rating by 18.</span><br><span class=\"q2\">Equip: Improves critical strike rating by 30.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 32352,
-              "name": "Naturewarden's Treads",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_boots_08.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Feet",
-              "class": "Armor",
-              "subclass": "Leather",
-              "dropChance": 0.0795,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Naturewarden's Treads</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Feet</td><th><span class=\"q1\">Leather</span></th></tr></table><span>305 Armor</span><br><span>+39 Stamina</span><br><span>+18 Intellect</span><br /><br>Yellow Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +4 Spell Damage and Healing</span><br /><br />Durability 60 / 60</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell critical strike rating by 26.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 44.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 7 mana per 5 sec.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 32353,
-              "name": "Gloves of Unfailing Faith",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_63.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Hands",
-              "class": "Armor",
-              "subclass": "Cloth",
-              "dropChance": 0.1622,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Gloves of Unfailing Faith</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Hands</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>148 Armor</span><br><span>+25 Stamina</span><br><span>+33 Intellect</span><br /><br>Red Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: 1 Mana per 5 sec.</span><br /><br />Durability 35 / 35</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 75 and damage done by up to 25 for all magical spells and effects.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 11 mana per 5 sec.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 32347,
-              "name": "Grips of Damnation",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_65.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Hands",
-              "class": "Armor",
-              "subclass": "Leather",
-              "dropChance": 0.1698,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Grips of Damnation</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Hands</td><th><span class=\"q1\">Leather</span></th></tr></table><span>277 Armor</span><br><span>+27 Agility</span><br><span>+38 Stamina</span><br>Durability 40 / 40</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves haste rating by 37.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 76.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 32354,
-              "name": "Crown of Empowered Fate",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_helmet_96.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Head",
-              "class": "Armor",
-              "subclass": "Plate",
-              "dropChance": 0.1613,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Crown of Empowered Fate</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Head</td><th><span class=\"q1\">Plate</span></th></tr></table><span>1434 Armor</span><br><span>+39 Stamina</span><br><span>+27 Intellect</span><br /><br>Meta Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +4 Spell Critical Strike Rating</span><br /><br />Durability 100 / 100</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell critical strike rating by 42.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 118 and damage done by up to 37 for all magical spells and effects.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 32350,
-              "name": "Touch of Inspiration",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_gem_ebondraenite_02.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Held In Off-hand",
-              "class": "Armor",
-              "subclass": "Miscellaneous",
-              "dropChance": 0.1667,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Touch of Inspiration</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Held In Off-hand</td><th><span class=\"q1\"></span></th></tr></table><span>+24 Stamina</span><br><span>+21 Intellect</span></td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 64 and damage done by up to 22 for all magical spells and effects.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 12 mana per 5 sec.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 32362,
-              "name": "Pendant of Titans",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_amulet_03.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Neck",
-              "class": "Armor",
-              "subclass": "Miscellaneous",
-              "dropChance": 0.1608,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Pendant of Titans</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Neck</td><th><span class=\"q1\"></span></th></tr></table><span>+43 Stamina</span></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Increases defense rating by 21.</span><br><span class=\"q2\">Equip: Increases your dodge rating by 25.</span><br><span class=\"q2\">Equip: Improves hit rating by 20.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 32349,
-              "name": "Translucent Spellthread Necklace",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_necklace_30.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Neck",
-              "class": "Armor",
-              "subclass": "Miscellaneous",
-              "dropChance": 0.1833,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Translucent Spellthread Necklace</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Neck</td><th><span class=\"q1\"></span></th></tr></table></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell hit rating by 15.</span><br><span class=\"q2\">Equip: Improves spell critical strike rating by 24.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 46.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 32363,
-              "name": "Naaru-Blessed Life Rod",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_wand_15.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Ranged",
-              "class": "Weapon",
-              "subclass": "Wand",
-              "dropChance": 0.1658,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Naaru-Blessed Life Rod</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Ranged</td><th><span class=\"q1\">Wand</span></th></tr></table><table width=\"100%\"><tr><td><span>193 - 360 Shadow Damage</span></td><th>Speed 1.50</th></tr></table>(184.33 damage per second)<br><span>+12 Stamina</span><br><span>+12 Intellect</span><br><span>+16 Spirit</span><br>Durability 75 / 75</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 37 and damage done by up to 13 for all magical spells and effects.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 32517,
-              "name": "The Wavemender's Mantle",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_shoulder_61.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Shoulder",
-              "class": "Armor",
-              "subclass": "Mail",
-              "dropChance": 0.159,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">The Wavemender's Mantle</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Shoulder</td><th><span class=\"q1\">Mail</span></th></tr></table><span>741 Armor</span><br><span>+37 Stamina</span><br><span>+26 Intellect</span><br>Durability 85 / 85</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 84 and damage done by up to 28 for all magical spells and effects.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 15 mana per 5 sec.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 32332,
-              "name": "Torch of the Damned",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_mace_49.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Two-Hand",
-              "class": "Weapon",
-              "subclass": "Mace",
-              "dropChance": 0.1545,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Torch of the Damned</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Two-Hand</td><th><span class=\"q1\">Mace</span></th></tr></table><table width=\"100%\"><tr><td><span>396 - 595 Damage</span></td><th>Speed 3.80</th></tr></table>(130.39 damage per second)<br><span>+51 Strength</span><br><span>+45 Stamina</span><br>Durability 120 / 120</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves critical strike rating by 38.</span><br><span class=\"q2\">Equip: Improves haste rating by 50.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 32346,
-              "name": "Boneweave Girdle",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_belt_14.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Waist",
-              "class": "Armor",
-              "subclass": "Mail",
-              "dropChance": 0.1402,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Boneweave Girdle</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Waist</td><th><span class=\"q1\">Mail</span></th></tr></table><span>556 Armor</span><br><span>+38 Agility</span><br><span>+26 Intellect</span><br>Durability 50 / 50</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves hit rating by 17.</span><br><span class=\"q2\">Equip: Improves critical strike rating by 24.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 76.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 32351,
-              "name": "Elunite Empowered Bracers",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_bracer_09.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Wrist",
-              "class": "Armor",
-              "subclass": "Leather",
-              "dropChance": 0.0813,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Elunite Empowered Bracers</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Wrist</td><th><span class=\"q1\">Leather</span></th></tr></table><span>194 Armor</span><br><span>+27 Stamina</span><br><span>+22 Intellect</span><br>Durability 40 / 40</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell hit rating by 19.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 34.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 6 mana per 5 sec.</span><br></td></tr></table>"
-            }
-          ]
-        },
-        {
           "name": "Gurtogg Bloodboil",
           "items": [
             {
@@ -5316,18 +5169,6 @@
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Blood-cursed Shoulderpads</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Shoulder</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>177 Armor</span><br><span>+25 Stamina</span><br><span>+19 Intellect</span><br>Durability 60 / 60</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell hit rating by 18.</span><br><span class=\"q2\">Equip: Improves spell critical strike rating by 25.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 55.</span><br></td></tr></table>"
             },
             {
-              "itemId": 32501,
-              "name": "Shadowmoon Insignia",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelcrafting_shadowsongamethyst_01.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Trinket",
-              "class": "Armor",
-              "subclass": "Miscellaneous",
-              "dropChance": 0.1556,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Shadowmoon Insignia</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Trinket</td><th><span class=\"q1\"></span></th></tr></table></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Increases defense rating by 36.</span><br><span class=\"q2\">Equip: Increases your dodge rating by 32.</span><br><span id=\"useText2\" class=\"q2\">Use: Increases your maximum health by 1750 for 20 sec. (3 Min Cooldown)</span><br></td></tr></table>"
-            },
-            {
               "itemId": 32344,
               "name": "Staff of Immaculate Recovery",
               "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_staff_61.jpg",
@@ -5374,83 +5215,6 @@
               "subclass": "Plate",
               "dropChance": 0.1386,
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Girdle of Stability</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Waist</td><th><span class=\"q1\">Plate</span></th></tr></table><span>993 Armor</span><br><span>+56 Stamina</span><br /><br>Red Socket<br>Yellow Socket<br><span class=\"q0\">Socket Bonus: +4 Stamina</span><br /><br />Durability 55 / 55</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Increases defense rating by 19.</span><br><span class=\"q2\">Equip: Increases your dodge rating by 18.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases the block value of your shield by 56.</span><br></td></tr></table>"
-            }
-          ]
-        },
-        {
-          "name": "High Nethermancer Zerevor",
-          "items": [
-            {
-              "itemId": 32331,
-              "name": "Cloak of the Illidari Council",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_cape_20.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Back",
-              "class": "Armor",
-              "subclass": "Cloth",
-              "dropChance": 0.1689,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Cloak of the Illidari Council</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Back</td></tr></table><span>118 Armor</span><br><span>+24 Stamina</span><br><span>+16 Intellect</span></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell critical strike rating by 25.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 42.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 32376,
-              "name": "Forest Prowler's Helm",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_helmet_95.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Head",
-              "class": "Armor",
-              "subclass": "Mail",
-              "dropChance": 0.1668,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Forest Prowler's Helm</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Head</td><th><span class=\"q1\">Mail</span></th></tr></table><span>803 Armor</span><br><span>+42 Agility</span><br><span>+29 Stamina</span><br><span>+28 Intellect</span><br /><br>Red Socket<br>Meta Socket<br><span class=\"q0\">Socket Bonus: 2 mana per 5 sec.</span><br /><br />Durability 85 / 85</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves critical strike rating by 20.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 100.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 32373,
-              "name": "Helm of the Illidari Shatterer",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_helmet_98.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Head",
-              "class": "Armor",
-              "subclass": "Plate",
-              "dropChance": 0.1689,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Helm of the Illidari Shatterer</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Head</td><th><span class=\"q1\">Plate</span></th></tr></table><span>1434 Armor</span><br><span>+51 Strength</span><br><span>+29 Stamina</span><br /><br>Meta Socket<br>Yellow Socket<br><span class=\"q0\">Socket Bonus: +6 Stamina</span><br /><br />Durability 100 / 100</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves hit rating by 34.</span><br><span class=\"q2\">Equip: Improves critical strike rating by 42.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 32518,
-              "name": "Veil of Turning Leaves",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_shoulder_58.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Shoulder",
-              "class": "Armor",
-              "subclass": "Leather",
-              "dropChance": 0.1347,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Veil of Turning Leaves</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Shoulder</td><th><span class=\"q1\">Leather</span></th></tr></table><span>333 Armor</span><br><span>+29 Stamina</span><br><span>+29 Intellect</span><br><span>+38 Spirit</span><br>Durability 70 / 70</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 84 and damage done by up to 28 for all magical spells and effects.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 32505,
-              "name": "Madness of the Betrayer",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/spell_shadow_charm.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Trinket",
-              "class": "Armor",
-              "subclass": "Miscellaneous",
-              "dropChance": 0.1718,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Madness of the Betrayer</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Trinket</td><th><span class=\"q1\"></span></th></tr></table></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves hit rating by 20.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 84.</span><br><span id=\"useText2\" class=\"q2\">Equip: Your melee and ranged attacks have a chance allow you to ignore 300 of your enemies' armor for 10 secs.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 32519,
-              "name": "Belt of Divine Guidance",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_belt_07.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Waist",
-              "class": "Armor",
-              "subclass": "Cloth",
-              "dropChance": 0.1803,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Belt of Divine Guidance</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Waist</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>133 Armor</span><br><span>+35 Stamina</span><br><span>+24 Intellect</span><br><span>+32 Spirit</span><br /><br>Yellow Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +7 Healing +3 Spell Damage</span><br /><br />Durability 35 / 35</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 73 and damage done by up to 25 for all magical spells and effects.</span><br></td></tr></table>"
             }
           ]
         },
@@ -5950,8 +5714,181 @@
           ]
         },
         {
+          "name": "Reliquary of Souls",
+          "items": [
+            {
+              "itemId": 32345,
+              "name": "Dreadboots of the Legion",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_boots_plate_02.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Feet",
+              "class": "Armor",
+              "subclass": "Plate",
+              "dropChance": 0.1595,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Dreadboots of the Legion</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Feet</td><th><span class=\"q1\">Plate</span></th></tr></table><span>1213 Armor</span><br><span>+38 Strength</span><br><span>+40 Stamina</span><br /><br>Yellow Socket<br>Yellow Socket<br><span class=\"q0\">Socket Bonus: +3 Strength</span><br /><br />Durability 75 / 75</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves hit rating by 18.</span><br><span class=\"q2\">Equip: Improves critical strike rating by 30.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32352,
+              "name": "Naturewarden's Treads",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_boots_08.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Feet",
+              "class": "Armor",
+              "subclass": "Leather",
+              "dropChance": 0.0795,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Naturewarden's Treads</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Feet</td><th><span class=\"q1\">Leather</span></th></tr></table><span>305 Armor</span><br><span>+39 Stamina</span><br><span>+18 Intellect</span><br /><br>Yellow Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +4 Spell Damage and Healing</span><br /><br />Durability 60 / 60</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell critical strike rating by 26.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 44.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 7 mana per 5 sec.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32353,
+              "name": "Gloves of Unfailing Faith",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_63.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Hands",
+              "class": "Armor",
+              "subclass": "Cloth",
+              "dropChance": 0.1622,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Gloves of Unfailing Faith</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Hands</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>148 Armor</span><br><span>+25 Stamina</span><br><span>+33 Intellect</span><br /><br>Red Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: 1 Mana per 5 sec.</span><br /><br />Durability 35 / 35</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 75 and damage done by up to 25 for all magical spells and effects.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 11 mana per 5 sec.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32347,
+              "name": "Grips of Damnation",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_65.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Hands",
+              "class": "Armor",
+              "subclass": "Leather",
+              "dropChance": 0.1698,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Grips of Damnation</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Hands</td><th><span class=\"q1\">Leather</span></th></tr></table><span>277 Armor</span><br><span>+27 Agility</span><br><span>+38 Stamina</span><br>Durability 40 / 40</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves haste rating by 37.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 76.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32354,
+              "name": "Crown of Empowered Fate",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_helmet_96.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Head",
+              "class": "Armor",
+              "subclass": "Plate",
+              "dropChance": 0.1613,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Crown of Empowered Fate</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Head</td><th><span class=\"q1\">Plate</span></th></tr></table><span>1434 Armor</span><br><span>+39 Stamina</span><br><span>+27 Intellect</span><br /><br>Meta Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +4 Spell Critical Strike Rating</span><br /><br />Durability 100 / 100</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell critical strike rating by 42.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 118 and damage done by up to 37 for all magical spells and effects.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32350,
+              "name": "Touch of Inspiration",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_gem_ebondraenite_02.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Held In Off-hand",
+              "class": "Armor",
+              "subclass": "Miscellaneous",
+              "dropChance": 0.1667,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Touch of Inspiration</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Held In Off-hand</td><th><span class=\"q1\"></span></th></tr></table><span>+24 Stamina</span><br><span>+21 Intellect</span></td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 64 and damage done by up to 22 for all magical spells and effects.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 12 mana per 5 sec.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32362,
+              "name": "Pendant of Titans",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_amulet_03.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Neck",
+              "class": "Armor",
+              "subclass": "Miscellaneous",
+              "dropChance": 0.1608,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Pendant of Titans</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Neck</td><th><span class=\"q1\"></span></th></tr></table><span>+43 Stamina</span></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Increases defense rating by 21.</span><br><span class=\"q2\">Equip: Increases your dodge rating by 25.</span><br><span class=\"q2\">Equip: Improves hit rating by 20.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32349,
+              "name": "Translucent Spellthread Necklace",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_necklace_30.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Neck",
+              "class": "Armor",
+              "subclass": "Miscellaneous",
+              "dropChance": 0.1833,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Translucent Spellthread Necklace</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Neck</td><th><span class=\"q1\"></span></th></tr></table></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell hit rating by 15.</span><br><span class=\"q2\">Equip: Improves spell critical strike rating by 24.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 46.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32363,
+              "name": "Naaru-Blessed Life Rod",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_wand_15.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Ranged",
+              "class": "Weapon",
+              "subclass": "Wand",
+              "dropChance": 0.1658,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Naaru-Blessed Life Rod</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Ranged</td><th><span class=\"q1\">Wand</span></th></tr></table><table width=\"100%\"><tr><td><span>193 - 360 Shadow Damage</span></td><th>Speed 1.50</th></tr></table>(184.33 damage per second)<br><span>+12 Stamina</span><br><span>+12 Intellect</span><br><span>+16 Spirit</span><br>Durability 75 / 75</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 37 and damage done by up to 13 for all magical spells and effects.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32517,
+              "name": "The Wavemender's Mantle",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_shoulder_61.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Shoulder",
+              "class": "Armor",
+              "subclass": "Mail",
+              "dropChance": 0.159,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">The Wavemender's Mantle</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Shoulder</td><th><span class=\"q1\">Mail</span></th></tr></table><span>741 Armor</span><br><span>+37 Stamina</span><br><span>+26 Intellect</span><br>Durability 85 / 85</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 84 and damage done by up to 28 for all magical spells and effects.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 15 mana per 5 sec.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32332,
+              "name": "Torch of the Damned",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_mace_49.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Two-Hand",
+              "class": "Weapon",
+              "subclass": "Mace",
+              "dropChance": 0.1545,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Torch of the Damned</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Two-Hand</td><th><span class=\"q1\">Mace</span></th></tr></table><table width=\"100%\"><tr><td><span>396 - 595 Damage</span></td><th>Speed 3.80</th></tr></table>(130.39 damage per second)<br><span>+51 Strength</span><br><span>+45 Stamina</span><br>Durability 120 / 120</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves critical strike rating by 38.</span><br><span class=\"q2\">Equip: Improves haste rating by 50.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32346,
+              "name": "Boneweave Girdle",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_belt_14.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Waist",
+              "class": "Armor",
+              "subclass": "Mail",
+              "dropChance": 0.1402,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Boneweave Girdle</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Waist</td><th><span class=\"q1\">Mail</span></th></tr></table><span>556 Armor</span><br><span>+38 Agility</span><br><span>+26 Intellect</span><br>Durability 50 / 50</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves hit rating by 17.</span><br><span class=\"q2\">Equip: Improves critical strike rating by 24.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 76.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32351,
+              "name": "Elunite Empowered Bracers",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_bracer_09.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Wrist",
+              "class": "Armor",
+              "subclass": "Leather",
+              "dropChance": 0.0813,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Elunite Empowered Bracers</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Wrist</td><th><span class=\"q1\">Leather</span></th></tr></table><span>194 Armor</span><br><span>+27 Stamina</span><br><span>+22 Intellect</span><br>Durability 40 / 40</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell hit rating by 19.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 34.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 6 mana per 5 sec.</span><br></td></tr></table>"
+            }
+          ]
+        },
+        {
           "name": "Shade of Akama",
           "items": [
+            {
+              "itemId": 32609,
+              "name": "Boots of the Divine Light",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_boots_cloth_08.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Feet",
+              "class": "Armor",
+              "subclass": "Cloth",
+              "dropChance": 0.01,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Boots of the Divine Light</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Feet</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>162 Armor</span><br><span>+47 Stamina</span><br><span>+24 Intellect</span><br><span>+24 Spirit</span><br /><br>Yellow Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +7 Healing +3 Spell Damage</span><br /><br />Durability 50 / 50</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 73 and damage done by up to 25 for all magical spells and effects.</span><br></td></tr></table>"
+            },
             {
               "itemId": 32268,
               "name": "Myrmidon's Treads",
@@ -6035,6 +5972,18 @@
               "subclass": "Plate",
               "dropChance": 0.1575,
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Praetorian's Legguards</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Legs</td><th><span class=\"q1\">Plate</span></th></tr></table><span>1544 Armor</span><br><span>+75 Stamina</span><br /><br>Yellow Socket<br>Yellow Socket<br>Red Socket<br><span class=\"q0\">Socket Bonus: +6 Stamina</span><br /><br />Durability 120 / 120</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Increases your dodge rating by 35.</span><br><span class=\"q2\">Equip: Increases your parry rating by 43.</span><br><span class=\"q2\">Equip: Improves hit rating by 18.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32591,
+              "name": "Choker of Serrated Blades",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_necklace_34.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Neck",
+              "class": "Armor",
+              "subclass": "Miscellaneous",
+              "dropChance": 0.01,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Choker of Serrated Blades</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Neck</td><th><span class=\"q1\"></span></th></tr></table><span>+37 Stamina</span></td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 70.</span><br><span id=\"useText2\" class=\"q2\">Equip: Your attacks ignore 175 of your opponent's armor.</span><br></td></tr></table>"
             },
             {
               "itemId": 32273,
@@ -6284,8 +6233,217 @@
           ]
         },
         {
+          "name": "Teron Gorefiend",
+          "items": [
+            {
+              "itemId": 32323,
+              "name": "Shadowmoon Destroyer's Drape",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_cape_naxxramas_02.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Back",
+              "class": "Armor",
+              "subclass": "Cloth",
+              "dropChance": 0.2683,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Shadowmoon Destroyer's Drape</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Back</td></tr></table><span>118 Armor</span><br><span>+24 Stamina</span></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves hit rating by 17.</span><br><span class=\"q2\">Equip: Improves critical strike rating by 24.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 72.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32327,
+              "name": "Robe of the Shadow Council",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_chest_cloth_51.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Chest",
+              "class": "Armor",
+              "subclass": "Cloth",
+              "dropChance": 0.2844,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Robe of the Shadow Council</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Chest</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>236 Armor</span><br><span>+37 Stamina</span><br><span>+36 Intellect</span><br><span>+26 Spirit</span><br>Durability 100 / 100</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell critical strike rating by 28.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 73.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32510,
+              "name": "Softstep Boots of Tracking",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_boots_chain_01.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Feet",
+              "class": "Armor",
+              "subclass": "Mail",
+              "dropChance": 0.2869,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Softstep Boots of Tracking</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Feet</td><th><span class=\"q1\">Mail</span></th></tr></table><span>679 Armor</span><br><span>+27 Agility</span><br><span>+29 Intellect</span><br>Durability 70 / 70</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves hit rating by 17.</span><br><span class=\"q2\">Equip: Improves critical strike rating by 26.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 76.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32328,
+              "name": "Botanist's Gloves of Growth",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_24.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Hands",
+              "class": "Armor",
+              "subclass": "Leather",
+              "dropChance": 0.2886,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Botanist's Gloves of Growth</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Hands</td><th><span class=\"q1\">Leather</span></th></tr></table><span>277 Armor</span><br><span>+22 Stamina</span><br><span>+21 Intellect</span><br /><br>Yellow Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +7 Healing +3 Spell Damage</span><br /><br />Durability 40 / 40</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell haste rating by 37.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 84 and damage done by up to 28 for all magical spells and effects.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32280,
+              "name": "Gauntlets of Enforcement",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_gauntlets_62.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Hands",
+              "class": "Armor",
+              "subclass": "Plate",
+              "dropChance": 0.2793,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Gauntlets of Enforcement</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Hands</td><th><span class=\"q1\">Plate</span></th></tr></table><span>1103 Armor</span><br><span>+70 Stamina</span><br>Durability 55 / 55</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Increases defense rating by 32.</span><br><span class=\"q2\">Equip: Increases your expertise rating by 21.</span><br><span id=\"useText4\" class=\"q2\">Equip: Increases the block value of your shield by 36.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32329,
+              "name": "Cowl of Benevolence",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_helmet_32.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Head",
+              "class": "Armor",
+              "subclass": "Cloth",
+              "dropChance": 0.2896,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Cowl of Benevolence</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Head</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>192 Armor</span><br><span>+39 Stamina</span><br><span>+27 Intellect</span><br><span>+42 Spirit</span><br /><br>Meta Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +9 Healing and +3 Spell Damage</span><br /><br />Durability 60 / 60</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 118 and damage done by up to 37 for all magical spells and effects.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32325,
+              "name": "Rifle of the Stoic Guardian",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_weapon_rifle_21.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Ranged",
+              "class": "Weapon",
+              "subclass": "Gun",
+              "dropChance": 0.2771,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Rifle of the Stoic Guardian</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Ranged</td><th><span class=\"q1\">Gun</span></th></tr></table><table width=\"100%\"><tr><td><span>120 - 224 Damage</span></td><th>Speed 1.90</th></tr></table>(90.53 damage per second)<br><span>+31 Stamina</span><br>Durability 90 / 90</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Increases your dodge rating by 20.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32330,
+              "name": "Totem of Ancestral Guidance",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/spell_nature_giftofthewaterspirit.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Relic",
+              "class": "Armor",
+              "subclass": "Totem",
+              "dropChance": 0.1473,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Totem of Ancestral Guidance</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Relic</td><th><span class=\"q1\">Totem</span></th></tr></table></td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases damage done by Chain Lightning and Lightning Bolt by up to 85.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32326,
+              "name": "Twisted Blades of Zarak",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_throwingknife_04.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Thrown",
+              "class": "Weapon",
+              "subclass": "Thrown",
+              "dropChance": 0.1277,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Twisted Blades of Zarak</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Thrown</td><th><span class=\"q1\">Thrown</span></th></tr></table><table width=\"100%\"><tr><td><span>101 - 152 Damage</span></td><th>Speed 1.40</th></tr></table>(90.36 damage per second)<br><span>+23 Agility</span><br>Durability 285 / 285</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves critical strike rating by 16.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32501,
+              "name": "Shadowmoon Insignia",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelcrafting_shadowsongamethyst_01.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Trinket",
+              "class": "Armor",
+              "subclass": "Miscellaneous",
+              "dropChance": 0.1556,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Shadowmoon Insignia</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Trinket</td><th><span class=\"q1\"></span></th></tr></table></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Increases defense rating by 36.</span><br><span class=\"q2\">Equip: Increases your dodge rating by 32.</span><br><span id=\"useText2\" class=\"q2\">Use: Increases your maximum health by 1750 for 20 sec. (3 Min Cooldown)</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32348,
+              "name": "Soul Cleaver",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_axe_60.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Two-Hand",
+              "class": "Weapon",
+              "subclass": "Axe",
+              "dropChance": 0.2847,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Soul Cleaver</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Two-Hand</td><th><span class=\"q1\">Axe</span></th></tr></table><table width=\"100%\"><tr><td><span>386 - 579 Damage</span></td><th>Speed 3.70</th></tr></table>(130.41 damage per second)<br><span>+65 Strength</span><br><span>+63 Stamina</span><br>Durability 120 / 120</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText2\" class=\"q2\">Equip: Your attacks ignore 315 of your opponent's armor.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32512,
+              "name": "Girdle of Lordaeron's Fallen",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_belt_28.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Waist",
+              "class": "Armor",
+              "subclass": "Plate",
+              "dropChance": 0.2904,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Girdle of Lordaeron's Fallen</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Waist</td><th><span class=\"q1\">Plate</span></th></tr></table><span>993 Armor</span><br><span>+32 Stamina</span><br><span>+32 Intellect</span><br>Durability 55 / 55</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell haste rating by 38.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 70 and damage done by up to 24 for all magical spells and effects.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32324,
+              "name": "Insidious Bands",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_bracer_04.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Wrist",
+              "class": "Armor",
+              "subclass": "Leather",
+              "dropChance": 0.2787,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Insidious Bands</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Wrist</td><th><span class=\"q1\">Leather</span></th></tr></table><span>194 Armor</span><br><span>+28 Agility</span><br><span>+28 Stamina</span><br /><br>Yellow Socket<br><span class=\"q0\">Socket Bonus: +2 Agility</span><br /><br />Durability 40 / 40</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves hit rating by 12.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 58.</span><br></td></tr></table>"
+            }
+          ]
+        },
+        {
           "name": "The Illidari Council",
           "items": [
+            {
+              "itemId": 32331,
+              "name": "Cloak of the Illidari Council",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_cape_20.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Back",
+              "class": "Armor",
+              "subclass": "Cloth",
+              "dropChance": 0.1689,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Cloak of the Illidari Council</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Back</td></tr></table><span>118 Armor</span><br><span>+24 Stamina</span><br><span>+16 Intellect</span></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell critical strike rating by 25.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 42.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32376,
+              "name": "Forest Prowler's Helm",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_helmet_95.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Head",
+              "class": "Armor",
+              "subclass": "Mail",
+              "dropChance": 0.1668,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Forest Prowler's Helm</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Head</td><th><span class=\"q1\">Mail</span></th></tr></table><span>803 Armor</span><br><span>+42 Agility</span><br><span>+29 Stamina</span><br><span>+28 Intellect</span><br /><br>Red Socket<br>Meta Socket<br><span class=\"q0\">Socket Bonus: 2 mana per 5 sec.</span><br /><br />Durability 85 / 85</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves critical strike rating by 20.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 100.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32373,
+              "name": "Helm of the Illidari Shatterer",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_helmet_98.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Head",
+              "class": "Armor",
+              "subclass": "Plate",
+              "dropChance": 0.1689,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Helm of the Illidari Shatterer</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Head</td><th><span class=\"q1\">Plate</span></th></tr></table><span>1434 Armor</span><br><span>+51 Strength</span><br><span>+29 Stamina</span><br /><br>Meta Socket<br>Yellow Socket<br><span class=\"q0\">Socket Bonus: +6 Stamina</span><br /><br />Durability 100 / 100</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves hit rating by 34.</span><br><span class=\"q2\">Equip: Improves critical strike rating by 42.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32518,
+              "name": "Veil of Turning Leaves",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_shoulder_58.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Shoulder",
+              "class": "Armor",
+              "subclass": "Leather",
+              "dropChance": 0.1347,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Veil of Turning Leaves</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Shoulder</td><th><span class=\"q1\">Leather</span></th></tr></table><span>333 Armor</span><br><span>+29 Stamina</span><br><span>+29 Intellect</span><br><span>+38 Spirit</span><br>Durability 70 / 70</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 84 and damage done by up to 28 for all magical spells and effects.</span><br></td></tr></table>"
+            },
             {
               "itemId": 31098,
               "name": "Leggings of the Forgotten Conqueror",
@@ -6321,6 +6479,30 @@
               "subclass": "Junk",
               "dropChance": 0.3651,
               "wowheadTooltip": "<table><tr><td><b class=\"q4\">Leggings of the Forgotten Vanquisher</b><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 70</span><br>Binds when picked up<div class=\"wowhead-tooltip-item-classes\">Classes: Rogue, Mage, Druid</div></td></tr></table><table><tr><td>Requires Level 70<br></td></tr></table>"
+            },
+            {
+              "itemId": 32505,
+              "name": "Madness of the Betrayer",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/spell_shadow_charm.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Trinket",
+              "class": "Armor",
+              "subclass": "Miscellaneous",
+              "dropChance": 0.1718,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Madness of the Betrayer</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Trinket</td><th><span class=\"q1\"></span></th></tr></table></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves hit rating by 20.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 84.</span><br><span id=\"useText2\" class=\"q2\">Equip: Your melee and ranged attacks have a chance allow you to ignore 300 of your enemies' armor for 10 secs.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32519,
+              "name": "Belt of Divine Guidance",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_belt_07.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Waist",
+              "class": "Armor",
+              "subclass": "Cloth",
+              "dropChance": 0.1803,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Belt of Divine Guidance</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Waist</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>133 Armor</span><br><span>+35 Stamina</span><br><span>+24 Intellect</span><br><span>+32 Spirit</span><br /><br>Yellow Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +7 Healing +3 Spell Damage</span><br /><br />Durability 35 / 35</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 73 and damage done by up to 25 for all magical spells and effects.</span><br></td></tr></table>"
             }
           ]
         },
@@ -7245,6 +7427,47 @@
           ]
         },
         {
+          "name": "Eredar Twins",
+          "items": [
+            {
+              "itemId": 35290,
+              "name": "Sin'dorei Pendant of Conquest",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_necklace_36.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Neck",
+              "class": "Armor",
+              "subclass": "Miscellaneous",
+              "dropChance": 0.5481,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Sin'dorei Pendant of Conquest</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Neck</td><th><span class=\"q1\"></span></th></tr></table><span>+18 Stamina</span><br><span>+19 Intellect</span><br /><br>Blue Socket<br><span class=\"q0\">Socket Bonus: +2 Spell Damage and Healing</span><br /><br /></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell critical strike rating by 19.</span><br><span class=\"q2\">Equip: Improves your resilience rating by 18.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 34.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 35291,
+              "name": "Sin'dorei Pendant of Salvation",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_necklace_36.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Neck",
+              "class": "Armor",
+              "subclass": "Miscellaneous",
+              "dropChance": 0.4712,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Sin'dorei Pendant of Salvation</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Neck</td><th><span class=\"q1\"></span></th></tr></table><span>+16 Stamina</span><br><span>+19 Intellect</span><br /><br>Blue Socket<br><span class=\"q0\">Socket Bonus: +4 Healing +2 Spell Damage</span><br /><br /></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves your resilience rating by 18.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 64 and damage done by up to 22 for all magical spells and effects.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 8 mana per 5 sec.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 35292,
+              "name": "Sin'dorei Pendant of Triumph",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_necklace_36.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Neck",
+              "class": "Armor",
+              "subclass": "Miscellaneous",
+              "dropChance": 0.5481,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Sin'dorei Pendant of Triumph</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Neck</td><th><span class=\"q1\"></span></th></tr></table><span>+18 Stamina</span><br /><br>Blue Socket<br><span class=\"q0\">Socket Bonus: +4 Attack Power</span><br /><br /></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves critical strike rating by 28.</span><br><span class=\"q2\">Equip: Improves your resilience rating by 19.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 58.</span><br></td></tr></table>"
+            }
+          ]
+        },
+        {
           "name": "Felmyst",
           "items": [
             {
@@ -7318,6 +7541,95 @@
               "subclass": "Staff",
               "dropChance": 0.1304,
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Grand Magister's Staff of Torrents</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 154</span><br>Binds when picked up<table width=\"100%\"><tr><td>Two-Hand</td><th><span class=\"q1\">Staff</span></th></tr></table><table width=\"100%\"><tr><td><span>146 - 326 Damage</span></td><th>Speed 3.20</th></tr></table>(73.75 damage per second)<br><span>+57 Stamina</span><br><span>+52 Intellect</span><br /><br>Yellow Socket<br>Yellow Socket<br>Yellow Socket<br><span class=\"q0\">Socket Bonus: +5 Spell Damage and Healing</span><br /><br />Durability 120 / 120</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell hit rating by 50.</span><br><span class=\"q2\">Equip: Improves spell critical strike rating by 49.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 266.</span><br></td></tr></table>"
+            }
+          ]
+        },
+        {
+          "name": "Kalecgos",
+          "items": [
+            {
+              "itemId": 34166,
+              "name": "Band of Lucent Beams",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_ring_57.jpg",
+              "quality": "Epic",
+              "itemLevel": 154,
+              "slot": "Finger",
+              "class": "Armor",
+              "subclass": "Miscellaneous",
+              "dropChance": 0.15,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Band of Lucent Beams</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 154</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Finger</td><th><span class=\"q1\"></span></th></tr></table><span>+24 Stamina</span><br><span>+25 Intellect</span></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell haste rating by 22.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 73 and damage done by up to 25 for all magical spells and effects.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 8 mana per 5 sec.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 34169,
+              "name": "Breeches of Natural Aggression",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_pants_leather_23.jpg",
+              "quality": "Epic",
+              "itemLevel": 159,
+              "slot": "Legs",
+              "class": "Armor",
+              "subclass": "Leather",
+              "dropChance": 0.15,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Breeches of Natural Aggression</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 159</span><br>Binds when picked up<table width=\"100%\"><tr><td>Legs</td><th><span class=\"q1\">Leather</span></th></tr></table><span>436 Armor</span><br><span>+42 Stamina</span><br><span>+41 Intellect</span><br /><br>Red Socket<br>Red Socket<br>Yellow Socket<br><span class=\"q0\">Socket Bonus: +5 Spell Damage and Healing</span><br /><br />Durability 90 / 90</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell critical strike rating by 49.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 71.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 34167,
+              "name": "Legplates of the Holy Juggernaut",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_pants_plate_22.jpg",
+              "quality": "Epic",
+              "itemLevel": 159,
+              "slot": "Legs",
+              "class": "Armor",
+              "subclass": "Plate",
+              "dropChance": 0.15,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Legplates of the Holy Juggernaut</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 159</span><br>Binds when picked up<table width=\"100%\"><tr><td>Legs</td><th><span class=\"q1\">Plate</span></th></tr></table><span>1735 Armor</span><br><span>+49 Stamina</span><br><span>+41 Intellect</span><br /><br>Red Socket<br>Yellow Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: 2 mana per 5 sec.</span><br /><br />Durability 120 / 120</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell critical strike rating by 37.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 99 and damage done by up to 33 for all magical spells and effects.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 18 mana per 5 sec.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 34170,
+              "name": "Pantaloons of Calming Strife",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_pants_cloth_07.jpg",
+              "quality": "Epic",
+              "itemLevel": 159,
+              "slot": "Legs",
+              "class": "Armor",
+              "subclass": "Cloth",
+              "dropChance": 0.15,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Pantaloons of Calming Strife</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 159</span><br>Binds when picked up<table width=\"100%\"><tr><td>Legs</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>232 Armor</span><br><span>+29 Stamina</span><br><span>+36 Intellect</span><br><span>+42 Spirit</span><br /><br>Red Socket<br>Yellow Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +4 Spirit</span><br /><br />Durability 75 / 75</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell critical strike rating by 25.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 134 and damage done by up to 45 for all magical spells and effects.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 34168,
+              "name": "Starstalker Legguards",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_pants_mail_16.jpg",
+              "quality": "Epic",
+              "itemLevel": 159,
+              "slot": "Legs",
+              "class": "Armor",
+              "subclass": "Mail",
+              "dropChance": 0.15,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Starstalker Legguards</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 159</span><br>Binds when picked up<table width=\"100%\"><tr><td>Legs</td><th><span class=\"q1\">Mail</span></th></tr></table><span>971 Armor</span><br><span>+57 Agility</span><br><span>+49 Stamina</span><br><span>+24 Intellect</span><br /><br>Yellow Socket<br>Blue Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +8 Attack Power</span><br /><br />Durability 105 / 105</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves hit rating by 20.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 120.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 34164,
+              "name": "Dragonscale-Encrusted Longblade",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_sword_115.jpg",
+              "quality": "Epic",
+              "itemLevel": 154,
+              "slot": "One-Hand",
+              "class": "Weapon",
+              "subclass": "Sword",
+              "dropChance": 0.15,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Dragonscale-Encrusted Longblade</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 154</span><br>Binds when picked up<table width=\"100%\"><tr><td>One-Hand</td><th><span class=\"q1\">Sword</span></th></tr></table><table width=\"100%\"><tr><td><span>113 - 211 Damage</span></td><th>Speed 1.50</th></tr></table>(108.00 damage per second)<br><span>+36 Stamina</span><br>Durability 105 / 105</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves haste rating by 25.</span><br><span class=\"q2\">Equip: Increases your expertise rating by 25.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 34165,
+              "name": "Fang of Kalecgos",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_weapon_shortblade_74.jpg",
+              "quality": "Epic",
+              "itemLevel": 154,
+              "slot": "One-Hand",
+              "class": "Weapon",
+              "subclass": "Dagger",
+              "dropChance": 0.15,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Fang of Kalecgos</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 154</span><br>Binds when picked up<table width=\"100%\"><tr><td>One-Hand</td><th><span class=\"q1\">Dagger</span></th></tr></table><table width=\"100%\"><tr><td><span>113 - 211 Damage</span></td><th>Speed 1.50</th></tr></table>(108.00 damage per second)<br><span>+25 Agility</span><br>Durability 75 / 75</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves haste rating by 25.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 48.</span><br></td></tr></table>"
             }
           ]
         },
@@ -7579,6 +7891,95 @@
           ]
         },
         {
+          "name": "M'uru",
+          "items": [
+            {
+              "itemId": 35282,
+              "name": "Sin'dorei Band of Dominance",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_ring_60.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Finger",
+              "class": "Armor",
+              "subclass": "Miscellaneous",
+              "dropChance": 0.5208,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Sin'dorei Band of Dominance</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Finger</td><th><span class=\"q1\"></span></th></tr></table><span>+22 Stamina</span><br><span>+15 Intellect</span></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell critical strike rating by 28.</span><br><span class=\"q2\">Equip: Improves your resilience rating by 15.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 34.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 35283,
+              "name": "Sin'dorei Band of Salvation",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_ring_60.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Finger",
+              "class": "Armor",
+              "subclass": "Miscellaneous",
+              "dropChance": 0.5208,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Sin'dorei Band of Salvation</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Finger</td><th><span class=\"q1\"></span></th></tr></table><span>+30 Stamina</span><br><span>+19 Intellect</span></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves your resilience rating by 19.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 64 and damage done by up to 22 for all magical spells and effects.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 7 mana per 5 sec.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 35284,
+              "name": "Sin'dorei Band of Triumph",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_ring_60.jpg",
+              "quality": "Epic",
+              "itemLevel": 141,
+              "slot": "Finger",
+              "class": "Armor",
+              "subclass": "Miscellaneous",
+              "dropChance": 0.5208,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Sin'dorei Band of Triumph</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Finger</td><th><span class=\"q1\"></span></th></tr></table><span>+30 Stamina</span></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves critical strike rating by 28.</span><br><span class=\"q2\">Equip: Improves your resilience rating by 19.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 58.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 34427,
+              "name": "Blackened Naaru Sliver",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_talisman_16.jpg",
+              "quality": "Epic",
+              "itemLevel": 154,
+              "slot": "Trinket",
+              "class": "Armor",
+              "subclass": "Miscellaneous",
+              "dropChance": 0.2714,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Blackened Naaru Sliver</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 154</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Trinket</td><th><span class=\"q1\"></span></th></tr></table></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves haste rating by 54.</span><br><span id=\"useText1\" class=\"q2\">Equip: Chance on hit to enter a Battle Trance, during which your melee or ranged attacks will each grant 44 attack power, stacking up to 10 times. &nbsp;Expires after 20 sec. (Proc chance: 10%, 45s cooldown)</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 34430,
+              "name": "Glimmering Naaru Sliver",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_talisman_17.jpg",
+              "quality": "Epic",
+              "itemLevel": 154,
+              "slot": "Trinket",
+              "class": "Armor",
+              "subclass": "Miscellaneous",
+              "dropChance": 0.3042,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Glimmering Naaru Sliver</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 154</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Trinket</td><th><span class=\"q1\"></span></th></tr></table></td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Use: Gain 250 mana each sec. for 8 sec. &nbsp;Channeled. (5 Min Cooldown)</span><br><span id=\"useText2\" class=\"q2\">Equip: Increases healing done by up to 119 and damage done by up to 40 for all magical spells and effects.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 34429,
+              "name": "Shifting Naaru Sliver",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_talisman_15.jpg",
+              "quality": "Epic",
+              "itemLevel": 154,
+              "slot": "Trinket",
+              "class": "Armor",
+              "subclass": "Miscellaneous",
+              "dropChance": 0.2714,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Shifting Naaru Sliver</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 154</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Trinket</td><th><span class=\"q1\"></span></th></tr></table></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell haste rating by 54.</span><br><span id=\"useText1\" class=\"q2\">Use: Conjures a Power Circle lasting for 15 sec. &nbsp;While standing in this circle, the caster gains up to 320 spell damage and healing. (1 Min, 30 Sec Cooldown)</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 34428,
+              "name": "Steely Naaru Sliver",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_talisman_18.jpg",
+              "quality": "Epic",
+              "itemLevel": 154,
+              "slot": "Trinket",
+              "class": "Armor",
+              "subclass": "Miscellaneous",
+              "dropChance": 0.3429,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Steely Naaru Sliver</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 154</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Trinket</td><th><span class=\"q1\"></span></th></tr></table></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Increases your expertise rating by 54.</span><br><span id=\"useText1\" class=\"q2\">Use: Increases maximum health by 2000 for 15 sec. (5 Min Cooldown)</span><br></td></tr></table>"
+            }
+          ]
+        },
+        {
           "name": "Trash Drops",
           "items": [
             {
@@ -7702,18 +8103,6 @@
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Warharness of Reckless Fury</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 159</span><br>Binds when picked up<table width=\"100%\"><tr><td>Chest</td><th><span class=\"q1\">Plate</span></th></tr></table><span>1983 Armor</span><br><span>+61 Strength</span><br><span>+67 Stamina</span><br /><br>Red Socket<br>Yellow Socket<br>Yellow Socket<br><span class=\"q0\">Socket Bonus: +4 Strength</span><br /><br />Durability 165 / 165</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves critical strike rating by 41.</span><br><span class=\"q2\">Equip: Improves haste rating by 32.</span><br></td></tr></table>"
             },
             {
-              "itemId": 34166,
-              "name": "Band of Lucent Beams",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_ring_57.jpg",
-              "quality": "Epic",
-              "itemLevel": 154,
-              "slot": "Finger",
-              "class": "Armor",
-              "subclass": "Miscellaneous",
-              "dropChance": 0.15,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Band of Lucent Beams</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 154</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Finger</td><th><span class=\"q1\"></span></th></tr></table><span>+24 Stamina</span><br><span>+25 Intellect</span></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell haste rating by 22.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 73 and damage done by up to 25 for all magical spells and effects.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 8 mana per 5 sec.</span><br></td></tr></table>"
-            },
-            {
               "itemId": 34189,
               "name": "Band of Ruinous Delight",
               "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_ring_36.jpg",
@@ -7760,42 +8149,6 @@
               "subclass": "Miscellaneous",
               "dropChance": 0.3429,
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Ring of Omnipotence</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 154</span><br>Binds when picked up<br>Unique-Equipped<table width=\"100%\"><tr><td>Finger</td><th><span class=\"q1\"></span></th></tr></table><span>+21 Stamina</span><br><span>+14 Intellect</span></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell critical strike rating by 22.</span><br><span class=\"q2\">Equip: Improves spell haste rating by 31.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 40.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 35282,
-              "name": "Sin'dorei Band of Dominance",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_ring_60.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Finger",
-              "class": "Armor",
-              "subclass": "Miscellaneous",
-              "dropChance": 0.5208,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Sin'dorei Band of Dominance</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Finger</td><th><span class=\"q1\"></span></th></tr></table><span>+22 Stamina</span><br><span>+15 Intellect</span></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell critical strike rating by 28.</span><br><span class=\"q2\">Equip: Improves your resilience rating by 15.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 34.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 35283,
-              "name": "Sin'dorei Band of Salvation",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_ring_60.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Finger",
-              "class": "Armor",
-              "subclass": "Miscellaneous",
-              "dropChance": 0.5208,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Sin'dorei Band of Salvation</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Finger</td><th><span class=\"q1\"></span></th></tr></table><span>+30 Stamina</span><br><span>+19 Intellect</span></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves your resilience rating by 19.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 64 and damage done by up to 22 for all magical spells and effects.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 7 mana per 5 sec.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 35284,
-              "name": "Sin'dorei Band of Triumph",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_ring_60.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Finger",
-              "class": "Armor",
-              "subclass": "Miscellaneous",
-              "dropChance": 0.5208,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Sin'dorei Band of Triumph</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Finger</td><th><span class=\"q1\"></span></th></tr></table><span>+30 Stamina</span></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves critical strike rating by 28.</span><br><span class=\"q2\">Equip: Improves your resilience rating by 19.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 58.</span><br></td></tr></table>"
             },
             {
               "itemId": 34350,
@@ -7858,54 +8211,6 @@
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Book of Highborne Hymns</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 154</span><br>Binds when picked up<table width=\"100%\"><tr><td>Held In Off-hand</td><th><span class=\"q1\"></span></th></tr></table><span>+33 Stamina</span><br><span>+20 Intellect</span></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell haste rating by 22.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 70 and damage done by up to 24 for all magical spells and effects.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 9 mana per 5 sec.</span><br></td></tr></table>"
             },
             {
-              "itemId": 34169,
-              "name": "Breeches of Natural Aggression",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_pants_leather_23.jpg",
-              "quality": "Epic",
-              "itemLevel": 159,
-              "slot": "Legs",
-              "class": "Armor",
-              "subclass": "Leather",
-              "dropChance": 0.15,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Breeches of Natural Aggression</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 159</span><br>Binds when picked up<table width=\"100%\"><tr><td>Legs</td><th><span class=\"q1\">Leather</span></th></tr></table><span>436 Armor</span><br><span>+42 Stamina</span><br><span>+41 Intellect</span><br /><br>Red Socket<br>Red Socket<br>Yellow Socket<br><span class=\"q0\">Socket Bonus: +5 Spell Damage and Healing</span><br /><br />Durability 90 / 90</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell critical strike rating by 49.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 71.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 34167,
-              "name": "Legplates of the Holy Juggernaut",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_pants_plate_22.jpg",
-              "quality": "Epic",
-              "itemLevel": 159,
-              "slot": "Legs",
-              "class": "Armor",
-              "subclass": "Plate",
-              "dropChance": 0.15,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Legplates of the Holy Juggernaut</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 159</span><br>Binds when picked up<table width=\"100%\"><tr><td>Legs</td><th><span class=\"q1\">Plate</span></th></tr></table><span>1735 Armor</span><br><span>+49 Stamina</span><br><span>+41 Intellect</span><br /><br>Red Socket<br>Yellow Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: 2 mana per 5 sec.</span><br /><br />Durability 120 / 120</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell critical strike rating by 37.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 99 and damage done by up to 33 for all magical spells and effects.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 18 mana per 5 sec.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 34170,
-              "name": "Pantaloons of Calming Strife",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_pants_cloth_07.jpg",
-              "quality": "Epic",
-              "itemLevel": 159,
-              "slot": "Legs",
-              "class": "Armor",
-              "subclass": "Cloth",
-              "dropChance": 0.15,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Pantaloons of Calming Strife</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 159</span><br>Binds when picked up<table width=\"100%\"><tr><td>Legs</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>232 Armor</span><br><span>+29 Stamina</span><br><span>+36 Intellect</span><br><span>+42 Spirit</span><br /><br>Red Socket<br>Yellow Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +4 Spirit</span><br /><br />Durability 75 / 75</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell critical strike rating by 25.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 134 and damage done by up to 45 for all magical spells and effects.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 34168,
-              "name": "Starstalker Legguards",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_pants_mail_16.jpg",
-              "quality": "Epic",
-              "itemLevel": 159,
-              "slot": "Legs",
-              "class": "Armor",
-              "subclass": "Mail",
-              "dropChance": 0.15,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Starstalker Legguards</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 159</span><br>Binds when picked up<table width=\"100%\"><tr><td>Legs</td><th><span class=\"q1\">Mail</span></th></tr></table><span>971 Armor</span><br><span>+57 Agility</span><br><span>+49 Stamina</span><br><span>+24 Intellect</span><br /><br>Yellow Socket<br>Blue Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +8 Attack Power</span><br /><br />Durability 105 / 105</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves hit rating by 20.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 120.</span><br></td></tr></table>"
-            },
-            {
               "itemId": 34199,
               "name": "Archon's Gavel",
               "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_mace_71.jpg",
@@ -7928,42 +8233,6 @@
               "subclass": "Miscellaneous",
               "dropChance": 0.1519,
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Amulet of Unfettered Magics</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 154</span><br>Binds when picked up<table width=\"100%\"><tr><td>Neck</td><th><span class=\"q1\"></span></th></tr></table><span>+24 Stamina</span><br><span>+17 Intellect</span></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell hit rating by 15.</span><br><span class=\"q2\">Equip: Improves spell haste rating by 32.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 39.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 35290,
-              "name": "Sin'dorei Pendant of Conquest",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_necklace_36.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Neck",
-              "class": "Armor",
-              "subclass": "Miscellaneous",
-              "dropChance": 0.5481,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Sin'dorei Pendant of Conquest</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Neck</td><th><span class=\"q1\"></span></th></tr></table><span>+18 Stamina</span><br><span>+19 Intellect</span><br /><br>Blue Socket<br><span class=\"q0\">Socket Bonus: +2 Spell Damage and Healing</span><br /><br /></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell critical strike rating by 19.</span><br><span class=\"q2\">Equip: Improves your resilience rating by 18.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 34.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 35291,
-              "name": "Sin'dorei Pendant of Salvation",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_necklace_36.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Neck",
-              "class": "Armor",
-              "subclass": "Miscellaneous",
-              "dropChance": 0.4712,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Sin'dorei Pendant of Salvation</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Neck</td><th><span class=\"q1\"></span></th></tr></table><span>+16 Stamina</span><br><span>+19 Intellect</span><br /><br>Blue Socket<br><span class=\"q0\">Socket Bonus: +4 Healing +2 Spell Damage</span><br /><br /></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves your resilience rating by 18.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 64 and damage done by up to 22 for all magical spells and effects.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 8 mana per 5 sec.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 35292,
-              "name": "Sin'dorei Pendant of Triumph",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_necklace_36.jpg",
-              "quality": "Epic",
-              "itemLevel": 141,
-              "slot": "Neck",
-              "class": "Armor",
-              "subclass": "Miscellaneous",
-              "dropChance": 0.5481,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Sin'dorei Pendant of Triumph</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Neck</td><th><span class=\"q1\"></span></th></tr></table><span>+18 Stamina</span><br /><br>Blue Socket<br><span class=\"q0\">Socket Bonus: +4 Attack Power</span><br /><br /></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves critical strike rating by 28.</span><br><span class=\"q2\">Equip: Improves your resilience rating by 19.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 58.</span><br></td></tr></table>"
             },
             {
               "itemId": 34231,
@@ -8000,30 +8269,6 @@
               "subclass": "Fist Weapon",
               "dropChance": 0.0994,
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Mounting Vengeance</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 154</span><br>Binds when picked up<table width=\"100%\"><tr><td>Off Hand</td><th><span class=\"q1\">Fist Weapon</span></th></tr></table><table width=\"100%\"><tr><td><span>196 - 365 Damage</span></td><th>Speed 2.60</th></tr></table>(107.88 damage per second)<br><span>+22 Stamina</span><br /><br>Yellow Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +3 Strength</span><br /><br />Durability 75 / 75</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 46.</span><br><span id=\"useText2\" class=\"q2\">Equip: Your attacks ignore 140 of your opponent's armor.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 34164,
-              "name": "Dragonscale-Encrusted Longblade",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_sword_115.jpg",
-              "quality": "Epic",
-              "itemLevel": 154,
-              "slot": "One-Hand",
-              "class": "Weapon",
-              "subclass": "Sword",
-              "dropChance": 0.15,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Dragonscale-Encrusted Longblade</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 154</span><br>Binds when picked up<table width=\"100%\"><tr><td>One-Hand</td><th><span class=\"q1\">Sword</span></th></tr></table><table width=\"100%\"><tr><td><span>113 - 211 Damage</span></td><th>Speed 1.50</th></tr></table>(108.00 damage per second)<br><span>+36 Stamina</span><br>Durability 105 / 105</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves haste rating by 25.</span><br><span class=\"q2\">Equip: Increases your expertise rating by 25.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 34165,
-              "name": "Fang of Kalecgos",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_weapon_shortblade_74.jpg",
-              "quality": "Epic",
-              "itemLevel": 154,
-              "slot": "One-Hand",
-              "class": "Weapon",
-              "subclass": "Dagger",
-              "dropChance": 0.15,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Fang of Kalecgos</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 154</span><br>Binds when picked up<table width=\"100%\"><tr><td>One-Hand</td><th><span class=\"q1\">Dagger</span></th></tr></table><table width=\"100%\"><tr><td><span>113 - 211 Damage</span></td><th>Speed 1.50</th></tr></table>(108.00 damage per second)<br><span>+25 Agility</span><br>Durability 75 / 75</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves haste rating by 25.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 48.</span><br></td></tr></table>"
             },
             {
               "itemId": 34214,
@@ -8564,54 +8809,6 @@
               "subclass": "Junk",
               "dropChance": 0.5086,
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Bracers of the Forgotten Vanquisher</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 70</span><br>Binds when picked up<div class=\"wowhead-tooltip-item-classes\">Classes: Rogue, Mage, Druid</div></td></tr></table><table><tr><td>Requires Level 70<br></td></tr></table>"
-            },
-            {
-              "itemId": 34427,
-              "name": "Blackened Naaru Sliver",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_talisman_16.jpg",
-              "quality": "Epic",
-              "itemLevel": 154,
-              "slot": "Trinket",
-              "class": "Armor",
-              "subclass": "Miscellaneous",
-              "dropChance": 0.2714,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Blackened Naaru Sliver</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 154</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Trinket</td><th><span class=\"q1\"></span></th></tr></table></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves haste rating by 54.</span><br><span id=\"useText1\" class=\"q2\">Equip: Chance on hit to enter a Battle Trance, during which your melee or ranged attacks will each grant 44 attack power, stacking up to 10 times. &nbsp;Expires after 20 sec. (Proc chance: 10%, 45s cooldown)</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 34430,
-              "name": "Glimmering Naaru Sliver",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_talisman_17.jpg",
-              "quality": "Epic",
-              "itemLevel": 154,
-              "slot": "Trinket",
-              "class": "Armor",
-              "subclass": "Miscellaneous",
-              "dropChance": 0.3042,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Glimmering Naaru Sliver</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 154</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Trinket</td><th><span class=\"q1\"></span></th></tr></table></td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Use: Gain 250 mana each sec. for 8 sec. &nbsp;Channeled. (5 Min Cooldown)</span><br><span id=\"useText2\" class=\"q2\">Equip: Increases healing done by up to 119 and damage done by up to 40 for all magical spells and effects.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 34429,
-              "name": "Shifting Naaru Sliver",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_talisman_15.jpg",
-              "quality": "Epic",
-              "itemLevel": 154,
-              "slot": "Trinket",
-              "class": "Armor",
-              "subclass": "Miscellaneous",
-              "dropChance": 0.2714,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Shifting Naaru Sliver</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 154</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Trinket</td><th><span class=\"q1\"></span></th></tr></table></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell haste rating by 54.</span><br><span id=\"useText1\" class=\"q2\">Use: Conjures a Power Circle lasting for 15 sec. &nbsp;While standing in this circle, the caster gains up to 320 spell damage and healing. (1 Min, 30 Sec Cooldown)</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 34428,
-              "name": "Steely Naaru Sliver",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_jewelry_talisman_18.jpg",
-              "quality": "Epic",
-              "itemLevel": 154,
-              "slot": "Trinket",
-              "class": "Armor",
-              "subclass": "Miscellaneous",
-              "dropChance": 0.3429,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Steely Naaru Sliver</b></td><th><b class=\"q0 whtt-extra\">Phase 5</b></th></tr></table><span class=\"q\"><br>Item Level 154</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Trinket</td><th><span class=\"q1\"></span></th></tr></table></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Increases your expertise rating by 54.</span><br><span id=\"useText1\" class=\"q2\">Use: Increases maximum health by 2000 for 15 sec. (5 Min Cooldown)</span><br></td></tr></table>"
             },
             {
               "itemId": 34183,

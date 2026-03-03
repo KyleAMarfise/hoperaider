@@ -58,6 +58,108 @@ const TIER_TOKEN_SOURCE_OVERRIDES = {
   34858: { zone: 4075, name: "Trash Drops" },
 };
 
+// Items to exclude entirely (no longer available / not real TBC raid loot)
+const EXCLUDE_ITEMS = new Set([
+  39769, // Arcanite Ripper — Prince Tenris Mirkblood, WotLK pre-patch event only
+]);
+
+// Items with wrong or missing boss attribution in wow-classic-items.
+// Maps itemId → { zone, name } to override source data before filtering.
+const BOSS_SOURCE_OVERRIDES = {
+  // ── KARAZHAN — Attumen the Huntsman ──────────────────────────────────
+  // Listed as "Zone Drop" in DB, actually drop from Attumen (+ Midnight)
+  28453: { zone: 3457, name: "Attumen the Huntsman" }, // Bracers of the White Stag
+  28454: { zone: 3457, name: "Attumen the Huntsman" }, // Stalker's War Bands
+  28477: { zone: 3457, name: "Attumen the Huntsman" }, // Harbinger Bands
+  28502: { zone: 3457, name: "Attumen the Huntsman" }, // Vambraces of Courage
+  28503: { zone: 3457, name: "Attumen the Huntsman" }, // Whirlwind Bracers
+  28504: { zone: 3457, name: "Attumen the Huntsman" }, // Steelhawk Crossbow
+  28505: { zone: 3457, name: "Attumen the Huntsman" }, // Gauntlets of Renewed Hope
+  28506: { zone: 3457, name: "Attumen the Huntsman" }, // Gloves of Dexterous Manipulation
+  28507: { zone: 3457, name: "Attumen the Huntsman" }, // Handwraps of Flowing Thought
+  28508: { zone: 3457, name: "Attumen the Huntsman" }, // Gloves of Saintly Blessings
+  28509: { zone: 3457, name: "Attumen the Huntsman" }, // Worgen Claw Necklace
+
+  // ── TEMPEST KEEP — Kael'thas Sunstrider ──────────────────────────────
+  // Legendary weapons listed under their own names as separate "bosses"
+  30311: { zone: 3845, name: "Kael'thas Sunstrider" }, // Warp Slicer
+  30312: { zone: 3845, name: "Kael'thas Sunstrider" }, // Infinity Blade
+  30313: { zone: 3845, name: "Kael'thas Sunstrider" }, // Staff of Disintegration
+  30314: { zone: 3845, name: "Kael'thas Sunstrider" }, // Phaseshift Bulwark
+  30316: { zone: 3845, name: "Kael'thas Sunstrider" }, // Devastation
+  30317: { zone: 3845, name: "Kael'thas Sunstrider" }, // Cosmic Infuser
+  30318: { zone: 3845, name: "Kael'thas Sunstrider" }, // Netherstrand Longbow
+  // Regular loot — "Rare Drop" with no zone in DB
+  29987: { zone: 3845, name: "Kael'thas Sunstrider" }, // Gauntlets of the Sun King
+  29988: { zone: 3845, name: "Kael'thas Sunstrider" }, // The Nexus Key
+  29989: { zone: 3845, name: "Kael'thas Sunstrider" }, // Sunshower Light Cloak
+  29990: { zone: 3845, name: "Kael'thas Sunstrider" }, // Crown of the Sun
+  29991: { zone: 3845, name: "Kael'thas Sunstrider" }, // Sunhawk Leggings
+  29992: { zone: 3845, name: "Kael'thas Sunstrider" }, // Royal Cloak of the Sunstriders
+  29993: { zone: 3845, name: "Kael'thas Sunstrider" }, // Twinblade of the Phoenix
+  29994: { zone: 3845, name: "Kael'thas Sunstrider" }, // Thalassian Wildercloak
+  29995: { zone: 3845, name: "Kael'thas Sunstrider" }, // Leggings of Murderous Intent
+  29996: { zone: 3845, name: "Kael'thas Sunstrider" }, // Rod of the Sun King
+  29997: { zone: 3845, name: "Kael'thas Sunstrider" }, // Band of the Ranger-General
+  29998: { zone: 3845, name: "Kael'thas Sunstrider" }, // Royal Gauntlets of Silvermoon
+  // Ashes of Al'ar mount — "Rare Drop" with no zone in DB
+  32458: { zone: 3845, name: "Kael'thas Sunstrider" }, // Ashes of Al'ar
+
+  // ── BLACK TEMPLE — Teron Gorefiend ───────────────────────────────────
+  // All listed as "Rare Drop" with no zone in DB
+  32280: { zone: 3959, name: "Teron Gorefiend" }, // Gauntlets of Enforcement
+  32323: { zone: 3959, name: "Teron Gorefiend" }, // Shadowmoon Destroyer's Drape
+  32324: { zone: 3959, name: "Teron Gorefiend" }, // Insidious Bands
+  32325: { zone: 3959, name: "Teron Gorefiend" }, // Rifle of the Stoic Guardian
+  32326: { zone: 3959, name: "Teron Gorefiend" }, // Twisted Blades of Zarak
+  32327: { zone: 3959, name: "Teron Gorefiend" }, // Robe of the Shadow Council
+  32328: { zone: 3959, name: "Teron Gorefiend" }, // Botanist's Gloves of Growth
+  32329: { zone: 3959, name: "Teron Gorefiend" }, // Cowl of Benevolence
+  32330: { zone: 3959, name: "Teron Gorefiend" }, // Totem of Ancestral Guidance
+  32348: { zone: 3959, name: "Teron Gorefiend" }, // Soul Cleaver
+  32510: { zone: 3959, name: "Teron Gorefiend" }, // Softstep Boots of Tracking
+  32512: { zone: 3959, name: "Teron Gorefiend" }, // Girdle of Lordaeron's Fallen
+  // Misattributed to Gurtogg Bloodboil in DB
+  32501: { zone: 3959, name: "Teron Gorefiend" }, // Shadowmoon Insignia
+
+  // ── SUNWELL PLATEAU — Kalecgos ───────────────────────────────────────
+  // Listed as "Zone Drop" with no boss name in DB
+  34164: { zone: 4075, name: "Kalecgos" }, // Dragonscale-Encrusted Longblade
+  34165: { zone: 4075, name: "Kalecgos" }, // Fang of Kalecgos
+  34166: { zone: 4075, name: "Kalecgos" }, // Band of Lucent Beams
+  34167: { zone: 4075, name: "Kalecgos" }, // Legplates of the Holy Juggernaut
+  34168: { zone: 4075, name: "Kalecgos" }, // Starstalker Legguards
+  34169: { zone: 4075, name: "Kalecgos" }, // Breeches of Natural Aggression
+  34170: { zone: 4075, name: "Kalecgos" }, // Pantaloons of Calming Strife
+
+  // ── SUNWELL PLATEAU — M'uru ──────────────────────────────────────────
+  // Listed as "Zone Drop" with no boss name in DB
+  34427: { zone: 4075, name: "M'uru" }, // Blackened Naaru Sliver
+  34428: { zone: 4075, name: "M'uru" }, // Steely Naaru Sliver
+  34429: { zone: 4075, name: "M'uru" }, // Shifting Naaru Sliver
+  34430: { zone: 4075, name: "M'uru" }, // Glimmering Naaru Sliver
+  35282: { zone: 4075, name: "M'uru" }, // Sin'dorei Band of Dominance
+  35283: { zone: 4075, name: "M'uru" }, // Sin'dorei Band of Salvation
+  35284: { zone: 4075, name: "M'uru" }, // Sin'dorei Band of Triumph
+
+  // ── SUNWELL PLATEAU — Eredar Twins ───────────────────────────────────
+  // Listed as "Zone Drop" with no boss name in DB
+  35290: { zone: 4075, name: "Eredar Twins" }, // Sin'dorei Pendant of Conquest
+  35291: { zone: 4075, name: "Eredar Twins" }, // Sin'dorei Pendant of Salvation
+  35292: { zone: 4075, name: "Eredar Twins" }, // Sin'dorei Pendant of Triumph
+};
+
+// Boss names in wow-classic-items that need renaming to the correct encounter name.
+// Key: "zoneId:dbBossName" → corrected boss name.
+const BOSS_RENAME_MAP = {
+  '3457:Echo of Medivh': 'Chess Event',
+  '3457:Phantom Attendant': 'Trash Drops',
+  '3457:Phantom Valet': 'Trash Drops',
+  '3959:Essence of Anger': 'Reliquary of Souls',
+  '3959:High Nethermancer Zerevor': 'The Illidari Council',
+  '3959:Ashtongue Channeler': 'Shade of Akama',
+};
+
 function isTierToken(item) {
   return item.name && TIER_TOKEN_RE.test(item.name) &&
     item.quality === 'Epic' && item.class === 'Miscellaneous';
@@ -66,9 +168,24 @@ function isTierToken(item) {
 // Label for the pseudo-boss used for zone/trash drops
 const TRASH_BOSS_NAME = 'Trash Drops';
 
+// ── Pre-processing: apply boss source overrides before filtering ────────────
+// This fixes items with wrong zone, wrong boss name, or "Rare Drop" with no zone.
+for (const item of items) {
+  if (!item.source) continue;
+  if (EXCLUDE_ITEMS.has(item.itemId)) continue;
+
+  const override = BOSS_SOURCE_OVERRIDES[item.itemId];
+  if (override) {
+    item.source.zone = override.zone;
+    item.source.name = override.name;
+    item.source.category = 'Boss Drop';
+  }
+}
+
 // Filter for reservable items: boss drops from TBC raids, epic+ quality, equippable
 const raidItems = items.filter(i => {
   if (!i.source) return false;
+  if (EXCLUDE_ITEMS.has(i.itemId)) return false;
   if (i.quality !== 'Epic' && i.quality !== 'Legendary') return false;
   if (!zoneIdSet.has(i.source.zone)) return false;
 
@@ -121,10 +238,12 @@ for (const raid of TBC_RAIDS) {
 
   const zoneItems = raidItems.filter(i => i.source.zone === raid.zoneId);
 
-  // Group by boss name
+  // Group by boss name, applying BOSS_RENAME_MAP for corrected encounter names
   const bossByName = {};
   for (const item of zoneItems) {
-    const bossName = item.source.name;
+    const rawName = item.source.name;
+    const renameKey = `${raid.zoneId}:${rawName}`;
+    const bossName = BOSS_RENAME_MAP[renameKey] || rawName;
     if (!bossByName[bossName]) {
       bossByName[bossName] = [];
     }
