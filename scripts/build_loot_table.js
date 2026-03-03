@@ -155,6 +155,14 @@ const BOSS_RENAME_MAP = {
   '3457:Echo of Medivh': 'Chess Event',
   '3457:Phantom Attendant': 'Trash Drops',
   '3457:Phantom Valet': 'Trash Drops',
+  // Opera Event — one of three encounters is randomly selected each week
+  '3457:The Big Bad Wolf': 'Opera Event',
+  '3457:The Crone': 'Opera Event',
+  '3457:Julianne': 'Opera Event',
+  // Rare Spawn — one of three spawns randomly per lockout
+  '3457:Hyakiss the Lurker': 'Rare Spawn',
+  '3457:Rokad the Ravager': 'Rare Spawn',
+  '3457:Shadikith the Glider': 'Rare Spawn',
   '3959:Essence of Anger': 'Reliquary of Souls',
   '3959:High Nethermancer Zerevor': 'The Illidari Council',
   '3959:Ashtongue Channeler': 'Shade of Akama',
