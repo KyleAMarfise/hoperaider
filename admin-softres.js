@@ -58,7 +58,10 @@ const softresAdminAdd = document.getElementById("softresAdminAdd");
 const softresCharacterSelect = document.getElementById("softresCharacterSelect");
 const softresCharReserves = document.getElementById("softresCharReserves");
 const softresLootBrowser = document.getElementById("softresLootBrowser");
-const lootBossFilter = document.getElementById("lootBossFilter");
+const lootBossMultiSelect = document.getElementById("lootBossMultiSelect");
+const lootBossToggle = document.getElementById("lootBossToggle");
+const lootBossDropdown = document.getElementById("lootBossDropdown");
+const lootBossOptions = document.getElementById("lootBossOptions");
 const lootTypeFilter = document.getElementById("lootTypeFilter");
 const lootSlotFilter = document.getElementById("lootSlotFilter");
 const lootSearchFilter = document.getElementById("lootSearchFilter");
@@ -766,18 +769,22 @@ function renderLootBrowser() {
     return;
   }
 
-  // Populate boss filter
-  let bossHtml = '<option value="">All Bosses</option>';
+  // Populate boss filter checkboxes
+  let bossCheckboxes = '';
   const slots = new Set();
   const types = new Set();
   for (const boss of selectedRaidLoot.bosses) {
-    bossHtml += `<option value="${escapeHtml(boss.name)}">${escapeHtml(boss.name)}</option>`;
+    bossCheckboxes += `<label class="multi-select-option"><input type="checkbox" value="${escapeHtml(boss.name)}" /> ${escapeHtml(boss.name)}</label>`;
     for (const item of boss.items) {
       slots.add(item.slot);
       types.add(getItemType(item));
     }
   }
-  lootBossFilter.innerHTML = bossHtml;
+  lootBossOptions.innerHTML = bossCheckboxes;
+  // Reset "All Bosses" to checked
+  const allCheckbox = lootBossDropdown.querySelector('.multi-select-all input');
+  if (allCheckbox) allCheckbox.checked = true;
+  lootBossToggle.textContent = 'All Bosses';
 
   let typeHtml = '<option value="">All Types</option>';
   for (const t of [...types].sort()) {
@@ -836,7 +843,8 @@ function itemMatchesSearch(item, bossName, term) {
 
 function filterLootTable() {
   if (!selectedRaidLoot) return;
-  const bossFilter = lootBossFilter.value;
+  // Read selected bosses from multi-select
+  const selectedBosses = getSelectedBosses();
   const typeFilter = lootTypeFilter.value;
   const slotFilter = lootSlotFilter.value;
   const searchFilter = (lootSearchFilter.value || "").trim().toLowerCase();
@@ -859,7 +867,7 @@ function filterLootTable() {
   // Collect all matching items into an array so we can sort by class relevance
   const itemList = [];
   for (const boss of selectedRaidLoot.bosses) {
-    if (bossFilter && boss.name !== bossFilter) continue;
+    if (selectedBosses.size && !selectedBosses.has(boss.name)) continue;
     for (const item of boss.items) {
       if (typeFilter && getItemType(item) !== typeFilter) continue;
       if (slotFilter && item.slot !== slotFilter) continue;
@@ -1536,11 +1544,67 @@ softresRaidGrid.addEventListener("click", (e) => {
   if (!tile) return;
   onRaidSelected(tile.dataset.raidId);
 });
+// ── Boss multi-select dropdown behavior ─────────────────────────────────────
+function getSelectedBosses() {
+  const allCb = lootBossDropdown.querySelector('.multi-select-all input');
+  if (allCb?.checked) return new Set(); // empty = all
+  const checked = lootBossOptions.querySelectorAll('input:checked');
+  const names = new Set();
+  for (const cb of checked) names.add(cb.value);
+  return names;
+}
+
+function updateBossToggleLabel() {
+  const selected = getSelectedBosses();
+  if (selected.size === 0) {
+    lootBossToggle.textContent = 'All Bosses';
+  } else if (selected.size === 1) {
+    lootBossToggle.textContent = [...selected][0];
+  } else {
+    lootBossToggle.textContent = `${selected.size} Bosses`;
+  }
+}
+
+lootBossToggle.addEventListener('click', () => {
+  lootBossDropdown.hidden = !lootBossDropdown.hidden;
+});
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  if (!lootBossMultiSelect.contains(e.target)) {
+    lootBossDropdown.hidden = true;
+  }
+});
+
+// "All Bosses" checkbox behavior
+lootBossDropdown.querySelector('.multi-select-all input').addEventListener('change', (e) => {
+  if (e.target.checked) {
+    // Uncheck all individual bosses
+    for (const cb of lootBossOptions.querySelectorAll('input')) cb.checked = false;
+  }
+  updateBossToggleLabel();
+  filterLootTable();
+});
+
+// Individual boss checkbox behavior
+lootBossOptions.addEventListener('change', (e) => {
+  if (!e.target.matches('input[type="checkbox"]')) return;
+  const allCb = lootBossDropdown.querySelector('.multi-select-all input');
+  const anyChecked = lootBossOptions.querySelector('input:checked');
+  // If no individual boss checked, re-check "All"
+  if (!anyChecked) {
+    allCb.checked = true;
+  } else {
+    allCb.checked = false;
+  }
+  updateBossToggleLabel();
+  filterLootTable();
+});
+
 softresCharacterSelect.addEventListener("change", renderCharacterReserves);
 softresToggleLockBtn.addEventListener("click", toggleLock);
 softresMaxReservesInput.addEventListener("change", updateMaxReserves);
 softresRows.addEventListener("click", handleReserveAction);
-lootBossFilter.addEventListener("change", filterLootTable);
 lootTypeFilter.addEventListener("change", filterLootTable);
 lootSlotFilter.addEventListener("change", filterLootTable);
 lootSearchFilter.addEventListener("input", filterLootTable);

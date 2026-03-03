@@ -114,9 +114,15 @@
         <div class="softres-loot-filters">
           <label>
             Boss
-            <select id="lootBossFilter">
-              <option value="">All Bosses</option>
-            </select>
+            <div class="multi-select" id="lootBossMultiSelect">
+              <button type="button" class="multi-select-toggle" id="lootBossToggle">All Bosses</button>
+              <div class="multi-select-dropdown" id="lootBossDropdown" hidden>
+                <label class="multi-select-option multi-select-all">
+                  <input type="checkbox" value="" checked /> All Bosses
+                </label>
+                <div id="lootBossOptions"></div>
+              </div>
+            </div>
           </label>
           <label>
             Type

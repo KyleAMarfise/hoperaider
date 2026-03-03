@@ -3438,6 +3438,64 @@ td .row-actions button {
 .softres-loot-filters input {
   width: 100%;
 }
+
+/* Boss multi-select dropdown */
+.multi-select {
+  position: relative;
+}
+.multi-select-toggle {
+  width: 100%;
+  text-align: left;
+  background: var(--bg-input, #1a1a2e);
+  color: var(--text-main, #e8dcc3);
+  border: 1px solid var(--border-dim, #333);
+  border-radius: 4px;
+  padding: 0.35em 0.6em;
+  font-size: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.multi-select-toggle:hover {
+  border-color: var(--accent, #7c5cbf);
+}
+.multi-select-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: var(--bg-card, #16162a);
+  border: 1px solid var(--border-dim, #333);
+  border-radius: 4px;
+  margin-top: 2px;
+  max-height: 260px;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+.multi-select-option {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.35em 0.6em;
+  cursor: pointer;
+  font-size: 0.88rem;
+  white-space: nowrap;
+}
+.multi-select-option:hover {
+  background: rgba(124, 92, 191, 0.15);
+}
+.multi-select-option input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+  accent-color: var(--accent, #7c5cbf);
+}
+.multi-select-all {
+  border-bottom: 1px solid var(--border-dim, #333);
+  font-weight: 600;
+}
+
 .softres-loot-scroll {
   max-height: 500px;
   overflow-y: auto;
