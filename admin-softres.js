@@ -774,7 +774,17 @@ function renderLootBrowser() {
   const slots = new Set();
   const types = new Set();
   for (const boss of selectedRaidLoot.bosses) {
-    bossCheckboxes += `<label class="multi-select-option"><input type="checkbox" value="${escapeHtml(boss.name)}" /> ${escapeHtml(boss.name)}</label>`;
+    let displayName = boss.name;
+    let filterName = boss.name;
+    if (boss.name === "Echo of Medivh" || boss.name === "Chess Event") {
+      displayName = "Chess Event (Echo of Medivh)";
+      filterName = "Chess Event (Echo of Medivh)";
+    }
+    if (boss.name === "Julianne" || boss.name === "Opera Event (The Big Bad Wolf / Julianne / The Crone)") {
+      displayName = "Opera Event (The Big Bad Wolf / Julianne / The Crone)";
+      filterName = "Opera Event (The Big Bad Wolf / Julianne / The Crone)";
+    }
+    bossCheckboxes += `<label class="multi-select-option"><input type="checkbox" value="${escapeHtml(filterName)}" /> ${escapeHtml(displayName)}</label>`;
     for (const item of boss.items) {
       slots.add(item.slot);
       types.add(getItemType(item));
@@ -867,12 +877,19 @@ function filterLootTable() {
   // Collect all matching items into an array so we can sort by class relevance
   const itemList = [];
   for (const boss of selectedRaidLoot.bosses) {
-    if (selectedBosses.size && !selectedBosses.has(boss.name)) continue;
+    let filterName = boss.name;
+    if (boss.name === "Echo of Medivh" || boss.name === "Chess Event") {
+      filterName = "Chess Event (Echo of Medivh)";
+    }
+    if (boss.name === "Julianne" || boss.name === "Opera Event (The Big Bad Wolf / Julianne / The Crone)") {
+      filterName = "Opera Event (The Big Bad Wolf / Julianne / The Crone)";
+    }
+    if (selectedBosses.size && !selectedBosses.has(filterName)) continue;
     for (const item of boss.items) {
       if (typeFilter && getItemType(item) !== typeFilter) continue;
       if (slotFilter && item.slot !== slotFilter) continue;
-      if (searchFilter && !itemMatchesSearch(item, boss.name, searchFilter)) continue;
-      itemList.push({ item, bossName: boss.name });
+      if (searchFilter && !itemMatchesSearch(item, filterName, searchFilter)) continue;
+      itemList.push({ item, bossName: filterName });
     }
   }
 
@@ -1065,7 +1082,13 @@ function renderRaidModeBody(bossFilter) {
 
   const raidReserves = currentReserves.filter(r => r.raidId === selectedRaidId);
   const raid = currentRaids.find(r => r.id === selectedRaidId);
-  const bosses = sortBossesByKillOrder(selectedRaidLoot?.bosses || [], raid?.raidName);
+  let bosses = sortBossesByKillOrder(selectedRaidLoot?.bosses || [], raid?.raidName);
+  bosses = bosses.map(boss => {
+    let displayName = boss.name;
+    if (boss.name === "Echo of Medivh" || boss.name === "Chess Event") displayName = "Chess Event (Echo of Medivh)";
+    if (boss.name === "Julianne" || boss.name === "Opera Event (The Big Bad Wolf / Julianne / The Crone)") displayName = "Opera Event (The Big Bad Wolf / Julianne / The Crone)";
+    return { ...boss, name: displayName };
+  });
 
   if (!bosses.length) {
     raidModeBody.innerHTML = '<p class="text-dim">No loot table data available for this raid.</p>';
