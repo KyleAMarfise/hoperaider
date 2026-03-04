@@ -107,14 +107,18 @@ const TOOLTIP_FORMAT_COLORS = {
 // Canonical boss kill order for each TBC raid (common raid pathway)
 const BOSS_KILL_ORDER = {
   "Karazhan": [
+    "Servant Quarters",
     "Attumen the Huntsman",
-    "Hyakiss the Lurker", "Rokad the Ravager", "Shadikith the Glider",
-    "Moroes", "Maiden of Virtue",
-    "The Big Bad Wolf", "Julianne", "The Crone", "Echo of Medivh",
+    "Moroes",
+    "Opera Event (The Big Bad Wolf / Julianne / The Crone)",
+    "Maiden of Virtue",
+    "The Curator",
+    "Chess Event (Echo of Medivh)",
+    "Terestian Illhoof",
+    "Shade of Aran",
+    "Netherspite",
     "Nightbane",
-    "The Curator", "Shade of Aran", "Terestian Illhoof", "Netherspite",
-    "Prince Malchezaar", "Prince Tenris Mirkblood",
-    "Trash Drops"
+    "Prince Malchezaar"
   ],
   "Gruul's Lair": [
     "High King Maulgar", "Gruul the Dragonkiller",
@@ -773,10 +777,12 @@ function renderLootBrowser() {
   let bossCheckboxes = '';
   const slots = new Set();
   const types = new Set();
-  for (const boss of selectedRaidLoot.bosses) {
+  // Sort bosses by new kill order and add order indicators
+  let orderedBosses = sortBossesByKillOrder(selectedRaidLoot.bosses, selectedRaidLoot.name);
+  orderedBosses.forEach((boss, idx) => {
     let displayName = boss.name;
     let filterName = boss.name;
-    if (boss.name === "Echo of Medivh" || boss.name === "Chess Event") {
+    if (boss.name === "Echo of Medivh" || boss.name === "Chess Event" || boss.name === "Chess Event (Echo of Medivh)") {
       displayName = "Chess Event (Echo of Medivh)";
       filterName = "Chess Event (Echo of Medivh)";
     }
@@ -784,12 +790,14 @@ function renderLootBrowser() {
       displayName = "Opera Event (The Big Bad Wolf / Julianne / The Crone)";
       filterName = "Opera Event (The Big Bad Wolf / Julianne / The Crone)";
     }
-    bossCheckboxes += `<label class="multi-select-option"><input type="checkbox" value="${escapeHtml(filterName)}" /> ${escapeHtml(displayName)}</label>`;
+    // Add order indicator
+    const orderLabel = ` (${idx + 1})`;
+    bossCheckboxes += `<label class="multi-select-option"><input type="checkbox" value="${escapeHtml(filterName)}" /> ${escapeHtml(displayName + orderLabel)}</label>`;
     for (const item of boss.items) {
       slots.add(item.slot);
       types.add(getItemType(item));
     }
-  }
+  });
   lootBossOptions.innerHTML = bossCheckboxes;
   // Reset "All Bosses" to checked
   const allCheckbox = lootBossDropdown.querySelector('.multi-select-all input');
@@ -1083,11 +1091,14 @@ function renderRaidModeBody(bossFilter) {
   const raidReserves = currentReserves.filter(r => r.raidId === selectedRaidId);
   const raid = currentRaids.find(r => r.id === selectedRaidId);
   let bosses = sortBossesByKillOrder(selectedRaidLoot?.bosses || [], raid?.raidName);
-  bosses = bosses.map(boss => {
+  // Sort bosses by new kill order and add order indicators
+  bosses = sortBossesByKillOrder(bosses, raid?.raidName).map((boss, idx) => {
     let displayName = boss.name;
-    if (boss.name === "Echo of Medivh" || boss.name === "Chess Event") displayName = "Chess Event (Echo of Medivh)";
+    if (boss.name === "Echo of Medivh" || boss.name === "Chess Event" || boss.name === "Chess Event (Echo of Medivh)") displayName = "Chess Event (Echo of Medivh)";
     if (boss.name === "Julianne" || boss.name === "Opera Event (The Big Bad Wolf / Julianne / The Crone)") displayName = "Opera Event (The Big Bad Wolf / Julianne / The Crone)";
-    return { ...boss, name: displayName };
+    // Add order indicator
+    const orderLabel = ` (${idx + 1})`;
+    return { ...boss, name: displayName + orderLabel };
   });
 
   if (!bosses.length) {
