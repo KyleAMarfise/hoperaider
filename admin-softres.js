@@ -1433,6 +1433,11 @@ async function handleReserveButton(e) {
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
         };
+        // Log softresLocked and authUid for debugging
+        console.log("[SOFTRESERVE] Debug:", {
+          softresLocked: raid.softresLocked,
+          authUid: authUid
+        });
         console.log("[SOFTRESERVE] Payload for addDoc:", JSON.stringify(payload, null, 2));
         await addDoc(collection(db, "softreserves"), payload);
         setMsg(`Reserved ${item.name}.`);
