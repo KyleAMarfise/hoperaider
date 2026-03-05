@@ -4160,7 +4160,6 @@ if (!hasConfigValues()) {
     }
     isAdmin = inStaticAdminAllowlist || hasAdminDoc || hasOwnerDoc;
     hasAdminUI = isAdmin && !!adminRaidSection;
-    console.log("[AUTH] uid:", authUid, "isAdmin:", isAdmin, "hasAdminDoc:", hasAdminDoc, "hasOwnerDoc:", hasOwnerDoc, "email:", authEmail);
     try {
       const safeDisplayName = String(user.displayName || authEmail || "").trim();
       await setDoc(
@@ -4175,7 +4174,6 @@ if (!hasConfigValues()) {
         },
         { merge: true }
       );
-      console.log("[AUTH] setDoc members OK");
     } catch (error) {
       console.error("[AUTH] setDoc members FAILED:", error?.code, error?.message);
       const fallback = "Signed in, but unable to initialize member access. Ask an admin to add your UID in Access Manager.";
@@ -4203,7 +4201,6 @@ if (!hasConfigValues()) {
     unsubscribeSignups = onSnapshot(
       q,
       (snapshot) => {
-        console.log("[SIGNUPS] snapshot received, count:", snapshot.docs.length);
         currentRows = snapshot.docs.map((docItem) => ({
           id: docItem.id,
           ...docItem.data()
@@ -4222,7 +4219,6 @@ if (!hasConfigValues()) {
       unsubscribeRaids = onSnapshot(
         raidsQuery,
         (snapshot) => {
-          console.log("[RAIDS] snapshot received, count:", snapshot.docs.length);
           currentRaids = snapshot.docs.map((docItem) => ({
             id: docItem.id,
             ...docItem.data()

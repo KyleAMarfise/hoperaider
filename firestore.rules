@@ -355,7 +355,7 @@ service cloud.firestore {
     }
 
     match /raids/{raidId} {
-      allow read: if isApprovedUser();
+      allow read: if request.auth != null;
 
       allow create: if isAdmin()
         && validRaidData(request.resource.data)

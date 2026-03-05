@@ -75,7 +75,6 @@ const lootTableRows = document.getElementById("lootTableRows");
 
 // ── State ───────────────────────────────────────────────────────────────────
 let db = null;
-let authUser = null;
 let authUid = null;
 let isAdmin = false;
 let isOwner = false;
@@ -1350,36 +1349,23 @@ function subscribeToReserves() {
 
 // ── Reserve via +/- buttons ─────────────────────────────────────────────────
 async function handleReserveButton(e) {
-  console.log("[SOFTRESERVE] handleReserveButton called", {
-    isApprovedUser,
-    authUid,
-    selectedRaidId,
-    isAdmin
-  });
   const btn = e.target.closest("[data-reserve-action]");
-  console.log("[SOFTRESERVE] btn:", typeof btn, btn == null, btn);
   if (!btn) return;
-  if (!db || !isApprovedUser || !selectedRaidId) {
-    console.log("[SOFTRESERVE] Early exit: db, isApprovedUser, or selectedRaidId missing", { db, isApprovedUser, selectedRaidId });
-    return;
-  }
+  if (!db || !isApprovedUser || !selectedRaidId) return;
 
   const raid = currentRaids.find(r => r.id === selectedRaidId);
-  console.log("[SOFTRESERVE] raid:", typeof raid, raid == null, raid);
   if (!raid || (!isAdmin && raid.softresLocked)) {
     setMsg("Reserves are locked for this raid.", true);
     return;
   }
 
   const ch = getSelectedCharacter();
-  console.log("[SOFTRESERVE] character:", typeof ch, ch == null, ch);
   if (!ch) {
     setMsg("Please select a character first.", true);
     return;
   }
 
   if (!isAdmin && ch.ownerUid !== authUid) {
-    console.log("[SOFTRESERVE] Early exit: ownerUid mismatch", { chOwnerUid: ch.ownerUid, authUid });
     setMsg("You can only modify your own characters' reserves.", true);
     return;
   }
@@ -1391,7 +1377,6 @@ async function handleReserveButton(e) {
     b.items.map(i => ({ ...i, bossName: b.name }))
   ) : [];
   const item = allItems.find(i => i.itemId === itemId);
-  console.log("[SOFTRESERVE] item:", typeof item, item == null, item);
   if (!item && action === "add") {
     setMsg("Item not found in loot table.", true);
     return;
@@ -1408,13 +1393,11 @@ async function handleReserveButton(e) {
     slot: item.slot || "",
     boss: item.bossName || ""
   } : null;
-  console.log("[SOFTRESERVE] itemEntry:", typeof itemEntry, itemEntry == null, itemEntry);
 
   btn.disabled = true;
   try {
     if (action === "add") {
       if (existing) {
-        console.log("[SOFTRESERVE] BRANCH: updating existing reserve", existing);
         const currentItems = getReserveItems(existing);
         if (currentItems.length >= maxRes) {
           setMsg(`Already at max reserves (${maxRes}). Remove one first.`, true);
@@ -1432,12 +1415,9 @@ async function handleReserveButton(e) {
           createdAt: existing.createdAt || serverTimestamp(),
           updatedAt: serverTimestamp()
         };
-        console.log("[SOFTRESERVE] updatePayload:", JSON.stringify(updatePayload, null, 2));
         await setDoc(doc(db, "softreserves", existing.id), updatePayload);
         setMsg(`Reserved ${item.name}.`);
       } else {
-        console.log("[SOFTRESERVE] BRANCH: creating new reserve");
-        // Fix ownerUid: always use current user's UID
         const payload = {
           raidId: selectedRaidId,
           raidName: raid.raidName || "",
@@ -1450,21 +1430,10 @@ async function handleReserveButton(e) {
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
         };
-        console.log("[SOFTRESERVE] payload:", JSON.stringify(payload, null, 2));
         try {
-          // TEMP DEBUG - remove after diagnosis
-          if (authUser) {
-            const tokenResult = await authUser.getIdTokenResult();
-            console.log("[SOFTRESERVE] token debug:", JSON.stringify({
-              sign_in_provider: tokenResult.claims?.firebase?.sign_in_provider,
-              uid: tokenResult.claims?.user_id,
-              email: tokenResult.claims?.email
-            }, null, 2));
-          }
           await addDoc(collection(db, "softreserves"), payload);
           setMsg(`Reserved ${item.name}.`);
         } catch (err) {
-          console.error("[SOFTRESERVE] Firestore error:", err);
           setMsg("Error saving reserve: " + err.message, true);
         }
       }
@@ -1822,7 +1791,6 @@ if (!hasConfigValues()) {
     if (unsubscribeReserves) { unsubscribeReserves(); unsubscribeReserves = null; }
 
     if (!user) {
-      authUser = null;
       authUid = null;
       isAdmin = false;
       isOwner = false;
@@ -1839,7 +1807,6 @@ if (!hasConfigValues()) {
       return;
     }
 
-    authUser = user;
     authUid = user.uid;
 
     // Check admin status
