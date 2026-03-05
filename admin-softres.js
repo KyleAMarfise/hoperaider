@@ -553,16 +553,16 @@ function renderRaidOptions() {
     html += renderUpcomingTile(raid);
   }
 
-  // ── Past divider + compact rows ──
+  // ── Past divider + collapsible list ──
   if (past.length) {
-    if (upcoming.length) {
-      html += '<div class="srt-divider"><span>Completed Raids</span></div>';
-    }
+    const isSelectedPast = past.some(r => r.id === selectedRaidId);
+    html += `<details class="srt-past-details"${isSelectedPast ? ' open' : ''}>`;
+    html += `<summary class="srt-past-summary">Completed Raids <span class="srt-past-count">(${past.length})</span></summary>`;
     html += '<div class="srt-past-list">';
     for (const raid of past) {
       html += renderPastRow(raid);
     }
-    html += '</div>';
+    html += '</div></details>';
   }
 
   softresRaidGrid.innerHTML = html;

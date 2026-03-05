@@ -3180,25 +3180,40 @@ td .row-actions button {
   border: 1px solid rgba(220, 50, 50, 0.3);
 }
 
-/* ── Completed Raids Divider ── */
-.srt-divider {
+/* ── Completed Raids Collapsible ── */
+.srt-past-details {
   width: 100%;
+  margin-top: 1rem;
+}
+.srt-past-summary {
+  cursor: pointer;
+  list-style: none;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin: 1rem 0 0.25rem;
+  gap: 0.5rem;
+  padding: 0.4rem 0.5rem;
   color: var(--text-dim);
   font-size: 0.82rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  border-radius: 4px;
+  user-select: none;
 }
-.srt-divider::before,
-.srt-divider::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: var(--line-strong);
+.srt-past-summary::-webkit-details-marker { display: none; }
+.srt-past-summary::before {
+  content: "▶";
+  font-size: 0.6rem;
+  transition: transform 0.15s;
+}
+.srt-past-details[open] .srt-past-summary::before {
+  transform: rotate(90deg);
+}
+.srt-past-summary:hover {
+  color: var(--gold);
+}
+.srt-past-count {
+  font-weight: 400;
 }
 
 /* ── Past Raids Compact List ── */
