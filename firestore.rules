@@ -9,10 +9,7 @@ service cloud.firestore {
     }
 
     function isApprovedUser() {
-      return signedIn() && (
-        isAdmin()
-        || exists(/databases/$(database)/documents/members/$(request.auth.uid))
-      );
+      return signedIn();
     }
 
     function isAdmin() {
@@ -447,21 +444,7 @@ service cloud.firestore {
 
     match /members/{uid} {
       allow read: if isAdmin() || (signedIn() && request.auth.uid == uid);
-      allow create: if isAdmin()
-        || (
-          signedIn()
-          && request.auth.uid == uid
-          && request.resource.data.uid == uid
-          && request.resource.data.role == 'member'
-        );
-      allow update: if isAdmin()
-        || (
-          signedIn()
-          && request.auth.uid == uid
-          && request.resource.data.uid == uid
-          && request.resource.data.role == 'member'
-        );
-      allow delete: if isAdmin();
+      allow create, update, delete: if isAdmin();
     }
 
     match /admins/{uid} {
