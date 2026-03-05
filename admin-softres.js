@@ -1571,6 +1571,12 @@ function setPageVisibility() {
   // Show to all approved users (admins + members)
   softresSection.hidden = !isApprovedUser;
   if (!isApprovedUser) softresDetail.hidden = true;
+
+  // Hide admin-only nav links from non-admin users
+  const adminRaidsLink = document.getElementById("adminRaidsLink");
+  const adminOpsLink = document.getElementById("adminOpsLink");
+  if (adminRaidsLink) adminRaidsLink.hidden = !isAdmin;
+  if (adminOpsLink) adminOpsLink.hidden = !isAdmin;
 }
 
 // ── Wire up events ──────────────────────────────────────────────────────────

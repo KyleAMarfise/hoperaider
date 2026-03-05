@@ -376,33 +376,20 @@ service cloud.firestore {
       allow create: if validSoftReserveData(request.resource.data)
         && request.resource.data.createdAt is timestamp
         && request.resource.data.updatedAt is timestamp
-        && (
-          isAdmin()
-          || (
-            signedIn()
-            && request.resource.data.ownerUid == request.auth.uid
-            && !(get(/databases/$(database)/documents/raids/$(request.resource.data.raidId)).data.softresLocked == true)
-          )
-        );
+        && signedIn()
+        && request.resource.data.ownerUid == request.auth.uid;
 
       allow update: if validSoftReserveData(request.resource.data)
         && request.resource.data.createdAt == resource.data.createdAt
         && request.resource.data.updatedAt is timestamp
-        && (
-          isAdmin()
-          || (
-            signedIn()
-            && resource.data.ownerUid == request.auth.uid
-            && request.resource.data.ownerUid == request.auth.uid
-            && !(get(/databases/$(database)/documents/raids/$(request.resource.data.raidId)).data.softresLocked == true)
-          )
-        );
+        && signedIn()
+        && resource.data.ownerUid == request.auth.uid
+        && request.resource.data.ownerUid == request.auth.uid;
 
       allow delete: if isAdmin()
         || (
           isApprovedUser()
           && resource.data.ownerUid == request.auth.uid
-          && !(get(/databases/$(database)/documents/raids/$(resource.data.raidId)).data.softresLocked == true)
         );
     }
 

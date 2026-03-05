@@ -65,7 +65,7 @@
 
   const adminActions = `
     <a class="nav-button" href="index.html">Signup Page</a>
-    <a class="nav-button ${page === "admin-raids" ? "is-active" : ""}" href="admin.html">Raid Creator</a>
+    <a id="adminRaidsLink" class="nav-button ${page === "admin-raids" ? "is-active" : ""}" href="admin.html">Raid Creator</a>
     <a id="adminOpsLink" class="nav-button ${page === "admin-operations" ? "is-active" : ""}" href="admin-operations.html">
       Requests &amp; Audit
       <span id="adminOpsBadge" class="nav-mini-badge" hidden>0</span>
