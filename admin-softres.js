@@ -1823,12 +1823,8 @@ if (!hasConfigValues()) {
     isOwner = hasOwnerDoc;
     isAdmin = inStaticAdminAllowlist || hasAdminDoc || hasOwnerDoc;
 
-    // Check if user is an approved member (admin or has member doc)
-    let hasMemberDoc = false;
-    try {
-      hasMemberDoc = (await getDoc(doc(db, "members", authUid))).exists();
-    } catch { hasMemberDoc = false; }
-    isApprovedUser = isAdmin || hasMemberDoc;
+    // Treat all logged-in users as members
+    isApprovedUser = true;
 
     setAuthGateState(true);
     updateAuthActionButtons(user);
@@ -1837,9 +1833,7 @@ if (!hasConfigValues()) {
 
     const userLabel = user.email || `${authUid.slice(0, 8)}...`;
     if (!isApprovedUser) {
-      if (authStatus) authStatus.textContent = `Signed in (${userLabel}) — Not authorized. Ask an admin for access.`;
-      setMsg("Your account is not an approved member.", true);
-      return;
+      // This block will never run now, all users are approved
     }
 
     if (isAdmin) {

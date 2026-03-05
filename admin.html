@@ -22,10 +22,11 @@
         <input type="email" id="authGateEmail" class="auth-input" placeholder="Email address" required autocomplete="email" />
         <input type="password" id="authGatePassword" class="auth-input" placeholder="Password" required autocomplete="current-password" />
         <div class="auth-gate-email-buttons">
-          <button type="submit" class="auth-btn auth-btn-email">Sign In with Email</button>
+          <button type="submit" class="auth-btn auth-btn-email" style="opacity:0.4;pointer-events:none;" aria-disabled="true">Sign In with Email</button>
           <button type="button" id="authGateCreateAccount" class="auth-btn auth-btn-create">Create Account</button>
         </div>
         <p class="auth-gate-email-hint">First time? Click <strong>Create Account</strong>. Already registered? Click <strong>Sign In</strong>.</p>
+        <p class="auth-gate-email-hint" style="color:#888;font-size:0.95em;">Sign In is disabled. Please use Create Account to register and log in.</p>
       </form>
     </div>
   </section>

@@ -902,11 +902,14 @@ if (!hasConfigValues()) {
   if (authGateEmailForm) {
     authGateEmailForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      performEmailSignIn(false);
+      // Disabled sign in with email. Only allow create account.
+      setMessage(raidAdminMessage, "Sign In is disabled. Please use Create Account.", true);
     });
   }
   if (authGateCreateAccount) {
-    authGateCreateAccount.addEventListener("click", () => performEmailSignIn(true));
+    authGateCreateAccount.addEventListener("click", async () => {
+      await performEmailSignIn(true);
+    });
   }
 
   if (signOutButton) {

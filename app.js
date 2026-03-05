@@ -2137,15 +2137,15 @@ function hasValidPreferredTimes() {
   const preferredStart2 = parseHourValue(fields.preferredStart2.value);
   const preferredEnd2 = parseHourValue(fields.preferredEnd2.value);
 
+  function isValidRange(start, end) {
+    // Accept normal and overnight (e.g., 20 to 2)
+    return Number.isInteger(start) && Number.isInteger(end) && start !== end;
+  }
   return (
     Boolean(preferredDay1)
     && Boolean(preferredDay2)
-    && Number.isInteger(preferredStart1)
-    && Number.isInteger(preferredEnd1)
-    && Number.isInteger(preferredStart2)
-    && Number.isInteger(preferredEnd2)
-    && preferredStart1 < preferredEnd1
-    && preferredStart2 < preferredEnd2
+    && isValidRange(preferredStart1, preferredEnd1)
+    && isValidRange(preferredStart2, preferredEnd2)
   );
 }
 
