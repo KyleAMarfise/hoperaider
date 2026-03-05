@@ -1431,7 +1431,8 @@ async function handleReserveButton(e) {
           wowClass: ch.wowClass || "",
           ownerUid: authUid,
           items: [itemEntry],
-          // Workaround for Firestore CDN: set timestamps after addDoc
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
         };
         // Log softresLocked and authUid for debugging
         const softresLocked = typeof raid.softresLocked !== "undefined" ? raid.softresLocked : null;
@@ -1440,12 +1441,7 @@ async function handleReserveButton(e) {
           authUid
         });
         console.log("[SOFTRESERVE] Payload for addDoc:", JSON.stringify(payload, null, 2));
-        // Add doc, then update with timestamps if needed
-        const docRef = await addDoc(collection(db, "softreserves"), payload);
-        await updateDoc(docRef, {
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp()
-        });
+        await addDoc(collection(db, "softreserves"), payload);
         setMsg(`Reserved ${item.name}.`);
       }
     } else if (action === "remove") {
