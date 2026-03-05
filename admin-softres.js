@@ -75,6 +75,7 @@ const lootTableRows = document.getElementById("lootTableRows");
 
 // ── State ───────────────────────────────────────────────────────────────────
 let db = null;
+let authUser = null;
 let authUid = null;
 let isAdmin = false;
 let isOwner = false;
@@ -1451,6 +1452,15 @@ async function handleReserveButton(e) {
         };
         console.log("[SOFTRESERVE] payload:", JSON.stringify(payload, null, 2));
         try {
+          // TEMP DEBUG - remove after diagnosis
+          if (authUser) {
+            const tokenResult = await authUser.getIdTokenResult();
+            console.log("[SOFTRESERVE] token debug:", JSON.stringify({
+              sign_in_provider: tokenResult.claims?.firebase?.sign_in_provider,
+              uid: tokenResult.claims?.user_id,
+              email: tokenResult.claims?.email
+            }, null, 2));
+          }
           await addDoc(collection(db, "softreserves"), payload);
           setMsg(`Reserved ${item.name}.`);
         } catch (err) {
@@ -1812,6 +1822,7 @@ if (!hasConfigValues()) {
     if (unsubscribeReserves) { unsubscribeReserves(); unsubscribeReserves = null; }
 
     if (!user) {
+      authUser = null;
       authUid = null;
       isAdmin = false;
       isOwner = false;
@@ -1828,6 +1839,7 @@ if (!hasConfigValues()) {
       return;
     }
 
+    authUser = user;
     authUid = user.uid;
 
     // Check admin status
