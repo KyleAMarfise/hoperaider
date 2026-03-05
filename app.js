@@ -4162,12 +4162,13 @@ if (!hasConfigValues()) {
     hasAdminUI = isAdmin && !!adminRaidSection;
     console.log("[AUTH] uid:", authUid, "isAdmin:", isAdmin, "hasAdminDoc:", hasAdminDoc, "hasOwnerDoc:", hasOwnerDoc, "email:", authEmail);
     try {
+      const safeDisplayName = String(user.displayName || authEmail || "").trim();
       await setDoc(
         doc(membersRef, authUid),
         {
           uid: authUid,
           role: "member",
-          displayName: String(user.displayName || "").trim(),
+          displayName: safeDisplayName,
           email: authEmail || "",
           updatedAt: serverTimestamp(),
           createdAt: serverTimestamp()
