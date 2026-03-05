@@ -1421,6 +1421,7 @@ async function handleReserveButton(e) {
         });
         setMsg(`Reserved ${item.name}.`);
       } else {
+        // Fix ownerUid: always use current user's UID
         const payload = {
           raidId: selectedRaidId,
           raidName: raid.raidName || "",
@@ -1428,18 +1429,23 @@ async function handleReserveButton(e) {
           characterId: ch.id,
           characterName: ch.characterName || "",
           wowClass: ch.wowClass || "",
-          ownerUid: ch.ownerUid || authUid,
+          ownerUid: authUid,
           items: [itemEntry],
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp()
+          // Workaround for Firestore CDN: set timestamps after addDoc
         };
         // Log softresLocked and authUid for debugging
+        const softresLocked = typeof raid.softresLocked !== "undefined" ? raid.softresLocked : null;
         console.log("[SOFTRESERVE] Debug:", {
-          softresLocked: raid.softresLocked,
-          authUid: authUid
+          softresLocked,
+          authUid
         });
         console.log("[SOFTRESERVE] Payload for addDoc:", JSON.stringify(payload, null, 2));
-        await addDoc(collection(db, "softreserves"), payload);
+        // Add doc, then update with timestamps if needed
+        const docRef = await addDoc(collection(db, "softreserves"), payload);
+        await updateDoc(docRef, {
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        });
         setMsg(`Reserved ${item.name}.`);
       }
     } else if (action === "remove") {
