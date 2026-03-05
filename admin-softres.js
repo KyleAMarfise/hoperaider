@@ -1171,7 +1171,7 @@ function renderRaidModeBody(bossFilter) {
             ${iconUrl}
             <div class="raid-mode-item-info">
               <span class="raid-mode-item-name" style="color:${color}">${escapeHtml(item.name)} <a href="${wowheadUrl(item.itemId)}" class="wowhead-link" target="_blank" rel="noopener" title="View on Wowhead" onclick="event.stopPropagation()">↗</a>${contestLabel}</span>
-              <span class="raid-mode-item-meta">${escapeHtml(slotLabel)}${slotLabel && typeName ? ' · ' : ''}${escapeHtml(typeName)}${(slotLabel || typeName) && iLvl ? ' · ' : ''}${iLvl}${((slotLabel || typeName || iLvl) && dropPct) ? ' · ' : ''}${dropPct}</span>
+              <span class="raid-mode-item-meta">${escapeHtml(slotLabel)}${slotLabel && typeName ? ' · ' : ''}${escapeHtml(typeName)}${(slotLabel || typeName || iLvl) && dropPct ? ' · ' : ''}${dropPct}</span>
             </div>
           </div>
           <div class="raid-mode-char-list">${charChips}</div>
@@ -1349,37 +1349,48 @@ function subscribeToReserves() {
 
 // ── Reserve via +/- buttons ─────────────────────────────────────────────────
 async function handleReserveButton(e) {
+  console.log("[SOFTRESERVE] handleReserveButton called", {
+    isApprovedUser,
+    authUid,
+    selectedRaidId,
+    isAdmin
+  });
   const btn = e.target.closest("[data-reserve-action]");
+  console.log("[SOFTRESERVE] btn:", typeof btn, btn == null, btn);
   if (!btn) return;
-  if (!db || !isApprovedUser || !selectedRaidId) return;
+  if (!db || !isApprovedUser || !selectedRaidId) {
+    console.log("[SOFTRESERVE] Early exit: db, isApprovedUser, or selectedRaidId missing", { db, isApprovedUser, selectedRaidId });
+    return;
+  }
 
   const raid = currentRaids.find(r => r.id === selectedRaidId);
-  // Non-admins cannot modify when locked; admins can always modify
+  console.log("[SOFTRESERVE] raid:", typeof raid, raid == null, raid);
   if (!raid || (!isAdmin && raid.softresLocked)) {
     setMsg("Reserves are locked for this raid.", true);
     return;
   }
 
   const ch = getSelectedCharacter();
+  console.log("[SOFTRESERVE] character:", typeof ch, ch == null, ch);
   if (!ch) {
     setMsg("Please select a character first.", true);
     return;
   }
 
-  // Non-admins can only modify reserves for their own characters
   if (!isAdmin && ch.ownerUid !== authUid) {
+    console.log("[SOFTRESERVE] Early exit: ownerUid mismatch", { chOwnerUid: ch.ownerUid, authUid });
     setMsg("You can only modify your own characters' reserves.", true);
     return;
   }
 
-  const action = btn.dataset.reserveAction;   // "add" or "remove"
+  const action = btn.dataset.reserveAction;
   const itemId = Number(btn.dataset.itemId);
 
-  // Look up item from loot data
   const allItems = selectedRaidLoot ? selectedRaidLoot.bosses.flatMap(b =>
     b.items.map(i => ({ ...i, bossName: b.name }))
   ) : [];
   const item = allItems.find(i => i.itemId === itemId);
+  console.log("[SOFTRESERVE] item:", typeof item, item == null, item);
   if (!item && action === "add") {
     setMsg("Item not found in loot table.", true);
     return;
@@ -1396,18 +1407,19 @@ async function handleReserveButton(e) {
     slot: item.slot || "",
     boss: item.bossName || ""
   } : null;
+  console.log("[SOFTRESERVE] itemEntry:", typeof itemEntry, itemEntry == null, itemEntry);
 
   btn.disabled = true;
   try {
     if (action === "add") {
       if (existing) {
+        console.log("[SOFTRESERVE] BRANCH: updating existing reserve", existing);
         const currentItems = getReserveItems(existing);
         if (currentItems.length >= maxRes) {
           setMsg(`Already at max reserves (${maxRes}). Remove one first.`, true);
           return;
         }
-        // Use setDoc to fully overwrite (removes any old item1*/item2* fields)
-        await setDoc(doc(db, "softreserves", existing.id), {
+        const updatePayload = {
           raidId: existing.raidId,
           raidName: existing.raidName || "",
           raidDate: existing.raidDate || "",
@@ -1418,9 +1430,12 @@ async function handleReserveButton(e) {
           items: [...currentItems, itemEntry],
           createdAt: existing.createdAt || serverTimestamp(),
           updatedAt: serverTimestamp()
-        });
+        };
+        console.log("[SOFTRESERVE] updatePayload:", JSON.stringify(updatePayload, null, 2));
+        await setDoc(doc(db, "softreserves", existing.id), updatePayload);
         setMsg(`Reserved ${item.name}.`);
       } else {
+        console.log("[SOFTRESERVE] BRANCH: creating new reserve");
         // Fix ownerUid: always use current user's UID
         const payload = {
           raidId: selectedRaidId,
@@ -1434,15 +1449,14 @@ async function handleReserveButton(e) {
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
         };
-        // Log softresLocked and authUid for debugging
-        const softresLocked = typeof raid.softresLocked !== "undefined" ? raid.softresLocked : null;
-        console.log("[SOFTRESERVE] Debug:", {
-          softresLocked,
-          authUid
-        });
-        console.log("[SOFTRESERVE] Payload for addDoc:", JSON.stringify(payload, null, 2));
-        await addDoc(collection(db, "softreserves"), payload);
-        setMsg(`Reserved ${item.name}.`);
+        console.log("[SOFTRESERVE] payload:", JSON.stringify(payload, null, 2));
+        try {
+          await addDoc(collection(db, "softreserves"), payload);
+          setMsg(`Reserved ${item.name}.`);
+        } catch (err) {
+          console.error("[SOFTRESERVE] Firestore error:", err);
+          setMsg("Error saving reserve: " + err.message, true);
+        }
       }
     } else if (action === "remove") {
       if (!existing) return;
