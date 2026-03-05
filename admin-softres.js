@@ -1433,6 +1433,7 @@ async function handleReserveButton(e) {
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
         };
+        console.log("[SOFTRESERVE] Payload for addDoc:", JSON.stringify(payload, null, 2));
         await addDoc(collection(db, "softreserves"), payload);
         setMsg(`Reserved ${item.name}.`);
       }
