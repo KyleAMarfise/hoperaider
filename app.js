@@ -228,6 +228,188 @@ function enrichArmoryColumns(containerEl) {
   });
 }
 
+// WarcraftLogs API (fresh TBC servers) — shares sessionStorage cache with admin-operations.js
+const WCL_BASE_URL = "https://fresh.warcraftlogs.com";
+const WCL_SERVER_SLUG = "dreamscythe";
+const WCL_SERVER_REGION = "US";
+const WCL_TBC_ZONES = [
+  { id: 1013, label: "Sunwell" },
+  { id: 1011, label: "BT/Hyjal" },
+  { id: 1012, label: "Zul'Aman" },
+  { id: 1052, label: "SSC/TK" },
+  { id: 1048, label: "Gruul/Mag" },
+  { id: 1047, label: "Kara" }
+];
+
+let wclTokenCache = null;
+let wclTokenExpiry = 0;
+const wclParseCache = new Map();
+const wclPendingFetches = new Map();
+const WCL_SESSION_KEY = "wclParseCache_v1";
+(function loadWclSessionCache() {
+  try {
+    const stored = sessionStorage.getItem(WCL_SESSION_KEY);
+    if (stored) {
+      Object.entries(JSON.parse(stored)).forEach(([k, v]) => wclParseCache.set(k, v));
+    }
+  } catch { /* ignore */ }
+})();
+
+function saveWclSessionCache() {
+  try {
+    const obj = {};
+    wclParseCache.forEach((v, k) => { if (v !== null) obj[k] = v; });
+    sessionStorage.setItem(WCL_SESSION_KEY, JSON.stringify(obj));
+  } catch { /* ignore */ }
+}
+
+let wclTokenFetchPromise = null;
+async function getWclToken() {
+  if (wclTokenCache && Date.now() < wclTokenExpiry) return wclTokenCache;
+  if (wclTokenFetchPromise) return wclTokenFetchPromise;
+  const clientId = appSettings.wclClientId;
+  const clientSecret = appSettings.wclClientSecret;
+  if (!clientId || !clientSecret) return null;
+  wclTokenFetchPromise = (async () => {
+    try {
+      const creds = btoa(`${clientId}:${clientSecret}`);
+      const res = await fetch(`${WCL_BASE_URL}/oauth/token`, {
+        method: "POST",
+        headers: { "Authorization": `Basic ${creds}`, "Content-Type": "application/x-www-form-urlencoded" },
+        body: "grant_type=client_credentials"
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      wclTokenCache = data.access_token;
+      wclTokenExpiry = Date.now() + ((data.expires_in || 3600) - 60) * 1000;
+      return wclTokenCache;
+    } catch {
+      return null;
+    } finally {
+      wclTokenFetchPromise = null;
+    }
+  })();
+  return wclTokenFetchPromise;
+}
+
+async function fetchWclParses(characterName) {
+  const slug = String(characterName || "").trim().toLowerCase();
+  if (!slug) return null;
+  if (wclParseCache.has(slug)) return wclParseCache.get(slug);
+  if (wclPendingFetches.has(slug)) return wclPendingFetches.get(slug);
+
+  const promise = (async () => {
+    const token = await getWclToken();
+    if (!token) { wclParseCache.set(slug, null); return null; }
+
+    const safeName = String(characterName).trim().replace(/[^a-zA-Z\u00C0-\u024F'-]/g, "");
+    if (!safeName) { wclParseCache.set(slug, null); return null; }
+
+    const zoneFields = WCL_TBC_ZONES.map((z, i) => `z${i}: zoneRankings(zoneID: ${z.id})`).join(" ");
+    const query = `{ characterData { character(name: "${safeName}", serverSlug: "${WCL_SERVER_SLUG}", serverRegion: "${WCL_SERVER_REGION}") { ${zoneFields} } } }`;
+
+    try {
+      const res = await fetch(`${WCL_BASE_URL}/api/v2/client`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ query })
+      });
+      if (res.status === 429) { wclParseCache.set(slug, null); return null; }
+      if (!res.ok) { wclParseCache.set(slug, null); return null; }
+      const data = await res.json();
+      const char = data?.data?.characterData?.character;
+      if (!char) { wclParseCache.set(slug, null); return null; }
+
+      const results = [];
+      for (let i = 0; i < WCL_TBC_ZONES.length; i++) {
+        const zoneData = char[`z${i}`];
+        const avg = zoneData?.bestPerformanceAverage;
+        if (avg != null && avg > 0) {
+          results.push({ label: WCL_TBC_ZONES[i].label, avg: Math.round(avg) });
+        }
+      }
+      wclParseCache.set(slug, results);
+      saveWclSessionCache();
+      return results;
+    } catch {
+      wclParseCache.set(slug, null);
+      return null;
+    }
+  })();
+
+  wclPendingFetches.set(slug, promise);
+  promise.finally(() => wclPendingFetches.delete(slug));
+  return promise;
+}
+
+function wclParseColorClass(pct) {
+  if (pct >= 99) return "wcl-parse-gold";
+  if (pct >= 95) return "wcl-parse-orange";
+  if (pct >= 75) return "wcl-parse-purple";
+  if (pct >= 50) return "wcl-parse-blue";
+  if (pct >= 25) return "wcl-parse-green";
+  return "wcl-parse-gray";
+}
+
+const RAID_NAME_TO_WCL_ZONES = {
+  "Karazhan": ["Kara"],
+  "Gruul's Lair": ["Gruul/Mag"],
+  "Magtheridon's Lair": ["Gruul/Mag"],
+  "Serpentshrine Cavern": ["SSC/TK"],
+  "The Eye": ["SSC/TK"],
+  "Tempest Keep": ["SSC/TK"],
+  "Hyjal Summit": ["BT/Hyjal"],
+  "Black Temple": ["BT/Hyjal"],
+  "Zul'Aman": ["Zul'Aman"],
+  "Sunwell Plateau": ["Sunwell"]
+};
+
+function renderWclParsesCell(charName, logsUrl, raidName) {
+  if (!charName) return "—";
+  const href = escapeHtml(logsUrl || buildLogsUrl(charName));
+  const raidAttr = raidName ? ` data-wcl-raid="${escapeHtml(raidName)}"` : "";
+  return `<span data-wcl-char="${escapeHtml(charName)}" data-wcl-href="${href}"${raidAttr} class="wcl-parses-container"><a href="${href}" target="_blank" rel="noopener noreferrer" class="wcl-parse-link">…</a></span>`;
+}
+
+function applyWclResults(containerEl, name, results) {
+  containerEl.querySelectorAll(`[data-wcl-char="${CSS.escape(name)}"]`).forEach((cell) => {
+    const href = cell.dataset.wclHref || "#";
+    const raidName = cell.dataset.wclRaid || "";
+    cell.removeAttribute("data-wcl-char");
+    cell.removeAttribute("data-wcl-href");
+    cell.removeAttribute("data-wcl-raid");
+    if (!results || !results.length) {
+      cell.innerHTML = `<span class="text-dim">N/A</span>`;
+      return;
+    }
+    const allowedZones = RAID_NAME_TO_WCL_ZONES[raidName];
+    const filtered = allowedZones ? results.filter((r) => allowedZones.includes(r.label)) : results;
+    if (!filtered.length) {
+      cell.innerHTML = `<span class="text-dim">N/A</span>`;
+      return;
+    }
+    cell.innerHTML = filtered.map((r) => {
+      const colorClass = wclParseColorClass(r.avg);
+      return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer" class="wcl-parse-badge ${escapeHtml(colorClass)}" title="${escapeHtml(r.label)} – ${r.avg}% avg">${r.avg}<span class="wcl-badge-pct">%</span><span class="wcl-badge-zone">${escapeHtml(r.label)}</span></a>`;
+    }).join("");
+  });
+}
+
+function enrichWclColumns(containerEl) {
+  if (!containerEl || !appSettings.wclClientId) return;
+  const cells = containerEl.querySelectorAll("[data-wcl-char]");
+  const uniqueNames = new Set();
+  cells.forEach((cell) => uniqueNames.add(cell.dataset.wclChar));
+  uniqueNames.forEach((name) => {
+    const slug = name.toLowerCase();
+    if (wclParseCache.has(slug)) {
+      applyWclResults(containerEl, name, wclParseCache.get(slug));
+    } else {
+      fetchWclParses(name).then((results) => applyWclResults(containerEl, name, results));
+    }
+  });
+}
+
 const clockDaysEl = document.getElementById("clockDays");
 const clockHoursEl = document.getElementById("clockHours");
 const clockMinutesEl = document.getElementById("clockMinutes");
@@ -370,7 +552,7 @@ function buildExternalLink(urlValue, label) {
   if (!normalized) {
     return "—";
   }
-  return `<a href="${escapeHtml(normalized)}" target="_blank" rel="noreferrer">${escapeHtml(label)}</a>`;
+  return `<a href="${escapeHtml(normalized)}" target="_blank" rel="noreferrer" title="${escapeHtml(label)}">↗</a>`;
 }
 
 function buildArmoryUrl(characterName) {
@@ -514,6 +696,18 @@ function setRaidClockDigits(days, hours, minutes, seconds) {
   clockHoursEl.textContent = padCountdown(hours);
   clockMinutesEl.textContent = padCountdown(minutes);
   clockSecondsEl.textContent = padCountdown(seconds);
+}
+
+function isRaidLocked(raid) {
+  if (!raid) return false;
+  // Manual unlock by admin overrides auto-lock
+  if (raid.signupsLocked === false) return false;
+  // Manual lock by admin
+  if (raid.signupsLocked === true) return true;
+  // Auto-lock 2 hours before raid start
+  const startDt = getRaidStartDateTime(raid);
+  if (!startDt) return false;
+  return Date.now() >= startDt.getTime() - 2 * 60 * 60 * 1000;
 }
 
 function getRaidStartDateTime(raid) {
@@ -1044,7 +1238,7 @@ function renderRoleCompositionBar(resolvedSignups, raidItem) {
   </div>`;
 }
 
-function renderRosterTable(resolvedSignups) {
+function renderRosterTable(resolvedSignups, raidName) {
   if (!resolvedSignups.length) {
     return `<p class="roster-empty">No signups yet.</p>`;
   }
@@ -1072,17 +1266,18 @@ function renderRosterTable(resolvedSignups) {
         <td>${formatSpecDisplay(spec, "", role)}</td>
         <td>${formatSpecDisplay(offSpec, "", offRole)}</td>
         <td><span class="signup-status-badge status-${statusNorm}">${escapeHtml(statusLabel(signup.status))}</span></td>
+        <td>${renderWclParsesCell(charName, signup.logsUrl, raidName)}</td>
         <td>${buildExternalLink(signup.armoryUrl, "Gear")}</td>
         <td>${buildExternalLink(signup.logsUrl || buildLogsUrl(charName), "Logs")}</td>
       </tr>`;
     }).join("");
 
-    return `<tr class="roster-section-header"><td colspan="7">${escapeHtml(sectionLabel)} (${signups.length})</td></tr>${rows}`;
+    return `<tr class="roster-section-header"><td colspan="8">${escapeHtml(sectionLabel)} (${signups.length})</td></tr>${rows}`;
   }
 
   return `<table class="roster-table">
     <thead>
-      <tr><th class="roster-char-indent">Character</th><th>Class</th><th>Main Spec</th><th>Off Spec</th><th>Status</th><th>Gear</th><th>Logs</th></tr>
+      <tr><th class="roster-char-indent">Character</th><th>Class</th><th>Main Spec</th><th>Off Spec</th><th>Status</th><th>Parses</th><th>Gear</th><th>Logs</th></tr>
     </thead>
     <tbody>
       ${rosterRows(accepted, "Accepted")}
@@ -1364,9 +1559,12 @@ function renderRaidProfileControl(raidId, signup) {
     </select>`;
 }
 
-function renderRaidCharacterControl(raidId, signup) {
+function renderRaidCharacterControl(raidId, signup, raid) {
   if (!raidId) {
     return `<span class="signup-control-disabled">Unavailable</span>`;
+  }
+  if (!isAdmin && isRaidLocked(raid)) {
+    return `<span class="signup-control-disabled">Locked</span>`;
   }
   return renderRaidProfileControl(raidId, signup);
 }
@@ -1388,9 +1586,18 @@ async function clearRaidSignup(signupId) {
   renderRows(currentRows);
 }
 
-function renderRaidSignupControl(raidId, signup) {
+function renderRaidSignupControl(raidId, signup, raid) {
   if (!raidId) {
     return `<span class="signup-control-disabled">Unavailable</span>`;
+  }
+  const locked = isRaidLocked(raid);
+  if (!isAdmin && locked) {
+    const hasSignup = Boolean(signup);
+    const selectedStatus = hasSignup ? normalizeSignupStatus(signup.status) : "";
+    if (selectedStatus) {
+      return `<span class="signup-status-badge status-${selectedStatus}">🔒 ${escapeHtml(statusLabel(signup.status))}</span>`;
+    }
+    return `<span class="signup-control-disabled">🔒 Locked</span>`;
   }
 
   const hasSignup = Boolean(signup);
@@ -3029,10 +3236,10 @@ function renderCategoryRows(targetElement, rows, rosterMap, reverse = false) {
 
       return `<tr class="raid-summary-row">
           <td>
-            ${renderRaidCharacterControl(selectedRaid?.id || "", viewerSignup)}
+            ${renderRaidCharacterControl(selectedRaid?.id || "", viewerSignup, selectedRaid)}
           </td>
           <td>
-            ${renderRaidSignupControl(selectedRaid?.id || "", viewerSignup)}
+            ${renderRaidSignupControl(selectedRaid?.id || "", viewerSignup, selectedRaid)}
           </td>
           <td>
             <div class="raid-date">${renderRaidDateWithTime(item)}</div>
@@ -3053,13 +3260,24 @@ function renderCategoryRows(targetElement, rows, rosterMap, reverse = false) {
               data-open-label="Hide Signups"
               data-closed-label="Show Signups (${signupCount})"
             >${isExpanded ? "Hide Signups" : `Show Signups (${signupCount})`}</button>
+            ${(() => { if (!isAdmin) return ""; const names = resolvedSignups.filter((s) => normalizeSignupStatus(s.status) === "accept").map((s) => s.characterName || s.profileCharacterName || "").filter(Boolean); return names.length ? `<button type="button" class="invite-attendees-btn" data-invite-names="${escapeHtml(names.join(","))}" title="Copy /invite commands for all accepted signups">Invite Attendees</button>` : ""; })()}
+            ${(() => {
+              const locked = isRaidLocked(selectedRaid);
+              if (isAdmin && selectedRaid) {
+                return `<button type="button" class="raid-lock-btn ${locked ? "raid-locked" : ""}" data-lock-raid-id="${escapeHtml(selectedRaid.id)}" data-lock-current="${locked ? "locked" : "unlocked"}" title="${locked ? "Unlock signups" : "Lock signups"}">${locked ? "🔒 Unlock" : "🔓 Lock"}</button>`;
+              }
+              if (locked) {
+                return `<span class="raid-lock-indicator">🔒 Locked</span>`;
+              }
+              return "";
+            })()}
           </td>
         </tr>
         <tr id="${detailId}" class="raid-detail-row" ${isExpanded ? "" : "hidden"}>
           <td colspan="10">
             <div class="raid-detail-wrap">
               ${renderRoleCompositionBar(resolvedSignups, item)}
-              ${renderRosterTable(resolvedSignups)}
+              ${renderRosterTable(resolvedSignups, item.raidName)}
             </div>
           </td>
         </tr>`;
@@ -3105,6 +3323,8 @@ function renderRows(items) {
 
   enrichArmoryColumns(raidRows.upcoming);
   enrichArmoryColumns(raidRows.past);
+  enrichWclColumns(raidRows.upcoming);
+  enrichWclColumns(raidRows.past);
 
   setMessage(listMessage, scheduleItems.length ? "" : "No raids scheduled yet.");
 
@@ -3257,8 +3477,8 @@ function renderCalendarView(scheduleItems) {
       const sizeStr = raid.raidSize ? `/${raid.raidSize}` : "";
       const countLabel = `<span class="chip-time">${signupCount}${sizeStr} signed</span>`;
       const raidId = selectedRaid?.id || "";
-      const charControl = raidId ? renderRaidCharacterControl(raidId, viewerSignup) : "";
-      const signupControl = raidId ? renderRaidSignupControl(raidId, viewerSignup) : "";
+      const charControl = raidId ? renderRaidCharacterControl(raidId, viewerSignup, selectedRaid) : "";
+      const signupControl = raidId ? renderRaidSignupControl(raidId, viewerSignup, selectedRaid) : "";
       const calBtn = selectedRaid
         ? `<button type="button" class="add-to-calendar-btn" data-calendar-raid-id="${escapeHtml(selectedRaid.id)}" title="Add to calendar with reminders">📅 Add to Cal</button>`
         : "";
@@ -3545,6 +3765,35 @@ raidSectionsEl.addEventListener("click", async (event) => {
     return;
   }
 
+  // "Lock/Unlock" button — toggle signupsLocked on raid document
+  const lockRaidId = target.dataset.lockRaidId;
+  if (lockRaidId && isAdmin) {
+    const isCurrentlyLocked = target.dataset.lockCurrent === "locked";
+    try {
+      await updateDoc(doc(db, "raids", lockRaidId), {
+        signupsLocked: isCurrentlyLocked ? false : true
+      });
+    } catch (err) {
+      setMessage(listMessage, "Failed to update lock status.", true);
+    }
+    return;
+  }
+
+  // "Invite Attendees" button — copy /invite commands to clipboard
+  const inviteNames = target.dataset.inviteNames;
+  if (inviteNames) {
+    const names = inviteNames.split(",").filter(Boolean);
+    const text = names.map((n) => `/invite ${n}`).join("\n");
+    navigator.clipboard.writeText(text).then(() => {
+      target.textContent = "Copied!";
+      setTimeout(() => { target.textContent = "Invite Attendees"; }, 2000);
+    }).catch(() => {
+      target.textContent = "Copy failed";
+      setTimeout(() => { target.textContent = "Invite Attendees"; }, 2000);
+    });
+    return;
+  }
+
   // "Add to Calendar" button
   const calRaidId = target.dataset.calendarRaidId;
   if (calRaidId) {
@@ -3561,6 +3810,7 @@ raidSectionsEl.addEventListener("click", async (event) => {
       detailRow.hidden = !shouldOpen;
       if (shouldOpen) {
         enrichArmoryColumns(detailRow);
+        enrichWclColumns(detailRow);
       }
       if (raidGroupKey) {
         if (shouldOpen) {
@@ -3780,6 +4030,11 @@ form.addEventListener("submit", async (event) => {
 
     if (!effectiveRaid) {
       setMessage(formMessage, "Choose a raid from the Signup dropdown in the raid table first.", true);
+      return;
+    }
+
+    if (!isAdmin && isRaidLocked(effectiveRaid)) {
+      setMessage(formMessage, "Signups for this raid are locked.", true);
       return;
     }
 

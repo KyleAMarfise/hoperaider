@@ -45,6 +45,8 @@ jobs:
           APP_ADMIN_UIDS: ${{ vars.APP_ADMIN_UIDS }}
           APP_DISCORD_INVITE_URL: ${{ vars.APP_DISCORD_INVITE_URL }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          WCL_CLIENT_ID: ${{ secrets.WCL_CLIENT_ID }}
+          WCL_CLIENT_SECRET: ${{ secrets.WCL_CLIENT_SECRET }}
         run: |
           mkdir -p config/prod
           node -e "
@@ -61,7 +63,9 @@ jobs:
               '  APP_SITE_TITLE: ' + s('APP_SITE_TITLE', 'Hope Raid Tracker') + ',\n' +
               '  APP_ADMIN_UIDS: ' + s('APP_ADMIN_UIDS') + ',\n' +
               '  APP_DISCORD_INVITE_URL: ' + s('APP_DISCORD_INVITE_URL', 'https://discord.gg/YOUR_INVITE_CODE') + ',\n' +
-              '  DISCORD_WEBHOOK_URL: ' + s('DISCORD_WEBHOOK_URL') + '\n' +
+              '  DISCORD_WEBHOOK_URL: ' + s('DISCORD_WEBHOOK_URL') + ',\n' +
+              '  WCL_CLIENT_ID: ' + s('WCL_CLIENT_ID') + ',\n' +
+              '  WCL_CLIENT_SECRET: ' + s('WCL_CLIENT_SECRET') + '\n' +
               '};\n'
             );
           "

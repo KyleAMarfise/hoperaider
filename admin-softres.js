@@ -770,7 +770,7 @@ function getItemSortScore(item, wowClass) {
 // ── Loot browser ────────────────────────────────────────────────────────────
 function renderLootBrowser() {
   if (!selectedRaidLoot) {
-    lootTableRows.innerHTML = '<tr><td colspan="8" class="text-dim">Select a raid to browse loot.</td></tr>';
+    lootTableRows.innerHTML = '<tr><td colspan="7" class="text-dim">Select a raid to browse loot.</td></tr>';
     return;
   }
 
@@ -937,13 +937,12 @@ function filterLootTable() {
       <td style="color:${canUse ? qualityColor : '#666'};font-weight:600">${escapeHtml(item.name)} <a href="${wowheadUrl(item.itemId)}" class="wowhead-link" target="_blank" rel="noopener" title="View on Wowhead" onclick="event.stopPropagation()">↗</a></td>
       <td>${escapeHtml(getItemType(item))}</td>
       <td>${escapeHtml(item.slot)}</td>
-      <td>${item.itemLevel}</td>
       <td>${escapeHtml(bossName)}</td>
       <td>${dropPct}</td>
       <td>${actionHtml}</td>
     </tr>`;
   }
-  if (!rows) rows = '<tr><td colspan="8" class="text-dim">No items match filters.</td></tr>';
+  if (!rows) rows = '<tr><td colspan="7" class="text-dim">No items match filters.</td></tr>';
   lootTableRows.innerHTML = rows;
 }
 

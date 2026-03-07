@@ -129,6 +129,196 @@ function enrichArmoryColumns(containerEl) {
   });
 }
 
+// WarcraftLogs API (fresh TBC servers)
+const WCL_BASE_URL = "https://fresh.warcraftlogs.com";
+const WCL_SERVER_SLUG = "dreamscythe";
+const WCL_SERVER_REGION = "US";
+// Zones ordered highest tier first so we display the best tier a character has logs for
+const WCL_TBC_ZONES = [
+  { id: 1013, label: "Sunwell" },
+  { id: 1011, label: "BT/Hyjal" },
+  { id: 1012, label: "Zul'Aman" },
+  { id: 1052, label: "SSC/TK" },
+  { id: 1048, label: "Gruul/Mag" },
+  { id: 1047, label: "Kara" }
+];
+
+let wclTokenCache = null;
+let wclTokenExpiry = 0;
+const wclParseCache = new Map();     // slug → results array (or null on error)
+const wclPendingFetches = new Map(); // slug → Promise (deduplication)
+
+// Persist parse results in sessionStorage so page refreshes don't re-fetch
+const WCL_SESSION_KEY = "wclParseCache_v1";
+(function loadWclSessionCache() {
+  try {
+    const stored = sessionStorage.getItem(WCL_SESSION_KEY);
+    if (stored) {
+      Object.entries(JSON.parse(stored)).forEach(([k, v]) => wclParseCache.set(k, v));
+    }
+  } catch { /* ignore */ }
+})();
+
+function saveWclSessionCache() {
+  try {
+    const obj = {};
+    wclParseCache.forEach((v, k) => { if (v !== null) obj[k] = v; });
+    sessionStorage.setItem(WCL_SESSION_KEY, JSON.stringify(obj));
+  } catch { /* ignore */ }
+}
+
+let wclTokenFetchPromise = null;
+async function getWclToken() {
+  if (wclTokenCache && Date.now() < wclTokenExpiry) return wclTokenCache;
+  // Deduplicate concurrent token requests
+  if (wclTokenFetchPromise) return wclTokenFetchPromise;
+  const clientId = appSettings.wclClientId;
+  const clientSecret = appSettings.wclClientSecret;
+  if (!clientId || !clientSecret) return null;
+  wclTokenFetchPromise = (async () => {
+    try {
+      const creds = btoa(`${clientId}:${clientSecret}`);
+      const res = await fetch(`${WCL_BASE_URL}/oauth/token`, {
+        method: "POST",
+        headers: { "Authorization": `Basic ${creds}`, "Content-Type": "application/x-www-form-urlencoded" },
+        body: "grant_type=client_credentials"
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      wclTokenCache = data.access_token;
+      wclTokenExpiry = Date.now() + ((data.expires_in || 3600) - 60) * 1000;
+      return wclTokenCache;
+    } catch {
+      return null;
+    } finally {
+      wclTokenFetchPromise = null;
+    }
+  })();
+  return wclTokenFetchPromise;
+}
+
+async function fetchWclParses(characterName) {
+  const slug = String(characterName || "").trim().toLowerCase();
+  if (!slug) return null;
+  if (wclParseCache.has(slug)) return wclParseCache.get(slug);
+  // Deduplicate: if a fetch is already in-flight for this character, reuse it
+  if (wclPendingFetches.has(slug)) return wclPendingFetches.get(slug);
+
+  const promise = (async () => {
+    const token = await getWclToken();
+    if (!token) { wclParseCache.set(slug, null); return null; }
+
+    const safeName = String(characterName).trim().replace(/[^a-zA-Z\u00C0-\u024F'-]/g, "");
+    if (!safeName) { wclParseCache.set(slug, null); return null; }
+
+    const zoneFields = WCL_TBC_ZONES.map((z, i) => `z${i}: zoneRankings(zoneID: ${z.id})`).join(" ");
+    const query = `{ characterData { character(name: "${safeName}", serverSlug: "${WCL_SERVER_SLUG}", serverRegion: "${WCL_SERVER_REGION}") { ${zoneFields} } } }`;
+
+    try {
+      const res = await fetch(`${WCL_BASE_URL}/api/v2/client`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ query })
+      });
+      if (res.status === 429) { wclParseCache.set(slug, null); return null; }
+      if (!res.ok) { wclParseCache.set(slug, null); return null; }
+      const data = await res.json();
+      const char = data?.data?.characterData?.character;
+      if (!char) { wclParseCache.set(slug, null); return null; }
+
+      const results = [];
+      for (let i = 0; i < WCL_TBC_ZONES.length; i++) {
+        const zoneData = char[`z${i}`];
+        const avg = zoneData?.bestPerformanceAverage;
+        if (avg != null && avg > 0) {
+          results.push({ label: WCL_TBC_ZONES[i].label, avg: Math.round(avg) });
+        }
+      }
+      wclParseCache.set(slug, results);
+      saveWclSessionCache();
+      return results;
+    } catch {
+      wclParseCache.set(slug, null);
+      return null;
+    }
+  })();
+
+  wclPendingFetches.set(slug, promise);
+  promise.finally(() => wclPendingFetches.delete(slug));
+  return promise;
+}
+
+function wclParseColorClass(pct) {
+  if (pct >= 99) return "wcl-parse-gold";
+  if (pct >= 95) return "wcl-parse-orange";
+  if (pct >= 75) return "wcl-parse-purple";
+  if (pct >= 50) return "wcl-parse-blue";
+  if (pct >= 25) return "wcl-parse-green";
+  return "wcl-parse-gray";
+}
+
+const RAID_NAME_TO_WCL_ZONES = {
+  "Karazhan": ["Kara"],
+  "Gruul's Lair": ["Gruul/Mag"],
+  "Magtheridon's Lair": ["Gruul/Mag"],
+  "Serpentshrine Cavern": ["SSC/TK"],
+  "The Eye": ["SSC/TK"],
+  "Tempest Keep": ["SSC/TK"],
+  "Hyjal Summit": ["BT/Hyjal"],
+  "Black Temple": ["BT/Hyjal"],
+  "Zul'Aman": ["Zul'Aman"],
+  "Sunwell Plateau": ["Sunwell"]
+};
+
+function renderWclParsesCell(entry, raidName) {
+  const charName = String(entry.characterName || "").trim();
+  if (!charName) return "—";
+  const logsUrl = String(entry.logsUrl || buildLogsUrl(charName)).trim();
+  const href = escapeHtml(logsUrl);
+  const raidAttr = raidName ? ` data-wcl-raid="${escapeHtml(raidName)}"` : "";
+  return `<span data-wcl-char="${escapeHtml(charName)}" data-wcl-href="${href}"${raidAttr} class="wcl-parses-container"><a href="${href}" target="_blank" rel="noopener noreferrer" class="wcl-parse-link">…</a></span>`;
+}
+
+function applyWclResults(containerEl, name, results) {
+  containerEl.querySelectorAll(`[data-wcl-char="${CSS.escape(name)}"]`).forEach((cell) => {
+    const href = cell.dataset.wclHref || "#";
+    const raidName = cell.dataset.wclRaid || "";
+    cell.removeAttribute("data-wcl-char");
+    cell.removeAttribute("data-wcl-href");
+    cell.removeAttribute("data-wcl-raid");
+    if (!results || !results.length) {
+      cell.innerHTML = `<span class="text-dim" title="No parses found">Fucking Noob</span>`;
+      return;
+    }
+    const allowedZones = RAID_NAME_TO_WCL_ZONES[raidName];
+    const filtered = allowedZones ? results.filter((r) => allowedZones.includes(r.label)) : results;
+    if (!filtered.length) {
+      cell.innerHTML = `<span class="text-dim" title="No parses for this raid">Fucking Noob</span>`;
+      return;
+    }
+    cell.innerHTML = filtered.map((r) => {
+      const colorClass = wclParseColorClass(r.avg);
+      return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer" class="wcl-parse-badge ${escapeHtml(colorClass)}" title="${escapeHtml(r.label)} – ${r.avg}% avg">${r.avg}<span class="wcl-badge-pct">%</span><span class="wcl-badge-zone">${escapeHtml(r.label)}</span></a>`;
+    }).join("");
+  });
+}
+
+function enrichWclColumns(containerEl) {
+  if (!containerEl || !appSettings.wclClientId) return;
+  const cells = containerEl.querySelectorAll("[data-wcl-char]");
+  const uniqueNames = new Set();
+  cells.forEach((cell) => uniqueNames.add(cell.dataset.wclChar));
+  uniqueNames.forEach((name) => {
+    const slug = name.toLowerCase();
+    if (wclParseCache.has(slug)) {
+      // Cache hit: apply synchronously so re-renders never flash back to placeholder
+      applyWclResults(containerEl, name, wclParseCache.get(slug));
+    } else {
+      fetchWclParses(name).then((results) => applyWclResults(containerEl, name, results));
+    }
+  });
+}
+
 const WOW_CLASS_COLORS = {
   Druid: "#FF7D0A",
   Hunter: "#ABD473",
@@ -378,6 +568,7 @@ function buildRequestQueueRows(rows, profilesById, actionMode = "full") {
         <td class="armory-col-narrow" data-armory-char="${escapeHtml(charSlug)}" data-armory-field="ilvl">…</td>
         <td>${renderGearLink(gearUrl)}</td>
         <td>${renderExternalLink(logsUrl, "Logs")}</td>
+        <td class="audit-parses-cell">${renderWclParsesCell({ characterName, logsUrl }, signup.raidName || "")}</td>
         <td><span class="signup-status-badge status-${escapeHtml(status)}">${escapeHtml(signupStatusLabel(signup.status))}</span></td>
         <td>${actionCell}</td>
       </tr>`;
@@ -605,24 +796,25 @@ function renderSignupRequestsTable() {
   authStatus.textContent = `${existingAuthText} • Pending requests: ${activeItems.length}`;
 
   if (!activeItems.length) {
-    signupRequestRows.innerHTML = `<tr><td colspan="12">No active signup request records.</td></tr>`;
+    signupRequestRows.innerHTML = `<tr><td colspan="13">No active signup request records.</td></tr>`;
     setMessage(signupRequestMessage, "");
     return;
   }
 
   const profilesById = getCharacterMapById();
   const requestedHeader = requested.length
-    ? `<tr class="request-group-row"><td colspan="12"><strong>Signup Requests (${requested.length})</strong></td></tr>${buildRequestQueueRows(requested, profilesById, "full")}`
+    ? `<tr class="request-group-row"><td colspan="13"><strong>Signup Requests (${requested.length})</strong></td></tr>${buildRequestQueueRows(requested, profilesById, "full")}`
     : "";
   const benchedHeader = benched.length
-    ? `<tr class="request-group-row"><td colspan="12"><strong>Benched Themselves (${benched.length})</strong></td></tr>${buildRequestQueueRows(benched, profilesById, "accept-only")}`
+    ? `<tr class="request-group-row"><td colspan="13"><strong>Benched Themselves (${benched.length})</strong></td></tr>${buildRequestQueueRows(benched, profilesById, "accept-only")}`
     : "";
   const withdrewHeader = withdrew.length
-    ? `<tr class="request-group-row"><td colspan="12"><strong>Accepted Then Withdrew (${withdrew.length})</strong></td></tr>${buildRequestQueueRows(withdrew, profilesById, "none")}`
+    ? `<tr class="request-group-row"><td colspan="13"><strong>Accepted Then Withdrew (${withdrew.length})</strong></td></tr>${buildRequestQueueRows(withdrew, profilesById, "none")}`
     : "";
 
   signupRequestRows.innerHTML = `${requestedHeader}${benchedHeader}${withdrewHeader}`;
   enrichArmoryColumns(signupRequestRows);
+  enrichWclColumns(signupRequestRows);
 
   setMessage(signupRequestMessage, `${activeItems.length} active signup record(s) across requests, benches, and withdrawals.`);
 }
@@ -1046,7 +1238,7 @@ function renderExternalLink(url, label = "Link") {
   if (!trimmed) {
     return "—";
   }
-  return `<a href="${escapeHtml(trimmed)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>`;
+  return `<a href="${escapeHtml(trimmed)}" target="_blank" rel="noopener noreferrer" title="${escapeHtml(label)}">↗</a>`;
 }
 
 function renderClassText(wowClass) {
@@ -1092,13 +1284,13 @@ function renderCharacterAuditTable() {
   auditCountBadge.textContent = String(filteredRows.length);
 
   if (!allRows.length) {
-    characterAuditRows.innerHTML = `<tr><td colspan="12">No user records found yet.</td></tr>`;
+    characterAuditRows.innerHTML = `<tr><td colspan="11">No user records found yet.</td></tr>`;
     setMessage(characterAuditMessage, "");
     return;
   }
 
   if (!filteredRows.length) {
-    characterAuditRows.innerHTML = `<tr><td colspan="12">No matches for current search/filter.</td></tr>`;
+    characterAuditRows.innerHTML = `<tr><td colspan="11">No matches for current search/filter.</td></tr>`;
     setMessage(characterAuditMessage, "");
     return;
   }
@@ -1107,13 +1299,14 @@ function renderCharacterAuditTable() {
     .map((row) => {
       const entries = row.characterEntries || [];
       return `<tr>
-        <td><span class="audit-user-name" title="${escapeHtml(row.tooltip)}">${escapeHtml(row.profileName || row.displayName)}</span></td>
+        <td title="${escapeHtml(row.tooltip)}">${escapeHtml(row.profileName || row.displayName)}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderCharacterCell(entry, row)) : "—"}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderClassText(entry.wowClass)) : "—"}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderRoleSpec(entry.mainRole, entry.mainSpecialization)) : "—"}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderRoleSpec(entry.offRole, entry.offSpecialization)) : "—"}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.armoryUrl, "Gear")) : "—"}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.logsUrl, "Logs")) : "—"}</td>
+        <td class="audit-stack-cell audit-parses-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderWclParsesCell(entry)) : "—"}</td>
         <td class="audit-history-col">${escapeHtml(row.acceptedTotal)}</td>
         <td>
           <select data-role-uid="${escapeHtml(row.uid)}" data-role-current="${escapeHtml(row.role)}" title="Change this user's access role" ${row.role === "owner" && !isOwner ? "disabled" : ""}>
@@ -1132,6 +1325,7 @@ function renderCharacterAuditTable() {
 
   setMessage(characterAuditMessage, `${filteredRows.length} user access record(s) shown.`);
   enrichArmoryColumns(characterAuditRows);
+  enrichWclColumns(characterAuditRows);
 }
 
 function setAdminVisibility() {

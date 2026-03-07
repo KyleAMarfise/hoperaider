@@ -1496,11 +1496,6 @@ button:disabled {
   margin-left: 0.35rem;
 }
 
-.audit-user-name {
-  cursor: help;
-  text-decoration: underline dotted;
-  text-underline-offset: 2px;
-}
 
 .access-form {
   display: grid;
@@ -1524,6 +1519,17 @@ button:disabled {
 
 .audit-stack-cell {
   min-width: 110px;
+}
+
+.audit-parses-cell {
+  white-space: nowrap;
+}
+.audit-parses-cell .wcl-parses-container {
+  flex-wrap: nowrap;
+}
+.admin-operations-page [data-role-uid] {
+  max-width: 90px;
+  font-size: 0.78rem;
 }
 .audit-stack-cell.role-col,
 .audit-stack-cell.class-col {
@@ -1584,18 +1590,17 @@ button:disabled {
 }
 
 .audit-history-col {
-  min-width: 150px;
   white-space: nowrap;
 }
 
 .audit-assign-col {
-  min-width: 320px;
+  min-width: 240px;
   white-space: normal;
 }
 
 .audit-assignment {
   display: grid;
-  grid-template-columns: minmax(180px, 1.5fr) minmax(130px, 1fr) auto;
+  grid-template-columns: minmax(120px, 1fr) minmax(70px, 0.5fr) auto;
   gap: 0.38rem;
   align-items: center;
 }
@@ -2498,6 +2503,49 @@ tbody tr:hover {
   font-size: 0.9rem;
 }
 
+/* WarcraftLogs parse badges */
+.wcl-parses-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+  align-items: center;
+}
+
+.wcl-parse-link {
+  font-size: 0.78rem;
+}
+
+.wcl-parse-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15em;
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  color: #fff;
+}
+
+.wcl-parse-gold   { background: #e2cc80; color: #000; }
+.wcl-parse-orange { background: #ff8000; }
+.wcl-parse-purple { background: #a335ee; }
+.wcl-parse-blue   { background: #0070dd; }
+.wcl-parse-green  { background: #1eff00; color: #000; }
+.wcl-parse-gray   { background: #555; }
+
+.wcl-badge-pct {
+  font-size: 0.68em;
+  opacity: 0.8;
+}
+
+.wcl-badge-zone {
+  font-size: 0.65em;
+  opacity: 0.75;
+  font-weight: 400;
+}
+
 /* Armory-fetched narrow columns (Guild, iLvl) */
 .armory-col-narrow {
   white-space: nowrap;
@@ -2522,6 +2570,58 @@ th.armory-col-narrow {
   font-size: 0.82rem;
   color: var(--text-dim);
   margin: 0.3rem 0;
+}
+.invite-attendees-btn {
+  display: block;
+  margin-top: 0.3rem;
+  padding: 0.15rem 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #c5e6c5;
+  background: rgba(80, 180, 80, 0.12);
+  border: 1px solid rgba(80, 180, 80, 0.3);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+.invite-attendees-btn:hover {
+  background: rgba(80, 180, 80, 0.25);
+  border-color: rgba(80, 180, 80, 0.55);
+}
+.raid-lock-btn {
+  display: block;
+  margin-top: 0.3rem;
+  padding: 0.15rem 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #e0c8a0;
+  background: rgba(200, 160, 60, 0.1);
+  border: 1px solid rgba(200, 160, 60, 0.3);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+.raid-lock-btn:hover {
+  background: rgba(200, 160, 60, 0.22);
+  border-color: rgba(200, 160, 60, 0.55);
+}
+.raid-lock-btn.raid-locked {
+  color: #f5a0a0;
+  background: rgba(220, 80, 80, 0.1);
+  border-color: rgba(220, 80, 80, 0.3);
+}
+.raid-lock-btn.raid-locked:hover {
+  background: rgba(220, 80, 80, 0.22);
+  border-color: rgba(220, 80, 80, 0.55);
+}
+.raid-lock-indicator {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.72rem;
+  color: #f5a0a0;
+  white-space: nowrap;
 }
 
 /* ── Detail Signups collapsible ── */
@@ -3524,6 +3624,12 @@ td .row-actions button {
 .softres-loot-scroll {
   max-height: 500px;
   overflow-y: auto;
+}
+.softres-loot-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--bg-card, #1a1a2e);
+  z-index: 2;
 }
 .softres-loot-table td:first-child {
   width: 36px;
