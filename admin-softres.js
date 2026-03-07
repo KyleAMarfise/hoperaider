@@ -47,6 +47,7 @@ const softresRaidBadge = document.getElementById("softresRaidBadge");
 const softresLockControls = document.getElementById("softresLockControls");
 const softresLockStatus = document.getElementById("softresLockStatus");
 const softresToggleLockBtn = document.getElementById("softresToggleLockBtn");
+const softresCopyBtn = document.getElementById("softresCopyBtn");
 const softresMaxReservesInput = document.getElementById("softresMaxReservesInput");
 const softresOverview = document.getElementById("softresOverview");
 const softresRaidTitle = document.getElementById("softresRaidTitle");
@@ -1544,6 +1545,34 @@ async function toggleLock() {
   }
 }
 
+async function copySRResults() {
+  if (!selectedRaidId) return;
+  const raidReserves = currentReserves.filter(r => r.raidId === selectedRaidId);
+  if (!raidReserves.length) {
+    setMsg("No reserves to copy.", true);
+    return;
+  }
+
+  // Gargul CSV import format: header row + one row per item per player
+  // Columns: ItemId,Name,Class,Note,Plus
+  const rows = ["ItemId,Name,Class,Note,Plus"];
+  for (const res of raidReserves) {
+    const items = getReserveItems(res);
+    for (const item of items) {
+      rows.push(`${item.itemId},${res.characterName},${res.wowClass || ""},,0`);
+    }
+  }
+
+  try {
+    await navigator.clipboard.writeText(rows.join("\n"));
+    const orig = softresCopyBtn.textContent;
+    softresCopyBtn.textContent = "Copied!";
+    setTimeout(() => { softresCopyBtn.textContent = orig; }, 2000);
+  } catch {
+    setMsg("Unable to copy to clipboard.", true);
+  }
+}
+
 async function updateMaxReserves() {
   if (!db || !isAdmin || !selectedRaidId) return;
   const raid = currentRaids.find(r => r.id === selectedRaidId);
@@ -1644,6 +1673,7 @@ lootBossOptions.addEventListener('change', (e) => {
 
 softresCharacterSelect.addEventListener("change", renderCharacterReserves);
 softresToggleLockBtn.addEventListener("click", toggleLock);
+softresCopyBtn.addEventListener("click", copySRResults);
 softresMaxReservesInput.addEventListener("change", updateMaxReserves);
 softresRows.addEventListener("click", handleReserveAction);
 lootTypeFilter.addEventListener("change", filterLootTable);
