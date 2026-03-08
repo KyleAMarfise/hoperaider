@@ -3248,7 +3248,7 @@ function renderCategoryRows(targetElement, rows, rosterMap, reverse = false) {
           <td class="raid-time-cell">${renderRaidWindowMultiline(item.raidStart, item.raidEnd, { highlightLocal: true })}</td>
           <td>${escapeHtml(item.phase ? `Phase ${String(item.phase)}` : "—")}</td>
           <td><span class="raid-name-glow">${escapeHtml(item.raidName || "—")}</span>${item.raidLeader ? `<br><span class="raid-leader-label">RL: ${escapeHtml(item.raidLeader)}</span>` : ""}</td>
-          <td>${escapeHtml(item.runType || "—")}</td>
+          <td>${escapeHtml(item.runType || "—")}${item.runType === "Partial" && item.plannedBosses?.length ? `<div class="planned-bosses-list">${item.plannedBosses.map((b) => `<span class="planned-boss-tag">${escapeHtml(b)}</span>`).join("")}</div>` : ""}</td>
           <td>${escapeHtml(item.raidSize || "—")}</td>
           <td>${renderRosterProgress(item, rosterMap, resolvedSignups)}</td>
           <td>
@@ -3769,10 +3769,17 @@ raidSectionsEl.addEventListener("click", async (event) => {
   const lockRaidId = target.dataset.lockRaidId;
   if (lockRaidId && isAdmin) {
     const isCurrentlyLocked = target.dataset.lockCurrent === "locked";
+    const newLockState = !isCurrentlyLocked;
     try {
       await updateDoc(doc(db, "raids", lockRaidId), {
-        signupsLocked: isCurrentlyLocked ? false : true
+        signupsLocked: newLockState
       });
+      // Update local state immediately so UI reflects the change
+      const localRaid = currentRaids.find((r) => r.id === lockRaidId);
+      if (localRaid) {
+        localRaid.signupsLocked = newLockState;
+        renderRows(currentRows);
+      }
     } catch (err) {
       setMessage(listMessage, "Failed to update lock status.", true);
     }

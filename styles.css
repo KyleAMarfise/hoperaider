@@ -2642,6 +2642,41 @@ th.armory-col-narrow {
   color: var(--text-main);
 }
 
+/* Partial raid boss selection */
+.partial-boss-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.25rem 0.6rem;
+}
+.partial-boss-label {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.82rem;
+  cursor: pointer;
+  padding: 0.15rem 0;
+}
+.planned-bosses-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+  margin-top: 0.25rem;
+}
+.planned-boss-tag {
+  display: inline-block;
+  padding: 0.08rem 0.35rem;
+  font-size: 0.68rem;
+  border-radius: 3px;
+  background: rgba(200, 160, 60, 0.12);
+  border: 1px solid rgba(200, 160, 60, 0.25);
+  color: #e0c8a0;
+  white-space: nowrap;
+}
+.planned-bosses-inline {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
 td .row-actions {
   display: flex;
   gap: 0.5rem;

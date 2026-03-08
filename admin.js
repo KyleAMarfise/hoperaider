@@ -59,6 +59,41 @@ const siteTitleEl = document.getElementById("siteTitle");
 const guildDiscordLink = document.getElementById("guildDiscordLink");
 const adminOpsBadge = document.getElementById("adminOpsBadge");
 const signOutButton = document.getElementById("signOutButton");
+const partialBossSection = document.getElementById("partialBossSection");
+const partialBossCheckboxes = document.getElementById("partialBossCheckboxes");
+
+const BOSS_KILL_ORDER = {
+  "Karazhan": [
+    "Attumen the Huntsman", "Moroes", "Opera Event", "Maiden of Virtue",
+    "The Curator", "Terestian Illhoof", "Shade of Aran", "Netherspite",
+    "Nightbane", "Prince Malchezaar"
+  ],
+  "Gruul's Lair": ["High King Maulgar", "Gruul the Dragonkiller"],
+  "Magtheridon's Lair": ["Magtheridon"],
+  "Serpentshrine Cavern": [
+    "Hydross the Unstable", "The Lurker Below", "Leotheras the Blind",
+    "Fathom-Lord Karathress", "Morogrim Tidewalker", "Lady Vashj"
+  ],
+  "The Eye": [
+    "Al'ar", "Void Reaver", "High Astromancer Solarian", "Kael'thas Sunstrider"
+  ],
+  "Tempest Keep": [
+    "Al'ar", "Void Reaver", "High Astromancer Solarian", "Kael'thas Sunstrider"
+  ],
+  "Hyjal Summit": [
+    "Rage Winterchill", "Anetheron", "Kaz'rogal", "Azgalor", "Archimonde"
+  ],
+  "Black Temple": [
+    "High Warlord Naj'entus", "Supremus", "Shade of Akama",
+    "Gurtogg Bloodboil", "Teron Gorefiend", "Mother Shahraz",
+    "The Illidari Council", "Illidan Stormrage"
+  ],
+  "Zul'Aman": [
+    "Nalorakk", "Akil'zon", "Jan'alai", "Halazzi",
+    "Hex Lord Malacrass", "Zul'jin"
+  ],
+  "Sunwell Plateau": ["Kalecgos", "Brutallus", "Felmyst", "Eredar Twins", "M'uru", "Kil'jaeden"]
+};
 
 const DEMO_RAID_STORAGE_KEY = "hopeRaidTrackerDemoRaids";
 const DEMO_SIGNUP_STORAGE_KEY = "hopeRaidSignupDemoRows";
@@ -288,7 +323,7 @@ function buildAdminRaidRows(items) {
         <td>${escapeHtml(item.raidName)}</td>
         <td>${escapeHtml(formatMonthDayYear(item.raidDate))}</td>
         <td class="raid-time-cell">${windowText}</td>
-        <td>${escapeHtml(item.runType)}</td>
+        <td>${escapeHtml(item.runType)}${item.runType === "Partial" && item.plannedBosses?.length ? `<br><span class="planned-bosses-inline">${item.plannedBosses.length} boss${item.plannedBosses.length > 1 ? "es" : ""}</span>` : ""}</td>
         <td>${escapeHtml(item.raidLeader || "—")}</td>
         <td>${escapeHtml(item.raidSize || "—")}${slotLabel}</td>
         <td>
@@ -454,6 +489,30 @@ function syncRaidSize() {
   syncRoleSlotDefaults();
 }
 
+function refreshPartialBossSection(selectedBosses = []) {
+  const runType = raidRunTypeInput.value;
+  const raidName = raidTemplateInput.value;
+  if (runType !== "Partial" || !raidName) {
+    partialBossSection.hidden = true;
+    return;
+  }
+  const bosses = BOSS_KILL_ORDER[raidName] || [];
+  if (!bosses.length) {
+    partialBossSection.hidden = true;
+    return;
+  }
+  partialBossSection.hidden = false;
+  const selectedSet = new Set(selectedBosses);
+  partialBossCheckboxes.innerHTML = bosses.map((boss) => {
+    const checked = selectedSet.has(boss) ? " checked" : "";
+    return `<label class="partial-boss-label"><input type="checkbox" name="plannedBoss" value="${escapeHtml(boss)}"${checked} /> ${escapeHtml(boss)}</label>`;
+  }).join("");
+}
+
+function getSelectedBosses() {
+  return Array.from(partialBossCheckboxes.querySelectorAll('input[name="plannedBoss"]:checked')).map((cb) => cb.value);
+}
+
 function refreshRaidTemplateOptions(selectedRaid = "") {
   const selectedPhase = Number(raidPhaseInput.value);
   const phaseRaids = RAID_PRESETS_BY_PHASE[selectedPhase] || [];
@@ -533,6 +592,8 @@ function resetRaidForm() {
   healerSlotsInput.value = "";
   dpsSlotsInput.value = "";
   syncRoleSlotDefaults();
+  partialBossSection.hidden = true;
+  partialBossCheckboxes.innerHTML = "";
   setMessage(raidAdminMessage, "");
 }
 
@@ -560,6 +621,8 @@ function loadRaidForm(item) {
   if (item.dpsSlots != null) {
     dpsSlotsInput.value = String(item.dpsSlots);
   }
+
+  refreshPartialBossSection(item.plannedBosses || []);
 }
 
 populateHourOptions(raidStartInput, START_HOURS, "Select CST start");
@@ -601,10 +664,16 @@ raidEventDateInput.addEventListener("focus", () => {
 
 raidPhaseInput.addEventListener("change", () => {
   refreshRaidTemplateOptions();
+  refreshPartialBossSection();
 });
 
 raidTemplateInput.addEventListener("change", () => {
   syncRaidSize();
+  refreshPartialBossSection();
+});
+
+raidRunTypeInput.addEventListener("change", () => {
+  refreshPartialBossSection();
 });
 
 cancelRaidEditButton.addEventListener("click", () => {
@@ -722,6 +791,8 @@ raidForm.addEventListener("submit", async (event) => {
     return;
   }
 
+  const plannedBosses = runType === "Partial" ? getSelectedBosses() : [];
+
   const payload = {
     phase,
     raidName,
@@ -734,6 +805,7 @@ raidForm.addEventListener("submit", async (event) => {
     tankSlots,
     healerSlots,
     dpsSlots,
+    plannedBosses,
     createdByUid: isDemoMode ? "demo-local" : authUid,
     updatedAt: serverTimestamp()
   };
