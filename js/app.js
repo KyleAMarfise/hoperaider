@@ -81,7 +81,7 @@ const WOW_CLASS_COLORS = {
 const raidCountBadges = {
   upcoming: document.getElementById("upcomingCountBadge"),
 };
-import { appSettings, firebaseConfig } from "./config/prod/firebase-config.js";
+import { appSettings, firebaseConfig } from "../config/prod/firebase-config.js";
 
 const START_HOURS = Array.from({ length: 24 }, (_, index) => index);
 const END_HOURS = Array.from({ length: 24 }, (_, index) => index + 1);

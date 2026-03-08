@@ -20,15 +20,15 @@ const QUICK = process.argv.includes("--quick");
 
 // ─── Files to process ───────────────────────────────────────────────
 const JS_FILES = [
-  "app.js",
-  "admin.js",
-  "admin-operations.js",
-  "admin-softres.js",
-  "nav-component.js",
-  "main.js",
+  "js/app.js",
+  "js/admin.js",
+  "js/admin-operations.js",
+  "js/admin-softres.js",
+  "js/nav-component.js",
+  "js/main.js",
 ];
 
-const CSS_FILES = ["styles.css"];
+const CSS_FILES = ["styles/styles.css"];
 
 const HTML_FILES = ["index.html", "admin.html", "admin-operations.html", "admin-softres.html"];
 
@@ -38,8 +38,7 @@ const COPY_ITEMS = [
   "config/prod",           // only prod config — never copy config/local (secrets)
   "data",
   "firebase.json",
-  "firestore.rules",
-  "firestore.indexes.json",
+  "firebase",              // firestore.rules + firestore.indexes.json
 ];
 
 // ─── Helpers ────────────────────────────────────────────────────────
@@ -133,6 +132,7 @@ for (const file of JS_FILES) {
   const originalSize = fileSize(src);
   if (QUICK) {
     // Quick mode: just copy (no obfuscation)
+    ensureDir(path.dirname(dest));
     fs.copyFileSync(src, dest);
     console.log(`  📄 Copied ${file} (${fmtSize(originalSize)})`);
   } else {

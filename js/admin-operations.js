@@ -28,7 +28,7 @@ import {
   where,
   query
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-import { appSettings, firebaseConfig } from "./config/prod/firebase-config.js";
+import { appSettings, firebaseConfig } from "../config/prod/firebase-config.js";
 
 const authStatus = document.getElementById("adminAuthStatus");
 const appShell = document.getElementById("appShell");

@@ -25,7 +25,7 @@ import {
   updateDoc,
   where
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-import { appSettings, firebaseConfig } from "./config/prod/firebase-config.js";
+import { appSettings, firebaseConfig } from "../config/prod/firebase-config.js";
 
 // ── DOM refs ────────────────────────────────────────────────────────────────
 const authStatus = document.getElementById("adminAuthStatus");
