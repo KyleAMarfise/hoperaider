@@ -3203,7 +3203,9 @@ function hydrateRowsWithRaidWindow(rows) {
       raidLeader: matchedRaid.raidLeader ?? row.raidLeader ?? "",
       tankSlots: matchedRaid.tankSlots ?? row.tankSlots ?? 0,
       healerSlots: matchedRaid.healerSlots ?? row.healerSlots ?? 0,
-      dpsSlots: matchedRaid.dpsSlots ?? row.dpsSlots ?? 0
+      dpsSlots: matchedRaid.dpsSlots ?? row.dpsSlots ?? 0,
+      plannedBosses: matchedRaid.plannedBosses ?? row.plannedBosses ?? [],
+      signupsLocked: matchedRaid.signupsLocked ?? row.signupsLocked
     };
   });
 }
