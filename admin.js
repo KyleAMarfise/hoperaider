@@ -64,9 +64,9 @@ const partialBossCheckboxes = document.getElementById("partialBossCheckboxes");
 
 const BOSS_KILL_ORDER = {
   "Karazhan": [
-    "Attumen the Huntsman", "Moroes", "Opera Event", "Maiden of Virtue",
-    "The Curator", "Terestian Illhoof", "Shade of Aran", "Netherspite",
-    "Nightbane", "Prince Malchezaar"
+    "Servant Quarters", "Attumen the Huntsman", "Moroes", "Opera Event",
+    "Maiden of Virtue", "The Curator", "Chess Event", "Terestian Illhoof",
+    "Shade of Aran", "Netherspite", "Nightbane", "Prince Malchezaar"
   ],
   "Gruul's Lair": ["High King Maulgar", "Gruul the Dragonkiller"],
   "Magtheridon's Lair": ["Magtheridon"],
