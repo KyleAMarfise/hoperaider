@@ -3321,7 +3321,7 @@ function renderPastRaidsCompact(pastItems) {
     </div>`;
   }).join("");
 
-  pastRaidsContainer.innerHTML = `<details class="past-raids-details">
+  pastRaidsContainer.innerHTML = `<details class="past-raids-details" open>
     <summary class="past-raids-summary">Completed Raids <span class="past-raids-count">(${pastGroups.length})</span></summary>
     <div class="past-raids-list">${rows}</div>
   </details>`;
