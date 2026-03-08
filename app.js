@@ -3309,15 +3309,6 @@ function renderRows(items) {
 
   const rosterMap = buildRosterMap(scheduleItems);
 
-  // Auto-expand the first upcoming raid unless the user manually collapsed it.
-  const upcomingGroups = groupRowsByRaid(grouped.upcoming);
-  if (upcomingGroups.length) {
-    const firstKey = upcomingGroups[0].key;
-    if (!manuallyCollapsedGroups.has(firstKey)) {
-      expandedRaidGroups.add(firstKey);
-    }
-  }
-
   renderCategoryRows(raidRows.upcoming, grouped.upcoming, rosterMap);
   renderCategoryRows(raidRows.past, grouped.past, rosterMap, /* reverse */ true);
 

@@ -134,7 +134,7 @@ service cloud.firestore {
     }
 
     function validRunType(value) {
-      return value in ['Progression', 'Farm', 'Weekly', 'Alt Run'];
+      return value in ['Progression', 'Farm', 'Weekly', 'Alt Run', 'Partial'];
     }
 
     function validCharacterData(data) {
@@ -275,6 +275,8 @@ service cloud.firestore {
           'raidLeader',
           'softresLocked',
           'softresMaxReserves',
+          'signupsLocked',
+          'plannedBosses',
           'createdByUid',
           'createdAt',
           'updatedAt'
@@ -295,6 +297,8 @@ service cloud.firestore {
         && (!('raidLeader' in data) || (data.raidLeader is string && data.raidLeader.size() <= 40))
         && (!('softresLocked' in data) || data.softresLocked is bool)
         && (!('softresMaxReserves' in data) || (data.softresMaxReserves is int && data.softresMaxReserves >= 1 && data.softresMaxReserves <= 10))
+        && (!('signupsLocked' in data) || data.signupsLocked is bool)
+        && (!('plannedBosses' in data) || data.plannedBosses is list)
         && data.createdByUid is string
         && data.createdByUid == request.auth.uid;
     }
