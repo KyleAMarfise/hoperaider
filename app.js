@@ -61,8 +61,8 @@ const fields = {
 // Raid row containers for renderRows (fix ReferenceError)
 const raidRows = {
   upcoming: document.getElementById("upcomingRaidRows"),
-  past: document.getElementById("pastRaidRows")
 };
+const pastRaidsContainer = document.getElementById("pastRaidsContainer");
 
 // WoW class colors (fix ReferenceError)
 const WOW_CLASS_COLORS = {
@@ -80,7 +80,6 @@ const WOW_CLASS_COLORS = {
 // Raid count badges (fix ReferenceError)
 const raidCountBadges = {
   upcoming: document.getElementById("upcomingCountBadge"),
-  past: document.getElementById("pastCountBadge")
 };
 import { appSettings, firebaseConfig } from "./config/prod/firebase-config.js";
 
@@ -3285,6 +3284,50 @@ function renderCategoryRows(targetElement, rows, rosterMap, reverse = false) {
     .join("");
 }
 
+function renderPastRaidsCompact(pastItems) {
+  if (!pastRaidsContainer) return;
+  const pastGroups = groupRowsByRaid(pastItems).slice().reverse();
+  if (!pastGroups.length) {
+    pastRaidsContainer.innerHTML = "";
+    return;
+  }
+  const rows = pastGroups.map((group) => {
+    const item = group.summary;
+    const detailId = `past-detail-${safeId(group.key)}`;
+    const rDate = parseDateOnly(getRaidDateString(item));
+    const dateLabel = rDate
+      ? rDate.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })
+      : "—";
+    const start = Number.isInteger(item.raidStart) ? hourLabel(item.raidStart) : "";
+    const end = Number.isInteger(item.raidEnd) ? hourLabel(item.raidEnd) : "";
+    const timeStr = start ? `${start}${end ? " – " + end : ""} ST` : "";
+    const runType = item.runType ? ` (${escapeHtml(item.runType)})` : "";
+    const raidSignups = group.signups.filter((s) => s.__isSignup !== false && s.characterId);
+    const signupCount = raidSignups.length;
+    const countLabel = signupCount > 0 ? `${signupCount} signup${signupCount !== 1 ? "s" : ""}` : "0 signups";
+    const resolvedSignups = raidSignups.map((signup) => resolveSignupCharacterData(signup));
+    const isExpanded = expandedRaidGroups.has(group.key);
+    return `<button type="button" class="past-raid-row${isExpanded ? " is-expanded" : ""}" data-past-toggle="${escapeHtml(detailId)}" data-past-group-key="${escapeHtml(group.key)}">
+      <span class="past-raid-name">${escapeHtml(item.raidName || "Raid")}${runType}</span>
+      <span class="past-raid-date">${escapeHtml(dateLabel)}</span>
+      <span class="past-raid-time">${escapeHtml(timeStr)}</span>
+      <span class="past-raid-signups">${escapeHtml(countLabel)}</span>
+    </button>
+    <div id="${detailId}" class="past-raid-detail" ${isExpanded ? "" : "hidden"}>
+      ${renderRoleCompositionBar(resolvedSignups, item)}
+      ${renderRosterTable(resolvedSignups, item.raidName)}
+    </div>`;
+  }).join("");
+
+  pastRaidsContainer.innerHTML = `<details class="past-raids-details">
+    <summary class="past-raids-summary">Completed Raids <span class="past-raids-count">(${pastGroups.length})</span></summary>
+    <div class="past-raids-list">${rows}</div>
+  </details>`;
+
+  enrichArmoryColumns(pastRaidsContainer);
+  enrichWclColumns(pastRaidsContainer);
+}
+
 function renderRows(items) {
   const scheduleItems = buildScheduleItems(items);
   const now = new Date();
@@ -3303,19 +3346,14 @@ function renderRows(items) {
   if (raidCountBadges.upcoming) {
     raidCountBadges.upcoming.textContent = String(groupRowsByRaid(grouped.upcoming).length);
   }
-  if (raidCountBadges.past) {
-    raidCountBadges.past.textContent = String(groupRowsByRaid(grouped.past).length);
-  }
 
   const rosterMap = buildRosterMap(scheduleItems);
 
   renderCategoryRows(raidRows.upcoming, grouped.upcoming, rosterMap);
-  renderCategoryRows(raidRows.past, grouped.past, rosterMap, /* reverse */ true);
+  renderPastRaidsCompact(grouped.past);
 
   enrichArmoryColumns(raidRows.upcoming);
-  enrichArmoryColumns(raidRows.past);
   enrichWclColumns(raidRows.upcoming);
-  enrichWclColumns(raidRows.past);
 
   setMessage(listMessage, scheduleItems.length ? "" : "No raids scheduled yet.");
 
@@ -3852,6 +3890,25 @@ raidSectionsEl.addEventListener("click", async (event) => {
       setMessage(formMessage, error.message, true);
     }
     return;
+  }
+});
+
+pastRaidsContainer.addEventListener("click", (event) => {
+  const btn = event.target.closest("[data-past-toggle]");
+  if (!btn) return;
+  const detailId = btn.dataset.pastToggle;
+  const groupKey = btn.dataset.pastGroupKey;
+  const detailEl = document.getElementById(detailId);
+  if (!detailEl) return;
+  const isHidden = detailEl.hidden;
+  detailEl.hidden = !isHidden;
+  btn.classList.toggle("is-expanded", isHidden);
+  if (isHidden) {
+    expandedRaidGroups.add(groupKey);
+    enrichArmoryColumns(detailEl);
+    enrichWclColumns(detailEl);
+  } else {
+    expandedRaidGroups.delete(groupKey);
   }
 });
 

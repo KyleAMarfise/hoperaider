@@ -1444,6 +1444,16 @@ button:disabled {
   padding-right: 2vw;
 }
 
+.audit-table-scroll {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+.audit-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--bg-card, #1a1a2e);
+  z-index: 2;
+}
 .admin-operations-page #characterAuditSection table {
   font-size: 0.8rem;
   width: 100%;
@@ -2544,6 +2554,109 @@ tbody tr:hover {
   font-size: 0.65em;
   opacity: 0.75;
   font-weight: 400;
+}
+
+/* ── Compact Past Raids (signup page) ── */
+.past-raids-details {
+  width: 100%;
+  margin-top: 1rem;
+}
+.past-raids-summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.5rem;
+  color: var(--text-dim);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 4px;
+  user-select: none;
+}
+.past-raids-summary::-webkit-details-marker { display: none; }
+.past-raids-summary::before {
+  content: "\25B6";
+  font-size: 0.6rem;
+  transition: transform 0.15s;
+}
+.past-raids-details[open] .past-raids-summary::before {
+  transform: rotate(90deg);
+}
+.past-raids-summary:hover {
+  color: var(--gold);
+}
+.past-raids-count {
+  font-weight: 400;
+}
+.past-raids-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding-top: 0.35rem;
+}
+.past-raid-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 0.5rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid #3a3224;
+  background: linear-gradient(180deg, #1e1a0f, #161208);
+  color: #c8b78a;
+  font-size: 0.88rem;
+  text-align: left;
+  opacity: 0.65;
+}
+.past-raid-name {
+  font-weight: 700;
+  color: #e8c860;
+  white-space: nowrap;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1 1 auto;
+}
+.past-raid-date {
+  font-weight: 600;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+.past-raid-time {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+.past-raid-signups {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+  flex: 0 0 auto;
+  min-width: 4rem;
+  text-align: right;
+}
+.past-raid-row {
+  cursor: pointer;
+  font-family: inherit;
+}
+.past-raid-row:hover {
+  border-color: var(--gold);
+  box-shadow: 0 0 10px rgba(192, 168, 112, 0.2);
+  opacity: 0.85;
+}
+.past-raid-row.is-expanded {
+  border-color: var(--gold);
+  background: linear-gradient(180deg, #2a2210, #1e1a0f);
+  opacity: 1;
+  box-shadow: 0 0 14px rgba(192, 168, 112, 0.35);
+}
+.past-raid-detail {
+  padding: 0.5rem 0;
+  overflow-x: auto;
 }
 
 /* Armory-fetched narrow columns (Guild, iLvl) */
@@ -3650,6 +3763,9 @@ td .row-actions button {
 }
 .multi-select-option:hover {
   background: rgba(124, 92, 191, 0.15);
+}
+.multi-select-option.boss-not-planned {
+  opacity: 0.4;
 }
 .multi-select-option input[type="checkbox"] {
   width: auto;

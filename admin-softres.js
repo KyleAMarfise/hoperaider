@@ -775,11 +775,25 @@ function renderLootBrowser() {
   }
 
   // Populate boss filter checkboxes
+  const raid = currentRaids.find(r => r.id === selectedRaidId);
+  const isPartial = raid?.runType === "Partial" && raid.plannedBosses?.length;
+  const plannedSet = new Set((raid?.plannedBosses || []).map(b => b.toLowerCase()));
+
+  function isBossPlanned(filterName) {
+    if (!isPartial) return true;
+    const lower = filterName.toLowerCase();
+    for (const planned of plannedSet) {
+      if (lower === planned || lower.startsWith(planned)) return true;
+    }
+    return false;
+  }
+
   let bossCheckboxes = '';
   const slots = new Set();
   const types = new Set();
   // Sort bosses by new kill order and add order indicators
   let orderedBosses = sortBossesByKillOrder(selectedRaidLoot.bosses, selectedRaidLoot.name);
+  let hasPartialSelection = false;
   orderedBosses.forEach((boss, idx) => {
     let displayName = boss.name;
     let filterName = boss.name;
@@ -793,17 +807,26 @@ function renderLootBrowser() {
     }
     // Add order indicator
     const orderLabel = ` (${idx + 1})`;
-    bossCheckboxes += `<label class="multi-select-option"><input type="checkbox" value="${escapeHtml(filterName)}" /> ${escapeHtml(displayName + orderLabel)}</label>`;
+    const planned = isBossPlanned(filterName);
+    const checked = isPartial && planned ? " checked" : "";
+    const dimClass = isPartial && !planned ? " boss-not-planned" : "";
+    if (isPartial && planned) hasPartialSelection = true;
+    bossCheckboxes += `<label class="multi-select-option${dimClass}"><input type="checkbox" value="${escapeHtml(filterName)}"${checked} /> ${escapeHtml(displayName + orderLabel)}</label>`;
     for (const item of boss.items) {
       slots.add(item.slot);
       types.add(getItemType(item));
     }
   });
   lootBossOptions.innerHTML = bossCheckboxes;
-  // Reset "All Bosses" to checked
+  // For partial raids, uncheck "All" and show only planned bosses
   const allCheckbox = lootBossDropdown.querySelector('.multi-select-all input');
-  if (allCheckbox) allCheckbox.checked = true;
-  lootBossToggle.textContent = 'All Bosses';
+  if (isPartial && hasPartialSelection) {
+    if (allCheckbox) allCheckbox.checked = false;
+    updateBossToggleLabel();
+  } else {
+    if (allCheckbox) allCheckbox.checked = true;
+    lootBossToggle.textContent = 'All Bosses';
+  }
 
   let typeHtml = '<option value="">All Types</option>';
   for (const t of [...types].sort()) {
