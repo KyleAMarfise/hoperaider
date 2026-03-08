@@ -68,15 +68,13 @@
 
 /* Signup requests compact with scroll */
 .signup-requests-compact {
-  max-height: 340px;
   margin-top: 0;
   padding-top: 0.5rem;
   display: flex;
   flex-direction: column;
 }
 .signup-requests-scroll {
-  overflow-y: auto;
-  max-height: 220px;
+  overflow-x: auto;
 }
 
 /* Character audit section grows */
@@ -2797,11 +2795,20 @@ th.armory-col-narrow {
 
 td .row-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 td .row-actions button {
-  padding: 0.4rem 0.6rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+}
+
+/* Compact signup request rows */
+.signup-requests-scroll td,
+.signup-requests-scroll th {
+  padding: 0.25rem 0.4rem;
+  font-size: 0.82rem;
+  white-space: nowrap;
 }
 
 .message {
@@ -3145,12 +3152,10 @@ td .row-actions button {
   }
 
   /* Signup requests section */
-  .signup-requests-compact {
-    max-height: 260px;
-  }
-
-  .signup-requests-scroll {
-    max-height: 180px;
+  .signup-requests-scroll td,
+  .signup-requests-scroll th {
+    font-size: 0.78rem;
+    padding: 0.2rem 0.3rem;
   }
 
   /* Raid groups */
