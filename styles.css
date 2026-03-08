@@ -1613,9 +1613,19 @@ button:disabled {
   align-items: center;
 }
 
-.audit-assignment select,
-.audit-assignment button {
-  min-height: 30px;
+.audit-assignment select {
+  min-height: 26px;
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+  font-size: 0.82rem;
+}
+
+.audit-assignment-actions button {
+  min-height: unset;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.78rem;
+  border-radius: 999px;
+  line-height: 1.3;
 }
 
 .audit-assignment-actions {
