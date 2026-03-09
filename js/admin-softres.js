@@ -636,8 +636,15 @@ function renderCharacterOptions() {
   );
   let html = '<option value="">— Select character —</option>';
   for (const ch of sorted) {
-    const label = `${ch.characterName || "?"} (${ch.wowClass || "?"})`;
-    html += `<option value="${escapeHtml(ch.id)}">${escapeHtml(label)}</option>`;
+    // Main character
+    html += `<option value="${escapeHtml(ch.id)}">${escapeHtml(`${ch.characterName || "?"} (${ch.wowClass || "?"})`)}</option>`;
+    // Alt characters embedded in the same profile document
+    const alts = Array.isArray(ch.altCharacters) ? ch.altCharacters : [];
+    alts.forEach((alt, idx) => {
+      if (!alt || !alt.characterName) return;
+      const altId = `${ch.id}::alt-${idx}`;
+      html += `<option value="${escapeHtml(altId)}">${escapeHtml(`${alt.characterName} (${alt.wowClass || "?"}) [Alt]`)}</option>`;
+    });
   }
   softresCharacterSelect.innerHTML = html;
 }
@@ -646,6 +653,22 @@ function renderCharacterOptions() {
 function getSelectedCharacter() {
   const charId = softresCharacterSelect.value;
   if (!charId) return null;
+  // Handle alt characters: composite ID of "{docId}::alt-{index}"
+  if (charId.includes("::alt-")) {
+    const [docId, altPart] = charId.split("::");
+    const idx = parseInt(altPart.replace("alt-", ""), 10);
+    const parent = currentCharacters.find(c => c.id === docId);
+    if (!parent) return null;
+    const alts = Array.isArray(parent.altCharacters) ? parent.altCharacters : [];
+    const alt = alts[idx];
+    if (!alt || !alt.characterName) return null;
+    return {
+      id: charId,
+      characterName: alt.characterName,
+      wowClass: alt.wowClass || "",
+      ownerUid: parent.ownerUid
+    };
+  }
   return currentCharacters.find(c => c.id === charId) || null;
 }
 
