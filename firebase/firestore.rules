@@ -374,6 +374,11 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
+    match /attendance_docks/{uid} {
+      allow read: if isApprovedUser();
+      allow create, update, delete: if isAdmin();
+    }
+
     match /softreserves/{reserveId} {
       allow read: if signedIn();
 

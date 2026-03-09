@@ -1599,6 +1599,46 @@ button:disabled {
 
 .audit-history-col {
   white-space: nowrap;
+  min-width: 110px;
+}
+
+.attendance-summary {
+  display: block;
+  font-size: 0.82rem;
+  cursor: default;
+}
+
+.attendance-attended {
+  color: #6fcf8a;
+  font-weight: 600;
+}
+
+.attendance-docked {
+  color: #e07a5f;
+  font-weight: 600;
+  margin-left: 0.35rem;
+}
+
+.attendance-dock-controls {
+  display: flex;
+  gap: 0.3rem;
+  margin-top: 0.25rem;
+}
+
+.attendance-dock-btn {
+  padding: 0.15rem 0.45rem;
+  font-size: 0.75rem;
+  border-radius: 999px;
+  line-height: 1.3;
+  background: linear-gradient(180deg, #7a3f35, #5c2e26);
+  border-color: #a05040;
+  color: #ffd8d0;
+}
+
+.attendance-undock-btn {
+  background: linear-gradient(180deg, #3a4050, #2a2e3a);
+  border-color: #5a6070;
+  color: var(--text-soft);
 }
 
 .audit-assign-col {

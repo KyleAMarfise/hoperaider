@@ -385,6 +385,8 @@ let unsubscribeRaids = null;
 let unsubscribeAdmins = null;
 let unsubscribeMembers = null;
 let unsubscribeOwners = null;
+let unsubscribeAttendanceDocks = null;
+let currentAttendanceDocks = new Map(); // uid → docks count
 
 if (siteTitleEl) {
   siteTitleEl.textContent = appSettings.siteTitle || "Hope Raid Tracker";
@@ -1022,6 +1024,7 @@ function buildUserAuditRows(signups) {
     const profileName = String(source.profileName || profileNamesByUid.get(normalizedUid) || source.displayName || emailLocalPart || "No Profile Name").trim();
     const role = currentOwnerUids.includes(normalizedUid) ? "owner" : adminSet.has(normalizedUid) ? "admin" : memberSet.has(normalizedUid) ? "member" : "remove";
     const acceptedTotal = acceptedTotals.get(normalizedUid) || 0;
+    const docks = currentAttendanceDocks.get(normalizedUid) || 0;
     const characterEntries = Array.from(characterSummariesByUid.get(normalizedUid)?.values() || [])
       .sort((left, right) => left.characterName.localeCompare(right.characterName, undefined, { sensitivity: "base" }));
     const tooltip = [
@@ -1036,6 +1039,7 @@ function buildUserAuditRows(signups) {
       email,
       role,
       acceptedTotal,
+      docks,
       characterEntries,
       tooltip,
       searchIndex: ""
@@ -1307,7 +1311,15 @@ function renderCharacterAuditTable() {
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.armoryUrl, "Gear")) : "—"}</td>
         <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.logsUrl, "Logs")) : "—"}</td>
         <td class="audit-stack-cell audit-parses-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderWclParsesCell(entry)) : "—"}</td>
-        <td class="audit-history-col">${escapeHtml(row.acceptedTotal)}</td>
+        <td class="audit-history-col">
+          <span class="attendance-summary" title="Attended: ${row.acceptedTotal} raid${row.acceptedTotal !== 1 ? 's' : ''} | Docked: ${row.docks} time${row.docks !== 1 ? 's' : ''}">
+            <span class="attendance-attended">${row.acceptedTotal} ✓</span>${row.docks > 0 ? ` <span class="attendance-docked">${row.docks} ✗</span>` : ''}
+          </span>
+          ${isAdmin ? `<div class="attendance-dock-controls">
+            <button class="attendance-dock-btn" data-dock-uid="${escapeHtml(row.uid)}" data-dock-action="add" title="Dock for missed raid">+ Dock</button>
+            ${row.docks > 0 ? `<button class="attendance-dock-btn attendance-undock-btn" data-dock-uid="${escapeHtml(row.uid)}" data-dock-action="remove" title="Remove last dock">− Undo</button>` : ''}
+          </div>` : ''}
+        </td>
         <td>
           <select data-role-uid="${escapeHtml(row.uid)}" data-role-current="${escapeHtml(row.role)}" title="Change this user's access role" ${row.role === "owner" && !isOwner ? "disabled" : ""}>
             <option value="member" ${row.role === "member" ? "selected" : ""} title="Standard access — can sign up for raids.">Member</option>
@@ -1700,6 +1712,31 @@ characterAuditSection.addEventListener("click", async (event) => {
   if (!(target instanceof HTMLElement)) {
     return;
   }
+
+  // ── Attendance dock / undock ──────────────────────────────────────────────
+  const dockButton = target.closest("button[data-dock-uid][data-dock-action]");
+  if (dockButton instanceof HTMLButtonElement && isAdmin && db) {
+    const uid = normalizeUid(dockButton.dataset.dockUid || "");
+    const action = dockButton.dataset.dockAction;
+    if (!uid) return;
+    const current = currentAttendanceDocks.get(uid) || 0;
+    const next = action === "add" ? current + 1 : Math.max(0, current - 1);
+    dockButton.disabled = true;
+    try {
+      await setDoc(doc(db, "attendance_docks", uid), {
+        uid,
+        docks: next,
+        updatedAt: serverTimestamp(),
+        updatedBy: authUid || ""
+      });
+    } catch (err) {
+      setMessage(characterAuditMessage, "Error saving dock: " + err.message, true);
+    } finally {
+      dockButton.disabled = false;
+    }
+    return;
+  }
+
   const actionButton = target.closest("button[data-audit-action][data-audit-action-uid]");
   if (!(actionButton instanceof HTMLButtonElement)) {
     return;
@@ -2102,6 +2139,10 @@ if (!hasConfigValues()) {
       unsubscribeOwners();
       unsubscribeOwners = null;
     }
+    if (unsubscribeAttendanceDocks) {
+      unsubscribeAttendanceDocks();
+      unsubscribeAttendanceDocks = null;
+    }
 
     if (!user) {
       authUid = null;
@@ -2258,6 +2299,19 @@ if (!hasConfigValues()) {
       },
       (error) => {
         console.warn("[OWNERS] snapshot error:", error.message);
+      }
+    );
+
+    unsubscribeAttendanceDocks = onSnapshot(
+      collection(db, "attendance_docks"),
+      (snapshot) => {
+        currentAttendanceDocks = new Map(
+          snapshot.docs.map((d) => [String(d.id || "").trim(), Number(d.data().docks || 0)])
+        );
+        renderCharacterAuditTable();
+      },
+      (error) => {
+        console.warn("[ATTENDANCE] snapshot error:", error.message);
       }
     );
   });
