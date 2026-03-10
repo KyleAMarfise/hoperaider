@@ -3870,9 +3870,11 @@ td .row-actions button {
   padding-right: 0;
 }
 .softres-loot-table td:last-child {
-  width: 36px;
-  text-align: center;
+  width: 80px;
+  min-width: 80px;
+  text-align: right;
   padding: 0 0.3rem;
+  white-space: nowrap;
 }
 
 /* +/- reserve buttons */
