@@ -1685,6 +1685,32 @@ async function toggleLock() {
   }
 }
 
+/**
+ * Compress a string using zlib (deflate with header) and return a base64 string.
+ * This matches the format softres.it uses for Gargul exports.
+ */
+async function zlibBase64(str) {
+  const bytes = new TextEncoder().encode(str);
+  const cs = new CompressionStream("deflate");
+  const writer = cs.writable.getWriter();
+  writer.write(bytes);
+  writer.close();
+  const chunks = [];
+  const reader = cs.readable.getReader();
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    chunks.push(value);
+  }
+  const total = chunks.reduce((n, c) => n + c.length, 0);
+  const out = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) { out.set(chunk, offset); offset += chunk.length; }
+  let binary = "";
+  for (let i = 0; i < out.length; i++) binary += String.fromCharCode(out[i]);
+  return btoa(binary);
+}
+
 async function copySRResults() {
   if (!selectedRaidId) return;
   const raidReserves = currentReserves.filter(r => r.raidId === selectedRaidId);
@@ -1694,35 +1720,44 @@ async function copySRResults() {
     return;
   }
 
-  // Build a name→class lookup from known characters for HR rows
-  const nameClassMap = new Map();
-  for (const ch of currentCharacters) {
-    if (ch.characterName) nameClassMap.set(ch.characterName.toLowerCase(), ch.wowClass || "");
-    for (const alt of (ch.altCharacters || [])) {
-      if (alt?.characterName) nameClassMap.set(alt.characterName.toLowerCase(), alt.wowClass || "");
-    }
-  }
+  const raid = currentRaids.find(r => r.id === selectedRaidId);
+  const now = Math.floor(Date.now() / 1000);
 
-  // Gargul CSV import format: header row + one row per item per player
-  // Columns: ItemId,Name,Class,Note,Plus
-  const rows = ["ItemId,Name,Class,Note,Plus"];
-
-  // Soft reserves
-  for (const res of raidReserves) {
-    const items = getReserveItems(res);
-    for (const item of items) {
-      rows.push(`${item.itemId},${res.characterName},${res.wowClass || ""},,0`);
-    }
-  }
-
-  // Hard reserves — look up class by character name if available
-  for (const hr of raidHRs) {
-    const wowClass = nameClassMap.get((hr.characterName || "").toLowerCase()) || "";
-    rows.push(`${hr.itemId},${hr.characterName},${wowClass},,0`);
-  }
+  // Build softres.it Gargul export format: zlib(JSON) → base64
+  // Structure decoded from a real softres.it export payload
+  const payload = {
+    metadata: {
+      id: selectedRaidId,
+      instance: null,
+      instances: [(raid?.raidName || "raid").toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 12)],
+      hidden: false,
+      createdAt: now,
+      updatedAt: now,
+      raidStartsAt: null,
+      lockedAt: raid?.softresLocked ? now : null,
+      discordUrl: "",
+      note: ""
+    },
+    softreserves: raidReserves
+      .filter(res => getReserveItems(res).length)
+      .map(res => ({
+        rollBonus: 0,
+        plusOnes: 0,
+        name: res.characterName || "",
+        class: (res.wowClass || "").toLowerCase(),
+        note: "",
+        items: getReserveItems(res).map((it, idx) => ({ id: Number(it.itemId), note: "", order: idx }))
+      })),
+    hardreserves: raidHRs.map(hr => ({
+      id: Number(hr.itemId),
+      for: hr.characterName || "",
+      note: hr.note || ""
+    }))
+  };
 
   try {
-    await navigator.clipboard.writeText(rows.join("\n"));
+    const encoded = await zlibBase64(JSON.stringify(payload));
+    await navigator.clipboard.writeText(encoded);
     const orig = softresCopyBtn.textContent;
     softresCopyBtn.textContent = "Copied!";
     setTimeout(() => { softresCopyBtn.textContent = orig; }, 2000);
