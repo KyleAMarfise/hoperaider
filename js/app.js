@@ -1247,17 +1247,19 @@ function renderRoleCompositionBar(resolvedSignups, raidItem) {
 }
 
 function renderRosterTable(resolvedSignups, raidName, raidId) {
-  // Hard reserves mini-section
-  const raidHRs = raidId ? allHardReserves.filter(hr => hr.raidId === raidId) : [];
-  const hrSection = raidHRs.length
-    ? `<div class="roster-hr-section">${raidHRs.map(hr => {
-        const color = ITEM_QUALITY_COLORS[hr.itemQuality] || "#ccc";
-        return `<span class="roster-hr-item"><span class="hardres-badge">HR</span> <span style="color:${color};font-weight:600">${escapeHtml(hr.itemName || "?")}</span> → <strong>${escapeHtml(hr.characterName)}</strong>${hr.note ? ` <span class="text-dim">(${escapeHtml(hr.note)})</span>` : ""}</span>`;
-      }).join("")}</div>`
-    : "";
+  // Build a name→HR map for this raid (case-insensitive name match)
+  const hrByName = new Map();
+  if (raidId) {
+    for (const hr of allHardReserves) {
+      if (hr.raidId !== raidId) continue;
+      const key = (hr.characterName || "").toLowerCase();
+      if (!hrByName.has(key)) hrByName.set(key, []);
+      hrByName.get(key).push(hr);
+    }
+  }
 
   if (!resolvedSignups.length) {
-    return `${hrSection}<p class="roster-empty">No signups yet.</p>`;
+    return `<p class="roster-empty">No signups yet.</p>`;
   }
 
   const accepted = resolvedSignups.filter((s) => normalizeSignupStatus(s.status) === "accept");
@@ -1275,13 +1277,21 @@ function renderRosterTable(resolvedSignups, raidName, raidId) {
       const spec = signup.mainSpecialization || signup.specialization || "";
       const statusNorm = normalizeSignupStatus(signup.status);
 
-      // Soft reserves for this character in this raid
+      // Soft reserves + hard reserves for this character in this raid
       const charReserves = raidId
         ? allSoftReserves.find(r => r.raidId === raidId && r.characterId === signup.characterId)
         : null;
       const reserveItems = charReserves && Array.isArray(charReserves.items) ? charReserves.items : [];
-      const srHtml = reserveItems.length
-        ? reserveItems.map(it => `<span style="color:${ITEM_QUALITY_COLORS[it.quality] || "#ccc"};font-weight:600">${escapeHtml(it.name || "?")}</span>`).join('<span class="text-dim"> · </span>')
+      const charHRs = hrByName.get(charName.toLowerCase()) || [];
+      const srParts = reserveItems.map(it =>
+        `<span style="color:${ITEM_QUALITY_COLORS[it.quality] || "#ccc"};font-weight:600">${escapeHtml(it.name || "?")}</span>`
+      );
+      const hrParts = charHRs.map(hr =>
+        `<span class="hardres-badge roster-hr-inline" title="${hr.note ? escapeHtml(hr.note) : "Hard Reserve"}">${escapeHtml(hr.itemName || "?")}</span>`
+      );
+      const allParts = [...srParts, ...hrParts];
+      const srHtml = allParts.length
+        ? allParts.join('<span class="text-dim"> · </span>')
         : '<span class="text-dim">—</span>';
 
       return `<tr class="roster-row roster-status-${statusNorm}">
@@ -1299,9 +1309,9 @@ function renderRosterTable(resolvedSignups, raidName, raidId) {
     return `<tr class="roster-section-header"><td colspan="8">${escapeHtml(sectionLabel)} (${signups.length})</td></tr>${rows}`;
   }
 
-  return `${hrSection}<table class="roster-table">
+  return `<table class="roster-table">
     <thead>
-      <tr><th class="roster-char-indent">Character</th><th>Class</th><th>Main Spec</th><th>SR's</th><th>Status</th><th>Parses</th><th>Gear</th><th>Logs</th></tr>
+      <tr><th class="roster-char-indent">Character</th><th>Class</th><th>Main Spec</th><th>Soft & Hard Reserves</th><th>Status</th><th>Parses</th><th>Gear</th><th>Logs</th></tr>
     </thead>
     <tbody>
       ${rosterRows(accepted, "Accepted")}

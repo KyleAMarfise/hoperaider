@@ -1003,13 +1003,13 @@ function filterLootTable() {
     }
 
     rows += `<tr data-item-id="${item.itemId}" class="${rowClass}">
+      <td class="softres-loot-actions">${actionHtml}${hrHtml}</td>
       <td><img class="softres-item-icon" src="${escapeHtml(item.icon)}" alt="" loading="lazy" /></td>
       <td style="color:${canUse ? qualityColor : '#666'};font-weight:600">${escapeHtml(item.name)} <a href="${wowheadUrl(item.itemId)}" class="wowhead-link" target="_blank" rel="noopener" title="View on Wowhead" onclick="event.stopPropagation()">↗</a></td>
       <td>${escapeHtml(getItemType(item))}</td>
       <td>${escapeHtml(item.slot)}</td>
       <td>${escapeHtml(bossName)}</td>
       <td>${dropPct}</td>
-      <td class="softres-loot-actions">${actionHtml}${hrHtml}</td>
     </tr>`;
   }
   if (!rows) rows = '<tr><td colspan="7" class="text-dim">No items match filters.</td></tr>';
