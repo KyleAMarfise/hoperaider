@@ -2418,36 +2418,12 @@
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Terror Pit Girdle</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 125</span><br>Binds when picked up<table width=\"100%\"><tr><td>Waist</td><th><span class=\"q1\">Mail</span></th></tr></table><span>495 Armor</span><br><span>+18 Stamina</span><br><span>+22 Intellect</span><br /><br>Blue Socket<br>Red Socket<br><span class=\"q0\">Socket Bonus: +4 Stamina</span><br /><br />Durability 50 / 50</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves critical strike rating by 21.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 44.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 8 mana per 5 sec.</span><br></td></tr></table>"
             },
             {
-              "itemId": 28790,
-              "name": "Naaru Lightwarden's Band",
+              "itemId": 32385,
+              "name": "Magtheridon's Head",
               "quality": "Epic",
-              "slot": "Finger",
-              "icon": "inv_jewelry_ring_70",
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Naaru Lightwarden's Band</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 125</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Finger</td><th><span class=\"q1\"></span></th></tr></table><span>+21 Stamina</span><br><span>+25 Intellect</span></td></tr></table><table><tr><td><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 55 and damage done by up to 19 for all magical spells and effects.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 8 mana per 5 sec.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 28791,
-              "name": "Ring of the Recalcitrant",
-              "quality": "Epic",
-              "slot": "Finger",
-              "icon": "inv_jewelry_ring_71",
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Ring of the Recalcitrant</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 125</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Finger</td><th><span class=\"q1\"></span></th></tr></table><span>+24 Agility</span><br><span>+27 Stamina</span></td></tr></table><table><tr><td><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 54.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 28792,
-              "name": "A'dal's Signet of Defense",
-              "quality": "Epic",
-              "slot": "Finger",
-              "icon": "inv_jewelry_ring_55",
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">A'dal's Signet of Defense</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 125</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Finger</td><th><span class=\"q1\"></span></th></tr></table><span class=\"q2 tip\" data-simple-tooltip=\"&lt;span class=&quot;q&quot;&gt;Has 367 bonus armor.&lt;/span&gt;\">367 Armor</span><br><span>+34 Stamina</span></td></tr></table><table><tr><td><span class=\"q2\">Equip: Increases defense rating by 20.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 28793,
-              "name": "Band of Crimson Fury",
-              "quality": "Epic",
-              "slot": "Finger",
-              "icon": "inv_jewelry_ring_65",
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Band of Crimson Fury</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 125</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>Finger</td><th><span class=\"q1\"></span></th></tr></table><span>+22 Stamina</span><br><span>+22 Intellect</span></td></tr></table><table><tr><td><span class=\"q2\">Equip: Improves spell hit rating by 16.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 28.</span><br></td></tr></table>"
+              "slot": "Quest",
+              "icon": "inv_misc_head_tauren_01",
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Magtheridon's Head</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 70</span><br>Binds when picked up<br>Unique<br>This Item Begins a Quest</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q\">&quot;All that remains of the hellspawn, Magtheridon.&quot;</span><br></td></tr></table>"
             }
           ]
         }
