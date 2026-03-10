@@ -354,6 +354,7 @@ const RAID_NAME_TO_WCL_ZONES = {
   "Karazhan": ["Kara"],
   "Gruul's Lair": ["Gruul/Mag"],
   "Magtheridon's Lair": ["Gruul/Mag"],
+  "Gruul's + Mag's": ["Gruul/Mag"],
   "Serpentshrine Cavern": ["SSC/TK"],
   "The Eye": ["SSC/TK"],
   "Tempest Keep": ["SSC/TK"],
