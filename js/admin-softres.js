@@ -73,6 +73,17 @@ const raidModeBody = document.getElementById("raidModeBody");
 const raidModeBossFilter = document.getElementById("raidModeBossFilter");
 const raidModeCloseBtn = document.getElementById("raidModeCloseBtn");
 const lootTableRows = document.getElementById("lootTableRows");
+const hardresSection = document.getElementById("hardresSection");
+const hardresCount = document.getElementById("hardresCount");
+const hardresAdminControls = document.getElementById("hardresAdminControls");
+const hardresTableWrap = document.getElementById("hardresTableWrap");
+const hardresRows = document.getElementById("hardresRows");
+const hardresDialog = document.getElementById("hardresDialog");
+const hardresForm = document.getElementById("hardresForm");
+const hardresDialogItemName = document.getElementById("hardresDialogItemName");
+const hardresCharInput = document.getElementById("hardresCharInput");
+const hardresNoteInput = document.getElementById("hardresNoteInput");
+const hardresCancelBtn = document.getElementById("hardresCancelBtn");
 
 // ── State ───────────────────────────────────────────────────────────────────
 let db = null;
@@ -90,6 +101,10 @@ let selectedRaidId = null;
 let unsubscribeRaids = null;
 let unsubscribeCharacters = null;
 let unsubscribeReserves = null;
+let unsubscribeHardReserves = null;
+
+let currentHardReserves = [];
+let pendingHrItem = null; // item being hard reserved (dialog open)
 
 // ── Constants ───────────────────────────────────────────────────────────────
 const WOW_CLASS_COLORS = {
@@ -978,6 +993,15 @@ function filterLootTable() {
       }
     }
 
+    // HR badge/button — visible to all; add button is admin-only
+    const existingHR = currentHardReserves.find(hr => hr.raidId === selectedRaidId && Number(hr.itemId) === item.itemId);
+    let hrHtml = '';
+    if (existingHR) {
+      hrHtml = `<span class="hardres-badge" title="Hard Reserved for ${escapeHtml(existingHR.characterName)}">HR: ${escapeHtml(existingHR.characterName)}</span>`;
+    } else if (isAdmin) {
+      hrHtml = `<button class="softres-reserve-btn hardres-btn" data-hr-open="${item.itemId}" data-hr-boss="${escapeHtml(bossName)}" title="Hard reserve this item">HR</button>`;
+    }
+
     rows += `<tr data-item-id="${item.itemId}" class="${rowClass}">
       <td><img class="softres-item-icon" src="${escapeHtml(item.icon)}" alt="" loading="lazy" /></td>
       <td style="color:${canUse ? qualityColor : '#666'};font-weight:600">${escapeHtml(item.name)} <a href="${wowheadUrl(item.itemId)}" class="wowhead-link" target="_blank" rel="noopener" title="View on Wowhead" onclick="event.stopPropagation()">↗</a></td>
@@ -985,7 +1009,7 @@ function filterLootTable() {
       <td>${escapeHtml(item.slot)}</td>
       <td>${escapeHtml(bossName)}</td>
       <td>${dropPct}</td>
-      <td>${actionHtml}</td>
+      <td class="softres-loot-actions">${actionHtml}${hrHtml}</td>
     </tr>`;
   }
   if (!rows) rows = '<tr><td colspan="7" class="text-dim">No items match filters.</td></tr>';
@@ -1171,6 +1195,14 @@ function renderRaidModeBody(bossFilter) {
     list.sort((a, b) => a.characterName.localeCompare(b.characterName));
   }
 
+  // Build a map: itemId -> hard reserve entry for this raid
+  const hardReserveMap = new Map();
+  for (const hr of currentHardReserves) {
+    if (hr.raidId === selectedRaidId) {
+      hardReserveMap.set(Number(hr.itemId), hr);
+    }
+  }
+
   const filteredBosses = bossFilter
     ? bosses.filter(b => b.name === bossFilter)
     : bosses;
@@ -1182,8 +1214,10 @@ function renderRaidModeBody(bossFilter) {
 
   let html = '<div class="raid-mode-bosses">';
   for (const boss of filteredBosses) {
-    // Only show items that have at least one soft reserve
-    const reservedItems = boss.items.filter(item => itemReservers.has(item.itemId));
+    // Show items with at least one SR or an HR
+    const reservedItems = boss.items.filter(item =>
+      itemReservers.has(item.itemId) || hardReserveMap.has(item.itemId)
+    );
 
     // Bosses with 5+ reserved items get a wider card
     const spanClass = reservedItems.length >= 5 ? " boss-span-2" : "";
@@ -1197,6 +1231,7 @@ function renderRaidModeBody(bossFilter) {
       for (const item of reservedItems) {
         const color = QUALITY_COLORS[item.quality] || "#ccc";
         const reservers = itemReservers.get(item.itemId) || [];
+        const hr = hardReserveMap.get(item.itemId);
         const dropPct = item.dropChance != null ? `<span class="softres-drop-pct">${(item.dropChance * 100).toFixed(1)}%</span>` : "";
         const slotLabel = item.slot || "";
         const typeName = getItemType(item);
@@ -1212,6 +1247,10 @@ function renderRaidModeBody(bossFilter) {
           ? `<span class="softres-contention-badge" title="${reservers.length} characters reserved this">${reservers.length}</span>`
           : "";
 
+        const hrBanner = hr
+          ? `<div class="raid-mode-hr-banner"><span class="hardres-badge">HARD RESERVE</span><span class="raid-mode-hr-char">${escapeHtml(hr.characterName)}</span>${hr.note ? `<span class="raid-mode-hr-note text-dim">— ${escapeHtml(hr.note)}</span>` : ''}</div>`
+          : "";
+
         html += `<div class="raid-mode-item" data-item-id="${item.itemId}">
           <div class="raid-mode-item-header">
             ${iconUrl}
@@ -1220,6 +1259,7 @@ function renderRaidModeBody(bossFilter) {
               <span class="raid-mode-item-meta">${escapeHtml(slotLabel)}${slotLabel && typeName ? ' · ' : ''}${escapeHtml(typeName)}${(slotLabel || typeName || iLvl) && dropPct ? ' · ' : ''}${dropPct}</span>
             </div>
           </div>
+          ${hrBanner}
           <div class="raid-mode-char-list">${charChips}</div>
         </div>`;
       }
@@ -1321,6 +1361,7 @@ async function onRaidSelected(raidId) {
     softresAdminAdd.hidden = true;
     softresLootBrowser.hidden = true;
     softresLockControls.hidden = true;
+    if (hardresSection) hardresSection.hidden = true;
     selectedRaidLoot = null;
     return;
   }
@@ -1369,9 +1410,11 @@ async function onRaidSelected(raidId) {
   renderLootBrowser();
   renderReserves();
   renderLockState();
+  renderHardReserves();
 
-  // Subscribe to reserves for this raid
+  // Subscribe to reserves and hard reserves for this raid
   subscribeToReserves();
+  subscribeToHardReserves();
 }
 
 // ── Firestore subscriptions ─────────────────────────────────────────────────
@@ -1390,6 +1433,58 @@ function subscribeToReserves() {
     renderCharacterReserves();
   }, (err) => {
     setMsg("Error loading reserves: " + err.message, true);
+  });
+}
+
+// ── Hard Reserves ────────────────────────────────────────────────────────────
+function renderHardReserves() {
+  if (!selectedRaidId || !hardresSection) return;
+  hardresSection.hidden = false;
+
+  const raidHRs = currentHardReserves.filter(hr => hr.raidId === selectedRaidId);
+  if (hardresCount) hardresCount.textContent = String(raidHRs.length);
+  if (hardresAdminControls) hardresAdminControls.hidden = !isAdmin;
+
+  if (!hardresTableWrap || !hardresRows) return;
+  if (!raidHRs.length) {
+    hardresTableWrap.hidden = true;
+    return;
+  }
+
+  hardresTableWrap.hidden = false;
+  let html = '';
+  for (const hr of raidHRs) {
+    const color = QUALITY_COLORS[hr.itemQuality] || '#ccc';
+    const iconHtml = hr.itemIcon ? `<img class="softres-item-icon" src="${escapeHtml(hr.itemIcon)}" alt="" loading="lazy" /> ` : '';
+    const deleteBtn = isAdmin
+      ? `<button class="secondary softres-action-btn softres-delete-btn" data-hr-action="delete" data-hr-id="${escapeHtml(hr.id)}" title="Remove hard reserve">✕</button>`
+      : '';
+    html += `<tr>
+      <td>${iconHtml}<span data-item-id="${hr.itemId}" class="softres-item-hover" style="color:${color};font-weight:600">${escapeHtml(hr.itemName || '?')}</span> <span class="text-dim" style="font-size:0.8em">— ${escapeHtml(hr.bossName || '?')}</span></td>
+      <td style="font-weight:600">${escapeHtml(hr.characterName || '?')}</td>
+      <td class="text-dim">${escapeHtml(hr.note || '—')}</td>
+      <td class="text-dim">${relativeTime(hr.createdAt)}</td>
+      <td>${deleteBtn}</td>
+    </tr>`;
+  }
+  hardresRows.innerHTML = html;
+}
+
+function subscribeToHardReserves() {
+  if (unsubscribeHardReserves) {
+    unsubscribeHardReserves();
+    unsubscribeHardReserves = null;
+  }
+  if (!db || !selectedRaidId) return;
+
+  const q = query(collection(db, "hardreserves"), where("raidId", "==", selectedRaidId));
+  unsubscribeHardReserves = onSnapshot(q, (snapshot) => {
+    currentHardReserves = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderHardReserves();
+    filterLootTable(); // refresh HR badge/button state in loot table
+    if (raidModeDialog?.open) renderRaidModeBody(raidModeBossFilter?.value || "");
+  }, (err) => {
+    console.error("Error loading hard reserves:", err);
   });
 }
 
@@ -1729,8 +1824,81 @@ softresItemDroppedFilter.addEventListener("input", renderReserves);
 softresItemDroppedFilter.addEventListener("keyup", renderReserves);
 softresItemDroppedFilter.addEventListener("change", renderReserves);
 softresItemDroppedFilter.addEventListener("compositionend", renderReserves);
-lootTableRows.addEventListener("click", handleReserveButton);
+lootTableRows.addEventListener("click", (e) => {
+  // HR button — open dialog to collect character name + note
+  const hrBtn = e.target.closest("[data-hr-open]");
+  if (hrBtn && isAdmin && db) {
+    const itemId = Number(hrBtn.dataset.hrOpen);
+    const bossName = hrBtn.dataset.hrBoss || '';
+    const allItems = selectedRaidLoot ? selectedRaidLoot.bosses.flatMap(b => b.items.map(i => ({ ...i, bossName: b.name }))) : [];
+    const item = allItems.find(i => i.itemId === itemId);
+    if (!item) return;
+    pendingHrItem = { ...item, bossName };
+    if (hardresDialogItemName) hardresDialogItemName.textContent = `${item.name} — ${bossName}`;
+    if (hardresCharInput) hardresCharInput.value = '';
+    if (hardresNoteInput) hardresNoteInput.value = '';
+    hardresDialog?.showModal();
+    return;
+  }
+  handleReserveButton(e);
+});
 softresCharReserves.addEventListener("click", handleReserveButton);
+
+// Hard reserve dialog submit
+if (hardresForm) {
+  hardresForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!pendingHrItem || !db || !isAdmin || !selectedRaidId) return;
+    const charName = (hardresCharInput?.value || '').trim();
+    if (!charName) return;
+    const note = (hardresNoteInput?.value || '').trim();
+    const raid = currentRaids.find(r => r.id === selectedRaidId);
+    try {
+      await addDoc(collection(db, "hardreserves"), {
+        raidId: selectedRaidId,
+        raidName: raid?.raidName || '',
+        raidDate: raid?.raidDate || '',
+        itemId: pendingHrItem.itemId,
+        itemName: pendingHrItem.name || '',
+        itemIcon: pendingHrItem.icon || '',
+        itemQuality: pendingHrItem.quality || 'Epic',
+        bossName: pendingHrItem.bossName || '',
+        characterName: charName,
+        note: note,
+        createdByUid: authUid,
+        createdAt: serverTimestamp()
+      });
+      hardresDialog?.close();
+      pendingHrItem = null;
+    } catch (err) {
+      console.error("Error adding hard reserve:", err);
+    }
+  });
+}
+
+if (hardresCancelBtn) {
+  hardresCancelBtn.addEventListener("click", () => {
+    hardresDialog?.close();
+    pendingHrItem = null;
+  });
+}
+
+// Hard reserve rows delete
+if (hardresRows) {
+  hardresRows.addEventListener("click", async (e) => {
+    const btn = e.target.closest("[data-hr-action]");
+    if (!btn || !isAdmin || !db) return;
+    if (btn.dataset.hrAction === "delete") {
+      const hrId = btn.dataset.hrId;
+      if (!hrId || !confirm("Remove this hard reserve?")) return;
+      try {
+        await deleteDoc(doc(db, "hardreserves", hrId));
+      } catch (err) {
+        console.error("Error deleting hard reserve:", err);
+      }
+    }
+  });
+}
 
 // ── Firebase init ───────────────────────────────────────────────────────────
 if (!hasConfigValues()) {
@@ -1870,6 +2038,7 @@ if (!hasConfigValues()) {
     if (unsubscribeRaids) { unsubscribeRaids(); unsubscribeRaids = null; }
     if (unsubscribeCharacters) { unsubscribeCharacters(); unsubscribeCharacters = null; }
     if (unsubscribeReserves) { unsubscribeReserves(); unsubscribeReserves = null; }
+    if (unsubscribeHardReserves) { unsubscribeHardReserves(); unsubscribeHardReserves = null; }
 
     if (!user) {
       authUid = null;

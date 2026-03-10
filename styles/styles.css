@@ -4366,6 +4366,136 @@ td .row-actions button {
   color: var(--text-dim);
 }
 
+/* Hard Reserves ─────────────────────────────────────────────────────────── */
+.hardres-section {
+  margin-bottom: 1.25rem;
+}
+.hardres-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+  flex-wrap: wrap;
+}
+.hardres-admin-hint {
+  font-size: 0.82rem;
+}
+
+/* HR badge — shown inline in loot table and overview */
+.hardres-badge {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255, 90, 90, 0.14);
+  border: 1px solid rgba(255, 90, 90, 0.45);
+  color: #ff8585;
+  border-radius: 4px;
+  padding: 1px 7px;
+  font-size: 0.73rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* HR button in loot table (admin only) */
+.hardres-btn {
+  background: rgba(255, 90, 90, 0.12);
+  border: 1px solid rgba(255, 90, 90, 0.45);
+  color: #ff8585;
+  font-size: 0.73rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.hardres-btn:hover {
+  background: rgba(255, 90, 90, 0.28);
+}
+
+/* Space between SR +/- and HR button in the same cell */
+.softres-loot-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+
+/* HR dialog */
+.hardres-dialog {
+  background: var(--card-bg, #1e2a38);
+  border: 1px solid var(--border, #2e3f52);
+  border-radius: 10px;
+  padding: 1.5rem;
+  max-width: 380px;
+  width: 90%;
+  color: inherit;
+}
+.hardres-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.65);
+}
+.hardres-dialog-title {
+  margin: 0 0 0.4rem;
+}
+.hardres-dialog-item-name {
+  color: #a335ee;
+  font-weight: 600;
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+}
+.hardres-dialog-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+.hardres-dialog-input {
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  border: 1px solid var(--border, #2e3f52);
+  background: rgba(255, 255, 255, 0.05);
+  color: inherit;
+  font-size: 0.9rem;
+}
+.hardres-dialog-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+.hardres-confirm-btn {
+  background: rgba(255, 90, 90, 0.18);
+  border: 1px solid rgba(255, 90, 90, 0.5);
+  color: #ff8585;
+  border-radius: 4px;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.hardres-confirm-btn:hover {
+  background: rgba(255, 90, 90, 0.32);
+}
+
+/* HR banner in Raid Loot Mode */
+.raid-mode-hr-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.5rem;
+  background: rgba(255, 90, 90, 0.08);
+  border-radius: 4px;
+  margin-bottom: 0.4rem;
+  flex-wrap: wrap;
+}
+.raid-mode-hr-char {
+  font-weight: 600;
+  color: #ff8585;
+  font-size: 0.85rem;
+}
+.raid-mode-hr-note {
+  font-size: 0.78rem;
+}
+
 /* Tablet responsive */
 @media (max-width: 1024px) {
   .raid-mode-boss-card.boss-span-2 {

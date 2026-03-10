@@ -379,6 +379,11 @@ service cloud.firestore {
       allow create, update, delete: if isAdmin();
     }
 
+    match /hardreserves/{hrId} {
+      allow read: if isApprovedUser();
+      allow create, delete: if isAdmin();
+    }
+
     match /softreserves/{reserveId} {
       allow read: if signedIn();
 

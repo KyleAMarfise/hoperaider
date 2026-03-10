@@ -67,6 +67,28 @@
         </div>
       </div>
 
+      <!-- Hard Reserves -->
+      <div id="hardresSection" class="hardres-section" hidden>
+        <div class="hardres-header">
+          <h3>Hard Reserves <span id="hardresCount" class="badge">0</span></h3>
+          <div id="hardresAdminControls" class="hardres-admin-hint text-dim" hidden>Click <strong>HR</strong> on an item below to hard reserve it for a player</div>
+        </div>
+        <div class="table-wrap" id="hardresTableWrap" hidden>
+          <table class="softres-table hardres-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Character</th>
+                <th>Note</th>
+                <th>Added</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="hardresRows"></tbody>
+          </table>
+        </div>
+      </div>
+
       <!-- Active Reserves Overview -->
       <div id="softresOverview" class="softres-overview" hidden>
         <div class="softres-overview-header">
@@ -164,6 +186,26 @@
     </section>
 
   </main>
+
+  <!-- Hard Reserve Dialog -->
+  <dialog id="hardresDialog" class="hardres-dialog">
+    <form id="hardresForm">
+      <h3 class="hardres-dialog-title">Hard Reserve</h3>
+      <p id="hardresDialogItemName" class="hardres-dialog-item-name"></p>
+      <label class="hardres-dialog-label">
+        Character
+        <input type="text" id="hardresCharInput" class="hardres-dialog-input" placeholder="Character name…" required autocomplete="off" />
+      </label>
+      <label class="hardres-dialog-label">
+        Note <span class="text-dim">(optional)</span>
+        <input type="text" id="hardresNoteInput" class="hardres-dialog-input" placeholder="e.g. Tank BIS, Previous SR…" autocomplete="off" />
+      </label>
+      <div class="hardres-dialog-actions">
+        <button type="submit" class="hardres-confirm-btn">Add Hard Reserve</button>
+        <button type="button" id="hardresCancelBtn" class="secondary">Cancel</button>
+      </div>
+    </form>
+  </dialog>
 
   <!-- Raid Mode Modal (outside <main> so it overlays everything) -->
   <dialog id="raidModeDialog" class="raid-mode-dialog">
