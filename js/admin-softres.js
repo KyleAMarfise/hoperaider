@@ -1688,19 +1688,37 @@ async function toggleLock() {
 async function copySRResults() {
   if (!selectedRaidId) return;
   const raidReserves = currentReserves.filter(r => r.raidId === selectedRaidId);
-  if (!raidReserves.length) {
+  const raidHRs = currentHardReserves.filter(hr => hr.raidId === selectedRaidId);
+  if (!raidReserves.length && !raidHRs.length) {
     setMsg("No reserves to copy.", true);
     return;
+  }
+
+  // Build a name→class lookup from known characters for HR rows
+  const nameClassMap = new Map();
+  for (const ch of currentCharacters) {
+    if (ch.characterName) nameClassMap.set(ch.characterName.toLowerCase(), ch.wowClass || "");
+    for (const alt of (ch.altCharacters || [])) {
+      if (alt?.characterName) nameClassMap.set(alt.characterName.toLowerCase(), alt.wowClass || "");
+    }
   }
 
   // Gargul CSV import format: header row + one row per item per player
   // Columns: ItemId,Name,Class,Note,Plus
   const rows = ["ItemId,Name,Class,Note,Plus"];
+
+  // Soft reserves
   for (const res of raidReserves) {
     const items = getReserveItems(res);
     for (const item of items) {
       rows.push(`${item.itemId},${res.characterName},${res.wowClass || ""},,0`);
     }
+  }
+
+  // Hard reserves — look up class by character name if available
+  for (const hr of raidHRs) {
+    const wowClass = nameClassMap.get((hr.characterName || "").toLowerCase()) || "";
+    rows.push(`${hr.itemId},${hr.characterName},${wowClass},,0`);
   }
 
   try {
