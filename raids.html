@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hope Raid Tracker</title>
+  <link rel="icon" type="image/x-icon" href="assets/images/World%20of%20Warcraft%20Alliance.ico" />
+  <link rel="apple-touch-icon" href="assets/images/World%20of%20Warcraft%20Alliance.PNG" />
+  <link rel="stylesheet" href="styles/styles.css" />
+</head>
+<body class="admin-page admin-raids-page" data-nav-page="raids">
+  <section id="authGate" class="auth-gate" hidden>
+    <div class="auth-gate-card">
+      <h1>Hope Raid Tracker</h1>
+      <p id="authGateMessage" class="auth-gate-message">Sign in to continue.</p>
+      <div class="auth-gate-buttons">
+        <button type="button" id="authGateSignInButton" class="auth-btn auth-btn-google">Sign in with Google</button>
+        <button type="button" id="authGateYahooButton" class="auth-btn auth-btn-yahoo">Sign in with Yahoo</button>
+      </div>
+      <div class="auth-gate-divider"><span>or</span></div>
+      <form class="auth-gate-email-form" id="authGateEmailForm">
+        <input type="email" id="authGateEmail" class="auth-input" placeholder="Email address" required autocomplete="email" />
+        <input type="password" id="authGatePassword" class="auth-input" placeholder="Password" required autocomplete="current-password" />
+        <div class="auth-gate-email-buttons">
+          <button type="submit" class="auth-btn auth-btn-email" style="opacity:0.4;pointer-events:none;" aria-disabled="true">Sign In with Email</button>
+          <button type="button" id="authGateCreateAccount" class="auth-btn auth-btn-create">Create Account</button>
+        </div>
+        <p class="auth-gate-email-hint">First time? Click <strong>Create Account</strong>. Already registered? Click <strong>Sign In</strong>.</p>
+        <p class="auth-gate-email-hint" style="color:#888;font-size:0.95em;">Sign In is disabled. Please use Create Account to register and log in.</p>
+      </form>
+    </div>
+  </section>
+
+  <main class="container" id="appShell" hidden>
+    <header class="header">
+      <div id="sharedNavRoot"></div>
+    </header>
+
+    <section class="card admin-raid-section-compact" id="adminRaidSection" hidden>
+      <div class="list-header">
+        <h2>Raid Creation (Admin)</h2>
+      </div>
+
+      <form id="raidForm" class="form admin-form">
+        <input type="hidden" id="raidId" />
+
+        <div class="primary-fields raid-primary-fields">
+          <label>
+            Phase
+            <select id="raidPhase" name="raidPhase" required></select>
+          </label>
+
+          <label>
+            Raid
+            <select id="raidTemplate" name="raidTemplate" required></select>
+          </label>
+
+          <label>
+            Raid Date
+            <input id="raidEventDate" name="raidEventDate" type="date" required />
+          </label>
+
+          <label>
+            Run Type
+            <select id="raidRunType" name="raidRunType" required>
+              <option>Progression</option>
+              <option>Farm</option>
+              <option>Weekly</option>
+              <option>Alt Run</option>
+              <option>Partial</option>
+            </select>
+          </label>
+
+          <label>
+            Raid Leader
+            <input id="raidLeader" name="raidLeader" type="text" maxlength="40" placeholder="Character name" />
+          </label>
+        </div>
+
+        <div class="time-slots">
+          <fieldset class="slot-group">
+            <legend>Raid Window (CST)</legend>
+            <div class="slot-range">
+              <label>
+                CST Start Time
+                <select id="raidStart" name="raidStart" required></select>
+              </label>
+              <label>
+                CST End Time
+                <select id="raidEnd" name="raidEnd" required></select>
+              </label>
+              <label class="slot-size-inline">
+                Raid Size
+                <input id="raidSize" name="raidSize" type="text" readonly />
+              </label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="time-slots">
+          <fieldset class="slot-group">
+            <legend>Role Slots</legend>
+            <div class="slot-range slot-range-3col">
+              <label>
+                🛡 Tanks
+                <input id="tankSlots" name="tankSlots" type="number" min="0" max="25" />
+              </label>
+              <label>
+                ✚ Healers
+                <input id="healerSlots" name="healerSlots" type="number" min="0" max="25" />
+              </label>
+              <label>
+                ⚔ DPS
+                <input id="dpsSlots" name="dpsSlots" type="number" min="0" max="25" />
+              </label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div id="partialBossSection" class="time-slots" hidden>
+          <fieldset class="slot-group">
+            <legend>Planned Bosses</legend>
+            <div id="partialBossCheckboxes" class="partial-boss-grid"></div>
+          </fieldset>
+        </div>
+
+        <div class="actions">
+          <button type="submit" id="saveRaidButton">Save Raid</button>
+          <button type="button" id="cancelRaidEditButton" class="secondary" hidden>Cancel Edit</button>
+        </div>
+      </form>
+
+      <div class="raid-groups admin-raid-groups">
+        <section class="raid-group current-raids">
+          <div class="list-header">
+            <h3>Current / Up-Coming Raids</h3>
+            <span id="currentAdminCountBadge" class="badge">0</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Phase</th>
+                  <th>Raid</th>
+                  <th>Date</th>
+                  <th>Window (CST base)</th>
+                  <th>Run Type</th>
+                  <th>Leader</th>
+                  <th>Size</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="currentAdminRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <details class="raid-group past-raids admin-past-details">
+          <summary class="list-header">
+            <h3>Previous / Past Raids <span class="past-toggle-hint">(expand / collapse)</span></h3>
+            <span id="pastAdminCountBadge" class="badge">0</span>
+          </summary>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Phase</th>
+                  <th>Raid</th>
+                  <th>Date</th>
+                  <th>Window (CST base)</th>
+                  <th>Run Type</th>
+                  <th>Leader</th>
+                  <th>Size</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="pastAdminRows"></tbody>
+            </table>
+          </div>
+        </details>
+      </div>
+      <p id="raidAdminMessage" class="message"></p>
+    </section>
+
+  </main>
+
+  <script>
+    if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+      const script = document.createElement("script");
+      script.src = "config/local/app-config.local.js";
+      document.head.appendChild(script);
+    }
+  </script>
+  <script src="js/nav-component.js"></script>
+  <script src="config/prod/app-config.github.js"></script>
+  <script type="module" src="js/raids.js"></script>
+</body>
+</html>

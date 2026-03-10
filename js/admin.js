@@ -1,3 +1,8 @@
+// Utility: truncate text to maxLen, add ellipsis if needed
+function truncateText(str, maxLen) {
+  if (!str) return "";
+  return str.length > maxLen ? str.slice(0, maxLen - 1) + "…" : str;
+}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
   GoogleAuthProvider,
@@ -10,24 +15,21 @@ import {
   signOut
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
   getDoc,
   getDocs,
   getFirestore,
-  limit,
   onSnapshot,
-  orderBy,
-  query,
   serverTimestamp,
+  setDoc,
   updateDoc,
-  where
+  where,
+  query
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 import { appSettings, firebaseConfig } from "../config/prod/firebase-config.js";
 
-const adminRaidSection = document.getElementById("adminRaidSection");
 const authStatus = document.getElementById("adminAuthStatus");
 const appShell = document.getElementById("appShell");
 const authGate = document.getElementById("authGate");
@@ -35,99 +37,360 @@ const authGateMessage = document.getElementById("authGateMessage");
 const authGateSignInButton = document.getElementById("authGateSignInButton");
 const currentUidEl = document.getElementById("currentUid");
 const copyUidButton = document.getElementById("copyUidButton");
-const raidForm = document.getElementById("raidForm");
-const raidIdInput = document.getElementById("raidId");
-const raidPhaseInput = document.getElementById("raidPhase");
-const raidTemplateInput = document.getElementById("raidTemplate");
-const raidEventDateInput = document.getElementById("raidEventDate");
-const raidRunTypeInput = document.getElementById("raidRunType");
-const raidStartInput = document.getElementById("raidStart");
-const raidEndInput = document.getElementById("raidEnd");
-const raidSizeInput = document.getElementById("raidSize");
-const tankSlotsInput = document.getElementById("tankSlots");
-const healerSlotsInput = document.getElementById("healerSlots");
-const dpsSlotsInput = document.getElementById("dpsSlots");
-const raidLeaderInput = document.getElementById("raidLeader");
-const saveRaidButton = document.getElementById("saveRaidButton");
-const cancelRaidEditButton = document.getElementById("cancelRaidEditButton");
-const currentAdminRows = document.getElementById("currentAdminRows");
-const pastAdminRows = document.getElementById("pastAdminRows");
-const currentAdminCountBadge = document.getElementById("currentAdminCountBadge");
-const pastAdminCountBadge = document.getElementById("pastAdminCountBadge");
-const raidAdminMessage = document.getElementById("raidAdminMessage");
+const signupRequestsSection = document.getElementById("signupRequestsSection");
+const signupRequestRows = document.getElementById("signupRequestRows");
+const signupRequestMessage = document.getElementById("signupRequestMessage");
+const signupRequestBadge = document.getElementById("signupRequestBadge");
+const characterAuditSection = document.getElementById("characterAuditSection");
+const auditSearchInput = document.getElementById("auditSearch");
+const auditClassFilter = document.getElementById("auditClassFilter");
+const auditActivityFilter = document.getElementById("auditActivityFilter");
+const characterAuditRows = document.getElementById("characterAuditRows");
+const characterAuditMessage = document.getElementById("characterAuditMessage");
+const auditCountBadge = document.getElementById("auditCountBadge");
+const accessManagerSection = document.getElementById("accessManagerSection");
+const accessForm = document.getElementById("accessForm");
+const accessUidInput = document.getElementById("accessUidInput");
+const accessTypeSelect = document.getElementById("accessTypeSelect");
+const accessAddButton = document.getElementById("accessAddButton");
+const accessManagerMessage = document.getElementById("accessManagerMessage");
+const adminAccessRows = document.getElementById("adminAccessRows");
+const memberAccessRows = document.getElementById("memberAccessRows");
 const siteTitleEl = document.getElementById("siteTitle");
 const guildDiscordLink = document.getElementById("guildDiscordLink");
 const adminOpsBadge = document.getElementById("adminOpsBadge");
 const signOutButton = document.getElementById("signOutButton");
-const partialBossSection = document.getElementById("partialBossSection");
-const partialBossCheckboxes = document.getElementById("partialBossCheckboxes");
 
-const BOSS_KILL_ORDER = {
-  "Karazhan": [
-    "Servant Quarters", "Attumen the Huntsman", "Moroes", "Opera Event",
-    "Maiden of Virtue", "The Curator", "Chess Event", "Terestian Illhoof",
-    "Shade of Aran", "Netherspite", "Nightbane", "Prince Malchezaar"
-  ],
-  "Gruul's Lair": ["High King Maulgar", "Gruul the Dragonkiller"],
-  "Magtheridon's Lair": ["Magtheridon"],
-  "Serpentshrine Cavern": [
-    "Hydross the Unstable", "The Lurker Below", "Leotheras the Blind",
-    "Fathom-Lord Karathress", "Morogrim Tidewalker", "Lady Vashj"
-  ],
-  "The Eye": [
-    "Al'ar", "Void Reaver", "High Astromancer Solarian", "Kael'thas Sunstrider"
-  ],
-  "Tempest Keep": [
-    "Al'ar", "Void Reaver", "High Astromancer Solarian", "Kael'thas Sunstrider"
-  ],
-  "Hyjal Summit": [
-    "Rage Winterchill", "Anetheron", "Kaz'rogal", "Azgalor", "Archimonde"
-  ],
-  "Black Temple": [
-    "High Warlord Naj'entus", "Supremus", "Shade of Akama",
-    "Gurtogg Bloodboil", "Teron Gorefiend", "Mother Shahraz",
-    "The Illidari Council", "Illidan Stormrage"
-  ],
-  "Zul'Aman": [
-    "Nalorakk", "Akil'zon", "Jan'alai", "Halazzi",
-    "Hex Lord Malacrass", "Zul'jin"
-  ],
-  "Sunwell Plateau": ["Kalecgos", "Brutallus", "Felmyst", "Eredar Twins", "M'uru", "Kil'jaeden"]
+const DEMO_CHARACTER_STORAGE_KEY = "hopeRaidTrackerDemoCharacters";
+const DEMO_SIGNUP_STORAGE_KEY = "hopeRaidSignupDemoRows";
+const ARMORY_BASE_URL = "https://classic-armory.org/character/us/tbc-anniversary/dreamscythe";
+const ARMORY_API_URL = "https://classic-armory.org/api/v1/character";
+const ARMORY_REGION = "us";
+const ARMORY_REALM = "dreamscythe";
+const ARMORY_FLAVOR = "tbc-anniversary";
+const LOGS_BASE_URL = "https://fresh.warcraftlogs.com/character/us/dreamscythe";
+
+const armoryDataCache = new Map();
+
+function fetchArmoryData(characterName) {
+  const slug = String(characterName || "").trim().toLowerCase();
+  if (!slug) return Promise.resolve(null);
+  if (armoryDataCache.has(slug)) return Promise.resolve(armoryDataCache.get(slug));
+
+  return fetch(ARMORY_API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ region: ARMORY_REGION, realm: ARMORY_REALM, name: characterName.trim(), flavor: ARMORY_FLAVOR })
+  })
+    .then((res) => (res.ok ? res.json() : null))
+    .then((data) => {
+      if (data?.character) {
+        const result = {
+          // guildName removed
+          itemLevel: data.character.item_level || 0
+        };
+        armoryDataCache.set(slug, result);
+        return result;
+      }
+      armoryDataCache.set(slug, null);
+      return null;
+    })
+    .catch(() => {
+      armoryDataCache.set(slug, null);
+      return null;
+    });
+}
+
+function enrichArmoryColumns(containerEl) {
+  if (!containerEl) return;
+  const cells = containerEl.querySelectorAll("[data-armory-char]");
+  const uniqueNames = new Set();
+  cells.forEach((cell) => uniqueNames.add(cell.dataset.armoryChar));
+  uniqueNames.forEach((name) => {
+    fetchArmoryData(name).then((data) => {
+      if (!data) return;
+      containerEl.querySelectorAll(`[data-armory-char="${CSS.escape(name)}"]`).forEach((cell) => {
+        // guild enrichment removed
+        if (cell.dataset.armoryField === "ilvl") {
+          if (data.itemLevel) {
+            cell.textContent = String(data.itemLevel);
+            cell.title = `Item Level: ${data.itemLevel}`;
+          } else {
+            cell.textContent = "—";
+            cell.title = "";
+          }
+        }
+      function truncateText(str, maxLen) {
+        if (!str) return "";
+        return str.length > maxLen ? str.slice(0, maxLen - 1) + "…" : str;
+      }
+      });
+    });
+  });
+}
+
+// WarcraftLogs API (fresh TBC servers)
+const WCL_BASE_URL = "https://fresh.warcraftlogs.com";
+const WCL_SERVER_SLUG = "dreamscythe";
+const WCL_SERVER_REGION = "US";
+// Zones ordered highest tier first so we display the best tier a character has logs for
+const WCL_TBC_ZONES = [
+  { id: 1013, label: "Sunwell" },
+  { id: 1011, label: "BT/Hyjal" },
+  { id: 1012, label: "Zul'Aman" },
+  { id: 1052, label: "SSC/TK" },
+  { id: 1048, label: "Gruul/Mag" },
+  { id: 1047, label: "Kara" }
+];
+
+let wclTokenCache = null;
+let wclTokenExpiry = 0;
+const wclParseCache = new Map();     // slug → results array (or null on error)
+const wclPendingFetches = new Map(); // slug → Promise (deduplication)
+
+// Persist parse results in sessionStorage so page refreshes don't re-fetch
+const WCL_SESSION_KEY = "wclParseCache_v1";
+(function loadWclSessionCache() {
+  try {
+    const stored = sessionStorage.getItem(WCL_SESSION_KEY);
+    if (stored) {
+      Object.entries(JSON.parse(stored)).forEach(([k, v]) => wclParseCache.set(k, v));
+    }
+  } catch { /* ignore */ }
+})();
+
+function saveWclSessionCache() {
+  try {
+    const obj = {};
+    wclParseCache.forEach((v, k) => { if (v !== null) obj[k] = v; });
+    sessionStorage.setItem(WCL_SESSION_KEY, JSON.stringify(obj));
+  } catch { /* ignore */ }
+}
+
+let wclTokenFetchPromise = null;
+async function getWclToken() {
+  if (wclTokenCache && Date.now() < wclTokenExpiry) return wclTokenCache;
+  // Deduplicate concurrent token requests
+  if (wclTokenFetchPromise) return wclTokenFetchPromise;
+  const clientId = appSettings.wclClientId;
+  const clientSecret = appSettings.wclClientSecret;
+  if (!clientId || !clientSecret) return null;
+  wclTokenFetchPromise = (async () => {
+    try {
+      const creds = btoa(`${clientId}:${clientSecret}`);
+      const res = await fetch(`${WCL_BASE_URL}/oauth/token`, {
+        method: "POST",
+        headers: { "Authorization": `Basic ${creds}`, "Content-Type": "application/x-www-form-urlencoded" },
+        body: "grant_type=client_credentials"
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      wclTokenCache = data.access_token;
+      wclTokenExpiry = Date.now() + ((data.expires_in || 3600) - 60) * 1000;
+      return wclTokenCache;
+    } catch {
+      return null;
+    } finally {
+      wclTokenFetchPromise = null;
+    }
+  })();
+  return wclTokenFetchPromise;
+}
+
+async function fetchWclParses(characterName) {
+  const slug = String(characterName || "").trim().toLowerCase();
+  if (!slug) return null;
+  if (wclParseCache.has(slug)) return wclParseCache.get(slug);
+  // Deduplicate: if a fetch is already in-flight for this character, reuse it
+  if (wclPendingFetches.has(slug)) return wclPendingFetches.get(slug);
+
+  const promise = (async () => {
+    const token = await getWclToken();
+    if (!token) { wclParseCache.set(slug, null); return null; }
+
+    const safeName = String(characterName).trim().replace(/[^a-zA-Z\u00C0-\u024F'-]/g, "");
+    if (!safeName) { wclParseCache.set(slug, null); return null; }
+
+    const zoneFields = WCL_TBC_ZONES.map((z, i) => `z${i}: zoneRankings(zoneID: ${z.id})`).join(" ");
+    const query = `{ characterData { character(name: "${safeName}", serverSlug: "${WCL_SERVER_SLUG}", serverRegion: "${WCL_SERVER_REGION}") { ${zoneFields} } } }`;
+
+    try {
+      const res = await fetch(`${WCL_BASE_URL}/api/v2/client`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ query })
+      });
+      if (res.status === 429) { wclParseCache.set(slug, null); return null; }
+      if (!res.ok) { wclParseCache.set(slug, null); return null; }
+      const data = await res.json();
+      const char = data?.data?.characterData?.character;
+      if (!char) { wclParseCache.set(slug, null); return null; }
+
+      const results = [];
+      for (let i = 0; i < WCL_TBC_ZONES.length; i++) {
+        const zoneData = char[`z${i}`];
+        const avg = zoneData?.bestPerformanceAverage;
+        if (avg != null && avg > 0) {
+          results.push({ label: WCL_TBC_ZONES[i].label, avg: Math.round(avg) });
+        }
+      }
+      wclParseCache.set(slug, results);
+      saveWclSessionCache();
+      return results;
+    } catch {
+      wclParseCache.set(slug, null);
+      return null;
+    }
+  })();
+
+  wclPendingFetches.set(slug, promise);
+  promise.finally(() => wclPendingFetches.delete(slug));
+  return promise;
+}
+
+function wclParseColorClass(pct) {
+  if (pct >= 99) return "wcl-parse-gold";
+  if (pct >= 95) return "wcl-parse-orange";
+  if (pct >= 75) return "wcl-parse-purple";
+  if (pct >= 50) return "wcl-parse-blue";
+  if (pct >= 25) return "wcl-parse-green";
+  return "wcl-parse-gray";
+}
+
+const RAID_NAME_TO_WCL_ZONES = {
+  "Karazhan": ["Kara"],
+  "Gruul's Lair": ["Gruul/Mag"],
+  "Magtheridon's Lair": ["Gruul/Mag"],
+  "Serpentshrine Cavern": ["SSC/TK"],
+  "The Eye": ["SSC/TK"],
+  "Tempest Keep": ["SSC/TK"],
+  "Hyjal Summit": ["BT/Hyjal"],
+  "Black Temple": ["BT/Hyjal"],
+  "Zul'Aman": ["Zul'Aman"],
+  "Sunwell Plateau": ["Sunwell"]
 };
 
-const DEMO_RAID_STORAGE_KEY = "hopeRaidTrackerDemoRaids";
-const DEMO_SIGNUP_STORAGE_KEY = "hopeRaidSignupDemoRows";
-const START_HOURS = Array.from({ length: 24 }, (_, index) => index);
-const END_HOURS = Array.from({ length: 24 }, (_, index) => index + 1);
+function renderWclParsesCell(entry, raidName) {
+  const charName = String(entry.characterName || "").trim();
+  if (!charName) return "—";
+  const logsUrl = String(entry.logsUrl || buildLogsUrl(charName)).trim();
+  const href = escapeHtml(logsUrl);
+  const raidAttr = raidName ? ` data-wcl-raid="${escapeHtml(raidName)}"` : "";
+  return `<span data-wcl-char="${escapeHtml(charName)}" data-wcl-href="${href}"${raidAttr} class="wcl-parses-container"><a href="${href}" target="_blank" rel="noopener noreferrer" class="wcl-parse-link">…</a></span>`;
+}
 
-const RAID_PRESETS_BY_PHASE = {
-  1: [
-    { name: "Karazhan", size: "10", tanks: 2, healers: 3, dps: 5 },
-    { name: "Gruul's Lair", size: "25", tanks: 2, healers: 6, dps: 17 },
-    { name: "Magtheridon's Lair", size: "25", tanks: 3, healers: 6, dps: 16 },
-    { name: "Gruul's + Mag's", size: "25", tanks: 3, healers: 6, dps: 16 }
-  ],
-  2: [
-    { name: "Serpentshrine Cavern", size: "25", tanks: 3, healers: 7, dps: 15 },
-    { name: "The Eye", size: "25", tanks: 3, healers: 7, dps: 15 }
-  ],
-  3: [
-    { name: "Hyjal Summit", size: "25", tanks: 3, healers: 7, dps: 15 },
-    { name: "Black Temple", size: "25", tanks: 3, healers: 7, dps: 15 }
-  ],
-  4: [{ name: "Zul'Aman", size: "10", tanks: 2, healers: 3, dps: 5 }],
-  5: [{ name: "Sunwell Plateau", size: "25", tanks: 3, healers: 7, dps: 15 }]
+function applyWclResults(containerEl, name, results) {
+  containerEl.querySelectorAll(`[data-wcl-char="${CSS.escape(name)}"]`).forEach((cell) => {
+    const href = cell.dataset.wclHref || "#";
+    const raidName = cell.dataset.wclRaid || "";
+    cell.removeAttribute("data-wcl-char");
+    cell.removeAttribute("data-wcl-href");
+    cell.removeAttribute("data-wcl-raid");
+    if (!results || !results.length) {
+      cell.innerHTML = `<span class="text-dim" title="No parses found">Fucking Noob</span>`;
+      return;
+    }
+    const decodedRaidName = raidName.replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
+      .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').trim();
+    const allowedZones = RAID_NAME_TO_WCL_ZONES[decodedRaidName];
+    const filtered = allowedZones
+      ? results.filter((r) => allowedZones.includes(r.label))
+      : decodedRaidName ? [] : results;
+    if (!filtered.length) {
+      cell.innerHTML = `<span class="text-dim" title="No parses for this raid">Fucking Noob</span>`;
+      return;
+    }
+    cell.innerHTML = filtered.map((r) => {
+      const colorClass = wclParseColorClass(r.avg);
+      return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer" class="wcl-parse-badge ${escapeHtml(colorClass)}" title="${escapeHtml(r.label)} – ${r.avg}% avg">${r.avg}<span class="wcl-badge-pct">%</span><span class="wcl-badge-zone">${escapeHtml(r.label)}</span></a>`;
+    }).join("");
+  });
+}
+
+function enrichWclColumns(containerEl) {
+  if (!containerEl || !appSettings.wclClientId) return;
+  const cells = containerEl.querySelectorAll("[data-wcl-char]");
+  const uniqueNames = new Set();
+  cells.forEach((cell) => uniqueNames.add(cell.dataset.wclChar));
+  uniqueNames.forEach((name) => {
+    const slug = name.toLowerCase();
+    if (wclParseCache.has(slug)) {
+      // Cache hit: apply synchronously so re-renders never flash back to placeholder
+      applyWclResults(containerEl, name, wclParseCache.get(slug));
+    } else {
+      fetchWclParses(name).then((results) => applyWclResults(containerEl, name, results));
+    }
+  });
+}
+
+const WOW_CLASS_COLORS = {
+  Druid: "#FF7D0A",
+  Hunter: "#ABD473",
+  Mage: "#69CCF0",
+  Paladin: "#F58CBA",
+  Priest: "#FFFFFF",
+  Rogue: "#FFF569",
+  Shaman: "#0070DE",
+  Warlock: "#9482C9",
+  Warrior: "#C79C6E"
+};
+
+const ROLE_ICONS = {
+  Tank: "🛡",
+  Healer: "✚",
+  DPS: "⚔"
+};
+
+const SPEC_ICONS = {
+  "Feral (Bear)": "🐻",
+  Restoration: "💧",
+  Balance: "🌙",
+  "Feral (Cat)": "🐈",
+  "Beast Mastery": "🐾",
+  Marksmanship: "🎯",
+  Survival: "🪤",
+  Arcane: "✨",
+  Fire: "🔥",
+  Frost: "❄",
+  Protection: "🛡",
+  Holy: "✚",
+  Retribution: "⚔",
+  Discipline: "📿",
+  Shadow: "🕯",
+  Assassination: "🗡",
+  Combat: "⚔",
+  Subtlety: "🌑",
+  Elemental: "⚡",
+  Enhancement: "🔨",
+  Affliction: "☠",
+  Demonology: "👹",
+  Destruction: "💥",
+  Arms: "🪓",
+  Fury: "💢"
 };
 
 let authUid = null;
 let isAdmin = false;
+let isOwner = false;
 let isDemoMode = false;
-let adminMainCharName = "";
 let db = null;
-let currentRaids = [];
+let currentCharacters = [];
+let currentUserDirectory = new Map();
 let currentSignups = [];
-let unsubscribeRaids = null;
+let currentRaids = [];
+let currentAdminUids = [];
+let currentMemberUids = [];
+let currentAdminDirectory = new Map();
+let currentMemberDirectory = new Map();
+let currentOwnerUids = [];
+let unsubscribeCharacters = null;
 let unsubscribeSignups = null;
+let unsubscribeRaids = null;
+let unsubscribeAdmins = null;
+let unsubscribeMembers = null;
+let unsubscribeOwners = null;
+let unsubscribeAttendanceDocks = null;
+let currentAttendanceDocks = new Map(); // uid → docks count
 
 if (siteTitleEl) {
   siteTitleEl.textContent = appSettings.siteTitle || "Hope Raid Tracker";
@@ -160,34 +423,20 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
-function hourLabel(hourValue) {
-  const normalizedHour = hourValue % 24;
-  const suffix = normalizedHour >= 12 ? "PM" : "AM";
-  const twelveHour = normalizedHour % 12 === 0 ? 12 : normalizedHour % 12;
-  return `${twelveHour}:00 ${suffix}`;
-}
-
-function populateHourOptions(selectElement, hourValues, placeholderLabel) {
-  const placeholder = `<option value="">${placeholderLabel}</option>`;
-  const options = hourValues
-    .map((hour) => `<option value="${hour}">${hourLabel(hour)}</option>`)
-    .join("");
-  selectElement.innerHTML = `${placeholder}${options}`;
-}
-
-function parseHourValue(value) {
-  if (value === "") {
-    return null;
+function buildArmoryUrl(characterName) {
+  const slug = String(characterName || "").trim().toLowerCase();
+  if (!slug) {
+    return "";
   }
-  const parsed = Number(value);
-  return Number.isInteger(parsed) ? parsed : null;
+  return `${ARMORY_BASE_URL}/${encodeURIComponent(slug)}`;
 }
 
-function toDateOnlyString(dateValue) {
-  const year = dateValue.getFullYear();
-  const month = String(dateValue.getMonth() + 1).padStart(2, "0");
-  const day = String(dateValue.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
+function buildLogsUrl(characterName) {
+  const slug = String(characterName || "").trim().toLowerCase();
+  if (!slug) {
+    return "";
+  }
+  return `${LOGS_BASE_URL}/${encodeURIComponent(slug)}`;
 }
 
 function parseDateOnly(dateText) {
@@ -196,6 +445,13 @@ function parseDateOnly(dateText) {
   }
   const parsed = new Date(`${dateText}T00:00:00`);
   return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function toDateOnlyString(dateValue) {
+  const year = dateValue.getFullYear();
+  const month = String(dateValue.getMonth() + 1).padStart(2, "0");
+  const day = String(dateValue.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 function formatMonthDayYear(dateText) {
@@ -209,63 +465,121 @@ function formatMonthDayYear(dateText) {
   return `${month}-${day}-${year}`;
 }
 
-function shiftHourFromCst(hourValue, deltaHours) {
-  return ((hourValue + deltaHours) % 24 + 24) % 24;
-}
-
-function buildRaidWindowTimezoneLines(raidStart, raidEnd) {
-  if (!Number.isInteger(raidStart) || !Number.isInteger(raidEnd)) {
-    return [];
+function parseRaidHour(value, min, max) {
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || parsed < min || parsed > max) {
+    return null;
   }
-
-  const zones = [
-    { label: "CST", delta: 0 },
-    { label: "EST", delta: 1 },
-    { label: "MST", delta: -1 },
-    { label: "PST", delta: -2 }
-  ];
-
-  return zones
-    .map((zone) => {
-      const zoneStart = shiftHourFromCst(raidStart, zone.delta);
-      const zoneEnd = shiftHourFromCst(raidEnd, zone.delta);
-      return `${zone.label} ${hourLabel(zoneStart)} - ${hourLabel(zoneEnd)}`;
-    });
+  return parsed;
 }
 
-function renderRaidWindowMultiline(raidStart, raidEnd) {
-  const lines = buildRaidWindowTimezoneLines(raidStart, raidEnd);
-  if (!lines.length) {
-    return "—";
-  }
-
-  return lines
-    .map((line) => {
-      const zoneLabel = line.slice(0, 3);
-      const classes = ["raid-time-line"];
-      if (zoneLabel === "CST") {
-        classes.push("raid-time-cst");
-      }
-      return `<span class="${classes.join(" ")}">${escapeHtml(line)}</span>`;
-    })
-    .join("");
-}
-
-function getRaidCutoffDate(item) {
-  const raidDate = parseDateOnly(item.raidDate);
+function getSignupCutoffDate(signup) {
+  const raidDate = parseDateOnly(signup.raidDate || "");
   if (!raidDate) {
     return null;
   }
 
-  const raidEnd = Number(item.raidEnd);
-  const fallbackStart = Number(item.raidStart);
-  const hour = Number.isInteger(raidEnd)
+  const raidEnd = parseRaidHour(signup.raidEnd, 1, 24);
+  const fallbackStart = parseRaidHour(signup.raidStart, 0, 23);
+  const cutoffHour = Number.isInteger(raidEnd)
     ? raidEnd
     : (Number.isInteger(fallbackStart) ? fallbackStart : 0);
 
   const cutoff = new Date(raidDate);
-  cutoff.setHours(hour, 0, 0, 0);
+  cutoff.setHours(cutoffHour, 0, 0, 0);
   return cutoff;
+}
+
+function isActiveSignup(signup) {
+  const cutoff = getSignupCutoffDate(signup);
+  if (!cutoff) {
+    return true;
+  }
+  return cutoff.getTime() >= Date.now();
+}
+
+function sortRaidsForAssignment(raids) {
+  return [...raids].sort((left, right) => {
+    const leftDate = parseDateOnly(left.raidDate || "")?.getTime() || 0;
+    const rightDate = parseDateOnly(right.raidDate || "")?.getTime() || 0;
+    if (leftDate !== rightDate) {
+      return leftDate - rightDate;
+    }
+    return (Number(left.raidStart) || 0) - (Number(right.raidStart) || 0);
+  });
+}
+
+function getUpcomingRaidsForAssignment() {
+  return sortRaidsForAssignment(currentRaids).filter((raid) => isActiveSignup(raid));
+}
+
+function formatRaidAssignmentLabel(raid) {
+  const dateLabel = formatMonthDayYear(raid.raidDate || "");
+  const start = formatCstHour(Number(raid.raidStart));
+  const end = formatCstHour(Number(raid.raidEnd));
+  return `${dateLabel} • ${raid.raidName || "Raid"} • ${start} - ${end} CST`;
+}
+
+function formatCstHour(hourValue) {
+  if (!Number.isInteger(hourValue) || hourValue < 0 || hourValue > 24) {
+    return "?";
+  }
+  if (hourValue === 0 || hourValue === 24) {
+    return "12 AM";
+  }
+  if (hourValue === 12) {
+    return "12 PM";
+  }
+  if (hourValue > 12) {
+    return `${hourValue - 12} PM`;
+  }
+  return `${hourValue} AM`;
+}
+
+function buildRequestQueueRows(rows, profilesById, actionMode = "full") {
+  return rows
+    .map((signup) => {
+      const profile = resolveProfileForSignup(signup, profilesById);
+      const profileLabel = profile ? getProfileLabel(profile) : "Unknown Profile";
+      const selectedProfileEntry = profile
+        ? findProfileCharacterEntry(
+          profile,
+          String(signup.profileCharacterKey || "main"),
+          String(signup.profileCharacterName || signup.characterName || "")
+        )
+        : null;
+      const characterName = signup.profileCharacterName || signup.characterName || selectedProfileEntry?.characterName || profile?.characterName || "—";
+      const attributes = resolveSignupCharacterAttributes(signup, profilesById);
+      const status = normalizeSignupStatus(signup.status);
+      const gearUrl = String(signup.armoryUrl || buildArmoryUrl(characterName)).trim();
+      const logsUrl = String(signup.logsUrl || selectedProfileEntry?.logsUrl || buildLogsUrl(characterName)).trim();
+      const actionCell = actionMode === "full"
+        ? `<div class="row-actions">
+            <button type="button" data-request-action="accept" data-signup-id="${escapeHtml(signup.id)}">Accept</button>
+            <button type="button" class="danger" data-request-action="deny" data-signup-id="${escapeHtml(signup.id)}">Deny</button>
+          </div>`
+        : actionMode === "accept-only"
+          ? `<div class="row-actions">
+              <button type="button" data-request-action="accept" data-signup-id="${escapeHtml(signup.id)}">Accept</button>
+            </div>`
+          : `<span class="request-action-na">Record only</span>`;
+      const charSlug = String(characterName || "").trim().toLowerCase();
+      return `<tr>
+        <td>${escapeHtml(formatMonthDayYear(signup.raidDate || ""))}</td>
+        <td>${escapeHtml(signup.raidName || "—")}</td>
+        <td>${escapeHtml(profileLabel)}</td>
+        <td>${escapeHtml(characterName)}</td>
+        <td>${renderClassText(attributes.wowClass)}</td>
+        <td>${escapeHtml(attributes.specialization)}</td>
+        <td class="armory-col-narrow" data-armory-char="${escapeHtml(charSlug)}" data-armory-field="ilvl">…</td>
+        <td>${renderGearLink(gearUrl)}</td>
+        <td>${renderExternalLink(logsUrl, "Logs")}</td>
+        <td class="audit-parses-cell">${renderWclParsesCell({ characterName, logsUrl }, signup.raidName || "")}</td>
+        <td><span class="signup-status-badge status-${escapeHtml(status)}">${escapeHtml(signupStatusLabel(signup.status))}</span></td>
+        <td>${actionCell}</td>
+      </tr>`;
+    })
+    .join("");
 }
 
 function normalizeSignupStatus(value) {
@@ -273,84 +587,32 @@ function normalizeSignupStatus(value) {
   if (normalized === "requested" || normalized === "accept" || normalized === "tentative" || normalized === "decline" || normalized === "withdrawn" || normalized === "denied") {
     return normalized;
   }
-  if (normalized === "pending") {
-    return "requested";
-  }
+
   if (normalized === "confirmed") {
     return "accept";
+  }
+  if (normalized === "pending") {
+    return "requested";
   }
   return "decline";
 }
 
-function updatePendingBadge(signups = []) {
-  if (!adminOpsBadge || !isAdmin) {
-    return;
-  }
-  const now = Date.now();
-  const pending = signups.filter((signup) => {
-    if (normalizeSignupStatus(signup.status) !== "requested") return false;
-    const raidDate = parseDateOnly(signup.raidDate);
-    if (raidDate) {
-      const endHour = Number(signup.raidEnd);
-      const startHour = Number(signup.raidStart);
-      const cutoffHour = Number.isInteger(endHour) && endHour >= 1 && endHour <= 24
-        ? endHour
-        : (Number.isInteger(startHour) && startHour >= 0 && startHour <= 23 ? startHour : 0);
-      const cutoff = new Date(raidDate);
-      cutoff.setHours(cutoffHour, 0, 0, 0);
-      if (cutoff.getTime() < now) return false;
-    }
-    return true;
-  }).length;
-  adminOpsBadge.textContent = String(pending);
-  adminOpsBadge.hidden = pending <= 0;
-  // Update browser tab title with pending count
-  const baseTitle = document.title.replace(/^\(\d+\)\s*/, '');
-  document.title = pending > 0 ? `(${pending}) ${baseTitle}` : baseTitle;
+function signupStatusLabel(value) {
+  const normalized = normalizeSignupStatus(value);
+  const labels = {
+    requested: "Request Signup",
+    accept: "Accepted",
+    tentative: "Bench For Now",
+    decline: "Can't Go",
+    withdrawn: "Withdrawn",
+    denied: "Denied"
+  };
+  return labels[normalized] || "Unknown";
 }
 
-function buildAdminRaidRows(items) {
-  return items
-    .map((item) => {
-      const windowText = renderRaidWindowMultiline(item.raidStart, item.raidEnd);
-      const slotParts = [];
-      if (item.tankSlots != null) { slotParts.push(`🛡${item.tankSlots}`); }
-      if (item.healerSlots != null) { slotParts.push(`✚${item.healerSlots}`); }
-      if (item.dpsSlots != null) { slotParts.push(`⚔${item.dpsSlots}`); }
-      const slotLabel = slotParts.length ? `<br><span class="raid-slot-mini">${slotParts.join(" ")}</span>` : "";
-      return `<tr>
-        <td>${escapeHtml(`Phase ${String(item.phase)}`)}</td>
-        <td>${escapeHtml(item.raidName)}</td>
-        <td>${escapeHtml(formatMonthDayYear(item.raidDate))}</td>
-        <td class="raid-time-cell">${windowText}</td>
-        <td>${escapeHtml(item.runType)}${item.runType === "Partial" && item.plannedBosses?.length ? `<br><span class="planned-bosses-inline">${item.plannedBosses.length} boss${item.plannedBosses.length > 1 ? "es" : ""}</span>` : ""}</td>
-        <td>${escapeHtml(item.raidLeader || "—")}</td>
-        <td>${escapeHtml(item.raidSize || "—")}${slotLabel}</td>
-        <td>
-          <div class="row-actions">
-            <button type="button" data-raid-action="edit" data-raid-id="${item.id}">Edit</button>
-            <button type="button" class="danger" data-raid-action="delete" data-raid-id="${item.id}">Delete</button>
-          </div>
-        </td>
-      </tr>`;
-    })
-    .join("");
-}
-
-function sortRaids(rows) {
-  return [...rows].sort((left, right) => {
-    const leftDate = parseDateOnly(left.raidDate)?.getTime() || 0;
-    const rightDate = parseDateOnly(right.raidDate)?.getTime() || 0;
-    if (leftDate !== rightDate) {
-      return leftDate - rightDate;
-    }
-    return (left.raidStart ?? 0) - (right.raidStart ?? 0);
-  });
-}
-
-function loadDemoRaids() {
+function loadDemoCharacters() {
   try {
-    const raw = window.localStorage.getItem(DEMO_RAID_STORAGE_KEY);
+    const raw = window.localStorage.getItem(DEMO_CHARACTER_STORAGE_KEY);
     if (!raw) {
       return [];
     }
@@ -359,10 +621,6 @@ function loadDemoRaids() {
   } catch {
     return [];
   }
-}
-
-function saveDemoRaids(raids) {
-  window.localStorage.setItem(DEMO_RAID_STORAGE_KEY, JSON.stringify(raids));
 }
 
 function loadDemoSignups() {
@@ -378,11 +636,789 @@ function loadDemoSignups() {
   }
 }
 
+function saveDemoSignups(signups) {
+  window.localStorage.setItem(DEMO_SIGNUP_STORAGE_KEY, JSON.stringify(signups));
+}
+
+function getCharacterMapById() {
+  return new Map(currentCharacters.map((entry) => [entry.id, entry]));
+}
+
+function getUserDirectoryMeta(uid) {
+  const normalized = normalizeUid(uid);
+  if (!normalized) {
+    return null;
+  }
+
+  const fromDirectory = currentUserDirectory.get(normalized);
+  if (fromDirectory) {
+    return fromDirectory;
+  }
+
+  const fromCharacter = currentCharacters.find((entry) => normalizeUid(entry.ownerUid || entry.id) === normalized);
+  if (!fromCharacter) {
+    return null;
+  }
+
+  return {
+    uid: normalized,
+    displayName: String(fromCharacter.displayName || "").trim(),
+    profileName: String(fromCharacter.profileName || "").trim(),
+    email: String(fromCharacter.email || fromCharacter.ownerEmail || "").trim()
+  };
+}
+
+function getProfileLabel(profile) {
+  if (!profile) {
+    return "";
+  }
+  const irlName = String(profile.profileName || "").trim();
+  const mainCharacter = String(profile.characterName || "").trim();
+  if (irlName && mainCharacter) {
+    return `${irlName}-${mainCharacter}`;
+  }
+  return irlName || mainCharacter || String(profile.id || "");
+}
+
+function findProfileCharacterEntry(profile, characterKey = "", characterName = "") {
+  const entries = getProfileCharacterEntries(profile);
+  if (characterKey) {
+    const byKey = entries.find((entry) => entry.key === characterKey);
+    if (byKey) {
+      return byKey;
+    }
+  }
+  if (characterName) {
+    const normalizedName = String(characterName || "").trim().toLowerCase();
+    const byName = entries.find((entry) => String(entry.characterName || "").trim().toLowerCase() === normalizedName);
+    if (byName) {
+      return byName;
+    }
+  }
+  return entries[0] || null;
+}
+
+function resolveProfileForSignup(signup, profilesById) {
+  const byId = signup.characterId ? profilesById.get(signup.characterId) : null;
+  if (byId) {
+    return byId;
+  }
+
+  const ownerUid = normalizeUid(signup.ownerUid);
+  if (!ownerUid) {
+    return null;
+  }
+
+  const ownerProfiles = currentCharacters.filter((entry) => normalizeUid(entry.ownerUid || entry.id) === ownerUid);
+  if (!ownerProfiles.length) {
+    return null;
+  }
+
+  const targetCharacterName = String(signup.profileCharacterName || signup.characterName || "").trim().toLowerCase();
+  if (targetCharacterName) {
+    const matchedByCharacter = ownerProfiles.find((profile) =>
+      getProfileCharacterEntries(profile).some(
+        (entry) => String(entry.characterName || "").trim().toLowerCase() === targetCharacterName
+      )
+    );
+    if (matchedByCharacter) {
+      return matchedByCharacter;
+    }
+  }
+
+  return ownerProfiles[0];
+}
+
+function resolveSignupCharacterAttributes(signup, profilesById) {
+  const profile = resolveProfileForSignup(signup, profilesById);
+  if (!profile) {
+    return {
+      wowClass: signup.wowClass || "—",
+      specialization: signup.mainSpecialization || signup.specialization || "—"
+    };
+  }
+
+  const selectedEntry = findProfileCharacterEntry(
+    profile,
+    String(signup.profileCharacterKey || "main"),
+    String(signup.profileCharacterName || signup.characterName || "")
+  );
+
+  return {
+    wowClass: selectedEntry?.wowClass || profile.wowClass || signup.wowClass || "—",
+    specialization: selectedEntry?.mainSpecialization
+      || profile.mainSpecialization
+      || profile.specialization
+      || signup.mainSpecialization
+      || signup.specialization
+      || "—"
+  };
+}
+
+function updatePendingBadge() {
+  if (!adminOpsBadge || !isAdmin) {
+    return;
+  }
+  const pendingCount = currentSignups.filter((signup) => {
+    const status = normalizeSignupStatus(signup.status);
+    return isActiveSignup(signup) && (status === "requested" || status === "tentative" || status === "withdrawn");
+  }).length;
+  adminOpsBadge.textContent = String(pendingCount);
+  adminOpsBadge.hidden = pendingCount <= 0;
+  // Update browser tab title with pending count
+  const baseTitle = document.title.replace(/^\(\d+\)\s*/, '');
+  document.title = pendingCount > 0 ? `(${pendingCount}) ${baseTitle}` : baseTitle;
+}
+
+function renderSignupRequestsTable() {
+  if (!isAdmin) {
+    signupRequestRows.innerHTML = "";
+    signupRequestBadge.textContent = "0";
+    setMessage(signupRequestMessage, "");
+    return;
+  }
+
+  const activeItems = currentSignups
+    .filter((signup) => {
+      const status = normalizeSignupStatus(signup.status);
+      return isActiveSignup(signup) && (status === "requested" || status === "tentative" || status === "withdrawn");
+    })
+    .sort((left, right) => {
+      const leftDate = parseDateOnly(left.raidDate)?.getTime() || 0;
+      const rightDate = parseDateOnly(right.raidDate)?.getTime() || 0;
+      if (leftDate !== rightDate) {
+        return leftDate - rightDate;
+      }
+      return (Number(left.raidStart) || 0) - (Number(right.raidStart) || 0);
+    });
+
+  const requested = activeItems.filter((signup) => normalizeSignupStatus(signup.status) === "requested");
+  const benched = activeItems.filter((signup) => normalizeSignupStatus(signup.status) === "tentative");
+  const withdrew = activeItems.filter((signup) => normalizeSignupStatus(signup.status) === "withdrawn");
+
+  signupRequestBadge.textContent = String(activeItems.length);
+  updatePendingBadge();
+  const existingAuthText = String(authStatus.textContent || "").split(" • Pending requests:")[0];
+  authStatus.textContent = `${existingAuthText} • Pending requests: ${activeItems.length}`;
+
+  if (!activeItems.length) {
+    signupRequestRows.innerHTML = `<tr><td colspan="13">No active signup request records.</td></tr>`;
+    setMessage(signupRequestMessage, "");
+    return;
+  }
+
+  const profilesById = getCharacterMapById();
+  const requestedHeader = requested.length
+    ? `<tr class="request-group-row"><td colspan="13"><strong>Signup Requests (${requested.length})</strong></td></tr>${buildRequestQueueRows(requested, profilesById, "full")}`
+    : "";
+  const benchedHeader = benched.length
+    ? `<tr class="request-group-row"><td colspan="13"><strong>Benched Themselves (${benched.length})</strong></td></tr>${buildRequestQueueRows(benched, profilesById, "accept-only")}`
+    : "";
+  const withdrewHeader = withdrew.length
+    ? `<tr class="request-group-row"><td colspan="13"><strong>Accepted Then Withdrew (${withdrew.length})</strong></td></tr>${buildRequestQueueRows(withdrew, profilesById, "none")}`
+    : "";
+
+  signupRequestRows.innerHTML = `${requestedHeader}${benchedHeader}${withdrewHeader}`;
+  enrichArmoryColumns(signupRequestRows);
+  enrichWclColumns(signupRequestRows);
+
+  setMessage(signupRequestMessage, `${activeItems.length} active signup record(s) across requests, benches, and withdrawals.`);
+}
+
+function getProfileCharacterEntries(profile) {
+  const entries = [];
+  if (!profile) {
+    return entries;
+  }
+
+  entries.push({
+    key: "main",
+    characterName: profile.characterName || "",
+    wowClass: profile.wowClass || "",
+    mainRole: profile.mainRole || profile.role || "",
+    offRole: profile.offRole || "",
+    mainSpecialization: profile.mainSpecialization || profile.specialization || "",
+    offSpecialization: profile.offSpecialization || "",
+    armoryUrl: buildArmoryUrl(profile.characterName || "") || profile.armoryUrl || "",
+    logsUrl: buildLogsUrl(profile.characterName || "") || profile.logsUrl || ""
+  });
+
+  const alts = Array.isArray(profile.altCharacters) ? profile.altCharacters : [];
+  alts.forEach((alt, index) => {
+    if (!alt || !alt.characterName) {
+      return;
+    }
+    entries.push({
+      key: `alt-${index}`,
+      characterName: alt.characterName || "",
+      wowClass: alt.wowClass || "",
+      mainRole: alt.mainRole || "",
+      offRole: alt.offRole || "",
+      mainSpecialization: alt.mainSpecialization || "",
+      offSpecialization: alt.offSpecialization || "",
+      armoryUrl: buildArmoryUrl(alt.characterName || "") || alt.armoryUrl || profile.armoryUrl || "",
+      logsUrl: buildLogsUrl(alt.characterName || "") || alt.logsUrl || profile.logsUrl || ""
+    });
+  });
+
+  return entries;
+}
+
+function formatHistorySummary(stats) {
+  return `${stats.requested} Requested • ${stats.accept} Accept • ${stats.tentative} Tentative • ${stats.decline} Can't Go • ${stats.withdrawn} Withdrawn • ${stats.denied} Denied`;
+}
+
+function buildAuditSearchIndex(row) {
+  const baseParts = [
+    row.uid,
+    row.displayName,
+    row.profileName,
+    row.email,
+    row.role,
+    String(row.acceptedTotal || 0),
+    row.tooltip
+  ];
+
+  const characterParts = (row.characterEntries || []).flatMap((entry) => [
+    entry.characterName,
+    entry.wowClass,
+    entry.mainRole,
+    entry.mainSpecialization,
+    entry.offRole,
+    entry.offSpecialization,
+    entry.armoryUrl,
+    entry.logsUrl,
+    entry.isMain ? "main" : "alt",
+    String(entry.acceptedCount || 0)
+  ]);
+
+  return [...baseParts, ...characterParts]
+    .map((value) => String(value || "").trim())
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+}
+
+function buildUserAuditRows(signups) {
+  const acceptedTotals = new Map();
+  const characterSummariesByUid = new Map();
+  const profileNamesByUid = new Map();
+  const emailsByUid = new Map();
+
+  function ensureCharacterMap(uid) {
+    if (!characterSummariesByUid.has(uid)) {
+      characterSummariesByUid.set(uid, new Map());
+    }
+    return characterSummariesByUid.get(uid);
+  }
+
+  signups.forEach((signup) => {
+    const uid = normalizeUid(signup.ownerUid);
+    if (!uid) {
+      return;
+    }
+    const signupProfileName = String(signup.profileName || signup.displayName || "").trim();
+    if (signupProfileName && !profileNamesByUid.has(uid)) {
+      profileNamesByUid.set(uid, signupProfileName);
+    }
+    const signupEmail = String(signup.ownerEmail || signup.email || "").trim();
+    if (signupEmail && !emailsByUid.has(uid)) {
+      emailsByUid.set(uid, signupEmail);
+    }
+
+    const profile = resolveProfileForSignup(signup, getCharacterMapById());
+    const profileNameFromProfile = String(profile?.profileName || "").trim();
+    if (profileNameFromProfile && !profileNamesByUid.has(uid)) {
+      profileNamesByUid.set(uid, profileNameFromProfile);
+    }
+    const selectedEntry = profile
+      ? findProfileCharacterEntry(
+        profile,
+        String(signup.profileCharacterKey || "main"),
+        String(signup.profileCharacterName || signup.characterName || "")
+      )
+      : null;
+    const characterName = String(signup.profileCharacterName || signup.characterName || selectedEntry?.characterName || profile?.characterName || "").trim();
+    if (characterName) {
+      const key = characterName.toLowerCase();
+      const bucket = ensureCharacterMap(uid);
+      const previous = bucket.get(key);
+      const acceptedForCharacter = normalizeSignupStatus(signup.status) === "accept"
+        ? (previous?.acceptedCount || 0) + 1
+        : (previous?.acceptedCount || 0);
+      bucket.set(key, {
+        isMain: Boolean(selectedEntry?.key === "main"),
+        characterKey: String(selectedEntry?.key || previous?.characterKey || "main"),
+        characterName,
+        wowClass: String(signup.wowClass || selectedEntry?.wowClass || profile?.wowClass || previous?.wowClass || "").trim() || "—",
+        mainRole: String(signup.mainRole || signup.role || selectedEntry?.mainRole || profile?.mainRole || profile?.role || previous?.mainRole || "").trim() || "—",
+        mainSpecialization: String(signup.mainSpecialization || signup.specialization || selectedEntry?.mainSpecialization || profile?.mainSpecialization || profile?.specialization || previous?.mainSpecialization || "").trim() || "—",
+        offRole: String(signup.offRole || selectedEntry?.offRole || profile?.offRole || previous?.offRole || "").trim() || "—",
+        offSpecialization: String(signup.offSpecialization || selectedEntry?.offSpecialization || profile?.offSpecialization || previous?.offSpecialization || "").trim() || "—",
+        armoryUrl: String(signup.armoryUrl || previous?.armoryUrl || buildArmoryUrl(characterName)).trim(),
+        logsUrl: String(signup.logsUrl || selectedEntry?.logsUrl || previous?.logsUrl || buildLogsUrl(characterName)).trim(),
+        acceptedCount: acceptedForCharacter
+      });
+    }
+
+    if (normalizeSignupStatus(signup.status) !== "accept") {
+      return;
+    }
+    acceptedTotals.set(uid, (acceptedTotals.get(uid) || 0) + 1);
+  });
+
+  const adminSet = new Set(currentAdminUids);
+  const memberSet = new Set(currentMemberUids);
+  const uidSet = new Set([...currentAdminUids, ...currentMemberUids, ...acceptedTotals.keys()]);
+
+  currentCharacters.forEach((profile) => {
+    const uid = normalizeUid(profile.ownerUid || profile.id);
+    if (!uid) {
+      return;
+    }
+    uidSet.add(uid);
+
+    const profileNameFromProfile = String(profile.profileName || "").trim();
+    if (profileNameFromProfile && !profileNamesByUid.has(uid)) {
+      profileNamesByUid.set(uid, profileNameFromProfile);
+    }
+
+    const emailFromProfile = String(profile.email || profile.ownerEmail || "").trim();
+    if (emailFromProfile && !emailsByUid.has(uid)) {
+      emailsByUid.set(uid, emailFromProfile);
+    }
+
+    const bucket = ensureCharacterMap(uid);
+    const profileEntries = getProfileCharacterEntries(profile);
+    profileEntries.forEach((entry) => {
+      const characterName = String(entry.characterName || "").trim();
+      if (!characterName) {
+        return;
+      }
+      const key = characterName.toLowerCase();
+      const previous = bucket.get(key);
+      bucket.set(key, {
+        isMain: Boolean(entry.key === "main"),
+        characterKey: String(entry.key || previous?.characterKey || "main"),
+        characterName,
+        wowClass: String(entry.wowClass || previous?.wowClass || "").trim() || "—",
+        mainRole: String(entry.mainRole || previous?.mainRole || "").trim() || "—",
+        mainSpecialization: String(entry.mainSpecialization || previous?.mainSpecialization || "").trim() || "—",
+        offRole: String(entry.offRole || previous?.offRole || "").trim() || "—",
+        offSpecialization: String(entry.offSpecialization || previous?.offSpecialization || "").trim() || "—",
+        armoryUrl: String(entry.armoryUrl || previous?.armoryUrl || buildArmoryUrl(characterName)).trim(),
+        logsUrl: String(entry.logsUrl || previous?.logsUrl || buildLogsUrl(characterName)).trim(),
+        acceptedCount: previous?.acceptedCount || 0
+      });
+    });
+  });
+
+  signups.forEach((signup) => {
+    const uid = normalizeUid(signup.ownerUid);
+    if (uid) {
+      uidSet.add(uid);
+    }
+  });
+
+  const rows = Array.from(uidSet).map((uid) => {
+    const normalizedUid = normalizeUid(uid);
+    const source = getUserDirectoryMeta(normalizedUid) || {};
+    const email = String(source.email || emailsByUid.get(normalizedUid) || "").trim();
+    const emailLocalPart = email.includes("@") ? email.split("@")[0] : "";
+    const profileName = String(source.profileName || profileNamesByUid.get(normalizedUid) || source.displayName || emailLocalPart || "No Profile Name").trim();
+    const role = currentOwnerUids.includes(normalizedUid) ? "owner" : adminSet.has(normalizedUid) ? "admin" : memberSet.has(normalizedUid) ? "member" : "remove";
+    const acceptedTotal = acceptedTotals.get(normalizedUid) || 0;
+    const docks = currentAttendanceDocks.get(normalizedUid) || 0;
+    const characterEntries = Array.from(characterSummariesByUid.get(normalizedUid)?.values() || [])
+      .sort((left, right) => left.characterName.localeCompare(right.characterName, undefined, { sensitivity: "base" }));
+    const tooltip = [
+      `Discord Name: ${profileName || "Unknown"}`,
+      `Google Email: ${email || "Unknown"}`
+    ].join("\n");
+
+    return {
+      uid: normalizedUid,
+      displayName: profileName,
+      profileName,
+      email,
+      role,
+      acceptedTotal,
+      docks,
+      characterEntries,
+      tooltip,
+      searchIndex: ""
+    };
+  });
+
+  rows.forEach((row) => {
+    row.searchIndex = buildAuditSearchIndex(row);
+  });
+
+  return rows.sort((left, right) => left.displayName.localeCompare(right.displayName, undefined, { sensitivity: "base" }));
+}
+
+function renderAuditEntryLines(entries, renderLine) {
+  return entries
+    .map((entry) => `<span class="audit-entry-line ${entry.isMain ? "is-main" : "is-alt"}">${renderLine(entry)}</span>`)
+    .join("");
+}
+
+function renderRoleSpec(role, specialization) {
+  const roleLabel = String(role || "—");
+  const specLabel = String(specialization || "—");
+  return `<span class="audit-role-main">${escapeHtml(roleLabel)}</span><span class="audit-spec-muted">${escapeHtml(specLabel)}</span>`;
+}
+
+function renderCharacterCell(entry, row) {
+  const characterName = escapeHtml(entry.characterName || "—");
+  const charTooltip = [`UID: ${row.uid}`, `Discord Name: ${row.profileName || row.displayName || "Unknown"}`, `Google Email: ${row.email || "Unknown"}`].join("\n");
+  return `<span class="audit-character-name" title="${escapeHtml(charTooltip)}">${characterName}</span>`;
+}
+
+function findExistingAssignment(uid, raidId, characterName) {
+  const normalizedUid = normalizeUid(uid);
+  const normalizedRaidId = String(raidId || "").trim();
+  const normalizedCharacterName = String(characterName || "").trim().toLowerCase();
+  if (!normalizedUid || !normalizedRaidId || !normalizedCharacterName) {
+    return null;
+  }
+
+  return currentSignups.find((signup) =>
+    normalizeUid(signup.ownerUid) === normalizedUid
+    && String(signup.raidId || "") === normalizedRaidId
+    && String(signup.profileCharacterName || signup.characterName || "").trim().toLowerCase() === normalizedCharacterName
+  ) || null;
+}
+
+function getAssignmentState(existingAssignment) {
+  if (!existingAssignment) {
+    return { label: "Unassigned", className: "is-unassigned", hasAssignment: false };
+  }
+  const status = normalizeSignupStatus(existingAssignment.status);
+  if (status === "tentative") {
+    return { label: "Benched", className: "is-benched", hasAssignment: true };
+  }
+  return { label: "Assigned", className: "is-assigned", hasAssignment: true };
+}
+
+function renderAssignmentActions(uid, existingAssignment) {
+  const escapedUid = escapeHtml(uid);
+  const state = getAssignmentState(existingAssignment);
+  const stateBadge = `<span class="audit-assignment-state ${escapeHtml(state.className)}">${escapeHtml(state.label)}</span>`;
+  if (state.hasAssignment) {
+    return `${stateBadge}<button type="button" class="audit-action-unassign" data-audit-action="unassign" data-audit-action-uid="${escapedUid}">Unassign</button>`;
+  }
+
+  return [
+    stateBadge,
+    `<button type="button" class="audit-action-assign" data-audit-action="assign" data-audit-action-uid="${escapedUid}">Assign</button>`,
+    `<button type="button" data-audit-action="bench" data-audit-action-uid="${escapedUid}">Bench</button>`
+  ].join("");
+}
+
+function setAuditAssignmentButtonsDisabled(container, disabled) {
+  if (!(container instanceof HTMLElement)) {
+    return;
+  }
+  container.querySelectorAll("button[data-audit-action]").forEach((button) => {
+    if (button instanceof HTMLButtonElement) {
+      button.disabled = disabled;
+    }
+  });
+}
+
+function refreshAuditAssignmentButtonState(container, uid) {
+  if (!(container instanceof HTMLElement)) {
+    return;
+  }
+  const raidSelect = container.querySelector("select[data-audit-raid-select]");
+  const characterSelect = container.querySelector("select[data-audit-character-select]");
+  const actionWrap = container.querySelector("[data-audit-actions]");
+  if (!(raidSelect instanceof HTMLSelectElement) || !(characterSelect instanceof HTMLSelectElement) || !(actionWrap instanceof HTMLElement)) {
+    return;
+  }
+
+  const existing = findExistingAssignment(uid, raidSelect.value, characterSelect.value);
+  actionWrap.innerHTML = renderAssignmentActions(uid, existing);
+}
+
+function renderAuditAssignmentControl(row, entries, upcomingRaids) {
+  if (!entries.length) {
+    return "—";
+  }
+  if (!upcomingRaids.length) {
+    return `<span class="request-action-na">No upcoming raids</span>`;
+  }
+
+  const upcomingRaidIds = new Set(upcomingRaids.map((raid) => String(raid.id)));
+  const entryNames = new Set(entries.map((entry) => String(entry.characterName || "").trim().toLowerCase()));
+  const existingUpcomingSignup = currentSignups.find((signup) => {
+    const ownerUid = normalizeUid(signup.ownerUid);
+    const raidId = String(signup.raidId || "");
+    const characterName = String(signup.profileCharacterName || signup.characterName || "").trim().toLowerCase();
+    return ownerUid === row.uid && upcomingRaidIds.has(raidId) && entryNames.has(characterName);
+  });
+
+  const selectedRaidId = String(existingUpcomingSignup?.raidId || upcomingRaids[0]?.id || "");
+  const selectedCharacterName = String(existingUpcomingSignup?.profileCharacterName || existingUpcomingSignup?.characterName || entries[0]?.characterName || "").trim().toLowerCase();
+  const selectedCharacterValue = entries.find((entry) => String(entry.characterName || "").trim().toLowerCase() === selectedCharacterName)?.characterName
+    || entries[0]?.characterName
+    || "";
+  const selectedEntryAssignment = findExistingAssignment(row.uid, selectedRaidId, selectedCharacterValue);
+
+  const raidOptions = upcomingRaids
+    .map((raid) => `<option value="${escapeHtml(raid.id)}" ${String(raid.id) === selectedRaidId ? "selected" : ""}>${escapeHtml(formatRaidAssignmentLabel(raid))}</option>`)
+    .join("");
+
+  const characterOptions = entries
+    .map((entry) => {
+      const characterName = String(entry.characterName || "").trim();
+      const isSelected = characterName.toLowerCase() === selectedCharacterName;
+      return `<option value="${escapeHtml(characterName)}" ${isSelected ? "selected" : ""}>${escapeHtml(characterName)}</option>`;
+    })
+    .join("");
+
+  return `<div class="audit-assignment" data-audit-assign-wrap="${escapeHtml(row.uid)}">
+    <select data-audit-raid-select="${escapeHtml(row.uid)}">${raidOptions}</select>
+    <select data-audit-character-select="${escapeHtml(row.uid)}">${characterOptions}</select>
+    <div class="audit-assignment-actions" data-audit-actions="${escapeHtml(row.uid)}">${renderAssignmentActions(row.uid, selectedEntryAssignment)}</div>
+  </div>`;
+}
+
+function normalizeAssignmentPayloadForRules(payload) {
+  const phase = Number(payload.phase);
+  const raidStart = Number(payload.raidStart);
+  const raidEnd = Number(payload.raidEnd);
+  if (!Number.isInteger(phase) || phase < 1 || phase > 5) {
+    return null;
+  }
+  if (!Number.isInteger(raidStart) || raidStart < 0 || raidStart > 23) {
+    return null;
+  }
+  if (!Number.isInteger(raidEnd) || raidEnd < 1 || raidEnd > 24 || raidStart >= raidEnd) {
+    return null;
+  }
+
+  return {
+    characterId: String(payload.characterId || "").trim(),
+    profileCharacterKey: String(payload.profileCharacterKey || "").trim(),
+    profileCharacterName: String(payload.profileCharacterName || "").trim(),
+    raidId: String(payload.raidId || "").trim(),
+    raidDate: String(payload.raidDate || "").trim(),
+    raidName: String(payload.raidName || "").trim(),
+    phase,
+    runType: String(payload.runType || "").trim(),
+    raidSize: String(payload.raidSize || "").trim(),
+    raidStart,
+    raidEnd,
+    status: normalizeSignupStatus(payload.status),
+    ownerUid: String(payload.ownerUid || "").trim(),
+    updatedAt: payload.updatedAt
+  };
+}
+
+function resolveProfileCharacterForAssignment(ownerUid, characterName) {
+  const normalizedOwnerUid = normalizeUid(ownerUid);
+  const normalizedCharacterName = String(characterName || "").trim().toLowerCase();
+  if (!normalizedOwnerUid || !normalizedCharacterName) {
+    return null;
+  }
+
+  const ownerProfiles = currentCharacters.filter((entry) => normalizeUid(entry.ownerUid || entry.id) === normalizedOwnerUid);
+  for (const profile of ownerProfiles) {
+    const matchedEntry = getProfileCharacterEntries(profile).find(
+      (entry) => String(entry.characterName || "").trim().toLowerCase() === normalizedCharacterName
+    );
+    if (matchedEntry) {
+      return { profile, characterEntry: matchedEntry };
+    }
+  }
+
+  return null;
+}
+
+function renderGearLink(url) {
+  return renderExternalLink(url, "Gear");
+}
+
+function renderExternalLink(url, label = "Link") {
+  const trimmed = String(url || "").trim();
+  if (!trimmed) {
+    return "—";
+  }
+  return `<a href="${escapeHtml(trimmed)}" target="_blank" rel="noopener noreferrer" title="${escapeHtml(label)}">↗</a>`;
+}
+
+function renderClassText(wowClass) {
+  const className = normalizeClassName(wowClass) || "—";
+  const color = WOW_CLASS_COLORS[className];
+  if (!color) {
+    return `<span class="class-colored-name">${escapeHtml(className)}</span>`;
+  }
+  return `<span class="class-colored-name" style="color:${escapeHtml(color)}">${escapeHtml(className)}</span>`;
+}
+
+function normalizeClassName(value) {
+  return String(value || "").trim();
+}
+
+function normalizeClassKey(value) {
+  return normalizeClassName(value).toLowerCase();
+}
+
+function filterAuditRows(rows) {
+  const search = String(auditSearchInput.value || "").trim().toLowerCase();
+
+  return rows.filter((row) => {
+    if (!search) {
+      return true;
+    }
+
+    return String(row.searchIndex || "").includes(search);
+  });
+}
+
+function renderCharacterAuditTable() {
+  if (!isAdmin) {
+    characterAuditRows.innerHTML = "";
+    auditCountBadge.textContent = "0";
+    setMessage(characterAuditMessage, "");
+    return;
+  }
+
+  const allRows = buildUserAuditRows(currentSignups);
+  const filteredRows = filterAuditRows(allRows);
+  const upcomingRaids = getUpcomingRaidsForAssignment();
+  auditCountBadge.textContent = String(filteredRows.length);
+
+  if (!allRows.length) {
+    characterAuditRows.innerHTML = `<tr><td colspan="11">No user records found yet.</td></tr>`;
+    setMessage(characterAuditMessage, "");
+    return;
+  }
+
+  if (!filteredRows.length) {
+    characterAuditRows.innerHTML = `<tr><td colspan="11">No matches for current search/filter.</td></tr>`;
+    setMessage(characterAuditMessage, "");
+    return;
+  }
+
+  characterAuditRows.innerHTML = filteredRows
+    .map((row) => {
+      const entries = row.characterEntries || [];
+      return `<tr>
+        <td title="${escapeHtml(row.tooltip)}">${escapeHtml(row.profileName || row.displayName)}</td>
+        <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderCharacterCell(entry, row)) : "—"}</td>
+        <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderClassText(entry.wowClass)) : "—"}</td>
+        <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderRoleSpec(entry.mainRole, entry.mainSpecialization)) : "—"}</td>
+        <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderRoleSpec(entry.offRole, entry.offSpecialization)) : "—"}</td>
+        <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.armoryUrl, "Gear")) : "—"}</td>
+        <td class="audit-stack-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderExternalLink(entry.logsUrl, "Logs")) : "—"}</td>
+        <td class="audit-stack-cell audit-parses-cell">${entries.length ? renderAuditEntryLines(entries, (entry) => renderWclParsesCell(entry)) : "—"}</td>
+        <td class="audit-history-col">
+          <span class="attendance-summary" title="Attended: ${row.acceptedTotal} raid${row.acceptedTotal !== 1 ? 's' : ''} | Docked: ${row.docks} time${row.docks !== 1 ? 's' : ''}">
+            <span class="attendance-attended">${row.acceptedTotal} ✓</span>${row.docks > 0 ? ` <span class="attendance-docked">${row.docks} ✗</span>` : ''}
+          </span>
+          ${isAdmin ? `<div class="attendance-dock-controls">
+            <button class="attendance-dock-btn" data-dock-uid="${escapeHtml(row.uid)}" data-dock-action="add" title="Dock for missed raid">✕</button>
+            ${row.docks > 0 ? `<button class="attendance-dock-btn attendance-undock-btn" data-dock-uid="${escapeHtml(row.uid)}" data-dock-action="remove" title="Remove last dock">↩</button>` : ''}
+          </div>` : ''}
+        </td>
+        <td>
+          <select data-role-uid="${escapeHtml(row.uid)}" data-role-current="${escapeHtml(row.role)}" title="Change this user's access role" ${row.role === "owner" && !isOwner ? "disabled" : ""}>
+            <option value="member" ${row.role === "member" ? "selected" : ""} title="Standard access — can sign up for raids.">Member</option>
+            <option value="admin" ${row.role === "admin" ? "selected" : ""} title="Full admin access — can manage raids, approve signups, and change roles.">Admin</option>
+            <option value="remove" ${row.role === "remove" ? "selected" : ""} title="Revokes all access. Signups and profiles are preserved.">⛔ Soft Ban</option>
+            ${isOwner ? `<option value="owner" ${row.role === "owner" ? "selected" : ""} title="Full owner access — can manage admins, assign owners, and nuke accounts.">Owner</option>` : ""}
+            ${isOwner ? `<option value="nuke" title="PERMANENT: Deletes ALL access, signups, and character profiles. Cannot be undone.">☢ Nuke Account</option>` : ""}
+          </select>
+          <small class="audit-role-hint">${row.role === "remove" ? "⚠ Soft-banned" : row.role === "owner" ? "⭐ Owner" : ""}</small>
+        </td>
+        <td class="audit-assign-col">${renderAuditAssignmentControl(row, entries, upcomingRaids)}</td>
+      </tr>`;
+    })
+    .join("");
+
+  setMessage(characterAuditMessage, `${filteredRows.length} user access record(s) shown.`);
+  enrichArmoryColumns(characterAuditRows);
+  enrichWclColumns(characterAuditRows);
+}
+
 function setAdminVisibility() {
-  adminRaidSection.hidden = !isAdmin;
+  signupRequestsSection.hidden = !isAdmin;
+  characterAuditSection.hidden = !isAdmin;
   if (!isAdmin && adminOpsBadge) {
     adminOpsBadge.hidden = true;
   }
+}
+
+function normalizeUid(value) {
+  return String(value || "").trim();
+}
+
+function rebuildUserDirectory() {
+  const merged = new Map();
+
+  currentMemberDirectory.forEach((meta, uid) => {
+    merged.set(uid, {
+      id: uid,
+      uid,
+      displayName: String(meta.displayName || "").trim(),
+      email: String(meta.email || "").trim(),
+      profileName: String(meta.profileName || "").trim()
+    });
+  });
+
+  currentAdminDirectory.forEach((meta, uid) => {
+    const existing = merged.get(uid) || { id: uid, uid, displayName: "", email: "", profileName: "" };
+    merged.set(uid, {
+      ...existing,
+      displayName: String(meta.displayName || existing.displayName || "").trim(),
+      email: String(meta.email || existing.email || "").trim(),
+      profileName: String(meta.profileName || existing.profileName || "").trim()
+    });
+  });
+
+  currentUserDirectory = merged;
+}
+
+function renderAccessRows() {
+  renderCharacterAuditTable();
+}
+
+async function upsertAccessUid(uid, accessType) {
+  const targetCollection = accessType === "admin" ? "admins" : "members";
+  await setDoc(doc(db, targetCollection, uid), {
+    uid,
+    role: accessType,
+    updatedAt: serverTimestamp(),
+    updatedByUid: authUid,
+    createdAt: serverTimestamp()
+  }, { merge: true });
+}
+
+async function removeAccessUid(uid, accessType) {
+  const targetCollection = accessType === "admin" ? "admins" : "members";
+  await deleteDoc(doc(db, targetCollection, uid));
+}
+
+async function nukeAccountByUid(uid) {
+  // 1. Delete access docs (owners + admins + members)
+  await Promise.allSettled([
+    deleteDoc(doc(db, "owners", uid)),
+    deleteDoc(doc(db, "admins", uid)),
+    deleteDoc(doc(db, "members", uid))
+  ]);
+
+  // 2. Delete all signups owned by this user
+  const signupsSnap = await getDocs(query(collection(db, "signups"), where("ownerUid", "==", uid)));
+  const signupDeletes = signupsSnap.docs.map((d) => deleteDoc(doc(db, "signups", d.id)));
+  await Promise.allSettled(signupDeletes);
+
+  // 3. Delete all character profiles owned by this user
+  const charsSnap = await getDocs(query(collection(db, "characters"), where("ownerUid", "==", uid)));
+  const charDeletes = charsSnap.docs.map((d) => deleteDoc(doc(db, "characters", d.id)));
+  await Promise.allSettled(charDeletes);
 }
 
 function updateAuthActionButtons(user) {
@@ -433,444 +1469,513 @@ function getAuthErrorMessage(error) {
   return error?.message || "Sign-in failed.";
 }
 
-function populateRaidPhaseOptions() {
-  const phaseOptions = Object.keys(RAID_PRESETS_BY_PHASE)
-    .sort((left, right) => Number(left) - Number(right))
-    .map((phaseKey) => `<option value="${phaseKey}">Phase ${phaseKey}</option>`)
-    .join("");
-
-  raidPhaseInput.innerHTML = phaseOptions;
-  if (!raidPhaseInput.value) {
-    raidPhaseInput.value = "1";
-  }
+/* ── Role Slot Constraint Check ── */
+function resolveSignupRole(signup) {
+  const profilesById = getCharacterMapById();
+  const profile = resolveProfileForSignup(signup, profilesById);
+  const selectedEntry = profile
+    ? findProfileCharacterEntry(
+      profile,
+      String(signup.profileCharacterKey || "main"),
+      String(signup.profileCharacterName || signup.characterName || "")
+    )
+    : null;
+  return String(
+    signup.mainRole || signup.role
+    || selectedEntry?.mainRole || selectedEntry?.role
+    || profile?.mainRole || profile?.role
+    || ""
+  ).trim();
 }
 
-function getDefaultRoleSlots(raidSizeStr) {
-  const size = parseInt(String(raidSizeStr).replace(/\D/g, ""), 10) || 0;
-  if (size >= 25) {
-    return { tank: 3, healer: 7, dps: size - 10 };
+function checkRoleSlotConstraint(signup) {
+  const raidId = String(signup.raidId || "");
+  if (!raidId) {
+    return null;
   }
-  if (size >= 10) {
-    return { tank: 2, healer: 3, dps: size - 5 };
+
+  const raid = currentRaids.find((r) => r.id === raidId);
+  if (!raid) {
+    return null;
   }
-  return { tank: 2, healer: 3, dps: 5 };
+
+  const hasCfg = raid.tankSlots != null || raid.healerSlots != null || raid.dpsSlots != null;
+  if (!hasCfg) {
+    return null;
+  }
+
+  const limits = {
+    Tank: Number(raid.tankSlots) || 0,
+    Healer: Number(raid.healerSlots) || 0,
+    DPS: Number(raid.dpsSlots) || 0
+  };
+
+  const role = resolveSignupRole(signup);
+  if (!role || !(role in limits)) {
+    return null;
+  }
+
+  const acceptedForRole = currentSignups.filter((s) => {
+    return String(s.raidId || "") === raidId
+      && normalizeSignupStatus(s.status) === "accept"
+      && resolveSignupRole(s) === role;
+  }).length;
+
+  if (acceptedForRole >= limits[role]) {
+    return `Cannot accept: ${role} slots are full (${acceptedForRole}/${limits[role]}). Remove an accepted ${role} first.`;
+  }
+
+  return null;
 }
 
-function getRaidPresetDefaults() {
-  const selectedPhase = Number(raidPhaseInput.value);
-  const selectedRaid = raidTemplateInput.value;
-  const phaseRaids = RAID_PRESETS_BY_PHASE[selectedPhase] || [];
-  const matched = phaseRaids.find((raid) => raid.name === selectedRaid);
-  if (matched && matched.tanks != null) {
-    return { tank: matched.tanks, healer: matched.healers, dps: matched.dps };
-  }
-  return getDefaultRoleSlots(raidSizeInput.value);
-}
-
-function syncRoleSlotDefaults() {
-  const defaults = getRaidPresetDefaults();
-  if (!tankSlotsInput.value && !healerSlotsInput.value && !dpsSlotsInput.value) {
-    tankSlotsInput.value = defaults.tank;
-    healerSlotsInput.value = defaults.healer;
-    dpsSlotsInput.value = defaults.dps;
-  }
-}
-
-function syncRaidSize() {
-  const selectedPhase = Number(raidPhaseInput.value);
-  const selectedRaid = raidTemplateInput.value;
-  const phaseRaids = RAID_PRESETS_BY_PHASE[selectedPhase] || [];
-  const matched = phaseRaids.find((raid) => raid.name === selectedRaid);
-  raidSizeInput.value = matched ? `${matched.size}-man` : "";
-  // Reset role slots to the new raid's defaults when raid selection changes
-  tankSlotsInput.value = "";
-  healerSlotsInput.value = "";
-  dpsSlotsInput.value = "";
-  syncRoleSlotDefaults();
-}
-
-function refreshPartialBossSection(selectedBosses = []) {
-  const runType = raidRunTypeInput.value;
-  const raidName = raidTemplateInput.value;
-  if (runType !== "Partial" || !raidName) {
-    partialBossSection.hidden = true;
-    return;
-  }
-  const bosses = BOSS_KILL_ORDER[raidName] || [];
-  if (!bosses.length) {
-    partialBossSection.hidden = true;
-    return;
-  }
-  partialBossSection.hidden = false;
-  const selectedSet = new Set(selectedBosses);
-  partialBossCheckboxes.innerHTML = bosses.map((boss) => {
-    const checked = selectedSet.has(boss) ? " checked" : "";
-    return `<label class="partial-boss-label"><input type="checkbox" name="plannedBoss" value="${escapeHtml(boss)}"${checked} /> ${escapeHtml(boss)}</label>`;
-  }).join("");
-}
-
-function getSelectedBosses() {
-  return Array.from(partialBossCheckboxes.querySelectorAll('input[name="plannedBoss"]:checked')).map((cb) => cb.value);
-}
-
-function refreshRaidTemplateOptions(selectedRaid = "") {
-  const selectedPhase = Number(raidPhaseInput.value);
-  const phaseRaids = RAID_PRESETS_BY_PHASE[selectedPhase] || [];
-
-  raidTemplateInput.innerHTML = phaseRaids
-    .map((raid) => `<option value="${raid.name}">${raid.name}</option>`)
-    .join("");
-
-  if (selectedRaid && phaseRaids.some((raid) => raid.name === selectedRaid)) {
-    raidTemplateInput.value = selectedRaid;
-  }
-
-  syncRaidSize();
-}
-
-function renderAdminRaids(items) {
-  if (!isAdmin) {
-    currentAdminRows.innerHTML = "";
-    pastAdminRows.innerHTML = "";
-    currentAdminCountBadge.textContent = "0";
-    pastAdminCountBadge.textContent = "0";
-    setMessage(raidAdminMessage, "");
-    return;
-  }
-
-  if (!items.length) {
-    currentAdminRows.innerHTML = `<tr><td colspan="7">No current or up-coming raids.</td></tr>`;
-    pastAdminRows.innerHTML = `<tr><td colspan="7">No past raids.</td></tr>`;
-    currentAdminCountBadge.textContent = "0";
-    pastAdminCountBadge.textContent = "0";
-    setMessage(raidAdminMessage, "");
-    return;
-  }
-
-  const now = new Date();
-  const grouped = { currentUpcoming: [], past: [] };
-
-  items.forEach((item) => {
-    const cutoff = getRaidCutoffDate(item);
-    if (cutoff && cutoff < now) {
-      grouped.past.push(item);
-      return;
-    }
-    grouped.currentUpcoming.push(item);
-  });
-
-  // Sort past raids newest-first
-  const sortedPast = [...grouped.past].sort((a, b) => {
-    const aMs = parseDateOnly(a.raidDate)?.getTime() || 0;
-    const bMs = parseDateOnly(b.raidDate)?.getTime() || 0;
-    if (bMs !== aMs) return bMs - aMs;
-    return (b.raidStart ?? 0) - (a.raidStart ?? 0);
-  });
-
-  currentAdminCountBadge.textContent = String(grouped.currentUpcoming.length);
-  pastAdminCountBadge.textContent = String(sortedPast.length);
-
-  currentAdminRows.innerHTML = grouped.currentUpcoming.length
-    ? buildAdminRaidRows(grouped.currentUpcoming)
-    : `<tr><td colspan="8">No current or up-coming raids.</td></tr>`;
-
-  pastAdminRows.innerHTML = sortedPast.length
-    ? buildAdminRaidRows(sortedPast)
-    : `<tr><td colspan="8">No past raids.</td></tr>`;
-}
-
-function resetRaidForm() {
-  raidIdInput.value = "";
-  saveRaidButton.textContent = "Save Raid";
-  cancelRaidEditButton.hidden = true;
-  raidForm.reset();
-  populateRaidPhaseOptions();
-  refreshRaidTemplateOptions();
-  raidEventDateInput.value = toDateOnlyString(new Date());
-  raidLeaderInput.value = adminMainCharName;
-  tankSlotsInput.value = "";
-  healerSlotsInput.value = "";
-  dpsSlotsInput.value = "";
-  syncRoleSlotDefaults();
-  partialBossSection.hidden = true;
-  partialBossCheckboxes.innerHTML = "";
-  setMessage(raidAdminMessage, "");
-}
-
-function loadRaidForm(item) {
-  raidIdInput.value = item.id;
-  saveRaidButton.textContent = "Update Raid";
-  cancelRaidEditButton.hidden = false;
-
-  raidPhaseInput.value = String(item.phase);
-  refreshRaidTemplateOptions(item.raidName);
-  raidEventDateInput.value = item.raidDate;
-  raidRunTypeInput.value = item.runType;
-  raidLeaderInput.value = item.raidLeader || "";
-  raidStartInput.value = String(item.raidStart);
-  refreshEndHourOptions();
-  raidEndInput.value = String(item.raidEnd);
-  syncRaidSize();
-
-  if (item.tankSlots != null) {
-    tankSlotsInput.value = String(item.tankSlots);
-  }
-  if (item.healerSlots != null) {
-    healerSlotsInput.value = String(item.healerSlots);
-  }
-  if (item.dpsSlots != null) {
-    dpsSlotsInput.value = String(item.dpsSlots);
-  }
-
-  refreshPartialBossSection(item.plannedBosses || []);
-}
-
-populateHourOptions(raidStartInput, START_HOURS, "Select CST start");
-populateHourOptions(raidEndInput, END_HOURS, "Select CST end");
-
-function refreshEndHourOptions() {
-  const startVal = parseHourValue(raidStartInput.value);
-  if (!Number.isInteger(startVal)) {
-    populateHourOptions(raidEndInput, END_HOURS, "Select CST end");
-    return;
-  }
-  const previousEnd = raidEndInput.value;
-  const validEnds = END_HOURS.filter((h) => h > startVal);
-  populateHourOptions(raidEndInput, validEnds, "Select CST end");
-  if (validEnds.includes(Number(previousEnd))) {
-    raidEndInput.value = previousEnd;
-  }
-}
-
-raidStartInput.addEventListener("change", () => {
-  refreshEndHourOptions();
-});
-
-populateRaidPhaseOptions();
-refreshRaidTemplateOptions();
-raidEventDateInput.value = toDateOnlyString(new Date());
-
-raidEventDateInput.addEventListener("click", () => {
-  if (typeof raidEventDateInput.showPicker === "function") {
-    try { raidEventDateInput.showPicker(); } catch { /* already open or not supported */ }
-  }
-});
-
-raidEventDateInput.addEventListener("focus", () => {
-  if (typeof raidEventDateInput.showPicker === "function") {
-    try { raidEventDateInput.showPicker(); } catch { /* already open or not supported */ }
-  }
-});
-
-raidPhaseInput.addEventListener("change", () => {
-  refreshRaidTemplateOptions();
-  refreshPartialBossSection();
-});
-
-raidTemplateInput.addEventListener("change", () => {
-  syncRaidSize();
-  refreshPartialBossSection();
-});
-
-raidRunTypeInput.addEventListener("change", () => {
-  refreshPartialBossSection();
-});
-
-cancelRaidEditButton.addEventListener("click", () => {
-  resetRaidForm();
-});
-
-adminRaidSection.addEventListener("click", async (event) => {
+signupRequestsSection.addEventListener("click", async (event) => {
   const target = event.target;
   if (!(target instanceof HTMLButtonElement)) {
     return;
   }
 
-  const action = target.dataset.raidAction;
-  const id = target.dataset.raidId;
-  if (!action || !id || !isAdmin) {
+  const action = target.dataset.requestAction;
+  const signupId = target.dataset.signupId;
+  if (!action || !signupId || !isAdmin) {
     return;
   }
 
-  const item = currentRaids.find((entry) => entry.id === id);
-  if (!item) {
-    return;
-  }
-
-  if (action === "edit") {
-    loadRaidForm(item);
-    raidPhaseInput.focus();
-    return;
-  }
-
-  if (action === "delete") {
-    const confirmed = window.confirm(`Delete raid ${item.raidName} on ${item.raidDate}? This also deletes all signups for this raid.`);
-    if (!confirmed) {
-      return;
-    }
-
-    try {
-      if (isDemoMode) {
-        currentRaids = currentRaids.filter((entry) => entry.id !== id);
-        currentRaids = sortRaids(currentRaids);
-        saveDemoRaids(currentRaids);
-        renderAdminRaids(currentRaids);
-      } else {
-        /* Delete all signups referencing this raid first */
-        const signupsQuery = query(collection(db, "signups"), where("raidId", "==", id));
-        const signupsSnapshot = await getDocs(signupsQuery);
-        const deleteResults = await Promise.allSettled(
-          signupsSnapshot.docs.map((signupDoc) => deleteDoc(signupDoc.ref))
-        );
-        const failedDeletes = deleteResults.filter((r) => r.status === "rejected").length;
-        await deleteDoc(doc(db, "raids", id));
-        if (failedDeletes > 0) {
-          console.warn(`[RAID DELETE] ${failedDeletes} signup(s) could not be deleted for raid ${id}`);
-        }
+  /* ── Enforce role slot constraint on accept ── */
+  if (action === "accept") {
+    const signup = currentSignups.find((s) => s.id === signupId);
+    if (signup) {
+      const constraintMsg = checkRoleSlotConstraint(signup);
+      if (constraintMsg) {
+        setMessage(signupRequestMessage, constraintMsg, true);
+        return;
       }
-
-      if (raidIdInput.value === id) {
-        resetRaidForm();
-      }
-      setMessage(raidAdminMessage, "Raid and associated signups deleted.");
-    } catch (error) {
-      setMessage(raidAdminMessage, error.message, true);
     }
   }
-});
 
-raidForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
-
-  if (!isAdmin || (!isDemoMode && !authUid)) {
-    setMessage(raidAdminMessage, "Admin access is required.", true);
-    return;
-  }
-
-  const phase = Number(raidPhaseInput.value);
-  const raidName = raidTemplateInput.value;
-  const raidDate = raidEventDateInput.value;
-  const runType = raidRunTypeInput.value;
-  const raidLeader = raidLeaderInput.value.trim();
-  const raidStart = parseHourValue(raidStartInput.value);
-  const raidEnd = parseHourValue(raidEndInput.value);
-  const raidSize = raidSizeInput.value;
-  const tankSlots = Number(tankSlotsInput.value) || 0;
-  const healerSlots = Number(healerSlotsInput.value) || 0;
-  const dpsSlots = Number(dpsSlotsInput.value) || 0;
-
-  const phaseRaids = RAID_PRESETS_BY_PHASE[phase] || [];
-  const isValidRaid = phaseRaids.some((raid) => raid.name === raidName);
-
-  if (!Number.isInteger(phase) || phase < 1 || phase > 5) {
-    setMessage(raidAdminMessage, "Please select a valid raid phase.", true);
-    return;
-  }
-  if (!isValidRaid) {
-    setMessage(raidAdminMessage, "Please select a valid raid for the chosen phase.", true);
-    return;
-  }
-  if (!parseDateOnly(raidDate)) {
-    setMessage(raidAdminMessage, "Please select a valid raid date.", true);
-    return;
-  }
-  if (!runType) {
-    setMessage(raidAdminMessage, "Please select a run type.", true);
-    return;
-  }
-  if (!Number.isInteger(raidStart)) {
-    setMessage(raidAdminMessage, "Please select a start time.", true);
-    return;
-  }
-  if (!Number.isInteger(raidEnd)) {
-    setMessage(raidAdminMessage, "Please select an end time.", true);
-    return;
-  }
-  if (raidEnd <= raidStart) {
-    setMessage(raidAdminMessage, "End time must be after the start time.", true);
-    return;
-  }
-
-  const plannedBosses = runType === "Partial" ? getSelectedBosses() : [];
-
-  const payload = {
-    phase,
-    raidName,
-    raidDate,
-    runType,
-    raidLeader,
-    raidStart,
-    raidEnd,
-    raidSize,
-    tankSlots,
-    healerSlots,
-    dpsSlots,
-    plannedBosses,
-    createdByUid: isDemoMode ? "demo-local" : authUid,
-    updatedAt: serverTimestamp()
-  };
-
-  saveRaidButton.disabled = true;
+  const nextStatus = action === "accept" ? "accept" : "denied";
+  target.disabled = true;
 
   try {
-    const editingId = raidIdInput.value;
-
     if (isDemoMode) {
-      if (editingId) {
-        currentRaids = currentRaids.map((entry) =>
-          entry.id === editingId ? { ...entry, ...payload } : entry
-        );
-        setMessage(raidAdminMessage, "Raid updated (demo mode).");
-      } else {
-        currentRaids.push({
-          id: typeof crypto !== "undefined" && crypto.randomUUID
-            ? crypto.randomUUID()
-            : `raid-demo-${Date.now()}`,
-          ...payload,
-          createdAt: new Date().toISOString()
-        });
-        setMessage(raidAdminMessage, "Raid created (demo mode).");
-      }
-
-      currentRaids = sortRaids(currentRaids);
-      saveDemoRaids(currentRaids);
-      renderAdminRaids(currentRaids);
-      resetRaidForm();
+      currentSignups = currentSignups.map((signup) =>
+        signup.id === signupId
+          ? { ...signup, status: nextStatus, updatedAt: new Date().toISOString() }
+          : signup
+      );
+      saveDemoSignups(currentSignups);
+      renderSignupRequestsTable();
+      renderCharacterAuditTable();
+      setMessage(signupRequestMessage, `Request ${action === "accept" ? "accepted" : "denied"} (demo mode).`);
       return;
     }
 
-    if (editingId) {
-      await updateDoc(doc(db, "raids", editingId), payload);
-      setMessage(raidAdminMessage, "Raid updated.");
-    } else {
-      await addDoc(collection(db, "raids"), {
-        ...payload,
-        createdAt: serverTimestamp()
-      });
-      setMessage(raidAdminMessage, "Raid created.");
-    }
-
-    resetRaidForm();
+    await updateDoc(doc(db, "signups", signupId), {
+      status: nextStatus,
+      updatedAt: serverTimestamp()
+    });
+    setMessage(signupRequestMessage, `Request ${action === "accept" ? "accepted" : "denied"}.`);
   } catch (error) {
-    setMessage(raidAdminMessage, error.message, true);
+    setMessage(signupRequestMessage, error.message, true);
   } finally {
-    saveRaidButton.disabled = false;
+    target.disabled = false;
   }
 });
+
+auditSearchInput.addEventListener("input", () => {
+  renderCharacterAuditTable();
+});
+
+if (auditClassFilter) {
+  auditClassFilter.addEventListener("change", () => {
+    renderCharacterAuditTable();
+  });
+}
+
+if (auditActivityFilter) {
+  auditActivityFilter.addEventListener("change", () => {
+    renderCharacterAuditTable();
+  });
+}
+
+characterAuditSection.addEventListener("change", async (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLSelectElement)) {
+    return;
+  }
+
+  const uid = normalizeUid(target.dataset.roleUid || "");
+  if (!uid) {
+    return;
+  }
+  const nextRole = String(target.value || "");
+  const previousRole = String(target.dataset.roleCurrent || "");
+  if (!uid || !isAdmin || !db || !["member", "admin", "remove", "nuke", "owner"].includes(nextRole)) {
+    return;
+  }
+
+  if (nextRole === "nuke" && !isOwner) {
+    setMessage(characterAuditMessage, "Only owners can nuke accounts.", true);
+    target.value = previousRole || "member";
+    return;
+  }
+
+  if (nextRole === "owner" && !isOwner) {
+    setMessage(characterAuditMessage, "Only owners can assign the owner role.", true);
+    target.value = previousRole || "member";
+    return;
+  }
+
+  if (previousRole === "owner" && !isOwner) {
+    setMessage(characterAuditMessage, "Only owners can modify another owner's role.", true);
+    target.value = previousRole;
+    return;
+  }
+
+  target.disabled = true;
+  try {
+    if (nextRole === "member") {
+      await setDoc(doc(db, "members", uid), {
+        uid,
+        role: "member",
+        updatedAt: serverTimestamp(),
+        updatedByUid: authUid,
+        createdAt: serverTimestamp()
+      }, { merge: true });
+      await deleteDoc(doc(db, "admins", uid)).catch(() => {});
+      await deleteDoc(doc(db, "owners", uid)).catch(() => {});
+      setMessage(characterAuditMessage, "Role updated to member.");
+    } else if (nextRole === "admin") {
+      await setDoc(doc(db, "admins", uid), {
+        uid,
+        role: "admin",
+        updatedAt: serverTimestamp(),
+        updatedByUid: authUid,
+        createdAt: serverTimestamp()
+      }, { merge: true });
+      await setDoc(doc(db, "members", uid), {
+        uid,
+        role: "member",
+        updatedAt: serverTimestamp(),
+        updatedByUid: authUid,
+        createdAt: serverTimestamp()
+      }, { merge: true });
+      await deleteDoc(doc(db, "owners", uid)).catch(() => {});
+      setMessage(characterAuditMessage, "Role updated to admin.");
+    } else if (nextRole === "remove") {
+      await Promise.allSettled([
+        deleteDoc(doc(db, "owners", uid)),
+        deleteDoc(doc(db, "admins", uid)),
+        deleteDoc(doc(db, "members", uid))
+      ]);
+      setMessage(characterAuditMessage, "Soft ban applied — access revoked. Signups and profiles preserved.");
+    } else if (nextRole === "nuke") {
+      const confirmed = window.confirm(
+        "NUKE ACCOUNT: This will permanently delete this user's access, ALL signups, and ALL character profiles. This cannot be undone. Continue?"
+      );
+      if (!confirmed) {
+        target.value = previousRole || "member";
+        target.disabled = false;
+        return;
+      }
+      await nukeAccountByUid(uid);
+      setMessage(characterAuditMessage, "Account nuked — all data permanently deleted.");
+    } else if (nextRole === "owner") {
+      await setDoc(doc(db, "owners", uid), {
+        uid,
+        role: "owner",
+        updatedAt: serverTimestamp(),
+        updatedByUid: authUid,
+        createdAt: serverTimestamp()
+      }, { merge: true });
+      await setDoc(doc(db, "admins", uid), {
+        uid,
+        role: "admin",
+        updatedAt: serverTimestamp(),
+        updatedByUid: authUid,
+        createdAt: serverTimestamp()
+      }, { merge: true });
+      await setDoc(doc(db, "members", uid), {
+        uid,
+        role: "member",
+        updatedAt: serverTimestamp(),
+        updatedByUid: authUid,
+        createdAt: serverTimestamp()
+      }, { merge: true });
+      setMessage(characterAuditMessage, "Role updated to owner.");
+    }
+  } catch (error) {
+    setMessage(characterAuditMessage, error.message, true);
+    target.value = previousRole || "remove";
+  } finally {
+    target.disabled = false;
+  }
+});
+
+characterAuditSection.addEventListener("click", async (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLElement)) {
+    return;
+  }
+
+  // ── Attendance dock / undock ──────────────────────────────────────────────
+  const dockButton = target.closest("button[data-dock-uid][data-dock-action]");
+  if (dockButton instanceof HTMLButtonElement && isAdmin && db) {
+    const uid = normalizeUid(dockButton.dataset.dockUid || "");
+    const action = dockButton.dataset.dockAction;
+    if (!uid) return;
+    const current = currentAttendanceDocks.get(uid) || 0;
+    const next = action === "add" ? current + 1 : Math.max(0, current - 1);
+    dockButton.disabled = true;
+    try {
+      await setDoc(doc(db, "attendance_docks", uid), {
+        uid,
+        docks: next,
+        updatedAt: serverTimestamp(),
+        updatedBy: authUid || ""
+      });
+    } catch (err) {
+      setMessage(characterAuditMessage, "Error saving dock: " + err.message, true);
+    } finally {
+      dockButton.disabled = false;
+    }
+    return;
+  }
+
+  const actionButton = target.closest("button[data-audit-action][data-audit-action-uid]");
+  if (!(actionButton instanceof HTMLButtonElement)) {
+    return;
+  }
+
+  if (!isAdmin || !db) {
+    return;
+  }
+
+  const uid = normalizeUid(actionButton.dataset.auditActionUid || "");
+  const action = String(actionButton.dataset.auditAction || "").trim().toLowerCase();
+  const wrap = actionButton.closest(".audit-assignment");
+  if (!uid || !(wrap instanceof HTMLElement)) {
+    return;
+  }
+
+  const raidSelect = wrap.querySelector("select[data-audit-raid-select]");
+  const characterSelect = wrap.querySelector("select[data-audit-character-select]");
+  if (!(raidSelect instanceof HTMLSelectElement) || !(characterSelect instanceof HTMLSelectElement)) {
+    return;
+  }
+
+  const raidId = String(raidSelect.value || "").trim();
+  const characterName = String(characterSelect.value || "").trim();
+  const selectedRaid = currentRaids.find((raid) => raid.id === raidId);
+  if (!raidId || !characterName || !selectedRaid) {
+    setMessage(characterAuditMessage, "Select a raid and character before assigning.", true);
+    return;
+  }
+
+  const existing = findExistingAssignment(uid, raidId, characterName);
+
+  if (action === "unassign") {
+    if (!existing?.id) {
+      setMessage(characterAuditMessage, "No existing signup found for that raid and character.", true);
+      refreshAuditAssignmentButtonState(wrap, uid);
+      return;
+    }
+
+    setAuditAssignmentButtonsDisabled(wrap, true);
+    try {
+      if (isDemoMode) {
+        currentSignups = currentSignups.filter((signup) => signup.id !== existing.id);
+        saveDemoSignups(currentSignups);
+        renderSignupRequestsTable();
+        renderCharacterAuditTable();
+      } else {
+        await deleteDoc(doc(db, "signups", existing.id));
+      }
+      setMessage(characterAuditMessage, `Unassigned ${characterName} from ${selectedRaid.raidName || "raid"}.`);
+      refreshAuditAssignmentButtonState(wrap, uid);
+    } catch (error) {
+      setMessage(characterAuditMessage, error.message, true);
+    } finally {
+      setAuditAssignmentButtonsDisabled(wrap, false);
+    }
+    return;
+  }
+
+  if (action !== "assign" && action !== "bench") {
+    return;
+  }
+
+  if (existing?.id) {
+    setMessage(characterAuditMessage, "That character is already signed up for the selected raid. Use Unassign to remove them.", true);
+    refreshAuditAssignmentButtonState(wrap, uid);
+    return;
+  }
+
+  const nextStatus = action === "bench" ? "tentative" : "accept";
+
+  const resolved = resolveProfileCharacterForAssignment(uid, characterName);
+  if (!resolved) {
+    setMessage(characterAuditMessage, "Unable to resolve profile/character for assignment.", true);
+    return;
+  }
+
+  const { profile, characterEntry } = resolved;
+  const rawPayload = {
+    characterId: profile.id,
+    profileCharacterKey: characterEntry.key || "main",
+    profileCharacterName: characterEntry.characterName || characterName,
+    raidId: selectedRaid.id,
+    raidDate: selectedRaid.raidDate,
+    raidName: selectedRaid.raidName,
+    phase: selectedRaid.phase,
+    runType: selectedRaid.runType,
+    raidSize: selectedRaid.raidSize,
+    raidStart: selectedRaid.raidStart,
+    raidEnd: selectedRaid.raidEnd,
+    status: nextStatus,
+    ownerUid: uid,
+    updatedAt: serverTimestamp()
+  };
+  const payload = normalizeAssignmentPayloadForRules(rawPayload);
+  if (!payload) {
+    setMessage(characterAuditMessage, "Selected raid has invalid schedule data. Please check raid start/end in Admin: Raids.", true);
+    return;
+  }
+
+  setAuditAssignmentButtonsDisabled(wrap, true);
+  try {
+    if (isDemoMode) {
+      const nextEntry = {
+        id: typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `demo-${Date.now()}`,
+        ...payload,
+        updatedAt: new Date().toISOString(),
+        createdAt: new Date().toISOString()
+      };
+      currentSignups = [nextEntry, ...currentSignups];
+      saveDemoSignups(currentSignups);
+      renderSignupRequestsTable();
+      renderCharacterAuditTable();
+      setMessage(characterAuditMessage, `Assigned ${characterName} to ${selectedRaid.raidName || "raid"} (${signupStatusLabel(nextStatus)}).`);
+      return;
+    }
+
+    await setDoc(doc(collection(db, "signups")), {
+      ...payload,
+      createdAt: serverTimestamp()
+    });
+    setMessage(characterAuditMessage, `Assigned ${characterName} to ${selectedRaid.raidName || "raid"} (${signupStatusLabel(nextStatus)}).`);
+    refreshAuditAssignmentButtonState(wrap, uid);
+  } catch (error) {
+    setMessage(characterAuditMessage, error.message, true);
+  } finally {
+    setAuditAssignmentButtonsDisabled(wrap, false);
+  }
+});
+
+characterAuditSection.addEventListener("change", (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLElement)) {
+    return;
+  }
+  const wrap = target.closest(".audit-assignment");
+  if (!(wrap instanceof HTMLElement)) {
+    return;
+  }
+  const raidSelect = wrap.querySelector("select[data-audit-raid-select]");
+  const uid = normalizeUid(raidSelect instanceof HTMLSelectElement ? (raidSelect.dataset.auditRaidSelect || "") : "");
+  if (!uid) {
+    return;
+  }
+  refreshAuditAssignmentButtonState(wrap, uid);
+});
+
+if (accessForm) {
+  accessForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!isAdmin || !db) {
+      setMessage(accessManagerMessage, "Admin access is required.", true);
+      return;
+    }
+
+    const uid = normalizeUid(accessUidInput?.value);
+    const accessType = String(accessTypeSelect?.value || "member") === "admin" ? "admin" : "member";
+    if (!uid) {
+      setMessage(accessManagerMessage, "Enter a valid UID.", true);
+      return;
+    }
+
+    accessAddButton.disabled = true;
+    try {
+      await upsertAccessUid(uid, accessType);
+      setMessage(accessManagerMessage, `${accessType === "admin" ? "Admin" : "Member"} access granted.`);
+      accessUidInput.value = "";
+      accessUidInput.focus();
+    } catch (error) {
+      setMessage(accessManagerMessage, error.message, true);
+    } finally {
+      accessAddButton.disabled = false;
+    }
+  });
+}
+
+if (accessManagerSection) {
+  accessManagerSection.addEventListener("click", async (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLButtonElement)) {
+      return;
+    }
+    const uid = normalizeUid(target.dataset.accessUid);
+    const accessType = target.dataset.accessRemove === "admin" ? "admin" : target.dataset.accessRemove === "member" ? "member" : "";
+    if (!uid || !accessType || !isAdmin || !db) {
+      return;
+    }
+
+    target.disabled = true;
+    try {
+      await removeAccessUid(uid, accessType);
+      setMessage(accessManagerMessage, `${accessType === "admin" ? "Admin" : "Member"} access removed.`);
+    } catch (error) {
+      setMessage(accessManagerMessage, error.message, true);
+    } finally {
+      target.disabled = false;
+    }
+  });
+}
 
 if (!hasConfigValues()) {
   isDemoMode = true;
   isAdmin = true;
+  isOwner = true;
   setAuthGateState(true);
   setAdminVisibility();
   updateAuthActionButtons({ uid: "demo" });
   updateUidDisplay("demo-local");
   authStatus.textContent = "Demo mode: Firebase config not set (local testing enabled).";
-  currentRaids = sortRaids(loadDemoRaids());
+  currentCharacters = [{
+    id: "demo-local",
+    ownerUid: "demo-local",
+    uid: "demo-local",
+    displayName: "demo-local",
+    email: "demo@example.com",
+    profileName: "demo-local"
+  }];
+  currentUserDirectory = new Map([[
+    "demo-local",
+    {
+      uid: "demo-local",
+      displayName: "demo-local",
+      profileName: "demo-local",
+      email: "demo@example.com"
+    }
+  ]]);
   currentSignups = loadDemoSignups();
-  renderAdminRaids(currentRaids);
-  updatePendingBadge(currentSignups);
-  resetRaidForm();
+  currentRaids = [];
+  currentAdminUids = ["demo-local"];
+  currentMemberUids = ["demo-local"];
+  currentAdminDirectory = new Map([["demo-local", { displayName: "demo-local", email: "demo@example.com" }]]);
+  currentMemberDirectory = new Map([["demo-local", { displayName: "demo-local", email: "demo@example.com" }]]);
+  renderSignupRequestsTable();
+  renderCharacterAuditTable();
+  renderAccessRows();
 } else {
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
@@ -878,8 +1983,12 @@ if (!hasConfigValues()) {
   googleProvider.setCustomParameters({ prompt: "select_account" });
   const yahooProvider = new OAuthProvider("yahoo.com");
   db = getFirestore(app);
-  const raidsRef = collection(db, "raids");
   const signupsRef = collection(db, "signups");
+  const raidsRef = collection(db, "raids");
+  const charactersRef = collection(db, "characters");
+  const adminsRef = collection(db, "admins");
+  const membersRef = collection(db, "members");
+  const ownersRef = collection(db, "owners");
 
   setAuthPendingState();
   updateAuthActionButtons(null);
@@ -898,7 +2007,7 @@ if (!hasConfigValues()) {
       const errorText = getAuthErrorMessage(error);
       authStatus.textContent = errorText;
       setAuthGateState(false, errorText, true);
-      setMessage(raidAdminMessage, errorText, true);
+      setMessage(signupRequestMessage, errorText, true);
     } finally {
       buttons.forEach((b) => (b.disabled = false));
     }
@@ -965,7 +2074,7 @@ if (!hasConfigValues()) {
       const errorText = getEmailAuthErrorMessage(error);
       authStatus.textContent = errorText;
       setAuthGateState(false, errorText, true);
-      setMessage(raidAdminMessage, errorText, true);
+      setMessage(signupRequestMessage, errorText, true);
     } finally {
       allBtns.forEach((b) => (b.disabled = false));
     }
@@ -974,14 +2083,11 @@ if (!hasConfigValues()) {
   if (authGateEmailForm) {
     authGateEmailForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      // Disabled sign in with email. Only allow create account.
-      setMessage(raidAdminMessage, "Sign In is disabled. Please use Create Account.", true);
+      performEmailSignIn(false);
     });
   }
   if (authGateCreateAccount) {
-    authGateCreateAccount.addEventListener("click", async () => {
-      await performEmailSignIn(true);
-    });
+    authGateCreateAccount.addEventListener("click", () => performEmailSignIn(true));
   }
 
   if (signOutButton) {
@@ -990,7 +2096,7 @@ if (!hasConfigValues()) {
       try {
         await signOut(auth);
       } catch (error) {
-        setMessage(raidAdminMessage, error.message, true);
+        setMessage(signupRequestMessage, error.message, true);
       } finally {
         signOutButton.disabled = false;
       }
@@ -1013,24 +2119,56 @@ if (!hasConfigValues()) {
   }
 
   onAuthStateChanged(auth, async (user) => {
-    if (unsubscribeRaids) {
-      unsubscribeRaids();
-      unsubscribeRaids = null;
+    if (unsubscribeCharacters) {
+      unsubscribeCharacters();
+      unsubscribeCharacters = null;
     }
     if (unsubscribeSignups) {
       unsubscribeSignups();
       unsubscribeSignups = null;
     }
+    if (unsubscribeRaids) {
+      unsubscribeRaids();
+      unsubscribeRaids = null;
+    }
+    if (unsubscribeAdmins) {
+      unsubscribeAdmins();
+      unsubscribeAdmins = null;
+    }
+    if (unsubscribeMembers) {
+      unsubscribeMembers();
+      unsubscribeMembers = null;
+    }
+    if (unsubscribeOwners) {
+      unsubscribeOwners();
+      unsubscribeOwners = null;
+    }
+    if (unsubscribeAttendanceDocks) {
+      unsubscribeAttendanceDocks();
+      unsubscribeAttendanceDocks = null;
+    }
 
     if (!user) {
       authUid = null;
       isAdmin = false;
-      adminMainCharName = "";
-      currentRaids = [];
+      isOwner = false;
+      currentCharacters = [];
+      currentUserDirectory = new Map();
       currentSignups = [];
+      currentRaids = [];
+      currentAdminUids = [];
+      currentMemberUids = [];
+      currentOwnerUids = [];
+      currentAdminDirectory = new Map();
+      currentMemberDirectory = new Map();
       setAdminVisibility();
-      renderAdminRaids(currentRaids);
-      updatePendingBadge([]);
+      renderSignupRequestsTable();
+      renderCharacterAuditTable();
+      renderAccessRows();
+      signupRequestBadge.textContent = "0";
+      if (adminOpsBadge) {
+        adminOpsBadge.hidden = true;
+      }
       setAuthGateState(false, "Sign in with Google to continue.");
       updateAuthActionButtons(null);
       updateUidDisplay("");
@@ -1041,57 +2179,36 @@ if (!hasConfigValues()) {
     authUid = user.uid;
     const inStaticAdminAllowlist = Array.isArray(appSettings.adminUids) && appSettings.adminUids.includes(authUid);
     let hasAdminDoc = false;
+    let hasOwnerDoc = false;
     try {
       hasAdminDoc = (await getDoc(doc(db, "admins", authUid))).exists();
     } catch {
       hasAdminDoc = false;
     }
-    isAdmin = inStaticAdminAllowlist || hasAdminDoc;
+    try {
+      hasOwnerDoc = (await getDoc(doc(db, "owners", authUid))).exists();
+    } catch {
+      hasOwnerDoc = false;
+    }
+    isOwner = hasOwnerDoc;
+    isAdmin = inStaticAdminAllowlist || hasAdminDoc || isOwner;
     setAuthGateState(true);
     updateAuthActionButtons(user);
     updateUidDisplay(authUid);
     setAdminVisibility();
     const userLabel = user.email || `${authUid.slice(0, 8)}...`;
     if (!isAdmin) {
-      updatePendingBadge([]);
-      authStatus.textContent = `Signed in (${userLabel}) — Not authorized for raid management.`;
-      setMessage(raidAdminMessage, "Your account is not in the admin allowlist.", true);
+      if (adminOpsBadge) {
+        adminOpsBadge.hidden = true;
+      }
+      authStatus.textContent = `Signed in (${userLabel}) — Not authorized for requests/audit.`;
+      setMessage(signupRequestMessage, "Your account is not in the admin allowlist.", true);
+      setMessage(characterAuditMessage, "Your account is not in the admin allowlist.", true);
+      setMessage(accessManagerMessage, "Your account is not in the admin allowlist.", true);
       return;
     }
 
-    updatePendingBadge(currentSignups);
-    authStatus.textContent = `Signed in (${userLabel}) — Raid management enabled`;
-
-    // Fetch admin's main character name for pre-populating Raid Leader field
-    adminMainCharName = "";
-    try {
-      const charQuery = query(
-        collection(db, "characters"),
-        where("ownerUid", "==", authUid),
-        limit(1)
-      );
-      const charSnap = await getDocs(charQuery);
-      if (!charSnap.empty) {
-        adminMainCharName = charSnap.docs[0].data().characterName || "";
-      }
-    } catch {
-      // Non-critical — leave field blank
-    }
-
-    const raidsQuery = query(raidsRef, orderBy("raidDate", "asc"));
-    unsubscribeRaids = onSnapshot(
-      raidsQuery,
-      (snapshot) => {
-        currentRaids = snapshot.docs.map((docItem) => ({
-          id: docItem.id,
-          ...docItem.data()
-        }));
-        renderAdminRaids(sortRaids(currentRaids));
-      },
-      (error) => {
-        setMessage(raidAdminMessage, error.message, true);
-      }
-    );
+    authStatus.textContent = `Signed in (${userLabel}) — Requests and audit enabled`;
 
     unsubscribeSignups = onSnapshot(
       signupsRef,
@@ -1100,13 +2217,106 @@ if (!hasConfigValues()) {
           id: docItem.id,
           ...docItem.data()
         }));
-        updatePendingBadge(currentSignups);
+        renderSignupRequestsTable();
+        renderCharacterAuditTable();
       },
-      () => {
-        updatePendingBadge([]);
+      (error) => {
+        setMessage(characterAuditMessage, error.message, true);
       }
     );
 
-    resetRaidForm();
+    unsubscribeRaids = onSnapshot(
+      raidsRef,
+      (snapshot) => {
+        currentRaids = sortRaidsForAssignment(
+          snapshot.docs.map((docItem) => ({
+            id: docItem.id,
+            ...docItem.data()
+          }))
+        );
+        renderCharacterAuditTable();
+      },
+      (error) => {
+        setMessage(characterAuditMessage, error.message, true);
+      }
+    );
+
+    unsubscribeCharacters = onSnapshot(
+      charactersRef,
+      (snapshot) => {
+        currentCharacters = snapshot.docs.map((docItem) => ({
+          id: docItem.id,
+          ...docItem.data()
+        }));
+        renderSignupRequestsTable();
+        renderCharacterAuditTable();
+      },
+      (error) => {
+        setMessage(characterAuditMessage, error.message, true);
+      }
+    );
+
+    unsubscribeAdmins = onSnapshot(
+      adminsRef,
+      (snapshot) => {
+        currentAdminDirectory = new Map(
+          snapshot.docs.map((docItem) => [String(docItem.id || "").trim(), docItem.data() || {}])
+        );
+        currentAdminUids = snapshot.docs
+          .map((docItem) => String(docItem.id || "").trim())
+          .filter(Boolean)
+          .sort((left, right) => left.localeCompare(right));
+        rebuildUserDirectory();
+        renderAccessRows();
+      },
+      (error) => {
+        setMessage(accessManagerMessage, error.message, true);
+      }
+    );
+
+    unsubscribeMembers = onSnapshot(
+      membersRef,
+      (snapshot) => {
+        currentMemberDirectory = new Map(
+          snapshot.docs.map((docItem) => [String(docItem.id || "").trim(), docItem.data() || {}])
+        );
+        currentMemberUids = snapshot.docs
+          .map((docItem) => String(docItem.id || "").trim())
+          .filter(Boolean)
+          .sort((left, right) => left.localeCompare(right));
+        rebuildUserDirectory();
+        renderAccessRows();
+      },
+      (error) => {
+        setMessage(accessManagerMessage, error.message, true);
+      }
+    );
+
+    unsubscribeOwners = onSnapshot(
+      ownersRef,
+      (snapshot) => {
+        currentOwnerUids = snapshot.docs
+          .map((docItem) => String(docItem.id || "").trim())
+          .filter(Boolean);
+        // Re-render audit table so owner badges and options update
+        renderCharacterAuditTable();
+      },
+      (error) => {
+        console.warn("[OWNERS] snapshot error:", error.message);
+      }
+    );
+
+    unsubscribeAttendanceDocks = onSnapshot(
+      collection(db, "attendance_docks"),
+      (snapshot) => {
+        currentAttendanceDocks = new Map(
+          snapshot.docs.map((d) => [String(d.id || "").trim(), Number(d.data().docks || 0)])
+        );
+        renderCharacterAuditTable();
+      },
+      (error) => {
+        console.warn("[ATTENDANCE] snapshot error:", error.message);
+      }
+    );
   });
 }

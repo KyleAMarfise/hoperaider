@@ -21,16 +21,16 @@ const QUICK = process.argv.includes("--quick");
 // ─── Files to process ───────────────────────────────────────────────
 const JS_FILES = [
   "js/app.js",
+  "js/raids.js",
   "js/admin.js",
-  "js/admin-operations.js",
-  "js/admin-softres.js",
+  "js/softres.js",
   "js/nav-component.js",
   "js/main.js",
 ];
 
 const CSS_FILES = ["styles/styles.css"];
 
-const HTML_FILES = ["index.html", "admin.html", "admin-operations.html", "admin-softres.html"];
+const HTML_FILES = ["index.html", "raids.html", "admin.html", "softres.html"];
 
 // Directories + files to copy as-is (no transformation)
 const COPY_ITEMS = [

@@ -54,23 +54,23 @@
     </details>
 
     <div id="adminMenu" class="nav-admin-links" hidden>
-      <a id="adminRaidsLink" class="nav-button" href="admin.html" hidden>Raid Creator</a>
-      <a id="adminOpsLink" class="nav-button" href="admin-operations.html" hidden>
+      <a id="adminRaidsLink" class="nav-button" href="/raids" hidden>Raid Creator</a>
+      <a id="adminOpsLink" class="nav-button" href="/admin" hidden>
         Requests &amp; Audit
         <span id="adminOpsBadge" class="nav-mini-badge" hidden>0</span>
       </a>
-      <a id="adminSoftresLink" class="nav-button" href="admin-softres.html" hidden>Soft Reserves</a>
+      <a id="adminSoftresLink" class="nav-button" href="/softres" hidden>Soft Reserves</a>
     </div>
   `;
 
   const adminActions = `
-    <a class="nav-button" href="index.html">Signup Page</a>
-    <a id="adminRaidsLink" class="nav-button ${page === "admin-raids" ? "is-active" : ""}" href="admin.html">Raid Creator</a>
-    <a id="adminOpsLink" class="nav-button ${page === "admin-operations" ? "is-active" : ""}" href="admin-operations.html">
+    <a class="nav-button" href="/">Signup Page</a>
+    <a id="adminRaidsLink" class="nav-button ${page === "raids" ? "is-active" : ""}" href="/raids">Raid Creator</a>
+    <a id="adminOpsLink" class="nav-button ${page === "admin" ? "is-active" : ""}" href="/admin">
       Requests &amp; Audit
       <span id="adminOpsBadge" class="nav-mini-badge" hidden>0</span>
     </a>
-    <a class="nav-button ${page === "admin-softres" ? "is-active" : ""}" href="admin-softres.html">Soft Reserves</a>
+    <a class="nav-button ${page === "softres" ? "is-active" : ""}" href="/softres">Soft Reserves</a>
   `;
 
   const authStatusId = page === "signup" ? "authStatus" : "adminAuthStatus";
