@@ -1369,10 +1369,15 @@ function renderRoleCompositionBar(resolvedSignups, raidItem) {
 function renderRosterTable(resolvedSignups, raidName, raidId) {
   // Build a name→HR map for this raid (case-insensitive name match)
   const hrByName = new Map();
+  const unassignedHRs = [];
   if (raidId) {
     for (const hr of allHardReserves) {
       if (hr.raidId !== raidId) continue;
-      const key = (hr.characterName || "").toLowerCase();
+      if (!hr.characterName) {
+        unassignedHRs.push(hr);
+        continue;
+      }
+      const key = hr.characterName.toLowerCase();
       if (!hrByName.has(key)) hrByName.set(key, []);
       hrByName.get(key).push(hr);
     }
@@ -1429,6 +1434,18 @@ function renderRosterTable(resolvedSignups, raidName, raidId) {
     return `<tr class="roster-section-header"><td colspan="8">${escapeHtml(sectionLabel)} (${signups.length})</td></tr>${rows}`;
   }
 
+  // Unassigned HRs (no character name) — shown as their own row at the bottom
+  const unassignedHRRow = unassignedHRs.length ? `
+    <tr class="roster-section-header"><td colspan="8">Unassigned Hard Reserves (${unassignedHRs.length})</td></tr>
+    <tr class="roster-row">
+      <td class="roster-char-indent text-dim">—</td>
+      <td></td><td></td>
+      <td class="roster-sr-col">${unassignedHRs.map(hr =>
+        `<span data-roster-item-id="${hr.itemId}" class="hardres-badge roster-hr-inline" title="${hr.note ? escapeHtml(hr.note) : 'Hard Reserve'}" style="cursor:default">${escapeHtml(hr.itemName || '?')}</span>`
+      ).join('<span class="text-dim"> · </span>')}</td>
+      <td></td><td></td><td></td><td></td>
+    </tr>` : '';
+
   return `<table class="roster-table">
     <thead>
       <tr><th class="roster-char-indent">Character</th><th>Class</th><th>Main Spec</th><th>Soft & Hard Reserves</th><th>Status</th><th>Parses</th><th>Gear</th><th>Logs</th></tr>
@@ -1437,6 +1454,7 @@ function renderRosterTable(resolvedSignups, raidName, raidId) {
       ${rosterRows(accepted, "Accepted")}
       ${rosterRows(pending, "Pending")}
       ${rosterRows(declined, "Declined / Withdrawn")}
+      ${unassignedHRRow}
     </tbody>
   </table>`;
 }
