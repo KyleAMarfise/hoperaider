@@ -2732,6 +2732,29 @@ th.armory-col-narrow {
   color: var(--text-dim);
   margin: 0.3rem 0;
 }
+
+/* HR section above roster table in signup view */
+.roster-hr-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.4rem 0.5rem;
+  background: rgba(255, 90, 90, 0.06);
+  border: 1px solid rgba(255, 90, 90, 0.2);
+  border-radius: 5px;
+  margin-bottom: 0.5rem;
+}
+.roster-hr-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+}
+
+/* SR column in roster table */
+.roster-sr-col {
+  max-width: 180px;
+}
 .invite-attendees-btn {
   display: block;
   margin-top: 0.3rem;
@@ -4417,6 +4440,10 @@ td .row-actions button {
   align-items: center;
   gap: 0.35rem;
   white-space: nowrap;
+}
+.softres-loot-actions .softres-reserve-btn,
+.softres-loot-actions .hardres-btn {
+  flex-shrink: 0;
 }
 
 /* HR dialog */

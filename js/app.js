@@ -486,6 +486,15 @@ let raidCountdownIntervalId = null;
 let unsubscribeSignups = null;
 let unsubscribeRaids = null;
 let unsubscribeCharacters = null;
+let unsubscribeSoftReserves = null;
+let unsubscribeHardReserves = null;
+
+let allSoftReserves = [];
+let allHardReserves = [];
+
+const ITEM_QUALITY_COLORS = {
+  Legendary: "#ff8000", Epic: "#a335ee", Rare: "#0070dd", Uncommon: "#1eff00"
+};
 
 if (siteTitleEl) {
   siteTitleEl.textContent = appSettings.siteTitle || "Hope Raid Tracker";
@@ -1237,9 +1246,18 @@ function renderRoleCompositionBar(resolvedSignups, raidItem) {
   </div>`;
 }
 
-function renderRosterTable(resolvedSignups, raidName) {
+function renderRosterTable(resolvedSignups, raidName, raidId) {
+  // Hard reserves mini-section
+  const raidHRs = raidId ? allHardReserves.filter(hr => hr.raidId === raidId) : [];
+  const hrSection = raidHRs.length
+    ? `<div class="roster-hr-section">${raidHRs.map(hr => {
+        const color = ITEM_QUALITY_COLORS[hr.itemQuality] || "#ccc";
+        return `<span class="roster-hr-item"><span class="hardres-badge">HR</span> <span style="color:${color};font-weight:600">${escapeHtml(hr.itemName || "?")}</span> → <strong>${escapeHtml(hr.characterName)}</strong>${hr.note ? ` <span class="text-dim">(${escapeHtml(hr.note)})</span>` : ""}</span>`;
+      }).join("")}</div>`
+    : "";
+
   if (!resolvedSignups.length) {
-    return `<p class="roster-empty">No signups yet.</p>`;
+    return `${hrSection}<p class="roster-empty">No signups yet.</p>`;
   }
 
   const accepted = resolvedSignups.filter((s) => normalizeSignupStatus(s.status) === "accept");
@@ -1255,15 +1273,22 @@ function renderRosterTable(resolvedSignups, raidName) {
       const classColor = WOW_CLASS_COLORS[wowClass] || "";
       const charName = signup.characterName || signup.profileCharacterName || "Unknown";
       const spec = signup.mainSpecialization || signup.specialization || "";
-      const offSpec = signup.offSpecialization || "";
-      const offRole = signup.offRole || "";
       const statusNorm = normalizeSignupStatus(signup.status);
-      const charSlug = String(charName || "").trim().toLowerCase();
+
+      // Soft reserves for this character in this raid
+      const charReserves = raidId
+        ? allSoftReserves.find(r => r.raidId === raidId && r.characterId === signup.characterId)
+        : null;
+      const reserveItems = charReserves && Array.isArray(charReserves.items) ? charReserves.items : [];
+      const srHtml = reserveItems.length
+        ? reserveItems.map(it => `<span style="color:${ITEM_QUALITY_COLORS[it.quality] || "#ccc"};font-weight:600">${escapeHtml(it.name || "?")}</span>`).join('<span class="text-dim"> · </span>')
+        : '<span class="text-dim">—</span>';
+
       return `<tr class="roster-row roster-status-${statusNorm}">
         <td class="roster-char-indent" style="${classColor ? `color: ${classColor}; font-weight: 600` : ""}">${escapeHtml(charName)}</td>
         <td style="${classColor ? `color: ${classColor}` : ""}">${escapeHtml(wowClass)}</td>
         <td>${formatSpecDisplay(spec, "", role)}</td>
-        <td>${formatSpecDisplay(offSpec, "", offRole)}</td>
+        <td class="roster-sr-col">${srHtml}</td>
         <td><span class="signup-status-badge status-${statusNorm}">${escapeHtml(statusLabel(signup.status))}</span></td>
         <td>${renderWclParsesCell(charName, signup.logsUrl, raidName)}</td>
         <td>${buildExternalLink(signup.armoryUrl, "Gear")}</td>
@@ -1274,9 +1299,9 @@ function renderRosterTable(resolvedSignups, raidName) {
     return `<tr class="roster-section-header"><td colspan="8">${escapeHtml(sectionLabel)} (${signups.length})</td></tr>${rows}`;
   }
 
-  return `<table class="roster-table">
+  return `${hrSection}<table class="roster-table">
     <thead>
-      <tr><th class="roster-char-indent">Character</th><th>Class</th><th>Main Spec</th><th>Off Spec</th><th>Status</th><th>Parses</th><th>Gear</th><th>Logs</th></tr>
+      <tr><th class="roster-char-indent">Character</th><th>Class</th><th>Main Spec</th><th>SR's</th><th>Status</th><th>Parses</th><th>Gear</th><th>Logs</th></tr>
     </thead>
     <tbody>
       ${rosterRows(accepted, "Accepted")}
@@ -3278,7 +3303,7 @@ function renderCategoryRows(targetElement, rows, rosterMap, reverse = false) {
           <td colspan="10">
             <div class="raid-detail-wrap">
               ${renderRoleCompositionBar(resolvedSignups, item)}
-              ${renderRosterTable(resolvedSignups, item.raidName)}
+              ${renderRosterTable(resolvedSignups, item.raidName, item.raidId)}
             </div>
           </td>
         </tr>`;
@@ -4429,6 +4454,14 @@ if (!hasConfigValues()) {
       unsubscribeCharacters();
       unsubscribeCharacters = null;
     }
+    if (unsubscribeSoftReserves) {
+      unsubscribeSoftReserves();
+      unsubscribeSoftReserves = null;
+    }
+    if (unsubscribeHardReserves) {
+      unsubscribeHardReserves();
+      unsubscribeHardReserves = null;
+    }
 
     if (!user) {
       authUid = null;
@@ -4576,6 +4609,18 @@ if (!hasConfigValues()) {
         void reloadOwnCharacters();
       }
     );
+
+    // Subscribe to soft reserves (for SR column in roster table)
+    unsubscribeSoftReserves = onSnapshot(collection(db, "softreserves"), (snapshot) => {
+      allSoftReserves = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderRows(currentRows);
+    });
+
+    // Subscribe to hard reserves (for HR section in roster table)
+    unsubscribeHardReserves = onSnapshot(collection(db, "hardreserves"), (snapshot) => {
+      allHardReserves = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderRows(currentRows);
+    });
 
     resetRaidForm();
     resetForm();
