@@ -496,6 +496,118 @@ const ITEM_QUALITY_COLORS = {
   Legendary: "#ff8000", Epic: "#a335ee", Rare: "#0070dd", Uncommon: "#1eff00"
 };
 
+const TOOLTIP_FORMAT_COLORS = {
+  Legendary: "#ff8000", Epic: "#a335ee", Rare: "#0070dd", Uncommon: "#1eff00",
+  Common: "#fff", Poor: "#9d9d9d", Misc: "#ffd100", indent: "#9d9d9d"
+};
+
+// ── Item tooltip system ──────────────────────────────────────────────────────
+let appLootData = null;
+let appItemTooltipMap = new Map();
+let appTooltipEl = null;
+
+function wowheadUrl(itemId) {
+  return `https://www.wowhead.com/tbc/item=${itemId}`;
+}
+
+async function loadAppLootData() {
+  if (appLootData) return;
+  try {
+    const resp = await fetch("data/tbc-raid-loot.json");
+    if (!resp.ok) return;
+    appLootData = await resp.json();
+    appItemTooltipMap.clear();
+    for (const raid of appLootData.raids || []) {
+      for (const boss of raid.bosses || []) {
+        for (const item of boss.items || []) {
+          if (!appItemTooltipMap.has(item.itemId)) appItemTooltipMap.set(item.itemId, item);
+        }
+      }
+    }
+  } catch {}
+}
+
+function ensureAppTooltipEl() {
+  if (appTooltipEl) return appTooltipEl;
+  appTooltipEl = document.createElement('div');
+  appTooltipEl.className = 'wow-tooltip';
+  appTooltipEl.setAttribute('popover', 'manual');
+  appTooltipEl.hidden = true;
+  document.body.appendChild(appTooltipEl);
+  return appTooltipEl;
+}
+
+function renderAppTooltipHtml(item) {
+  let lines = '';
+  if (item.wowheadTooltip) {
+    lines = `<div class="wow-tt-wowhead-body">${item.wowheadTooltip}</div>`;
+  } else if (item.tooltip?.length) {
+    for (const entry of item.tooltip) {
+      const label = (entry.label || '').replace(/^\n+|\n+$/g, '');
+      if (!label) continue;
+      const fmt = entry.format || '';
+      const color = TOOLTIP_FORMAT_COLORS[fmt] || '#e8dcc3';
+      if (fmt === 'alignRight') {
+        if (lines.endsWith('</div>')) {
+          lines = lines.slice(0, -6) + `<span class="wow-tt-right" style="color:${color}">${escapeHtml(label)}</span></div>`;
+        }
+        continue;
+      }
+      const indent = fmt === 'indent' ? ' wow-tt-indent' : '';
+      lines += `<div class="wow-tt-line${indent}" style="color:${color}">${escapeHtml(label)}</div>`;
+    }
+  } else {
+    return '';
+  }
+  if (item.itemId) {
+    lines += `<div class="wow-tt-line wow-tt-wowhead"><a href="${wowheadUrl(item.itemId)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">View on Wowhead ↗</a></div>`;
+  }
+  return lines;
+}
+
+function showAppTooltip(itemId, x, y) {
+  const item = appItemTooltipMap.get(Number(itemId));
+  if (!item) return;
+  const el = ensureAppTooltipEl();
+  el.innerHTML = renderAppTooltipHtml(item);
+  if (!el.innerHTML) return;
+  el.hidden = false;
+  try { el.showPopover(); } catch {}
+  positionAppTooltip(x, y);
+}
+
+function positionAppTooltip(x, y) {
+  const el = ensureAppTooltipEl();
+  const pad = 16;
+  const rect = el.getBoundingClientRect();
+  let left = x + pad;
+  let top = y + pad;
+  if (left + rect.width > window.innerWidth - pad) left = x - rect.width - pad;
+  if (top + rect.height > window.innerHeight - pad) top = y - rect.height - pad;
+  if (left < pad) left = pad;
+  if (top < pad) top = pad;
+  el.style.left = left + 'px';
+  el.style.top = top + 'px';
+}
+
+function hideAppTooltip() {
+  if (appTooltipEl) {
+    appTooltipEl.hidden = true;
+    try { appTooltipEl.hidePopover(); } catch {}
+  }
+}
+
+document.addEventListener('mouseover', (e) => {
+  const trigger = e.target.closest('[data-roster-item-id]');
+  if (trigger) showAppTooltip(trigger.dataset.rosterItemId, e.clientX, e.clientY);
+});
+document.addEventListener('mousemove', (e) => {
+  if (appTooltipEl && !appTooltipEl.hidden) positionAppTooltip(e.clientX, e.clientY);
+});
+document.addEventListener('mouseout', (e) => {
+  if (e.target.closest('[data-roster-item-id]')) hideAppTooltip();
+});
+
 if (siteTitleEl) {
   siteTitleEl.textContent = appSettings.siteTitle || "Hope Raid Tracker";
 }
@@ -1284,10 +1396,10 @@ function renderRosterTable(resolvedSignups, raidName, raidId) {
       const reserveItems = charReserves && Array.isArray(charReserves.items) ? charReserves.items : [];
       const charHRs = hrByName.get(charName.toLowerCase()) || [];
       const srParts = reserveItems.map(it =>
-        `<span style="color:${ITEM_QUALITY_COLORS[it.quality] || "#ccc"};font-weight:600">${escapeHtml(it.name || "?")}</span>`
+        `<span data-roster-item-id="${it.itemId}" style="color:${ITEM_QUALITY_COLORS[it.quality] || "#ccc"};font-weight:600;cursor:default">${escapeHtml(it.name || "?")}</span>`
       );
       const hrParts = charHRs.map(hr =>
-        `<span class="hardres-badge roster-hr-inline" title="${hr.note ? escapeHtml(hr.note) : "Hard Reserve"}">${escapeHtml(hr.itemName || "?")}</span>`
+        `<span data-roster-item-id="${hr.itemId}" class="hardres-badge roster-hr-inline" title="${hr.note ? escapeHtml(hr.note) : "Hard Reserve"}" style="cursor:default">${escapeHtml(hr.itemName || "?")}</span>`
       );
       const allParts = [...srParts, ...hrParts];
       const srHtml = allParts.length
@@ -4619,6 +4731,9 @@ if (!hasConfigValues()) {
         void reloadOwnCharacters();
       }
     );
+
+    // Load loot data for item tooltips in roster
+    void loadAppLootData();
 
     // Subscribe to soft reserves (for SR column in roster table)
     unsubscribeSoftReserves = onSnapshot(collection(db, "softreserves"), (snapshot) => {

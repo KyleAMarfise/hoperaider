@@ -1626,19 +1626,35 @@ button:disabled {
 }
 
 .attendance-dock-btn {
-  padding: 0.15rem 0.45rem;
-  font-size: 0.75rem;
-  border-radius: 999px;
-  line-height: 1.3;
-  background: linear-gradient(180deg, #7a3f35, #5c2e26);
-  border-color: #a05040;
-  color: #ffd8d0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1;
+  border-radius: 5px;
+  border: 1.5px solid rgba(255, 60, 60, 0.3);
+  background: transparent;
+  color: #ff6b6b;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.attendance-dock-btn:hover {
+  background: rgba(255, 60, 60, 0.12);
+  border-color: rgba(255, 60, 60, 0.55);
 }
 
 .attendance-undock-btn {
-  background: linear-gradient(180deg, #3a4050, #2a2e3a);
-  border-color: #5a6070;
+  border-color: var(--line-muted);
   color: var(--text-soft);
+  font-size: 0.85rem;
+}
+.attendance-undock-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 .audit-assign-col {

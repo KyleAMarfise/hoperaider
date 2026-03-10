@@ -1316,8 +1316,8 @@ function renderCharacterAuditTable() {
             <span class="attendance-attended">${row.acceptedTotal} ✓</span>${row.docks > 0 ? ` <span class="attendance-docked">${row.docks} ✗</span>` : ''}
           </span>
           ${isAdmin ? `<div class="attendance-dock-controls">
-            <button class="attendance-dock-btn" data-dock-uid="${escapeHtml(row.uid)}" data-dock-action="add" title="Dock for missed raid">+ Dock</button>
-            ${row.docks > 0 ? `<button class="attendance-dock-btn attendance-undock-btn" data-dock-uid="${escapeHtml(row.uid)}" data-dock-action="remove" title="Remove last dock">− Undo</button>` : ''}
+            <button class="attendance-dock-btn" data-dock-uid="${escapeHtml(row.uid)}" data-dock-action="add" title="Dock for missed raid">✕</button>
+            ${row.docks > 0 ? `<button class="attendance-dock-btn attendance-undock-btn" data-dock-uid="${escapeHtml(row.uid)}" data-dock-action="remove" title="Remove last dock">↩</button>` : ''}
           </div>` : ''}
         </td>
         <td>
