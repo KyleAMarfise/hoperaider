@@ -288,7 +288,7 @@ function applyWclResults(containerEl, name, results) {
     cell.removeAttribute("data-wcl-href");
     cell.removeAttribute("data-wcl-raid");
     if (!results || !results.length) {
-      cell.innerHTML = `<span class="text-dim" title="No parses found">Fucking Noob</span>`;
+      cell.innerHTML = `<span class="text-dim" title="No parses found">N/A</span>`;
       return;
     }
     const decodedRaidName = raidName.replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
@@ -298,7 +298,7 @@ function applyWclResults(containerEl, name, results) {
       ? results.filter((r) => allowedZones.includes(r.label))
       : decodedRaidName ? [] : results;
     if (!filtered.length) {
-      cell.innerHTML = `<span class="text-dim" title="No parses for this raid">Fucking Noob</span>`;
+      cell.innerHTML = `<span class="text-dim" title="No parses for this raid">N/A</span>`;
       return;
     }
     cell.innerHTML = filtered.map((r) => {
