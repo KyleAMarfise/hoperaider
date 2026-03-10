@@ -942,8 +942,13 @@ function filterLootTable() {
   // Current character reserves for +/- state
   const charReserves = ch ? getCharacterReserves(ch.id) : null;
   const reservedItems = getReserveItems(charReserves);
-  const reservedItemIds = new Set(reservedItems.map(i => Number(i.itemId)));
-  const reserveCount = reservedItemIds.size;
+  // Use a count map so double-rolls (same item reserved twice) are tracked
+  const reservedItemIds = new Map();
+  for (const i of reservedItems) {
+    const id = Number(i.itemId);
+    reservedItemIds.set(id, (reservedItemIds.get(id) || 0) + 1);
+  }
+  const reserveCount = reservedItems.length;
   const maxReserves = getMaxReserves();
 
   // Per-dungeon limit for compound raids (e.g. "Gruul's + Mag's" → 1 per dungeon)
@@ -1002,7 +1007,8 @@ function filterLootTable() {
     const canUse = !wowClass || canClassUseItem(wowClass, item);
     const qualityColor = QUALITY_COLORS[item.quality] || "#ccc";
     const dropPct = item.dropChance != null ? `${(item.dropChance * 100).toFixed(1)}%` : "—";
-    const isReserved = reservedItemIds.has(item.itemId);
+    const itemReserveCount = reservedItemIds.get(item.itemId) || 0;
+    const isReserved = itemReserveCount > 0;
     let rowClass = isReserved ? "softres-loot-row softres-loot-reserved" : "softres-loot-row";
     if (!canUse) rowClass += " softres-loot-unusable";
 
@@ -1010,14 +1016,14 @@ function filterLootTable() {
     let actionHtml = '';
     const canModify = ch && (isAdmin || (!isLocked && ch.ownerUid === authUid));
     if (canModify && canUse) {
+      const itemSrc = itemSourceMap.get(item.itemId);
+      const dungeonFull = perDungeonLimit !== null && itemSrc != null && (reservedPerSource[itemSrc] || 0) >= perDungeonLimit;
       if (isReserved) {
-        actionHtml = `<button class="softres-reserve-btn softres-remove-btn" data-reserve-action="remove" data-item-id="${item.itemId}" title="Remove reserve">−</button>`;
-      } else if (reserveCount < maxReserves) {
-        const itemSrc = itemSourceMap.get(item.itemId);
-        const dungeonFull = perDungeonLimit !== null && itemSrc != null && (reservedPerSource[itemSrc] || 0) >= perDungeonLimit;
-        if (!dungeonFull) {
-          actionHtml = `<button class="softres-reserve-btn softres-add-btn" data-reserve-action="add" data-item-id="${item.itemId}" title="Reserve this item">+</button>`;
-        }
+        actionHtml = `<button class="softres-reserve-btn softres-remove-btn" data-reserve-action="remove" data-item-id="${item.itemId}" title="Remove one reserve">−</button>`;
+      }
+      if (reserveCount < maxReserves && !dungeonFull) {
+        const countBadge = itemReserveCount > 0 ? `<span class="softres-item-roll-count" title="Reserved ${itemReserveCount}x">×${itemReserveCount}</span>` : '';
+        actionHtml += `${countBadge}<button class="softres-reserve-btn softres-add-btn" data-reserve-action="add" data-item-id="${item.itemId}" title="Reserve this item${itemReserveCount > 0 ? ' again (double roll)' : ''}">+</button>`;
       }
     }
 
@@ -1626,7 +1632,12 @@ async function handleReserveButton(e) {
     } else if (action === "remove") {
       if (!existing) return;
       const currentItems = getReserveItems(existing);
-      const filtered = currentItems.filter(i => Number(i.itemId) !== itemId);
+      // Remove only one instance (supports double-roll where same item is reserved twice)
+      let removedOne = false;
+      const filtered = currentItems.filter(i => {
+        if (!removedOne && Number(i.itemId) === itemId) { removedOne = true; return false; }
+        return true;
+      });
       if (filtered.length === 0) {
         await deleteDoc(doc(db, "softreserves", existing.id));
         setMsg("Reserve removed.");

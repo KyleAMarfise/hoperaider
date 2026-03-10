@@ -3931,6 +3931,14 @@ td .row-actions button {
   cursor: not-allowed;
 }
 
+.softres-item-roll-count {
+  font-size: 0.75em;
+  color: #a335ee;
+  font-weight: 700;
+  margin-right: 2px;
+  vertical-align: middle;
+}
+
 /* Reserved row highlight */
 .softres-loot-reserved {
   background: rgba(163, 53, 238, 0.07);
