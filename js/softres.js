@@ -181,6 +181,12 @@ const BOSS_KILL_ORDER = {
   ]
 };
 
+// Maps compound raid names (as stored in Firestore) to their component loot table names.
+// Each component dungeon gets an equal share of the maxReserves limit (e.g. 2 reserves = 1 per dungeon).
+const COMPOUND_RAID_PARTS = {
+  "Gruul's + Mag's": ["Gruul's Lair", "Magtheridon's Lair"],
+};
+
 function sortBossesByKillOrder(bosses, raidName) {
   // Find the matching kill order list (fuzzy match on raid name)
   const normalized = (raidName || "").trim().toLowerCase();
@@ -940,6 +946,24 @@ function filterLootTable() {
   const reserveCount = reservedItemIds.size;
   const maxReserves = getMaxReserves();
 
+  // Per-dungeon limit for compound raids (e.g. "Gruul's + Mag's" → 1 per dungeon)
+  const itemSourceMap = new Map();
+  const reservedPerSource = {};
+  let perDungeonLimit = null;
+  if (selectedRaidLoot.sources?.length > 1) {
+    perDungeonLimit = Math.floor(maxReserves / selectedRaidLoot.sources.length);
+    for (const src of selectedRaidLoot.sources) reservedPerSource[src] = 0;
+    for (const boss of selectedRaidLoot.bosses) {
+      if (boss.sourceLoot) {
+        for (const item of boss.items) itemSourceMap.set(item.itemId, boss.sourceLoot);
+      }
+    }
+    for (const ri of reservedItems) {
+      const src = itemSourceMap.get(Number(ri.itemId));
+      if (src) reservedPerSource[src] = (reservedPerSource[src] || 0) + 1;
+    }
+  }
+
   // Is locked?
   const raid = currentRaids.find(r => r.id === selectedRaidId);
   const isLocked = raid?.softresLocked;
@@ -989,7 +1013,11 @@ function filterLootTable() {
       if (isReserved) {
         actionHtml = `<button class="softres-reserve-btn softres-remove-btn" data-reserve-action="remove" data-item-id="${item.itemId}" title="Remove reserve">−</button>`;
       } else if (reserveCount < maxReserves) {
-        actionHtml = `<button class="softres-reserve-btn softres-add-btn" data-reserve-action="add" data-item-id="${item.itemId}" title="Reserve this item">+</button>`;
+        const itemSrc = itemSourceMap.get(item.itemId);
+        const dungeonFull = perDungeonLimit !== null && itemSrc != null && (reservedPerSource[itemSrc] || 0) >= perDungeonLimit;
+        if (!dungeonFull) {
+          actionHtml = `<button class="softres-reserve-btn softres-add-btn" data-reserve-action="add" data-item-id="${item.itemId}" title="Reserve this item">+</button>`;
+        }
       }
     }
 
@@ -1380,27 +1408,25 @@ async function onRaidSelected(raidId) {
   buildTooltipMap();
   selectedRaidLoot = findRaidLoot(raid.raidName);
 
-  // Handle compound raids (e.g., "Gruul's + Mag's")
+  // Handle compound raids (e.g., "Gruul's + Mag's") using the explicit parts map
   if (!selectedRaidLoot && raid.raidName) {
-    // Try to match partial names for compound raids
-    const parts = raid.raidName.split(/[+&,]/);
-    if (parts.length > 1 && lootData?.raids) {
-      // Build a merged loot entry
+    const componentNames = COMPOUND_RAID_PARTS[raid.raidName] || [];
+    if (componentNames.length > 0 && lootData?.raids) {
       const mergedBosses = [];
-      for (const part of parts) {
-        const trimmed = part.trim().toLowerCase();
-        const match = lootData.raids.find(r =>
-          r.name.toLowerCase().includes(trimmed) || trimmed.includes(r.name.toLowerCase().split("'")[0])
-        );
+      const matchedSources = [];
+      for (const componentName of componentNames) {
+        const match = lootData.raids.find(r => r.name === componentName);
         if (match) {
-          mergedBosses.push(...match.bosses);
+          mergedBosses.push(...match.bosses.map(b => ({ ...b, sourceLoot: match.name })));
+          matchedSources.push(match.name);
         }
       }
       if (mergedBosses.length > 0) {
         selectedRaidLoot = {
           name: raid.raidName,
           phase: raid.phase,
-          bosses: mergedBosses
+          bosses: mergedBosses,
+          sources: matchedSources,
         };
       }
     }
@@ -1543,6 +1569,24 @@ async function handleReserveButton(e) {
         if (currentItems.length >= maxRes) {
           setMsg(`Already at max reserves (${maxRes}). Remove one first.`, true);
           return;
+        }
+        // Per-dungeon limit enforcement for compound raids
+        if (selectedRaidLoot?.sources?.length > 1) {
+          const srcMap = new Map();
+          for (const boss of selectedRaidLoot.bosses) {
+            if (boss.sourceLoot) {
+              for (const bi of boss.items) srcMap.set(bi.itemId, boss.sourceLoot);
+            }
+          }
+          const dungeonLimit = Math.floor(maxRes / selectedRaidLoot.sources.length);
+          const newItemSrc = srcMap.get(itemId);
+          if (newItemSrc) {
+            const srcCount = currentItems.filter(i => srcMap.get(Number(i.itemId)) === newItemSrc).length;
+            if (srcCount >= dungeonLimit) {
+              setMsg(`Already have ${dungeonLimit} reserve${dungeonLimit !== 1 ? 's' : ''} from ${newItemSrc}. Remove it first.`, true);
+              return;
+            }
+          }
         }
         const updatePayload = {
           raidId: existing.raidId,
