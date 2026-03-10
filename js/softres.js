@@ -1025,7 +1025,8 @@ function filterLootTable() {
     const existingHR = currentHardReserves.find(hr => hr.raidId === selectedRaidId && Number(hr.itemId) === item.itemId);
     let hrHtml = '';
     if (existingHR) {
-      hrHtml = `<span class="hardres-badge" title="Hard Reserved for ${escapeHtml(existingHR.characterName)}">HR: ${escapeHtml(existingHR.characterName)}</span>`;
+      const hrLabel = existingHR.characterName || (existingHR.note ? `Note: ${existingHR.note}` : 'Hard Reserved');
+      hrHtml = `<span class="hardres-badge" title="Hard Reserved${existingHR.characterName ? ' for ' + existingHR.characterName : ''}${existingHR.note ? ' — ' + existingHR.note : ''}">HR${existingHR.characterName ? ': ' + escapeHtml(existingHR.characterName) : ''}</span>`;
     } else if (isAdmin) {
       hrHtml = `<button class="softres-reserve-btn hardres-btn" data-hr-open="${item.itemId}" data-hr-boss="${escapeHtml(bossName)}" title="Hard reserve this item">HR</button>`;
     }
@@ -1487,7 +1488,7 @@ function renderHardReserves() {
       : '';
     html += `<tr>
       <td>${iconHtml}<span data-item-id="${hr.itemId}" class="softres-item-hover" style="color:${color};font-weight:600">${escapeHtml(hr.itemName || '?')}</span> <span class="text-dim" style="font-size:0.8em">— ${escapeHtml(hr.bossName || '?')}</span></td>
-      <td style="font-weight:600">${escapeHtml(hr.characterName || '?')}</td>
+      <td style="font-weight:600">${escapeHtml(hr.characterName || '—')}</td>
       <td class="text-dim">${escapeHtml(hr.note || '—')}</td>
       <td class="text-dim">${relativeTime(hr.createdAt)}</td>
       <td>${deleteBtn}</td>
@@ -1947,7 +1948,6 @@ if (hardresForm) {
     e.preventDefault();
     if (!pendingHrItem || !db || !isAdmin || !selectedRaidId) return;
     const charName = (hardresCharInput?.value || '').trim();
-    if (!charName) return;
     const note = (hardresNoteInput?.value || '').trim();
     const raid = currentRaids.find(r => r.id === selectedRaidId);
     try {
