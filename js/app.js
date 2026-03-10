@@ -381,8 +381,15 @@ function applyWclResults(containerEl, name, results) {
       cell.innerHTML = `<span class="text-dim">N/A</span>`;
       return;
     }
-    const allowedZones = RAID_NAME_TO_WCL_ZONES[raidName];
-    const filtered = allowedZones ? results.filter((r) => allowedZones.includes(r.label)) : results;
+    // Normalize raidName: decode any HTML entities and trim for robust map lookup
+    const decodedRaidName = raidName.replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
+      .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').trim();
+    const allowedZones = RAID_NAME_TO_WCL_ZONES[decodedRaidName];
+    // If raidName is empty, show all zones (audit/no-context view).
+    // If raidName is set but not in the map, show N/A to avoid wrong-raid data leaking through.
+    const filtered = allowedZones
+      ? results.filter((r) => allowedZones.includes(r.label))
+      : decodedRaidName ? [] : results;
     if (!filtered.length) {
       cell.innerHTML = `<span class="text-dim">N/A</span>`;
       return;

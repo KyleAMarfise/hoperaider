@@ -290,8 +290,12 @@ function applyWclResults(containerEl, name, results) {
       cell.innerHTML = `<span class="text-dim" title="No parses found">Fucking Noob</span>`;
       return;
     }
-    const allowedZones = RAID_NAME_TO_WCL_ZONES[raidName];
-    const filtered = allowedZones ? results.filter((r) => allowedZones.includes(r.label)) : results;
+    const decodedRaidName = raidName.replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
+      .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').trim();
+    const allowedZones = RAID_NAME_TO_WCL_ZONES[decodedRaidName];
+    const filtered = allowedZones
+      ? results.filter((r) => allowedZones.includes(r.label))
+      : decodedRaidName ? [] : results;
     if (!filtered.length) {
       cell.innerHTML = `<span class="text-dim" title="No parses for this raid">Fucking Noob</span>`;
       return;
