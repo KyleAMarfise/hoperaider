@@ -670,6 +670,16 @@ function renderCharacterOptions() {
     });
   }
   softresCharacterSelect.innerHTML = html;
+
+  // Auto-select if the user has exactly one character with no alts
+  if (!softresCharacterSelect.value && sorted.length === 1) {
+    const only = sorted[0];
+    const alts = Array.isArray(only.altCharacters) ? only.altCharacters.filter(a => a?.characterName) : [];
+    if (alts.length === 0) {
+      softresCharacterSelect.value = only.id;
+      renderCharacterReserves();
+    }
+  }
 }
 
 // ── Selected character state ────────────────────────────────────────────────
