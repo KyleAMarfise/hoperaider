@@ -676,7 +676,7 @@ function renderCharacterOptions() {
 // Auto-select the character the current user signed up with for the selected raid.
 // Skipped for admins (they need full visibility) and if a character is already chosen.
 function tryAutoSelectCharacter() {
-  if (isAdmin || !authUid || !selectedRaidId || softresCharacterSelect.value) return;
+  if (!authUid || !selectedRaidId || softresCharacterSelect.value) return;
   const DECLINED = new Set(["decline", "withdrawn", "denied"]);
   const signup = currentSignups.find(s =>
     s.ownerUid === authUid && !DECLINED.has((s.status || "").toLowerCase())
