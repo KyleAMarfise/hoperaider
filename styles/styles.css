@@ -3668,6 +3668,11 @@ td .row-actions button {
   flex-wrap: nowrap;
   overflow-x: auto;
 }
+.softres-lock-controls button {
+  padding: 0.32rem 0.7rem;
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
 .softres-max-reserves-label {
   display: flex;
   flex-direction: column;
