@@ -4641,7 +4641,8 @@ td .row-actions button {
   backdrop-filter: blur(4px);
 }
 .pug-name-modal-inner {
-  background: #1e2a38;
+  background: #1a2744;
+  border: 2px solid #4f6ea8;
   border-radius: 14px;
   box-shadow: 0 8px 40px rgba(0,0,0,0.6);
   padding: 2.5rem 2rem 2rem;
