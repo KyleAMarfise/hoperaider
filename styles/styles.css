@@ -4629,15 +4629,16 @@ td .row-actions button {
 .pug-name-modal {
   border: none;
   border-radius: 14px;
-  background: var(--card-bg);
+  background: #1e2a38 !important;
+  color-scheme: dark;
   padding: 0;
   max-width: 480px;
   width: 92vw;
   box-shadow: 0 8px 40px rgba(0,0,0,0.6);
 }
 .pug-name-modal::backdrop {
-  background: rgba(0,0,0,0.75);
-  backdrop-filter: blur(3px);
+  background: rgba(0,0,0,0.88) !important;
+  backdrop-filter: blur(4px);
 }
 .pug-name-modal-inner {
   padding: 2.5rem 2rem 2rem;
