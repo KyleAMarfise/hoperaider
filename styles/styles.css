@@ -4629,18 +4629,21 @@ td .row-actions button {
 .pug-name-modal {
   border: none;
   border-radius: 14px;
-  background: #1e2a38 !important;
-  color-scheme: dark;
+  background: transparent;
   padding: 0;
   max-width: 480px;
   width: 92vw;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+  box-shadow: none;
+  overflow: visible;
 }
 .pug-name-modal::backdrop {
-  background: rgba(0,0,0,0.88) !important;
+  background: rgba(0,0,0,0.88);
   backdrop-filter: blur(4px);
 }
 .pug-name-modal-inner {
+  background: #1e2a38;
+  border-radius: 14px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.6);
   padding: 2.5rem 2rem 2rem;
   display: flex;
   flex-direction: column;
