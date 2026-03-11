@@ -47,17 +47,17 @@
         </div>
         <div class="primary-fields">
           <label>
-            Discord Name (Required)
+            Discord Name <span class="field-required" aria-hidden="true">*</span>
             <input id="profileName" name="profileName" type="text" maxlength="60" required />
             <small class="help-text">Use your Discord display name to group your characters during signup.</small>
           </label>
           <label>
-            Character Name (Required)
+            Character Name <span class="field-required" aria-hidden="true">*</span>
             <input id="characterName" name="characterName" type="text" maxlength="24" required />
             <small class="help-text">Must exactly match your in-game main raiding character name.</small>
           </label>
           <label>
-            Class
+            Class <span class="field-required" aria-hidden="true">*</span>
             <select id="wowClass" name="wowClass" required>
               <option value="">Select class</option>
               <option value="Druid">Druid</option>
@@ -76,7 +76,7 @@
         </div>
         <div class="spec-pair">
         <fieldset class="spec-role-group">
-          <legend>Main Setup</legend>
+          <legend>Main Setup <span class="field-required" aria-hidden="true">*</span></legend>
           <label>
             Main Role
             <select id="mainRole" name="mainRole" required>
@@ -94,7 +94,7 @@
           </label>
         </fieldset>
         <fieldset class="spec-role-group">
-          <legend>Off Setup</legend>
+          <legend>Off Setup <span class="field-required" aria-hidden="true">*</span></legend>
           <label>
             Off Role
             <select id="offRole" name="offRole" required>
@@ -122,10 +122,10 @@
         </section>
         <div class="time-slots">
           <fieldset class="slot-group">
-            <legend>Preferred Raiding Time 1</legend>
+            <legend>Preferred Raiding Time 1 <span class="field-optional">(optional)</span></legend>
             <label>
               Day of Week
-              <select id="preferredDay1" name="preferredDay1" required>
+              <select id="preferredDay1" name="preferredDay1">
                 <option value="">Select day</option>
                 <option>Monday</option>
                 <option>Tuesday</option>
@@ -139,20 +139,19 @@
             <div class="slot-range">
               <label>
                 Start Time
-                <select id="preferredStart1" name="preferredStart1" required></select>
+                <select id="preferredStart1" name="preferredStart1"></select>
               </label>
               <label>
                 End Time
-                <select id="preferredEnd1" name="preferredEnd1" required></select>
+                <select id="preferredEnd1" name="preferredEnd1"></select>
               </label>
             </div>
-            <small class="help-text">Select a start and end time (12-hour format).</small>
           </fieldset>
           <fieldset class="slot-group">
-            <legend>Preferred Raiding Time 2</legend>
+            <legend>Preferred Raiding Time 2 <span class="field-optional">(optional)</span></legend>
             <label>
               Day of Week
-              <select id="preferredDay2" name="preferredDay2" required>
+              <select id="preferredDay2" name="preferredDay2">
                 <option value="">Select day</option>
                 <option>Monday</option>
                 <option>Tuesday</option>
@@ -166,16 +165,16 @@
             <div class="slot-range">
               <label>
                 Start Time
-                <select id="preferredStart2" name="preferredStart2" required></select>
+                <select id="preferredStart2" name="preferredStart2"></select>
               </label>
               <label>
                 End Time
-                <select id="preferredEnd2" name="preferredEnd2" required></select>
+                <select id="preferredEnd2" name="preferredEnd2"></select>
               </label>
             </div>
-            <small class="help-text">Select a start and end time (12-hour format).</small>
           </fieldset>
         </div>
+        <p class="field-required-note"><span class="field-required">*</span> Required field</p>
         <div class="actions">
           <button type="button" id="saveProfileButton">Save Profile</button>
           <button type="button" id="deleteProfileButton" class="danger" hidden>Delete Profile</button>

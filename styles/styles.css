@@ -1202,6 +1202,22 @@ label {
   font-size: 0.82rem;
   margin: 0;
 }
+.field-required {
+  color: #ff6b6b;
+  font-weight: 700;
+  margin-left: 2px;
+}
+.field-optional {
+  color: var(--text-dim);
+  font-size: 0.8em;
+  font-weight: 400;
+  margin-left: 4px;
+}
+.field-required-note {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin: 4px 0 0;
+}
 
 input,
 select,

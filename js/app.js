@@ -2545,7 +2545,7 @@ function updateSignupGate() {
   });
 
   if (saveProfileButton) {
-    saveProfileButton.disabled = !profileReady || !preferredTimesReady;
+    saveProfileButton.disabled = !profileReady;
   }
 }
 
