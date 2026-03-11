@@ -1202,21 +1202,23 @@ label {
   font-size: 0.82rem;
   margin: 0;
 }
-.field-required {
-  color: #ff6b6b;
-  font-weight: 700;
-  margin-left: 2px;
-}
 .field-optional {
   color: var(--text-dim);
   font-size: 0.8em;
   font-weight: 400;
   margin-left: 4px;
 }
-.field-required-note {
-  font-size: 0.8rem;
-  color: var(--text-dim);
-  margin: 4px 0 0;
+
+/* Red border on required-but-empty fields inside the profile modal */
+.profile-modal input:required:invalid,
+.profile-modal select:required:invalid {
+  border-color: #ff4444;
+  box-shadow: 0 0 0 2px rgba(255, 68, 68, 0.35);
+  animation: pulse-red 2s ease-in-out infinite;
+}
+@keyframes pulse-red {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(255, 68, 68, 0.35); }
+  50%       { box-shadow: 0 0 0 4px rgba(255, 68, 68, 0.6); }
 }
 
 input,
