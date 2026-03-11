@@ -24,13 +24,14 @@ const JS_FILES = [
   "js/raids.js",
   "js/admin.js",
   "js/softres.js",
+  "js/softres-pug.js",
   "js/nav-component.js",
   "js/main.js",
 ];
 
 const CSS_FILES = ["styles/styles.css"];
 
-const HTML_FILES = ["index.html", "raids.html", "admin.html", "softres.html"];
+const HTML_FILES = ["index.html", "raids.html", "admin.html", "softres.html", "softres-pug.html"];
 
 // Directories + files to copy as-is (no transformation)
 const COPY_ITEMS = [

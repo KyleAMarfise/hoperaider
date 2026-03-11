@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hope Raid Tracker — Guest Soft Reserves</title>
+  <link rel="icon" type="image/x-icon" href="assets/images/World%20of%20Warcraft%20Alliance.ico" />
+  <link rel="apple-touch-icon" href="assets/images/World%20of%20Warcraft%20Alliance.PNG" />
+  <link rel="stylesheet" href="styles/styles.css" />
+</head>
+<body class="pug-page admin-page admin-softres-page">
+
+  <!-- Loading state -->
+  <div id="pugLoadingState" class="pug-loading-state">
+    <span>Loading guest session…</span>
+  </div>
+
+  <!-- Error state -->
+  <div id="pugErrorState" class="pug-error-state" hidden>
+    <div class="pug-error-card">
+      <div class="pug-error-icon">🔒</div>
+      <h2 id="pugErrorTitle">Invalid Link</h2>
+      <p id="pugErrorMessage">This guest link is not valid.</p>
+    </div>
+  </div>
+
+  <!-- Name entry modal (undismissable) -->
+  <dialog id="pugNameModal" class="pug-name-modal">
+    <div class="pug-name-modal-inner">
+      <div class="pug-name-logo">
+        <img class="pug-name-logo-img" src="assets/images/World%20of%20Warcraft%20Alliance.PNG" alt="Hope" />
+        <span class="pug-name-logo-text">Hope Raid Tracker</span>
+      </div>
+      <h2 class="pug-name-heading">Welcome, PUG!</h2>
+      <p class="pug-name-raid-info" id="pugNameRaidInfo"></p>
+      <p class="pug-name-instructions">Enter your <strong>character name</strong> to access soft reserves for this raid. Guild members must sign in through the main page.</p>
+      <form class="pug-name-form" id="pugNameForm">
+        <input
+          type="text"
+          id="pugCharNameInput"
+          class="pug-name-input"
+          placeholder="Character name…"
+          minlength="2"
+          maxlength="24"
+          autocomplete="off"
+          required
+        />
+        <p class="pug-name-error" id="pugNameError" hidden></p>
+        <button type="submit" id="pugNameSubmit" class="pug-name-submit-btn">Continue</button>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- Main app shell (shown after name is confirmed) -->
+  <div id="pugShell" hidden>
+    <div class="container">
+
+      <!-- Guest header bar -->
+      <div class="pug-header">
+        <div class="pug-header-left">
+          <img class="pug-header-logo" src="assets/images/World%20of%20Warcraft%20Alliance.PNG" alt="Hope" />
+          <span class="pug-header-title">Hope Raid Tracker</span>
+        </div>
+        <div class="pug-header-right">
+          <span class="pug-guest-badge">GUEST</span>
+          <span class="pug-guest-name" id="pugGuestName"></span>
+        </div>
+      </div>
+
+      <!-- Raid info bar -->
+      <div class="card softres-section pug-raid-info-card" style="margin-bottom:1rem;">
+        <div class="pug-raid-info-content">
+          <span class="pug-raid-name" id="pugRaidName"></span>
+          <span class="pug-raid-meta text-dim" id="pugRaidMeta"></span>
+          <span id="pugLockBadge" class="softres-lock-badge" style="margin-left:auto;"></span>
+        </div>
+      </div>
+
+      <!-- Hard Reserves -->
+      <div id="hardresSection" class="card hardres-section" hidden>
+        <div class="hardres-header">
+          <h3>Hard Reserves <span id="hardresCount" class="badge">0</span></h3>
+        </div>
+        <div class="table-wrap" id="hardresTableWrap" hidden>
+          <table class="softres-table hardres-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Character</th>
+                <th>Note</th>
+                <th>Added</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="hardresRows"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Active Reserves Overview -->
+      <div id="softresOverview" class="card softres-section softres-overview" hidden>
+        <div class="softres-overview-header">
+          <h3 id="softresRaidTitle">Raid Reserves</h3>
+          <span id="softresReserveCount" class="badge">0</span>
+        </div>
+        <div class="softres-item-dropped-bar">
+          <label for="softresItemDroppedFilter" class="softres-item-dropped-label">Item Dropped</label>
+          <input type="text" id="softresItemDroppedFilter" class="softres-item-dropped-input" placeholder="Start typing item name…" autocomplete="off" />
+        </div>
+        <div class="table-wrap">
+          <table class="softres-table">
+            <thead>
+              <tr>
+                <th>Character</th>
+                <th>Class</th>
+                <th>Reserves</th>
+                <th>Updated</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="softresRows"></tbody>
+          </table>
+        </div>
+        <p id="softresMessage" class="message"></p>
+      </div>
+
+      <!-- Guest character identity + current reserves -->
+      <div id="softresAdminAdd" class="card softres-section softres-character-bar" hidden>
+        <div class="softres-char-row">
+          <div class="pug-char-identity">
+            <span class="pug-char-label">Reserving as</span>
+            <span class="pug-char-name-label" id="pugCharLabel"></span>
+          </div>
+          <div id="softresCharReserves" class="softres-char-reserves"></div>
+        </div>
+      </div>
+
+      <!-- Loot Table Browser -->
+      <div class="card softres-section softres-loot-browser" id="softresLootBrowser" hidden>
+        <div class="list-header">
+          <h3>Loot Table</h3>
+        </div>
+        <p class="softres-loot-disclaimer">Item stats sourced from Wowhead. Click ↗ to view full details.</p>
+        <div class="softres-loot-filters">
+          <label>
+            Boss
+            <div class="multi-select" id="lootBossMultiSelect">
+              <button type="button" class="multi-select-toggle" id="lootBossToggle">All Bosses</button>
+              <div class="multi-select-dropdown" id="lootBossDropdown" hidden>
+                <label class="multi-select-option multi-select-all">
+                  <input type="checkbox" value="" checked /> All Bosses
+                </label>
+                <div id="lootBossOptions"></div>
+              </div>
+            </div>
+          </label>
+          <label>
+            Type
+            <select id="lootTypeFilter">
+              <option value="">All Types</option>
+            </select>
+          </label>
+          <label>
+            Slot
+            <select id="lootSlotFilter">
+              <option value="">All Slots</option>
+            </select>
+          </label>
+          <label>
+            Search
+            <input id="lootSearchFilter" type="text" placeholder="Item name…" />
+          </label>
+        </div>
+        <div class="table-wrap softres-loot-scroll">
+          <table class="softres-table softres-loot-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Item</th>
+                <th>Type</th>
+                <th>Slot</th>
+                <th>Boss</th>
+                <th>Drop %</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="lootTableRows"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+      var s = document.createElement("script");
+      s.src = "config/local/app-config.local.js";
+      document.head.appendChild(s);
+    }
+  </script>
+  <script src="config/prod/app-config.github.js"></script>
+  <script type="module" src="js/softres-pug.js"></script>
+</body>
+</html>

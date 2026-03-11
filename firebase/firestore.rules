@@ -23,6 +23,30 @@ service cloud.firestore {
       return signedIn() && exists(/databases/$(database)/documents/owners/$(request.auth.uid));
     }
 
+    function isGuest() {
+      return request.auth != null
+        && request.auth.token.firebase.sign_in_provider == 'anonymous';
+    }
+
+    function isGuestWithDoc() {
+      return isGuest()
+        && exists(/databases/$(database)/documents/guestCharacters/$(request.auth.uid));
+    }
+
+    function validGuestCharacterData(data) {
+      return data.keys().hasOnly(['characterName','raidId','raidName','pugToken','expiresAt','createdAt'])
+        && data.characterName is string
+        && data.characterName.size() >= 2
+        && data.characterName.size() <= 24
+        && data.raidId is string
+        && data.raidId.size() > 5
+        && data.raidName is string
+        && data.raidName.size() > 2
+        && data.raidName.size() <= 40
+        && data.pugToken is string
+        && data.createdAt is timestamp;
+    }
+
     function userManageableStatus(value) {
       return value in ['requested', 'tentative', 'decline', 'withdrawn'];
     }
@@ -380,23 +404,23 @@ service cloud.firestore {
     }
 
     match /hardreserves/{hrId} {
-      allow read: if isApprovedUser();
+      allow read: if request.auth != null;
       allow create, delete: if isAdmin();
     }
 
     match /softreserves/{reserveId} {
-      allow read: if signedIn();
+      allow read: if signedIn() || isGuestWithDoc();
 
       allow create: if validSoftReserveData(request.resource.data)
         && request.resource.data.createdAt is timestamp
         && request.resource.data.updatedAt is timestamp
-        && signedIn()
+        && (signedIn() || isGuestWithDoc())
         && request.resource.data.ownerUid == request.auth.uid;
 
       allow update: if validSoftReserveData(request.resource.data)
         && request.resource.data.createdAt == resource.data.createdAt
         && request.resource.data.updatedAt is timestamp
-        && signedIn()
+        && (signedIn() || isGuestWithDoc())
         && resource.data.ownerUid == request.auth.uid
         && request.resource.data.ownerUid == request.auth.uid;
 
@@ -404,11 +428,12 @@ service cloud.firestore {
         || (
           isApprovedUser()
           && resource.data.ownerUid == request.auth.uid
-        );
+        )
+        || (isGuestWithDoc() && resource.data.ownerUid == request.auth.uid);
     }
 
     match /characters/{characterId} {
-      allow read: if isApprovedUser();
+      allow read: if request.auth != null;
 
       allow create: if isApprovedUser()
         && validCharacterData(request.resource.data)
@@ -457,6 +482,19 @@ service cloud.firestore {
     match /owners/{uid} {
       allow read: if isAdmin() || (signedIn() && request.auth.uid == uid);
       allow create, update, delete: if isOwner();
+    }
+
+    match /pugTokens/{token} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /guestCharacters/{uid} {
+      allow read: if (request.auth != null && request.auth.uid == uid) || isAdmin();
+      allow create: if isGuest()
+        && request.auth.uid == uid
+        && validGuestCharacterData(request.resource.data);
+      allow delete: if isAdmin() || (request.auth != null && request.auth.uid == uid);
     }
   }
 }

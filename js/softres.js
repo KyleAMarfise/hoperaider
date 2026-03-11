@@ -10,6 +10,7 @@ import {
   signOut
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import {
+  Timestamp,
   addDoc,
   collection,
   deleteDoc,
@@ -84,6 +85,14 @@ const hardresDialogItemName = document.getElementById("hardresDialogItemName");
 const hardresCharInput = document.getElementById("hardresCharInput");
 const hardresNoteInput = document.getElementById("hardresNoteInput");
 const hardresCancelBtn = document.getElementById("hardresCancelBtn");
+const generatePugLinkBtn = document.getElementById("generatePugLinkBtn");
+const pugLinkDialog = document.getElementById("pugLinkDialog");
+const pugLinkDialogRaid = document.getElementById("pugLinkDialogRaid");
+const pugLinkUrlInput = document.getElementById("pugLinkUrlInput");
+const pugLinkCopyBtn = document.getElementById("pugLinkCopyBtn");
+const pugLinkCopyStatus = document.getElementById("pugLinkCopyStatus");
+const pugLinkToken = document.getElementById("pugLinkToken");
+const pugLinkCloseBtn = document.getElementById("pugLinkCloseBtn");
 
 // ── State ───────────────────────────────────────────────────────────────────
 let db = null;
@@ -1386,6 +1395,7 @@ function getMaxReserves() {
 function renderLockState() {
   if (!selectedRaidId) {
     softresLockControls.hidden = true;
+    if (generatePugLinkBtn) generatePugLinkBtn.hidden = true;
     return;
   }
   const raid = currentRaids.find(r => r.id === selectedRaidId);
@@ -1401,6 +1411,7 @@ function renderLockState() {
     softresLockStatus.classList.toggle("softres-open", !isLocked);
     softresToggleLockBtn.hidden = true;
     softresMaxReservesInput.parentElement.hidden = true;
+    if (generatePugLinkBtn) generatePugLinkBtn.hidden = true;
     return;
   }
 
@@ -1420,6 +1431,9 @@ function renderLockState() {
 
   softresToggleLockBtn.disabled = false;
   softresToggleLockBtn.title = "";
+
+  // PUG link button — admin only, when a raid is selected
+  if (generatePugLinkBtn) generatePugLinkBtn.hidden = false;
 }
 
 // ── Raid selection handler ──────────────────────────────────────────────────
@@ -1901,6 +1915,71 @@ async function updateMaxReserves() {
   }
 }
 
+// ── PUG token generation ─────────────────────────────────────────────────────
+async function generatePugToken() {
+  if (!db || !isAdmin || !selectedRaidId) return;
+  const raid = currentRaids.find(r => r.id === selectedRaidId);
+  if (!raid) return;
+
+  const token = String(Math.floor(10000 + Math.random() * 90000));
+
+  // Calculate expiry: raid end hour + 2h grace
+  const raidDate = parseDateOnly(raid.raidDate);
+  if (!raidDate) { setMsg("Cannot determine raid date for token.", true); return; }
+  const endHour = Number.isInteger(raid.raidEnd) ? raid.raidEnd : 23;
+  const expiresAt = new Date(raidDate);
+  expiresAt.setHours(endHour + 2, 0, 0, 0);
+
+  if (generatePugLinkBtn) generatePugLinkBtn.disabled = true;
+  try {
+    // Clean up expired tokens (fire and forget)
+    cleanupExpiredPugTokens();
+
+    await setDoc(doc(db, "pugTokens", token), {
+      raidId: selectedRaidId,
+      raidName: raid.raidName || "",
+      raidDate: raid.raidDate || "",
+      expiresAt: Timestamp.fromDate(expiresAt),
+      createdBy: authUid,
+      createdAt: serverTimestamp()
+    });
+
+    const url = `${location.origin}/softres-pug?t=${token}`;
+    showPugLinkDialog(url, token, raid);
+  } catch (err) {
+    setMsg("Error generating PUG link: " + err.message, true);
+  } finally {
+    if (generatePugLinkBtn) generatePugLinkBtn.disabled = false;
+  }
+}
+
+function showPugLinkDialog(url, token, raid) {
+  if (!pugLinkDialog) return;
+  if (pugLinkDialogRaid) pugLinkDialogRaid.textContent = `${raid.raidName || "Raid"} — ${formatMonthDayYear(raid.raidDate || "")}`;
+  if (pugLinkUrlInput) pugLinkUrlInput.value = url;
+  if (pugLinkToken) pugLinkToken.textContent = token;
+  if (pugLinkCopyStatus) pugLinkCopyStatus.textContent = "";
+  pugLinkDialog.showModal();
+}
+
+async function cleanupExpiredPugTokens() {
+  try {
+    const now = new Date();
+    const tokensSnap = await getDocs(collection(db, "pugTokens"));
+    for (const d of tokensSnap.docs) {
+      const expiresAt = d.data().expiresAt?.toDate?.();
+      if (expiresAt && expiresAt < now) await deleteDoc(d.ref);
+    }
+    const guestSnap = await getDocs(collection(db, "guestCharacters"));
+    for (const d of guestSnap.docs) {
+      const expiresAt = d.data().expiresAt?.toDate?.();
+      if (expiresAt && expiresAt < now) await deleteDoc(d.ref);
+    }
+  } catch (err) {
+    console.warn("PUG cleanup:", err);
+  }
+}
+
 // ── Page visibility ─────────────────────────────────────────────────────────
 function setPageVisibility() {
   // Show to all approved users (admins + members)
@@ -2045,6 +2124,24 @@ if (hardresCancelBtn) {
   hardresCancelBtn.addEventListener("click", () => {
     hardresDialog?.close();
     pendingHrItem = null;
+  });
+}
+
+// ── PUG link dialog event listeners ─────────────────────────────────────────
+if (generatePugLinkBtn) {
+  generatePugLinkBtn.addEventListener("click", generatePugToken);
+}
+if (pugLinkCloseBtn) {
+  pugLinkCloseBtn.addEventListener("click", () => pugLinkDialog?.close());
+}
+if (pugLinkCopyBtn) {
+  pugLinkCopyBtn.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(pugLinkUrlInput?.value || "");
+      if (pugLinkCopyStatus) pugLinkCopyStatus.textContent = "✓ Copied!";
+    } catch {
+      if (pugLinkCopyStatus) pugLinkCopyStatus.textContent = "Copy failed — select and copy manually.";
+    }
   });
 }
 

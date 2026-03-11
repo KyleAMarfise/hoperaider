@@ -64,6 +64,7 @@
             <button type="button" id="raidModeBtn" class="raid-mode-btn" title="Open Raid Loot Mode — boss-by-boss SR viewer for raid leaders">⚔️ Raid Loot Mode</button>
             <span class="raid-mode-hint">View reserves by boss for loot distribution</span>
           </div>
+          <button type="button" id="generatePugLinkBtn" class="secondary" title="Generate a guest PUG link for this raid" hidden>🔗 PUG Link</button>
         </div>
       </div>
 
@@ -222,6 +223,25 @@
       </div>
     </div>
     <div id="raidModeBody" class="raid-mode-body"></div>
+  </dialog>
+
+  <!-- PUG Link dialog -->
+  <dialog id="pugLinkDialog" class="pug-link-dialog">
+    <div class="pug-link-dialog-content">
+      <h3 class="pug-link-dialog-title">🔗 PUG Guest Link</h3>
+      <p class="pug-link-dialog-raid" id="pugLinkDialogRaid"></p>
+      <p class="pug-link-dialog-hint">Share this link with your PUG player. It expires when the raid ends (+2h grace period). Guests cannot access any other pages.</p>
+      <div class="pug-link-url-row">
+        <input type="text" id="pugLinkUrlInput" class="pug-link-url-input" readonly />
+        <button type="button" id="pugLinkCopyBtn" class="secondary">Copy</button>
+      </div>
+      <p id="pugLinkCopyStatus" class="pug-link-copy-status"></p>
+      <div class="pug-link-token-row">
+        <span class="text-dim">Token:</span>
+        <code id="pugLinkToken" class="pug-link-token"></code>
+      </div>
+      <button type="button" id="pugLinkCloseBtn" class="secondary pug-link-close-btn">Close</button>
+    </div>
   </dialog>
 
   <script>
