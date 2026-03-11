@@ -4746,19 +4746,20 @@ td .row-actions button {
 .pug-link-dialog {
   border: none;
   border-radius: 12px;
-  background: var(--card-bg);
+  background: transparent;
   padding: 0;
   max-width: 520px;
   width: 92vw;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+  box-shadow: none;
+  overflow: visible;
 }
-.pug-link-dialog::backdrop { background: rgba(0,0,0,0.6); }
-.pug-link-dialog-content { padding: 1.75rem 1.5rem 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+.pug-link-dialog::backdrop { background: rgba(0,0,0,0.82); backdrop-filter: blur(3px); }
+.pug-link-dialog-content { background: #1a2744; border: 1px solid #4f6ea8; border-radius: 12px; box-shadow: 0 8px 40px rgba(0,0,0,0.6); padding: 1.75rem 1.5rem 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
 .pug-link-dialog-title { margin: 0; font-size: 1.2rem; }
 .pug-link-dialog-raid { margin: 0; font-weight: 600; color: var(--accent); }
 .pug-link-dialog-hint { margin: 0; font-size: 0.85rem; color: var(--text-dim); }
 .pug-link-url-row { display: flex; gap: 0.5rem; }
-.pug-link-url-input { flex: 1; font-size: 0.82rem; padding: 0.5rem 0.65rem; border-radius: 6px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text); font-family: monospace; }
+.pug-link-url-input { flex: 1; font-size: 0.82rem; padding: 0.5rem 0.65rem; border-radius: 6px; border: 1px solid var(--border, #2e3f52); background: rgba(255,255,255,0.07); color: var(--text, #e8dcc3); font-family: monospace; }
 .pug-link-copy-status { margin: 0; font-size: 0.85rem; color: var(--accent); min-height: 1.2em; }
 .pug-link-token-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; }
 .pug-link-token { background: rgba(255,255,255,0.08); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 1rem; letter-spacing: 0.1em; }
