@@ -158,7 +158,7 @@ service cloud.firestore {
     }
 
     function validRunType(value) {
-      return value in ['Progression', 'Farm', 'Weekly', 'Alt Run', 'Partial'];
+      return value in ['Weekly', 'Partial'];
     }
 
     function validCharacterData(data) {
