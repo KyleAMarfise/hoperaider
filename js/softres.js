@@ -102,6 +102,8 @@ let unsubscribeRaids = null;
 let unsubscribeCharacters = null;
 let unsubscribeReserves = null;
 let unsubscribeHardReserves = null;
+let unsubscribeSignups = null;
+let currentSignups = [];
 
 let currentHardReserves = [];
 let pendingHrItem = null; // item being hard reserved (dialog open)
@@ -1167,6 +1169,29 @@ function renderReserves() {
   if (!html) {
     html = '<tr><td colspan="5" class="text-dim">No characters reserved a matching item.</td></tr>';
   }
+
+  // Show accepted signups who haven't SR'd yet (only when not filtering by item)
+  if (!itemDroppedFilter) {
+    const reservedCharIds = new Set(raidReserves.map(r => r.characterId));
+    const noSrSignups = currentSignups.filter(s => {
+      const status = (s.status || "").toLowerCase();
+      return (status === "accept" || status === "accepted") && !reservedCharIds.has(s.characterId);
+    });
+    if (noSrSignups.length) {
+      noSrSignups.sort((a, b) => (a.characterName || "").localeCompare(b.characterName || ""));
+      html += `<tr><td colspan="5" class="softres-nosr-header text-dim">No SR yet (${noSrSignups.length})</td></tr>`;
+      for (const s of noSrSignups) {
+        const wowClass = s.wowClass || "—";
+        const classColor = WOW_CLASS_COLORS[wowClass] || "#ccc";
+        html += `<tr class="softres-nosr-row">
+          <td style="color:${classColor};font-weight:600;opacity:0.6">${escapeHtml(s.characterName || "—")}</td>
+          <td style="color:${classColor};opacity:0.6">${escapeHtml(wowClass)}</td>
+          <td colspan="3" class="text-dim">—</td>
+        </tr>`;
+      }
+    }
+  }
+
   // Update badge to reflect visible count when filtering
   softresReserveCount.textContent = itemDroppedFilter ? String(visibleCount) : String(raidReserves.length);
   softresRows.innerHTML = html;
@@ -1448,6 +1473,7 @@ async function onRaidSelected(raidId) {
   // Subscribe to reserves and hard reserves for this raid
   subscribeToReserves();
   subscribeToHardReserves();
+  subscribeToSignups();
 }
 
 // ── Firestore subscriptions ─────────────────────────────────────────────────
@@ -1518,6 +1544,18 @@ function subscribeToHardReserves() {
     if (raidModeDialog?.open) renderRaidModeBody(raidModeBossFilter?.value || "");
   }, (err) => {
     console.error("Error loading hard reserves:", err);
+  });
+}
+
+function subscribeToSignups() {
+  if (unsubscribeSignups) { unsubscribeSignups(); unsubscribeSignups = null; }
+  if (!db || !selectedRaidId) return;
+  const q = query(collection(db, "signups"), where("raidId", "==", selectedRaidId));
+  unsubscribeSignups = onSnapshot(q, (snapshot) => {
+    currentSignups = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderReserves();
+  }, (err) => {
+    console.error("Error loading signups:", err);
   });
 }
 
@@ -2147,6 +2185,7 @@ if (!hasConfigValues()) {
     if (unsubscribeCharacters) { unsubscribeCharacters(); unsubscribeCharacters = null; }
     if (unsubscribeReserves) { unsubscribeReserves(); unsubscribeReserves = null; }
     if (unsubscribeHardReserves) { unsubscribeHardReserves(); unsubscribeHardReserves = null; }
+    if (unsubscribeSignups) { unsubscribeSignups(); unsubscribeSignups = null; }
 
     if (!user) {
       authUid = null;

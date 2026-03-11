@@ -4088,6 +4088,17 @@ td .row-actions button {
 .softres-row-overlimit {
   background: rgba(255, 60, 60, 0.08);
 }
+.softres-nosr-header td {
+  padding-top: 10px;
+  font-size: 0.8em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.softres-nosr-row td {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
 .softres-row-overlimit td:first-child {
   border-left: 3px solid #ff6b6b;
 }
