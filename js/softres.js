@@ -670,15 +670,23 @@ function renderCharacterOptions() {
     });
   }
   softresCharacterSelect.innerHTML = html;
+  tryAutoSelectCharacter();
+}
 
-  // Auto-select if the user has exactly one character with no alts
-  if (!softresCharacterSelect.value && sorted.length === 1) {
-    const only = sorted[0];
-    const alts = Array.isArray(only.altCharacters) ? only.altCharacters.filter(a => a?.characterName) : [];
-    if (alts.length === 0) {
-      softresCharacterSelect.value = only.id;
-      renderCharacterReserves();
-    }
+// Auto-select the character the current user signed up with for the selected raid.
+// Skipped for admins (they need full visibility) and if a character is already chosen.
+function tryAutoSelectCharacter() {
+  if (isAdmin || !authUid || !selectedRaidId || softresCharacterSelect.value) return;
+  const DECLINED = new Set(["decline", "withdrawn", "denied"]);
+  const signup = currentSignups.find(s =>
+    s.ownerUid === authUid && !DECLINED.has((s.status || "").toLowerCase())
+  );
+  if (!signup?.characterId) return;
+  // Only set if that option actually exists in the dropdown
+  const opt = softresCharacterSelect.querySelector(`option[value="${CSS.escape(signup.characterId)}"]`);
+  if (opt) {
+    softresCharacterSelect.value = signup.characterId;
+    renderCharacterReserves();
   }
 }
 
@@ -1563,6 +1571,7 @@ function subscribeToSignups() {
   const q = query(collection(db, "signups"), where("raidId", "==", selectedRaidId));
   unsubscribeSignups = onSnapshot(q, (snapshot) => {
     currentSignups = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+    tryAutoSelectCharacter();
     renderReserves();
   }, (err) => {
     console.error("Error loading signups:", err);
