@@ -3647,10 +3647,10 @@ td .row-actions button {
 
 .softres-controls {
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 1rem;
-  margin-bottom: 1.2rem;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 .softres-controls label {
   flex: 1 1 280px;
@@ -3663,36 +3663,44 @@ td .row-actions button {
 .softres-lock-controls {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.4rem;
   flex-shrink: 0;
   flex-wrap: nowrap;
   overflow-x: auto;
 }
 .softres-lock-controls button {
-  padding: 0.32rem 0.7rem;
+  padding: 0.3rem 0.62rem;
   font-size: 0.82rem;
+  line-height: 1;
+  min-height: 1.75rem;
   white-space: nowrap;
 }
 .softres-max-reserves-label {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  font-size: 0.85rem;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
   color: var(--gold);
   font-weight: 600;
+  white-space: nowrap;
 }
 .softres-max-reserves-input {
-  width: 60px;
+  width: 46px;
   text-align: center;
-  padding: 0.25em 0.4em;
-  font-size: 0.9rem;
+  padding: 0.2em 0.3em;
+  font-size: 0.82rem;
+  min-height: 1.75rem;
+  border-radius: 6px;
 }
 .softres-lock-badge {
   font-weight: 700;
-  font-size: 0.95rem;
-  padding: 0.25em 0.65em;
+  font-size: 0.8rem;
+  padding: 0.2em 0.55em;
   border-radius: 6px;
   letter-spacing: 0.02em;
+  line-height: 1;
+  white-space: nowrap;
 }
 .softres-lock-badge.softres-open {
   background: rgba(30, 255, 0, 0.1);
