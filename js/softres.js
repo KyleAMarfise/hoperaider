@@ -533,7 +533,7 @@ function isRaidPast(raid) {
   const cutoffHour = endHour != null ? endHour : (startHour != null ? startHour : 0);
   const cutoff = new Date(rDate);
   cutoff.setHours(cutoffHour, 0, 0, 0);
-  return cutoff.getTime() < Date.now();
+  return cutoff.getTime() + 2 * 60 * 60 * 1000 < Date.now(); // +2h grace period
 }
 
 function renderRaidOptions() {
