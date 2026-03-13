@@ -420,9 +420,14 @@ service cloud.firestore {
       allow update: if validSoftReserveData(request.resource.data)
         && request.resource.data.createdAt == resource.data.createdAt
         && request.resource.data.updatedAt is timestamp
-        && (signedIn() || isGuestWithDoc())
-        && resource.data.ownerUid == request.auth.uid
-        && request.resource.data.ownerUid == request.auth.uid;
+        && request.resource.data.ownerUid == resource.data.ownerUid
+        && (
+          isAdmin()
+          || (
+            (signedIn() || isGuestWithDoc())
+            && resource.data.ownerUid == request.auth.uid
+          )
+        );
 
       allow delete: if isAdmin()
         || (
