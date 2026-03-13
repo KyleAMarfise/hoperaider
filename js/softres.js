@@ -1688,7 +1688,7 @@ async function handleReserveButton(e) {
           characterId: ch.id,
           characterName: ch.characterName || "",
           wowClass: ch.wowClass || "",
-          ownerUid: authUid,
+          ownerUid: ch.ownerUid || authUid,
           items: [itemEntry],
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
