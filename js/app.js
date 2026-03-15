@@ -51,12 +51,6 @@ const fields = {
   offSpecialization: document.getElementById("offSpecialization"),
   profileName: document.getElementById("profileName"),
   characterName: document.getElementById("characterName"),
-  preferredStart1: document.getElementById("preferredStart1"),
-  preferredEnd1: document.getElementById("preferredEnd1"),
-  preferredStart2: document.getElementById("preferredStart2"),
-  preferredEnd2: document.getElementById("preferredEnd2"),
-  preferredDay1: document.getElementById("preferredDay1"),
-  preferredDay2: document.getElementById("preferredDay2"),
 };
 // Raid row containers for renderRows (fix ReferenceError)
 const raidRows = {
@@ -626,10 +620,6 @@ decorateClassOptions();
 decorateRoleOptions();
 initializeClassPicker();
 syncClassVisualTheme();
-populateHourOptions(fields.preferredStart1, START_HOURS, "Select start");
-populateHourOptions(fields.preferredEnd1, END_HOURS, "Select end");
-populateHourOptions(fields.preferredStart2, START_HOURS, "Select start");
-populateHourOptions(fields.preferredEnd2, END_HOURS, "Select end");
 if (hasAdminUI) {
   populateHourOptions(raidStartInput, START_HOURS, "Select CST start");
   populateHourOptions(raidEndInput, END_HOURS, "Select CST end");
@@ -2508,41 +2498,8 @@ function isProfileSetupComplete() {
   );
 }
 
-function hasValidPreferredTimes() {
-  const preferredDay1 = fields.preferredDay1.value;
-  const preferredStart1 = parseHourValue(fields.preferredStart1.value);
-  const preferredEnd1 = parseHourValue(fields.preferredEnd1.value);
-  const preferredDay2 = fields.preferredDay2.value;
-  const preferredStart2 = parseHourValue(fields.preferredStart2.value);
-  const preferredEnd2 = parseHourValue(fields.preferredEnd2.value);
-
-  function isValidRange(start, end) {
-    // Accept normal and overnight (e.g., 20 to 2)
-    return Number.isInteger(start) && Number.isInteger(end) && start !== end;
-  }
-  return (
-    Boolean(preferredDay1)
-    && Boolean(preferredDay2)
-    && isValidRange(preferredStart1, preferredEnd1)
-    && isValidRange(preferredStart2, preferredEnd2)
-  );
-}
-
 function updateSignupGate() {
   const profileReady = isProfileSetupComplete();
-  const preferredTimesReady = hasValidPreferredTimes();
-  const timeFields = [
-    fields.preferredDay1,
-    fields.preferredStart1,
-    fields.preferredEnd1,
-    fields.preferredDay2,
-    fields.preferredStart2,
-    fields.preferredEnd2
-  ];
-
-  timeFields.forEach((element) => {
-    element.disabled = !profileReady;
-  });
 
   if (saveProfileButton) {
     saveProfileButton.disabled = !profileReady;
@@ -2708,20 +2665,6 @@ function loadCharacterIntoForm(character) {
   fields.wowClass.value = character.wowClass || "";
   fields.mainRole.value = character.mainRole || character.role || "";
   fields.offRole.value = character.offRole || character.mainRole || character.role || "";
-  fields.preferredDay1.value = character.preferredDay1 || "";
-  fields.preferredStart1.value = Number.isInteger(character.preferredStart1)
-    ? String(character.preferredStart1)
-    : "";
-  fields.preferredEnd1.value = Number.isInteger(character.preferredEnd1)
-    ? String(character.preferredEnd1)
-    : "";
-  fields.preferredDay2.value = character.preferredDay2 || "";
-  fields.preferredStart2.value = Number.isInteger(character.preferredStart2)
-    ? String(character.preferredStart2)
-    : "";
-  fields.preferredEnd2.value = Number.isInteger(character.preferredEnd2)
-    ? String(character.preferredEnd2)
-    : "";
   refreshRoleOptionsForClass(
     fields.wowClass.value,
     character.mainRole || character.role || "",
@@ -2742,12 +2685,6 @@ function setCharacterModeNew() {
   fields.wowClass.value = "";
   fields.mainRole.value = "";
   fields.offRole.value = "";
-  fields.preferredDay1.value = "";
-  fields.preferredStart1.value = "";
-  fields.preferredEnd1.value = "";
-  fields.preferredDay2.value = "";
-  fields.preferredStart2.value = "";
-  fields.preferredEnd2.value = "";
   refreshRoleOptionsForClass("", "", "");
   syncClassVisualTheme();
   refreshSpecializationOptions("", "");
@@ -3768,12 +3705,6 @@ fields.offRole.addEventListener("change", () => {
 fields.characterName.addEventListener("input", updateSignupGate);
 fields.mainSpecialization.addEventListener("change", updateSignupGate);
 fields.offSpecialization.addEventListener("change", updateSignupGate);
-fields.preferredDay1.addEventListener("change", updateSignupGate);
-fields.preferredStart1.addEventListener("change", updateSignupGate);
-fields.preferredEnd1.addEventListener("change", updateSignupGate);
-fields.preferredDay2.addEventListener("change", updateSignupGate);
-fields.preferredStart2.addEventListener("change", updateSignupGate);
-fields.preferredEnd2.addEventListener("change", updateSignupGate);
 
 characterProfileSelect.addEventListener("change", () => {
   updateSignupActionState();
@@ -3814,12 +3745,6 @@ if (saveProfileButton) {
     const wowClass = fields.wowClass.value;
     const mainRole = fields.mainRole.value;
     const offRole = fields.offRole.value;
-    const preferredDay1 = fields.preferredDay1.value;
-    const preferredStart1 = parseHourValue(fields.preferredStart1.value);
-    const preferredEnd1 = parseHourValue(fields.preferredEnd1.value);
-    const preferredDay2 = fields.preferredDay2.value;
-    const preferredStart2 = parseHourValue(fields.preferredStart2.value);
-    const preferredEnd2 = parseHourValue(fields.preferredEnd2.value);
     const mainSpecialization = fields.mainSpecialization.value;
     const offSpecialization = fields.offSpecialization.value;
     const mainSpecs = getSpecsForSelection(wowClass, mainRole);
@@ -3827,10 +3752,6 @@ if (saveProfileButton) {
 
     if (
       !profileName || !characterName || !wowClass || !mainRole || !offRole ||
-      !preferredDay1 || !preferredDay2 ||
-      !Number.isInteger(preferredStart1) || !Number.isInteger(preferredEnd1) ||
-      !Number.isInteger(preferredStart2) || !Number.isInteger(preferredEnd2) ||
-      preferredStart1 >= preferredEnd1 || preferredStart2 >= preferredEnd2 ||
       !mainSpecialization || !offSpecialization ||
       !mainSpecs.includes(mainSpecialization) || !offSpecs.includes(offSpecialization)
     ) {
@@ -3858,13 +3779,7 @@ if (saveProfileButton) {
       mainSpecialization,
       offSpecialization,
       armoryUrl: normalizedArmoryUrl,
-      progressionUrl,
-      preferredDay1,
-      preferredStart1,
-      preferredEnd1,
-      preferredDay2,
-      preferredStart2,
-      preferredEnd2
+      progressionUrl
     };
 
     const { alts, error } = collectAltCharacters();
