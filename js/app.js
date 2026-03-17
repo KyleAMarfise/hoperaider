@@ -828,37 +828,47 @@ function isRaidLocked(raid) {
   return Date.now() >= startDt.getTime() - 2 * 60 * 60 * 1000;
 }
 
+// Raid times are stored as Central Time hours. Build a real UTC Date by detecting
+// whether CDT (-05:00) or CST (-06:00) is in effect on the given date.
+function makeCentralDateTime(dateStr, hour) {
+  try {
+    const pad = n => String(n).padStart(2, "0");
+    // Sample noon UTC on that date to detect the Central offset (avoids DST boundary edge cases)
+    const noonUtc = new Date(`${dateStr}T12:00:00Z`);
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/Chicago",
+      timeZoneName: "shortOffset"
+    }).formatToParts(noonUtc);
+    const tzName = (parts.find(p => p.type === "timeZoneName") || {}).value || "";
+    const match = tzName.match(/GMT([+-]\d+)/);
+    const offsetHours = match ? parseInt(match[1], 10) : -6;
+    const sign = offsetHours <= 0 ? "-" : "+";
+    const offsetStr = `${sign}${pad(Math.abs(offsetHours))}:00`;
+    return new Date(`${dateStr}T${pad(hour)}:00:00${offsetStr}`);
+  } catch {
+    // Fallback: treat as CST (UTC-6)
+    const pad = n => String(n).padStart(2, "0");
+    return new Date(`${dateStr}T${pad(hour)}:00:00-06:00`);
+  }
+}
+
 function getRaidStartDateTime(raid) {
   const raidDateText = getRaidDateString(raid);
-  const raidDate = parseDateOnly(raidDateText);
-  if (!raidDate) {
-    return null;
-  }
+  if (!raidDateText) return null;
   const raidStartHour = parseRaidHourValue(raid.raidStart);
-  if (!Number.isInteger(raidStartHour)) {
-    return null;
-  }
-  const start = new Date(raidDate);
-  start.setHours(raidStartHour, 0, 0, 0);
-  return start;
+  if (!Number.isInteger(raidStartHour)) return null;
+  return makeCentralDateTime(raidDateText, raidStartHour);
 }
 
 function getRaidCutoffDateTime(raid) {
   const raidDateText = getRaidDateString(raid);
-  const raidDate = parseDateOnly(raidDateText);
-  if (!raidDate) {
-    return null;
-  }
-
+  if (!raidDateText) return null;
   const raidEndHour = parseRaidEndHourValue(raid.raidEnd);
   const fallbackStart = parseRaidHourValue(raid.raidStart);
   const cutoffHour = Number.isInteger(raidEndHour)
     ? raidEndHour
     : (Number.isInteger(fallbackStart) ? fallbackStart : 0);
-
-  const cutoff = new Date(raidDate);
-  cutoff.setHours(cutoffHour, 0, 0, 0);
-  return cutoff;
+  return makeCentralDateTime(raidDateText, cutoffHour);
 }
 
 // ── .ics calendar file generation ───────────────────────────────────────────
