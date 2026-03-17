@@ -958,6 +958,24 @@ function getNextRaid(raids) {
   return futureRaids[0] || null;
 }
 
+const TIMEZONE_DELTAS = { CST: 0, EST: 1, MST: -1, PST: -2 };
+
+function buildNavRaidTimeLabel(raidStart, raidEnd) {
+  if (!Number.isInteger(raidStart) || !Number.isInteger(raidEnd)) {
+    return Number.isInteger(raidStart) ? `Starts ${hourLabel(raidStart)} CST` : "Start time unavailable";
+  }
+  const tzLabel = VIEWER_TIMEZONE_LABEL && TIMEZONE_DELTAS[VIEWER_TIMEZONE_LABEL] !== undefined
+    ? VIEWER_TIMEZONE_LABEL : "CST";
+  const delta = TIMEZONE_DELTAS[tzLabel] ?? 0;
+  const localStart = shiftHourFromCst(raidStart, delta);
+  const localEnd = shiftHourFromCst(raidEnd, delta);
+  const isLocal = tzLabel !== "CST";
+  const timeText = `${hourLabel(localStart)} – ${hourLabel(localEnd)} ${tzLabel}`;
+  return isLocal
+    ? `<span class="raid-time-local">${escapeHtml(timeText)}</span>`
+    : `<span class="raid-time-cst">${escapeHtml(timeText)}</span>`;
+}
+
 function updateRaidCountdownClock() {
   if (!nextRaidLabel || !nextRaidSubLabel) {
     return;
@@ -981,9 +999,8 @@ function updateRaidCountdownClock() {
 
   nextRaidLabel.textContent = `${raid.raidName || "Raid"} • ${formatMonthDayYear(getRaidDateString(raid))}`;
   const raidStartHour = parseRaidHourValue(raid.raidStart);
-  nextRaidSubLabel.textContent = Number.isInteger(raidStartHour)
-    ? `Starts ${hourLabel(raidStartHour)} CST`
-    : "Start time unavailable";
+  const raidEndHour = parseRaidEndHourValue(raid.raidEnd);
+  nextRaidSubLabel.innerHTML = buildNavRaidTimeLabel(raidStartHour, raidEndHour);
   setRaidClockDigits(days, hours, minutes, seconds);
 }
 
