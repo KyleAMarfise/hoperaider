@@ -54,32 +54,42 @@
     </details>
 
     <div id="adminMenu" class="nav-admin-links" hidden>
-      <a id="adminRaidsLink" class="nav-button" href="/raids" hidden>Raid Creator</a>
-      <a id="adminOpsLink" class="nav-button" href="/admin" hidden>
+      <a id="adminRaidsLink" class="nav-button" href="/raids.html" hidden>Raid Creator</a>
+      <a id="adminOpsLink" class="nav-button" href="/admin.html" hidden>
         Requests &amp; Audit
         <span id="adminOpsBadge" class="nav-mini-badge" hidden>0</span>
       </a>
-      <a id="adminSoftresLink" class="nav-button" href="/softres" hidden>Soft Reserves</a>
+      <a id="adminSoftresLink" class="nav-button" href="/softres.html" hidden>Soft Reserves</a>
     </div>
   `;
 
   const adminActions = `
     <a class="nav-button" href="/">Signup Page</a>
-    <a id="adminRaidsLink" class="nav-button ${page === "raids" ? "is-active" : ""}" href="/raids">Raid Creator</a>
-    <a id="adminOpsLink" class="nav-button ${page === "admin" ? "is-active" : ""}" href="/admin">
+    <a id="adminRaidsLink" class="nav-button ${page === "raids" ? "is-active" : ""}" href="/raids.html">Raid Creator</a>
+    <a id="adminOpsLink" class="nav-button ${page === "admin" ? "is-active" : ""}" href="/admin.html">
       Requests &amp; Audit
       <span id="adminOpsBadge" class="nav-mini-badge" hidden>0</span>
     </a>
-    <a class="nav-button ${page === "softres" ? "is-active" : ""}" href="/softres">Soft Reserves</a>
+    <a class="nav-button ${page === "softres" ? "is-active" : ""}" href="/softres.html">Soft Reserves</a>
   `;
 
   const authStatusId = page === "signup" ? "authStatus" : "adminAuthStatus";
 
   mount.innerHTML = `
     <div class="header-nav-bar">
-      <div class="brand">
-        <img class="brand-icon" src="assets/images/World%20of%20Warcraft%20Alliance.PNG" alt="Alliance crest" />
-        <h1 id="siteTitle">Hope Raid Tracker</h1>
+      <div class="brand wow-unit-frame">
+        <div class="unit-portrait">
+          <img class="brand-icon" src="assets/images/World%20of%20Warcraft%20Alliance.PNG" alt="Alliance crest" />
+          <div class="unit-portrait-ring"></div>
+        </div>
+        <div class="unit-bars">
+          <div class="unit-name-row">
+            <span class="unit-name" id="siteTitle">Hope Raid Tracker</span>
+            <span class="unit-level">70</span>
+          </div>
+          <div class="unit-health-bar"><div class="unit-health-fill"></div></div>
+          <div class="unit-mana-bar"><div class="unit-mana-fill"></div></div>
+        </div>
       </div>
 
       ${page === "signup" ? clockBlock : ""}

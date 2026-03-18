@@ -552,7 +552,7 @@ function buildRequestQueueRows(rows, profilesById, actionMode = "full") {
       const characterName = signup.profileCharacterName || signup.characterName || selectedProfileEntry?.characterName || profile?.characterName || "—";
       const attributes = resolveSignupCharacterAttributes(signup, profilesById);
       const status = normalizeSignupStatus(signup.status);
-      const gearUrl = String(signup.armoryUrl || buildArmoryUrl(characterName)).trim();
+      const gearUrl = String(signup.armoryUrl || selectedProfileEntry?.armoryUrl || buildArmoryUrl(characterName)).trim();
       const logsUrl = String(signup.logsUrl || selectedProfileEntry?.logsUrl || buildLogsUrl(characterName)).trim();
       const actionCell = actionMode === "full"
         ? `<div class="row-actions">

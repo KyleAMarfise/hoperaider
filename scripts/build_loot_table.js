@@ -80,6 +80,19 @@ const BOSS_SOURCE_OVERRIDES = {
   28508: { zone: 3457, name: "Attumen the Huntsman" }, // Gloves of Saintly Blessings
   28509: { zone: 3457, name: "Attumen the Huntsman" }, // Worgen Claw Necklace
 
+  // ── KARAZHAN — Chess Event (Dust Covered Chest) ─────────────────────
+  // These drop from the chest after the Chess Event, not a direct boss kill
+  28746: { zone: 3457, name: "Chess Event" }, // Fiend Slayer Boots
+  28747: { zone: 3457, name: "Chess Event" }, // Battlescar Boots
+  28749: { zone: 3457, name: "Chess Event" }, // King's Defender
+  28750: { zone: 3457, name: "Chess Event" }, // Girdle of Treachery
+  28751: { zone: 3457, name: "Chess Event" }, // Heart-Flame Leggings
+  28752: { zone: 3457, name: "Chess Event" }, // Forestlord Striders
+  28753: { zone: 3457, name: "Chess Event" }, // Ring of Recurrence
+  28754: { zone: 3457, name: "Chess Event" }, // Triptych Shield of the Ancients
+  28755: { zone: 3457, name: "Chess Event" }, // Bladed Shoulderpads of the Merciless
+  28756: { zone: 3457, name: "Chess Event" }, // Headdress of the High Potentate
+
   // ── TEMPEST KEEP — Kael'thas Sunstrider ──────────────────────────────
   // Legendary weapons listed under their own names as separate "bosses"
   30311: { zone: 3845, name: "Kael'thas Sunstrider" }, // Warp Slicer
@@ -179,15 +192,16 @@ const TRASH_BOSS_NAME = 'Trash Drops';
 // ── Pre-processing: apply boss source overrides before filtering ────────────
 // This fixes items with wrong zone, wrong boss name, or "Rare Drop" with no zone.
 for (const item of items) {
-  if (!item.source) continue;
   if (EXCLUDE_ITEMS.has(item.itemId)) continue;
 
   const override = BOSS_SOURCE_OVERRIDES[item.itemId];
   if (override) {
+    if (!item.source) item.source = {};
     item.source.zone = override.zone;
     item.source.name = override.name;
     item.source.category = 'Boss Drop';
   }
+  if (!item.source) continue;
 }
 
 // Filter for reservable items: boss drops from TBC raids, epic+ quality, equippable

@@ -2362,6 +2362,14 @@ if (!hasConfigValues()) {
     unsubscribeRaids = onSnapshot(raidsQuery, (snapshot) => {
       currentRaids = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
       renderRaidOptions();
+      // Auto-select the nearest upcoming raid on first load
+      if (!selectedRaidId && currentRaids.length) {
+        const upcoming = currentRaids
+          .filter(r => !isRaidPast(r))
+          .sort((a, b) => (parseDateOnly(a.raidDate)?.getTime() || 0) - (parseDateOnly(b.raidDate)?.getTime() || 0));
+        const autoRaid = upcoming[0] || currentRaids[0];
+        if (autoRaid) onRaidSelected(autoRaid.id);
+      }
       renderLockState();
       renderReserves();
       renderCharacterReserves(); // re-render +/- buttons when max changes
