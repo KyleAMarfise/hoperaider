@@ -33,7 +33,7 @@
       </div>
       <h2 class="pug-name-heading">Welcome, PUG!</h2>
       <p class="pug-name-raid-info" id="pugNameRaidInfo"></p>
-      <p class="pug-name-instructions">Enter your <strong>character name</strong> to access soft reserves for this raid. Guild members must sign in through the main page.</p>
+      <p class="pug-name-instructions">Enter your <strong>character info</strong> to access soft reserves for this raid. Guild members must sign in through the main page.</p>
       <form class="pug-name-form" id="pugNameForm">
         <input
           type="text"
@@ -45,6 +45,21 @@
           autocomplete="off"
           required
         />
+        <label class="pug-field">
+          Class
+          <select id="pugClassSelect" required>
+            <option value="" disabled selected>Select class</option>
+            <option value="Druid">Druid</option>
+            <option value="Hunter">Hunter</option>
+            <option value="Mage">Mage</option>
+            <option value="Paladin">Paladin</option>
+            <option value="Priest">Priest</option>
+            <option value="Rogue">Rogue</option>
+            <option value="Shaman">Shaman</option>
+            <option value="Warlock">Warlock</option>
+            <option value="Warrior">Warrior</option>
+          </select>
+        </label>
         <p class="pug-name-error" id="pugNameError" hidden></p>
         <button type="submit" id="pugNameSubmit" class="pug-name-submit-btn">Continue</button>
       </form>

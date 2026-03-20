@@ -34,10 +34,12 @@ service cloud.firestore {
     }
 
     function validGuestCharacterData(data) {
-      return data.keys().hasOnly(['characterName','raidId','raidName','pugToken','expiresAt','createdAt'])
+      return data.keys().hasOnly(['characterName','wowClass','raidId','raidName','pugToken','expiresAt','createdAt'])
         && data.characterName is string
         && data.characterName.size() >= 2
         && data.characterName.size() <= 24
+        && data.wowClass is string
+        && (data.wowClass.size() == 0 || validClass(data.wowClass))
         && data.raidId is string
         && data.raidId.size() > 5
         && data.raidName is string
@@ -497,6 +499,9 @@ service cloud.firestore {
     match /guestCharacters/{uid} {
       allow read: if (request.auth != null && request.auth.uid == uid) || isAdmin();
       allow create: if isGuest()
+        && request.auth.uid == uid
+        && validGuestCharacterData(request.resource.data);
+      allow update: if isGuest()
         && request.auth.uid == uid
         && validGuestCharacterData(request.resource.data);
       allow delete: if isAdmin() || (request.auth != null && request.auth.uid == uid);

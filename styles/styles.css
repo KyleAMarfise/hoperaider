@@ -4870,6 +4870,40 @@ td .row-actions button {
   font-size: 1.05rem;
 }
 .pug-name-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(100,160,255,0.25); }
+.pug-field {
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.9rem;
+  color: var(--text-dim, #aaa);
+  justify-items: center;
+  text-align: center;
+}
+.pug-field select {
+  width: 60%;
+  padding: 0.48rem 0.6rem;
+  border-radius: 10px;
+  border: 1px solid #5e4b2a;
+  background: #0b0b0e;
+  color: var(--text-main, #e8dcc3);
+  font: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+.pug-field select:focus {
+  outline: none;
+  border-color: var(--gold, #d1a754);
+  box-shadow: 0 0 0 2px rgba(209, 167, 84, 0.2);
+}
+.pug-field select:disabled { opacity: 0.5; cursor: not-allowed; }
+.pug-field select:required:invalid {
+  border-color: #ff4444;
+  box-shadow: 0 0 0 2px rgba(255, 68, 68, 0.35);
+  animation: pulse-red 2s ease-in-out infinite;
+}
+.pug-field select option {
+  background: #0b0b0e;
+  color: var(--text-main, #e8dcc3);
+}
 .pug-name-submit-btn {
   padding: 0.7rem 1.2rem;
   border-radius: 8px;

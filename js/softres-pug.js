@@ -31,6 +31,7 @@ const pugNameForm       = document.getElementById("pugNameForm");
 const pugCharNameInput  = document.getElementById("pugCharNameInput");
 const pugNameError      = document.getElementById("pugNameError");
 const pugNameSubmit     = document.getElementById("pugNameSubmit");
+const pugClassSelect    = document.getElementById("pugClassSelect");
 const pugShell          = document.getElementById("pugShell");
 const pugGuestName      = document.getElementById("pugGuestName");
 const pugRaidName       = document.getElementById("pugRaidName");
@@ -63,6 +64,7 @@ const lootTableRows     = document.getElementById("lootTableRows");
 let db, auth;
 let authUid         = null;
 let guestCharName   = null;
+let guestCharClass  = "";
 let guestRaidId     = null;
 let guestRaid       = null;       // full raid Firestore doc data
 let pugTokenStr     = null;       // the 5-digit token string
@@ -912,7 +914,7 @@ async function handleReserveButton(e) {
           raidDate:      guestRaid.raidDate || "",
           characterId:   authUid,
           characterName: guestCharName,
-          wowClass:      "",
+          wowClass:      guestCharClass,
           ownerUid:      authUid,
           items:         [itemEntry],
           createdAt:     serverTimestamp(),
@@ -1014,6 +1016,13 @@ function showNameModal() {
   if (pugNameRaidInfo) {
     pugNameRaidInfo.textContent = `${guestRaid?.raidName || "Raid"}${dateStr ? "  —  " + dateStr : ""}`;
   }
+  // Color the class select on change
+  if (pugClassSelect) {
+    pugClassSelect.addEventListener("change", () => {
+      pugClassSelect.style.color = WOW_CLASS_COLORS[pugClassSelect.value] || "";
+    });
+  }
+
   pugNameModal.showModal();
   // Block Escape key
   pugNameModal.addEventListener("cancel", e => e.preventDefault());
@@ -1026,6 +1035,8 @@ async function handleNameSubmit(e) {
     showNameError("Name must be 2–24 characters.");
     return;
   }
+  const selectedClass = pugClassSelect?.value || "";
+  if (!selectedClass) { showNameError("Please select a class."); return; }
 
   // Disable button while checking
   if (pugNameSubmit) { pugNameSubmit.disabled = true; pugNameSubmit.textContent = "Checking…"; }
@@ -1059,8 +1070,9 @@ async function handleNameSubmit(e) {
     }
 
     // Create the guestCharacters doc
-    await createGuestCharDoc(name);
-    guestCharName = name;
+    await createGuestCharDoc(name, selectedClass);
+    guestCharName  = name;
+    guestCharClass = selectedClass;
     pugNameModal.close();
     setupSRPage();
   } catch (err) {
@@ -1077,15 +1089,17 @@ function showNameError(msg) {
   }
 }
 
-async function createGuestCharDoc(name) {
-  await setDoc(doc(db, "guestCharacters", authUid), {
+async function createGuestCharDoc(name, wowClass) {
+  const payload = {
     characterName: name,
+    wowClass:      wowClass || "",
     raidId:        guestRaidId,
     raidName:      guestRaid.raidName || "",
     pugToken:      pugTokenStr,
     expiresAt:     pugTokenData.expiresAt,
     createdAt:     serverTimestamp()
-  });
+  };
+  await setDoc(doc(db, "guestCharacters", authUid), payload);
 }
 
 // ── Setup SR page (post-name-entry) ──────────────────────────────────────────
@@ -1093,8 +1107,15 @@ async function setupSRPage() {
   if (pugLoadingState) pugLoadingState.hidden = true;
   if (pugShell)        pugShell.hidden = false;
 
-  if (pugGuestName) pugGuestName.textContent = guestCharName;
-  if (pugCharLabel) pugCharLabel.textContent = `${guestCharName} (Guest)`;
+  if (pugGuestName) {
+    pugGuestName.textContent = guestCharName;
+    if (guestCharClass) pugGuestName.style.color = WOW_CLASS_COLORS[guestCharClass] || "";
+  }
+  if (pugCharLabel) {
+    const classTag = guestCharClass ? ` — ${guestCharClass}` : "";
+    pugCharLabel.textContent = `${guestCharName}${classTag} (Guest)`;
+    if (guestCharClass) pugCharLabel.style.color = WOW_CLASS_COLORS[guestCharClass] || "";
+  }
 
   renderRaidInfo();
 
@@ -1291,7 +1312,8 @@ async function init() {
     const guestCharData = guestCharSnap.data();
     if (guestCharData.raidId === guestRaidId) {
       // Restore session — skip modal
-      guestCharName = guestCharData.characterName;
+      guestCharName  = guestCharData.characterName;
+      guestCharClass = guestCharData.wowClass || "";
       if (pugLoadingState) pugLoadingState.hidden = true;
       setupSRPage();
       return;
