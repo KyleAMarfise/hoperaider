@@ -558,7 +558,7 @@ function renderReserves() {
             : "";
           const count = itemReserveCount.get(Number(it.itemId)) || 0;
           const countBadge = count > 1
-            ? ` <span class="softres-contention-badge" title="${count} characters reserved this item">${count}</span>`
+            ? ` <span class="softres-contention-badge" title="${count} characters reserved this item">🎲 ${count}</span>`
             : "";
           const rawName = it.name || "—";
           let nameHtml;
