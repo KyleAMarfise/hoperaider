@@ -87,31 +87,16 @@
         </div>
       </div>
 
-      <!-- Active Reserves Overview -->
-      <div id="softresOverview" class="softres-overview" hidden>
-        <div class="softres-overview-header">
-          <h3 id="softresRaidTitle">Raid Reserves</h3>
-          <span id="softresReserveCount" class="badge">0</span>
+      <!-- Announcement Banner -->
+      <div id="softresAnnouncement" class="softres-announcement" hidden>
+        <div class="softres-announcement-text" id="softresAnnouncementText"></div>
+        <div class="softres-announcement-admin" id="softresAnnouncementAdmin" hidden>
+          <button type="button" id="softresAnnouncementEditBtn" class="secondary softres-announcement-edit-btn">Edit</button>
+          <button type="button" id="softresAnnouncementClearBtn" class="secondary softres-announcement-clear-btn">Clear</button>
         </div>
-        <div class="softres-item-dropped-bar">
-          <label for="softresItemDroppedFilter" class="softres-item-dropped-label">Item Dropped</label>
-          <input type="text" id="softresItemDroppedFilter" class="softres-item-dropped-input" placeholder="Start typing item name…" autocomplete="off" />
-        </div>
-        <div class="table-wrap">
-          <table class="softres-table">
-            <thead>
-              <tr>
-                <th>Character</th>
-                <th>Class</th>
-                <th>Reserves</th>
-                <th>Updated</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="softresRows"></tbody>
-          </table>
-        </div>
-        <p id="softresMessage" class="message"></p>
+      </div>
+      <div id="softresAnnouncementSetBtn" hidden>
+        <button type="button" id="softresAnnouncementCreateBtn" class="secondary">+ Set Announcement</button>
       </div>
 
       <!-- Character selector + current reserves -->
@@ -127,7 +112,7 @@
         </div>
       </div>
 
-      <!-- Loot Table Browser (always visible) -->
+      <!-- Loot Table Browser -->
       <div class="softres-loot-browser" id="softresLootBrowser" hidden>
         <div class="list-header">
           <h3>Loot Table</h3>
@@ -181,6 +166,33 @@
         </div>
       </div>
 
+      <!-- Active Reserves Overview -->
+      <div id="softresOverview" class="softres-overview" hidden>
+        <div class="softres-overview-header">
+          <h3 id="softresRaidTitle">Raid Reserves</h3>
+          <span id="softresReserveCount" class="badge">0</span>
+        </div>
+        <div class="softres-item-dropped-bar">
+          <label for="softresItemDroppedFilter" class="softres-item-dropped-label">Item Dropped</label>
+          <input type="text" id="softresItemDroppedFilter" class="softres-item-dropped-input" placeholder="Start typing item name…" autocomplete="off" />
+        </div>
+        <div class="table-wrap">
+          <table class="softres-table">
+            <thead>
+              <tr>
+                <th>Character</th>
+                <th>Class</th>
+                <th>Reserves</th>
+                <th>Updated</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="softresRows"></tbody>
+          </table>
+        </div>
+        <p id="softresMessage" class="message"></p>
+      </div>
+
     </section>
 
   </main>
@@ -220,6 +232,21 @@
       </div>
     </div>
     <div id="raidModeBody" class="raid-mode-body"></div>
+  </dialog>
+
+  <!-- Announcement Edit Dialog -->
+  <dialog id="announcementDialog" class="hardres-dialog">
+    <form id="announcementForm">
+      <h3 class="hardres-dialog-title">Raid Announcement</h3>
+      <label class="hardres-dialog-label">
+        Message
+        <textarea id="announcementTextInput" class="hardres-dialog-input" rows="3" placeholder="e.g. 1 SR for Gruul, 1 SR for Mag's" maxlength="500"></textarea>
+      </label>
+      <div class="hardres-dialog-actions">
+        <button type="submit" class="hardres-confirm-btn">Save</button>
+        <button type="button" id="announcementCancelBtn" class="secondary">Cancel</button>
+      </div>
+    </form>
   </dialog>
 
   <!-- PUG Link dialog -->

@@ -93,6 +93,17 @@ const pugLinkCopyBtn = document.getElementById("pugLinkCopyBtn");
 const pugLinkCopyStatus = document.getElementById("pugLinkCopyStatus");
 const pugLinkToken = document.getElementById("pugLinkToken");
 const pugLinkCloseBtn = document.getElementById("pugLinkCloseBtn");
+const softresAnnouncement = document.getElementById("softresAnnouncement");
+const softresAnnouncementText = document.getElementById("softresAnnouncementText");
+const softresAnnouncementAdmin = document.getElementById("softresAnnouncementAdmin");
+const softresAnnouncementEditBtn = document.getElementById("softresAnnouncementEditBtn");
+const softresAnnouncementClearBtn = document.getElementById("softresAnnouncementClearBtn");
+const softresAnnouncementSetBtn = document.getElementById("softresAnnouncementSetBtn");
+const softresAnnouncementCreateBtn = document.getElementById("softresAnnouncementCreateBtn");
+const announcementDialog = document.getElementById("announcementDialog");
+const announcementForm = document.getElementById("announcementForm");
+const announcementTextInput = document.getElementById("announcementTextInput");
+const announcementCancelBtn = document.getElementById("announcementCancelBtn");
 
 // ── State ───────────────────────────────────────────────────────────────────
 let db = null;
@@ -1455,6 +1466,8 @@ async function onRaidSelected(raidId) {
     softresLootBrowser.hidden = true;
     softresLockControls.hidden = true;
     if (hardresSection) hardresSection.hidden = true;
+    if (softresAnnouncement) softresAnnouncement.hidden = true;
+    if (softresAnnouncementSetBtn) softresAnnouncementSetBtn.hidden = true;
     selectedRaidLoot = null;
     return;
   }
@@ -1502,12 +1515,64 @@ async function onRaidSelected(raidId) {
   renderReserves();
   renderLockState();
   renderHardReserves();
+  renderAnnouncement();
 
   // Subscribe to reserves and hard reserves for this raid
   subscribeToReserves();
   subscribeToHardReserves();
   subscribeToSignups();
 }
+
+// ── Announcement banner ─────────────────────────────────────────────────────
+function renderAnnouncement() {
+  const raid = currentRaids.find(r => r.id === selectedRaidId);
+  const text = raid?.announcement || "";
+  if (text) {
+    if (softresAnnouncement) softresAnnouncement.hidden = false;
+    if (softresAnnouncementText) softresAnnouncementText.textContent = text;
+    if (softresAnnouncementAdmin) softresAnnouncementAdmin.hidden = !isAdmin;
+    if (softresAnnouncementSetBtn) softresAnnouncementSetBtn.hidden = true;
+  } else {
+    if (softresAnnouncement) softresAnnouncement.hidden = true;
+    // Show "Set Announcement" button for admins when no announcement exists
+    if (softresAnnouncementSetBtn) softresAnnouncementSetBtn.hidden = !isAdmin;
+  }
+}
+
+function openAnnouncementEditor() {
+  const raid = currentRaids.find(r => r.id === selectedRaidId);
+  if (announcementTextInput) announcementTextInput.value = raid?.announcement || "";
+  if (announcementDialog) announcementDialog.showModal();
+}
+
+async function saveAnnouncement(text) {
+  if (!db || !isAdmin || !selectedRaidId) return;
+  const raid = currentRaids.find(r => r.id === selectedRaidId);
+  if (!raid) return;
+  try {
+    const payload = buildRaidPayload(raid, { announcement: text || "" });
+    await setDoc(doc(db, "raids", selectedRaidId), payload);
+    raid.announcement = text || "";
+    renderAnnouncement();
+  } catch (err) {
+    setMsg("Error saving announcement: " + err.message, true);
+  }
+}
+
+if (softresAnnouncementEditBtn) softresAnnouncementEditBtn.addEventListener("click", openAnnouncementEditor);
+if (softresAnnouncementCreateBtn) softresAnnouncementCreateBtn.addEventListener("click", openAnnouncementEditor);
+if (softresAnnouncementClearBtn) softresAnnouncementClearBtn.addEventListener("click", () => {
+  if (confirm("Clear the announcement?")) saveAnnouncement("");
+});
+if (announcementForm) announcementForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const text = (announcementTextInput?.value || "").trim();
+  saveAnnouncement(text);
+  if (announcementDialog) announcementDialog.close();
+});
+if (announcementCancelBtn) announcementCancelBtn.addEventListener("click", () => {
+  if (announcementDialog) announcementDialog.close();
+});
 
 // ── Firestore subscriptions ─────────────────────────────────────────────────
 function subscribeToReserves() {
@@ -1831,6 +1896,17 @@ function buildRaidPayload(raid, overrides = {}) {
   }
   if ('softresMaxReserves' in overrides || raid.softresMaxReserves != null) {
     payload.softresMaxReserves = overrides.softresMaxReserves ?? raid.softresMaxReserves;
+  }
+  if ('signupsLocked' in overrides || raid.signupsLocked != null) {
+    payload.signupsLocked = overrides.signupsLocked ?? raid.signupsLocked;
+  }
+  if (raid.plannedBosses != null && !('plannedBosses' in overrides)) {
+    payload.plannedBosses = raid.plannedBosses;
+  }
+  if ('announcement' in overrides) {
+    if (overrides.announcement) payload.announcement = overrides.announcement;
+  } else if (raid.announcement) {
+    payload.announcement = raid.announcement;
   }
   return payload;
 }
@@ -2410,6 +2486,7 @@ if (!hasConfigValues()) {
         if (autoRaid) onRaidSelected(autoRaid.id);
       }
       renderLockState();
+      renderAnnouncement();
       renderReserves();
       renderCharacterReserves(); // re-render +/- buttons when max changes
     }, (err) => { setMsg("Error loading raids: " + err.message, true); });

@@ -4291,6 +4291,40 @@ td .row-actions button {
 }
 
 /* Data accuracy disclaimer */
+.softres-announcement {
+  background: rgba(209, 167, 84, 0.1);
+  border: 1px solid var(--gold, #d1a754);
+  border-radius: 10px;
+  padding: 0.6rem 0.9rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.softres-announcement-text {
+  flex: 1;
+  color: var(--gold, #d1a754);
+  font-size: 0.95rem;
+  font-weight: 500;
+  white-space: pre-line;
+}
+.softres-announcement-admin {
+  display: flex;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+.softres-announcement-edit-btn,
+.softres-announcement-clear-btn {
+  font-size: 0.78rem;
+  padding: 0.2rem 0.5rem;
+}
+.softres-announcement-clear-btn { color: #ff6b6b; }
+#softresAnnouncementSetBtn { margin-bottom: 0.75rem; }
+#softresAnnouncementCreateBtn { font-size: 0.82rem; }
+#announcementTextInput {
+  resize: vertical;
+  min-height: 3rem;
+}
 .softres-loot-disclaimer {
   color: var(--text-dim);
   font-size: 0.82rem;

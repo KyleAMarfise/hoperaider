@@ -302,6 +302,7 @@ service cloud.firestore {
           'softresMaxReserves',
           'signupsLocked',
           'plannedBosses',
+          'announcement',
           'createdByUid',
           'createdAt',
           'updatedAt'
@@ -324,6 +325,7 @@ service cloud.firestore {
         && (!('softresMaxReserves' in data) || (data.softresMaxReserves is int && data.softresMaxReserves >= 1 && data.softresMaxReserves <= 10))
         && (!('signupsLocked' in data) || data.signupsLocked is bool)
         && (!('plannedBosses' in data) || data.plannedBosses is list)
+        && (!('announcement' in data) || (data.announcement is string && data.announcement.size() <= 500))
         && data.createdByUid is string
         && data.createdByUid == request.auth.uid;
     }
