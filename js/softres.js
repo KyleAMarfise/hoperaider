@@ -98,12 +98,12 @@ const softresAnnouncementText = document.getElementById("softresAnnouncementText
 const softresAnnouncementAdmin = document.getElementById("softresAnnouncementAdmin");
 const softresAnnouncementEditBtn = document.getElementById("softresAnnouncementEditBtn");
 const softresAnnouncementClearBtn = document.getElementById("softresAnnouncementClearBtn");
-const softresAnnouncementSetBtn = document.getElementById("softresAnnouncementSetBtn");
 const softresAnnouncementCreateBtn = document.getElementById("softresAnnouncementCreateBtn");
 const announcementDialog = document.getElementById("announcementDialog");
 const announcementForm = document.getElementById("announcementForm");
 const announcementTextInput = document.getElementById("announcementTextInput");
 const announcementCancelBtn = document.getElementById("announcementCancelBtn");
+const softresAnnouncementDismissBtn = document.getElementById("softresAnnouncementDismissBtn");
 
 // ── State ───────────────────────────────────────────────────────────────────
 let db = null;
@@ -1467,7 +1467,7 @@ async function onRaidSelected(raidId) {
     softresLockControls.hidden = true;
     if (hardresSection) hardresSection.hidden = true;
     if (softresAnnouncement) softresAnnouncement.hidden = true;
-    if (softresAnnouncementSetBtn) softresAnnouncementSetBtn.hidden = true;
+    if (softresAnnouncementCreateBtn) softresAnnouncementCreateBtn.hidden = true;
     selectedRaidLoot = null;
     return;
   }
@@ -1531,11 +1531,10 @@ function renderAnnouncement() {
     if (softresAnnouncement) softresAnnouncement.hidden = false;
     if (softresAnnouncementText) softresAnnouncementText.textContent = text;
     if (softresAnnouncementAdmin) softresAnnouncementAdmin.hidden = !isAdmin;
-    if (softresAnnouncementSetBtn) softresAnnouncementSetBtn.hidden = true;
+    if (softresAnnouncementCreateBtn) softresAnnouncementCreateBtn.hidden = true;
   } else {
     if (softresAnnouncement) softresAnnouncement.hidden = true;
-    // Show "Set Announcement" button for admins when no announcement exists
-    if (softresAnnouncementSetBtn) softresAnnouncementSetBtn.hidden = !isAdmin;
+    if (softresAnnouncementCreateBtn) softresAnnouncementCreateBtn.hidden = !isAdmin;
   }
 }
 
@@ -1572,6 +1571,9 @@ if (announcementForm) announcementForm.addEventListener("submit", (e) => {
 });
 if (announcementCancelBtn) announcementCancelBtn.addEventListener("click", () => {
   if (announcementDialog) announcementDialog.close();
+});
+if (softresAnnouncementDismissBtn) softresAnnouncementDismissBtn.addEventListener("click", () => {
+  if (softresAnnouncement) softresAnnouncement.hidden = true;
 });
 
 // ── Firestore subscriptions ─────────────────────────────────────────────────

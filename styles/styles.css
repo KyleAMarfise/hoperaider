@@ -4292,14 +4292,18 @@ td .row-actions button {
 
 /* Data accuracy disclaimer */
 .softres-announcement {
-  background: rgba(209, 167, 84, 0.1);
-  border: 1px solid var(--gold, #d1a754);
-  border-radius: 10px;
-  padding: 0.6rem 0.9rem;
-  margin-bottom: 0.75rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 900;
+  background: linear-gradient(135deg, rgba(30, 20, 8, 0.97), rgba(45, 30, 12, 0.97));
+  border-bottom: 2px solid var(--gold, #d1a754);
+  padding: 0.6rem 1.2rem;
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.5);
 }
 .softres-announcement-text {
   flex: 1;
@@ -4307,6 +4311,7 @@ td .row-actions button {
   font-size: 0.95rem;
   font-weight: 500;
   white-space: pre-line;
+  text-align: center;
 }
 .softres-announcement-admin {
   display: flex;
@@ -4319,11 +4324,27 @@ td .row-actions button {
   padding: 0.2rem 0.5rem;
 }
 .softres-announcement-clear-btn { color: #ff6b6b; }
+.softres-announcement-dismiss-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim, #aaa);
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0 0.3rem;
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+.softres-announcement-dismiss-btn:hover { opacity: 1; }
 #softresAnnouncementSetBtn { margin-bottom: 0.75rem; }
 #softresAnnouncementCreateBtn { font-size: 0.82rem; }
 #announcementTextInput {
   resize: vertical;
   min-height: 3rem;
+}
+.softres-section-divider {
+  border: none;
+  border-top: 1px solid var(--line-muted, #5e4b2a);
+  margin: 1.5rem 0;
 }
 .softres-loot-disclaimer {
   color: var(--text-dim);
