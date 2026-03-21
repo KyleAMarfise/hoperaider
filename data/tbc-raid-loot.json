@@ -367,7 +367,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "Summons and dismisses Attumen the Huntsman's steed.  This is a very fast mount.",
+                  "label": "Summons and dismisses Attumen the Huntsman's steed. \u00a0This is a very fast mount.",
                   "format": "Uncommon"
                 }
               ]
@@ -4487,7 +4487,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "Use: Returns you to <Hearthstone Location>.  Speak to an Innkeeper in a different place to change your home location. (30 Min Cooldown)",
+                  "label": "Use: Returns you to <Hearthstone Location>. \u00a0Speak to an Innkeeper in a different place to change your home location. (30 Min Cooldown)",
                   "format": "Uncommon"
                 },
                 {
@@ -6999,7 +6999,7 @@
                   "label": "Requires Level 70"
                 },
                 {
-                  "label": "Use: Each spell cast within 20 seconds will grant a stacking bonus of 21 mana regen per 5 sec. Expires after 20 seconds.  Abilities with no mana cost will not trigger this trinket. (2 Min Cooldown)",
+                  "label": "Use: Each spell cast within 20 seconds will grant a stacking bonus of 21 mana regen per 5 sec. Expires after 20 seconds. \u00a0Abilities with no mana cost will not trigger this trinket. (2 Min Cooldown)",
                   "format": "Uncommon"
                 }
               ]
@@ -7361,7 +7361,7 @@
                   "label": "Requires Level 70"
                 },
                 {
-                  "label": "Equip: You gain an Electrical Charge each time you cause a damaging spell critical strike.  When you reach 3 Electrical Charges, they will release, firing a Lightning Bolt for 694 to 806 damage.  Electrical Charge cannot be gained more often than once every 2.5 sec. (2.5s cooldown)",
+                  "label": "Equip: You gain an Electrical Charge each time you cause a damaging spell critical strike. \u00a0When you reach 3 Electrical Charges, they will release, firing a Lightning Bolt for 694 to 806 damage. \u00a0Electrical Charge cannot be gained more often than once every 2.5 sec. (2.5s cooldown)",
                   "format": "Uncommon"
                 }
               ]
@@ -8838,7 +8838,7 @@
                   "format": "indent"
                 },
                 {
-                  "label": "\nRequires Bolt of Soulcloth (6), Rune Thread (4)",
+                  "label": "\nRequires Bolt of Soulcloth\u00a0(6), Rune Thread\u00a0(4)",
                   "format": "Common"
                 }
               ]
@@ -8944,7 +8944,7 @@
                   "format": "indent"
                 },
                 {
-                  "label": "\nRequires Bolt of Soulcloth (8), Rune Thread (4)",
+                  "label": "\nRequires Bolt of Soulcloth\u00a0(8), Rune Thread\u00a0(4)",
                   "format": "Common"
                 }
               ]
@@ -9088,7 +9088,7 @@
                   "label": "Requires Level 70"
                 },
                 {
-                  "label": "Use: For the next 20 sec, your direct heals grant Fecundity to your target, increasing the healing received by the target by up to 30.  Fecundity lasts 10 sec and stacks up to 5 times. (2 Min Cooldown)",
+                  "label": "Use: For the next 20 sec, your direct heals grant Fecundity to your target, increasing the healing received by the target by up to 30. \u00a0Fecundity lasts 10 sec and stacks up to 5 times. (2 Min Cooldown)",
                   "format": "Uncommon"
                 },
                 {
@@ -10532,6 +10532,43 @@
         {
           "name": "Magtheridon",
           "items": [
+            {
+              "itemId": 32385,
+              "name": "Magtheridon's Head",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_head_demon_01.jpg",
+              "quality": "Epic",
+              "itemLevel": 1,
+              "slot": "Quest",
+              "class": "Quest",
+              "subclass": "Quest",
+              "dropChance": 1.0,
+              "tooltip": [
+                {
+                  "label": "Magtheridon's Head"
+                },
+                {
+                  "label": "Phase 1",
+                  "format": "alignRight"
+                },
+                {
+                  "label": "Quest Item"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Unique"
+                },
+                {
+                  "label": "Begins a quest",
+                  "format": "Uncommon"
+                },
+                {
+                  "label": "Reward: A'dal's Signet of Defense or Ring of the Recalcitrant",
+                  "format": "Uncommon"
+                }
+              ]
+            },
             {
               "itemId": 28777,
               "name": "Cloak of the Pit Stalker",
@@ -12471,7 +12508,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "Use: Increases your defense rating by 165, but decreases your melee and ranged attack power by 330.  Effect lasts for 15 sec. (3 Min Cooldown)",
+                  "label": "Use: Increases your defense rating by 165, but decreases your melee and ranged attack power by 330. \u00a0Effect lasts for 15 sec. (3 Min Cooldown)",
                   "format": "Uncommon"
                 }
               ]
@@ -14555,7 +14592,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "Equip: You gain 25% more mana when you use a mana gem.  In addition, using a mana gem grants you 225 spell power for 15 sec.",
+                  "label": "Equip: You gain 25% more mana when you use a mana gem. \u00a0In addition, using a mana gem grants you 225 spell power for 15 sec.",
                   "format": "Uncommon"
                 }
               ]
@@ -25159,7 +25196,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "Use: Shows the location of all nearby demons on the minimap until cancelled.  Only one form of tracking can be active at a time. (10 Min Cooldown)",
+                  "label": "Use: Shows the location of all nearby demons on the minimap until cancelled. \u00a0Only one form of tracking can be active at a time. (10 Min Cooldown)",
                   "format": "Uncommon"
                 }
               ]
@@ -37365,7 +37402,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "Equip: Chance on melee or ranged hit to enter a Battle Trance, during which your melee or ranged attacks will each grant 44 attack power, stacking up to 10 times.  Expires after 20 sec. (Proc chance: 10%, 45s cooldown)",
+                  "label": "Equip: Chance on melee or ranged hit to enter a Battle Trance, during which your melee or ranged attacks will each grant 44 attack power, stacking up to 10 times. \u00a0Expires after 20 sec. (Proc chance: 10%, 45s cooldown)",
                   "format": "Uncommon"
                 }
               ]
@@ -37409,7 +37446,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "Use: Gain 250 mana each sec. for 8 sec.  Channeled. (5 Min Cooldown)",
+                  "label": "Use: Gain 250 mana each sec. for 8 sec. \u00a0Channeled. (5 Min Cooldown)",
                   "format": "Uncommon"
                 }
               ]
@@ -37453,7 +37490,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "Use: Conjures a Power Circle lasting for 15 sec.  While standing in this circle, the caster gains 320 spell power. (1 Min, 30 Sec Cooldown)",
+                  "label": "Use: Conjures a Power Circle lasting for 15 sec. \u00a0While standing in this circle, the caster gains 320 spell power. (1 Min, 30 Sec Cooldown)",
                   "format": "Uncommon"
                 }
               ]
@@ -39470,7 +39507,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "\nRequires Mercurial Adamantite (6), Seaspray Emerald (6)",
+                  "label": "\nRequires Mercurial Adamantite\u00a0(6), Seaspray Emerald\u00a0(6)",
                   "format": "Common"
                 }
               ]
@@ -39539,7 +39576,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "\nRequires Hardened Khorium (4), Primal Air (20), Mercurial Adamantite (12), Sunmote (5)",
+                  "label": "\nRequires Hardened Khorium\u00a0(4), Primal Air\u00a0(20), Mercurial Adamantite\u00a0(12), Sunmote\u00a0(5)",
                   "format": "Common"
                 }
               ]
@@ -39614,7 +39651,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "\nRequires Hardened Khorium (6), Primal Nether (9)",
+                  "label": "\nRequires Hardened Khorium\u00a0(6), Primal Nether\u00a0(9)",
                   "format": "Common"
                 }
               ]
@@ -39687,7 +39724,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "\nRequires Hardened Khorium (4), Primal Might (4), Mercurial Adamantite (12), Sunmote (5)",
+                  "label": "\nRequires Hardened Khorium\u00a0(4), Primal Might\u00a0(4), Mercurial Adamantite\u00a0(12), Sunmote\u00a0(5)",
                   "format": "Common"
                 }
               ]
@@ -39765,7 +39802,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "\nRequires Mercurial Adamantite (12), Crimson Spinel (3), Empyrean Sapphire (3)",
+                  "label": "\nRequires Mercurial Adamantite\u00a0(12), Crimson Spinel\u00a0(3), Empyrean Sapphire\u00a0(3)",
                   "format": "Common"
                 }
               ]
@@ -39838,7 +39875,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "\nRequires Hardened Khorium (4), Primal Life (20), Mercurial Adamantite (12), Sunmote (5)",
+                  "label": "\nRequires Hardened Khorium\u00a0(4), Primal Life\u00a0(20), Mercurial Adamantite\u00a0(12), Sunmote\u00a0(5)",
                   "format": "Common"
                 }
               ]
@@ -39934,7 +39971,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "\nRequires Heavy Knothide Leather (40), Fel Hide (24), Primal Might (6), Primal Nether (6)",
+                  "label": "\nRequires Heavy Knothide Leather\u00a0(40), Fel Hide\u00a0(24), Primal Might\u00a0(6), Primal Nether\u00a0(6)",
                   "format": "Common"
                 }
               ]
@@ -40029,7 +40066,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "\nRequires Heavy Knothide Leather (40), Wind Scales (24), Primal Might (6), Primal Nether (6)",
+                  "label": "\nRequires Heavy Knothide Leather\u00a0(40), Wind Scales\u00a0(24), Primal Might\u00a0(6), Primal Nether\u00a0(6)",
                   "format": "Common"
                 }
               ]
@@ -40120,7 +40157,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "\nRequires Heavy Knothide Leather (30), Wind Scales (16), Primal Air (18), Primal Might (8), Sunmote (6)",
+                  "label": "\nRequires Heavy Knothide Leather\u00a0(30), Wind Scales\u00a0(16), Primal Air\u00a0(18), Primal Might\u00a0(8), Sunmote\u00a0(6)",
                   "format": "Common"
                 }
               ]
@@ -40212,7 +40249,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "\nRequires Heavy Knothide Leather (30), Fel Hide (16), Primal Shadow (18), Primal Might (8), Sunmote (6)",
+                  "label": "\nRequires Heavy Knothide Leather\u00a0(30), Fel Hide\u00a0(16), Primal Shadow\u00a0(18), Primal Might\u00a0(8), Sunmote\u00a0(6)",
                   "format": "Common"
                 }
               ]
@@ -40299,7 +40336,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "\nRequires Primal Mooncloth (18), Primal Life (12), Primal Water (12), Sunmote (6)",
+                  "label": "\nRequires Primal Mooncloth\u00a0(18), Primal Life\u00a0(12), Primal Water\u00a0(12), Sunmote\u00a0(6)",
                   "format": "Common"
                 }
               ]
@@ -40394,7 +40431,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "\nRequires Heavy Knothide Leather (40), Thick Clefthoof Leather (24), Primal Might (6), Primal Nether (6)",
+                  "label": "\nRequires Heavy Knothide Leather\u00a0(40), Thick Clefthoof Leather\u00a0(24), Primal Might\u00a0(6), Primal Nether\u00a0(6)",
                   "format": "Common"
                 }
               ]
@@ -40485,7 +40522,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "\nRequires Heavy Knothide Leather (30), Thick Clefthoof Leather (16), Primal Life (18), Primal Might (8), Sunmote (6)",
+                  "label": "\nRequires Heavy Knothide Leather\u00a0(30), Thick Clefthoof Leather\u00a0(16), Primal Life\u00a0(18), Primal Might\u00a0(8), Sunmote\u00a0(6)",
                   "format": "Common"
                 }
               ]
@@ -40581,7 +40618,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "\nRequires Primal Mooncloth (20), Primal Nether (2)",
+                  "label": "\nRequires Primal Mooncloth\u00a0(20), Primal Nether\u00a0(2)",
                   "format": "Common"
                 }
               ]
@@ -40677,7 +40714,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "\nRequires Heavy Knothide Leather (40), Nether Dragonscales (24), Primal Might (6), Primal Nether (6)",
+                  "label": "\nRequires Heavy Knothide Leather\u00a0(40), Nether Dragonscales\u00a0(24), Primal Might\u00a0(6), Primal Nether\u00a0(6)",
                   "format": "Common"
                 }
               ]
@@ -40765,7 +40802,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "\nRequires Heavy Knothide Leather (30), Nether Dragonscales (16), Primal Life (18), Primal Might (8), Sunmote (6)",
+                  "label": "\nRequires Heavy Knothide Leather\u00a0(30), Nether Dragonscales\u00a0(16), Primal Life\u00a0(18), Primal Might\u00a0(8), Sunmote\u00a0(6)",
                   "format": "Common"
                 }
               ]
@@ -40853,7 +40890,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "\nRequires Spellcloth (10), Shadowcloth (10), Sunmote (6)",
+                  "label": "\nRequires Spellcloth\u00a0(10), Shadowcloth\u00a0(10), Sunmote\u00a0(6)",
                   "format": "Common"
                 }
               ]
@@ -40949,7 +40986,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "\nRequires Spellcloth (12), Shadowcloth (12), Primal Nether (2)",
+                  "label": "\nRequires Spellcloth\u00a0(12), Shadowcloth\u00a0(12), Primal Nether\u00a0(2)",
                   "format": "Common"
                 }
               ]
@@ -41037,7 +41074,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "\nRequires Hardened Khorium (10), Primal Fire (12), Primal Shadow (12), Primal Air (12), Sunmote (6)",
+                  "label": "\nRequires Hardened Khorium\u00a0(10), Primal Fire\u00a0(12), Primal Shadow\u00a0(12), Primal Air\u00a0(12), Sunmote\u00a0(6)",
                   "format": "Common"
                 }
               ]
@@ -41129,7 +41166,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "\nRequires Khorium Bar (20), Hardened Adamantite Bar (4), Primal Fire (10), Primal Shadow (10), Primal Nether (6)",
+                  "label": "\nRequires Khorium Bar\u00a0(20), Hardened Adamantite Bar\u00a0(4), Primal Fire\u00a0(10), Primal Shadow\u00a0(10), Primal Nether\u00a0(6)",
                   "format": "Common"
                 }
               ]
@@ -41225,7 +41262,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "\nRequires Khorium Bar (20), Hardened Adamantite Bar (4), Primal Life (15), Primal Water (15), Primal Nether (6)",
+                  "label": "\nRequires Khorium Bar\u00a0(20), Hardened Adamantite Bar\u00a0(4), Primal Life\u00a0(15), Primal Water\u00a0(15), Primal Nether\u00a0(6)",
                   "format": "Common"
                 }
               ]
@@ -41317,7 +41354,7 @@
                   "format": "Uncommon"
                 },
                 {
-                  "label": "\nRequires Hardened Khorium (8), Primal Life (20), Primal Might (6), Sunmote (6)",
+                  "label": "\nRequires Hardened Khorium\u00a0(8), Primal Life\u00a0(20), Primal Might\u00a0(6), Sunmote\u00a0(6)",
                   "format": "Common"
                 }
               ]
