@@ -38,6 +38,11 @@
 }
 
 /* Indent character rows in signup table */
+.roster-class-gap td {
+  padding: 0;
+  height: 0.5rem;
+  border: none;
+}
 .roster-row td:first-child {
   padding-left: 5em;
 }

@@ -1410,6 +1410,18 @@ function renderRosterTable(resolvedSignups, raidName, raidId) {
 
   function rosterRows(signups, sectionLabel) {
     if (!signups.length) return "";
+    const CLASS_ORDER = ["Warrior", "Paladin", "Hunter", "Rogue", "Priest", "Shaman", "Mage", "Warlock", "Druid"];
+    signups.sort((a, b) => {
+      const ca = a.wowClass || "";
+      const cb = b.wowClass || "";
+      const ia = CLASS_ORDER.indexOf(ca);
+      const ib = CLASS_ORDER.indexOf(cb);
+      const oa = ia >= 0 ? ia : 99;
+      const ob = ib >= 0 ? ib : 99;
+      if (oa !== ob) return oa - ob;
+      return (a.characterName || "").toLowerCase().localeCompare((b.characterName || "").toLowerCase());
+    });
+    let lastClass = null;
     const rows = signups.map((signup) => {
       const role = signup.mainRole || signup.role || "";
       const roleIcon = ROLE_ICONS[role] || "";
@@ -1436,7 +1448,9 @@ function renderRosterTable(resolvedSignups, raidName, raidId) {
         ? allParts.join('<span class="text-dim"> · </span>')
         : '<span class="text-dim">—</span>';
 
-      return `<tr class="roster-row roster-status-${statusNorm}">
+      const classGap = (wowClass !== lastClass && lastClass !== null) ? '<tr class="roster-class-gap"><td colspan="8"></td></tr>' : '';
+      lastClass = wowClass;
+      return `${classGap}<tr class="roster-row roster-status-${statusNorm}">
         <td class="roster-char-indent" style="${classColor ? `color: ${classColor}; font-weight: 600` : ""}">${escapeHtml(charName)}</td>
         <td style="${classColor ? `color: ${classColor}` : ""}">${escapeHtml(wowClass)}</td>
         <td>${formatSpecDisplay(spec, "", role)}</td>
