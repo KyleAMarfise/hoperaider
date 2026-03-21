@@ -1113,11 +1113,17 @@ function renderReserves() {
   // Build character lookup
   const charMap = new Map(currentCharacters.map(c => [c.id, c]));
 
-  // Sort by character name
+  // Sort by class, then character name within each class
+  const CLASS_ORDER = ["Warrior", "Paladin", "Hunter", "Rogue", "Priest", "Shaman", "Mage", "Warlock", "Druid"];
   raidReserves.sort((a, b) => {
-    const na = (a.characterName || "").toLowerCase();
-    const nb = (b.characterName || "").toLowerCase();
-    return na.localeCompare(nb);
+    const ca = a.wowClass || charMap.get(a.characterId)?.wowClass || "—";
+    const cb = b.wowClass || charMap.get(b.characterId)?.wowClass || "—";
+    const ia = CLASS_ORDER.indexOf(ca);
+    const ib = CLASS_ORDER.indexOf(cb);
+    const oa = ia >= 0 ? ia : 99;
+    const ob = ib >= 0 ? ib : 99;
+    if (oa !== ob) return oa - ob;
+    return (a.characterName || "").toLowerCase().localeCompare((b.characterName || "").toLowerCase());
   });
 
   // Build item reservation counts across all characters for this raid
@@ -1132,6 +1138,7 @@ function renderReserves() {
 
   let html = '';
   let visibleCount = 0;
+  let lastClass = null;
   const maxRes = getMaxReserves();
   for (const res of raidReserves) {
     const ch = charMap.get(res.characterId);
@@ -1144,6 +1151,12 @@ function renderReserves() {
     if (itemDroppedFilter) {
       const hasMatch = items.some(it => (it.name || "").toLowerCase().includes(itemDroppedFilter));
       if (!hasMatch) continue;
+    }
+    // Class group header
+    if (wowClass !== lastClass && !itemDroppedFilter) {
+      lastClass = wowClass;
+      const classCount = raidReserves.filter(r => (r.wowClass || charMap.get(r.characterId)?.wowClass || "—") === wowClass).length;
+      html += `<tr class="softres-class-group-header"><td colspan="5" style="color:${classColor}"><strong>${escapeHtml(wowClass)}</strong> <span class="text-dim">(${classCount})</span></td></tr>`;
     }
     const isOverOrUnder = items.length !== maxRes;
     // Only highlight over/under limit for admins or the character's own owner
