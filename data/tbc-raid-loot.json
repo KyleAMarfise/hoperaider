@@ -10053,6 +10053,36 @@
                   "format": "Uncommon"
                 }
               ]
+            },
+            {
+              "itemId": 31292,
+              "name": "Black Sack of Gems",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_bag_17.jpg",
+              "quality": "Uncommon",
+              "itemLevel": 1,
+              "slot": "Quest",
+              "class": "Quest",
+              "subclass": "Quest",
+              "dropChance": 1.0,
+              "tooltip": [
+                {
+                  "label": "Black Sack of Gems"
+                },
+                {
+                  "label": "Phase 1",
+                  "format": "alignRight"
+                },
+                {
+                  "label": "Binds when picked up"
+                },
+                {
+                  "label": "Unique"
+                },
+                {
+                  "label": "Contains random epic and rare gems",
+                  "format": "Uncommon"
+                }
+              ]
             }
           ]
         },
