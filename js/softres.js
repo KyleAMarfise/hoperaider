@@ -1167,7 +1167,8 @@ function renderReserves() {
           } else {
             nameHtml = escapeHtml(rawName);
           }
-          return `<span data-item-id="${it.itemId}" class="softres-item-hover" style="color:${c};font-weight:600">${nameHtml}${dropPct}${countBadge}</span>`;
+          const removeBtn = isAdmin ? ` <button class="softres-item-remove-btn" data-action="remove-item" data-id="${escapeHtml(res.id)}" data-item-id="${it.itemId}" title="Remove this item">✕</button>` : '';
+          return `<span data-item-id="${it.itemId}" class="softres-item-hover" style="color:${c};font-weight:600">${nameHtml}${dropPct}${countBadge}${removeBtn}</span>`;
         }).join('<span class="softres-reserve-sep-table"> · </span>')
       : '—') + limitMsg;
 
@@ -1744,9 +1745,47 @@ async function handleReserveAction(e) {
   const id = btn.dataset.id;
   if (!action || !id) return;
 
+  if (action === "remove-item") {
+    if (!isAdmin) return;
+    const itemId = Number(btn.dataset.itemId);
+    const res = currentReserves.find(r => r.id === id);
+    if (!res) return;
+    const currentItems = Array.isArray(res.items) ? res.items : getReserveItems(res);
+    const itemName = currentItems.find(i => Number(i.itemId) === itemId)?.name || "this item";
+    if (!confirm(`Remove ${itemName} from ${res.characterName || "this character"}?`)) return;
+    try {
+      let removedOne = false;
+      const filtered = currentItems.filter(i => {
+        if (!removedOne && Number(i.itemId) === itemId) { removedOne = true; return false; }
+        return true;
+      });
+      if (filtered.length === 0) {
+        await deleteDoc(doc(db, "softreserves", id));
+        setMsg("Last reserve removed — entry deleted.");
+      } else {
+        await setDoc(doc(db, "softreserves", id), {
+          raidId:        res.raidId,
+          raidName:      res.raidName || "",
+          raidDate:      res.raidDate || "",
+          characterId:   res.characterId,
+          characterName: res.characterName || "",
+          wowClass:      res.wowClass || "",
+          ownerUid:      res.ownerUid,
+          items:         filtered,
+          createdAt:     res.createdAt || serverTimestamp(),
+          updatedAt:     serverTimestamp()
+        });
+        setMsg(`Removed ${itemName}.`);
+      }
+    } catch (err) {
+      setMsg("Error removing item: " + err.message, true);
+    }
+    return;
+  }
+
   if (action === "delete") {
     if (!isAdmin) return; // Only admins can delete from overview
-    if (!confirm("Delete this reserve?")) return;
+    if (!confirm("Delete all reserves for this character?")) return;
     try {
       await deleteDoc(doc(db, "softreserves", id));
       setMsg("Reserve deleted.");

@@ -3931,6 +3931,20 @@ td .row-actions button {
 .softres-delete-btn {
   color: #ff6b6b;
 }
+.softres-item-remove-btn {
+  background: none;
+  border: none;
+  color: #ff6b6b;
+  cursor: pointer;
+  font-size: 0.7rem;
+  padding: 0 0.15rem;
+  opacity: 0.5;
+  vertical-align: middle;
+  line-height: 1;
+}
+.softres-item-remove-btn:hover {
+  opacity: 1;
+}
 
 .softres-item-icon {
   width: 28px;
