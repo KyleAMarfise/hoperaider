@@ -4297,17 +4297,22 @@ td .row-actions button {
   left: 0;
   right: 0;
   z-index: 900;
-  background: linear-gradient(135deg, rgba(30, 20, 8, 0.97), rgba(45, 30, 12, 0.97));
-  border-bottom: 2px solid var(--gold, #d1a754);
+  background: linear-gradient(135deg, rgba(8, 15, 35, 0.97), rgba(12, 25, 55, 0.97));
+  border-bottom: 2px solid #4f8ef7;
   padding: 0.6rem 1.2rem;
   display: flex;
   align-items: center;
   gap: 0.75rem;
   box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  animation: announcement-pulse 3s ease-in-out infinite;
+}
+@keyframes announcement-pulse {
+  0%, 100% { background: linear-gradient(135deg, rgba(8, 15, 35, 0.97), rgba(12, 25, 55, 0.97)); }
+  50% { background: linear-gradient(135deg, rgba(15, 25, 55, 0.97), rgba(20, 40, 80, 0.97)); }
 }
 .softres-announcement-text {
   flex: 1;
-  color: var(--gold, #d1a754);
+  color: #6db3f8;
   font-size: 0.95rem;
   font-weight: 500;
   white-space: pre-line;
