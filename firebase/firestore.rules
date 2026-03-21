@@ -38,8 +38,7 @@ service cloud.firestore {
         && data.characterName is string
         && data.characterName.size() >= 2
         && data.characterName.size() <= 24
-        && data.wowClass is string
-        && (data.wowClass.size() == 0 || validClass(data.wowClass))
+        && (!('wowClass' in data) || (data.wowClass is string && (data.wowClass.size() == 0 || validClass(data.wowClass))))
         && data.raidId is string
         && data.raidId.size() > 5
         && data.raidName is string
