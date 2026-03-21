@@ -1165,7 +1165,7 @@ function renderReserves() {
           const lootItem = itemTooltipMap.get(Number(it.itemId));
           const dropPct = lootItem?.dropChance != null ? ` <span class="softres-drop-pct">${(lootItem.dropChance * 100).toFixed(1)}%</span>` : '';
           const count = itemReserveCount.get(Number(it.itemId)) || 0;
-          const countBadge = count > 1 ? ` <span class="softres-contention-badge" title="${count} characters reserved this item">(x${count})</span>` : '';
+          const countBadge = count > 1 ? ` <span class="softres-contention-badge" title="${count} characters reserved this item">${count}</span>` : '';
           // Highlight matching portion of item name when filtering
           const rawName = it.name || '—';
           let nameHtml;
@@ -1343,7 +1343,7 @@ function renderRaidModeBody(bossFilter) {
         }).join("");
 
         const contestLabel = reservers.length > 1
-          ? `<span class="softres-contention-badge" title="${reservers.length} characters reserved this">(x${reservers.length})</span>`
+          ? `<span class="softres-contention-badge" title="${reservers.length} characters reserved this">${reservers.length}</span>`
           : "";
 
         const hrBanner = hr

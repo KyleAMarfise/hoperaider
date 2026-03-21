@@ -4443,14 +4443,21 @@ td .row-actions button {
 }
 /* Contention badge — shows how many characters reserved the same item */
 .softres-contention-badge {
-  display: inline;
-  margin-left: 0.2rem;
-  font-size: 0.8rem;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  margin-left: 0.3rem;
+  border-radius: 9px;
+  font-size: 0.72rem;
+  font-weight: 700;
   line-height: 1;
-  color: #ff6b6b;
-  background: none;
-  vertical-align: baseline;
+  color: #fff;
+  background: #4a90d9;
+  vertical-align: middle;
+  text-shadow: 0 0 4px rgba(100, 180, 255, 0.5);
 }
 
 /* Loot table rows are hoverable */
