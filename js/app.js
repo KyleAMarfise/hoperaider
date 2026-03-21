@@ -3429,7 +3429,7 @@ function renderCategoryRows(targetElement, rows, rosterMap, reverse = false) {
           <td colspan="10">
             <div class="raid-detail-wrap">
               ${renderRoleCompositionBar(resolvedSignups, item)}
-              ${renderRosterTable(resolvedSignups, item.raidName, item.raidId)}
+              ${renderRosterTable(resolvedSignups, item.raidName, selectedRaid?.id || item.raidId)}
             </div>
           </td>
         </tr>`;
