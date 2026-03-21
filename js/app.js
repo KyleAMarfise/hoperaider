@@ -1482,10 +1482,10 @@ function renderRosterTable(resolvedSignups, raidName, raidId) {
       <tr><th class="roster-char-indent">Character</th><th>Class</th><th>Main Spec</th><th>Soft & Hard Reserves</th><th>Status</th><th>Parses</th><th>Gear</th><th>Logs</th></tr>
     </thead>
     <tbody>
+      ${unassignedHRRow}
       ${rosterRows(accepted, "Accepted")}
       ${rosterRows(pending, "Pending")}
       ${rosterRows(declined, "Declined / Withdrawn")}
-      ${unassignedHRRow}
     </tbody>
   </table>`;
 }
