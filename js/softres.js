@@ -1152,12 +1152,11 @@ function renderReserves() {
       const hasMatch = items.some(it => (it.name || "").toLowerCase().includes(itemDroppedFilter));
       if (!hasMatch) continue;
     }
-    // Class group header
-    if (wowClass !== lastClass && !itemDroppedFilter) {
-      lastClass = wowClass;
-      const classCount = raidReserves.filter(r => (r.wowClass || charMap.get(r.characterId)?.wowClass || "—") === wowClass).length;
-      html += `<tr class="softres-class-group-header"><td colspan="5" style="color:${classColor}"><strong>${escapeHtml(wowClass)}</strong> <span class="text-dim">(${classCount})</span></td></tr>`;
+    // Class group spacing
+    if (wowClass !== lastClass && lastClass !== null && !itemDroppedFilter) {
+      html += '<tr class="softres-class-gap"><td colspan="5"></td></tr>';
     }
+    lastClass = wowClass;
     const isOverOrUnder = items.length !== maxRes;
     // Only highlight over/under limit for admins or the character's own owner
     const showLimitWarning = isOverOrUnder && (isAdmin || res.ownerUid === authUid);

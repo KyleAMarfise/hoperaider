@@ -4384,16 +4384,10 @@ td .row-actions button {
 .softres-row-overlimit {
   background: rgba(255, 60, 60, 0.08);
 }
-.softres-class-group-header td {
-  padding-top: 0.75rem;
-  padding-bottom: 0.25rem;
-  font-size: 0.85rem;
-  letter-spacing: 0.03em;
-  border-top: 1px solid var(--line-muted, #5e4b2a);
-}
-.softres-class-group-header:first-child td {
-  border-top: none;
-  padding-top: 0;
+.softres-class-gap td {
+  padding: 0;
+  height: 0.5rem;
+  border: none;
 }
 .softres-nosr-header td {
   padding-top: 10px;
