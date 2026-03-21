@@ -3729,6 +3729,7 @@ fields.offRole.addEventListener("change", () => {
   updateSignupGate();
 });
 
+fields.profileName.addEventListener("input", updateSignupGate);
 fields.characterName.addEventListener("input", updateSignupGate);
 fields.mainSpecialization.addEventListener("change", updateSignupGate);
 fields.offSpecialization.addEventListener("change", updateSignupGate);
