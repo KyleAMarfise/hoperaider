@@ -1527,14 +1527,14 @@ async function onRaidSelected(raidId) {
 function renderAnnouncement() {
   const raid = currentRaids.find(r => r.id === selectedRaidId);
   const text = raid?.announcement || "";
+  // Always show the button for admins when a raid is selected
+  if (softresAnnouncementCreateBtn) softresAnnouncementCreateBtn.hidden = !isAdmin;
   if (text) {
     if (softresAnnouncement) softresAnnouncement.hidden = false;
     if (softresAnnouncementText) softresAnnouncementText.textContent = text;
     if (softresAnnouncementAdmin) softresAnnouncementAdmin.hidden = !isAdmin;
-    if (softresAnnouncementCreateBtn) softresAnnouncementCreateBtn.hidden = true;
   } else {
     if (softresAnnouncement) softresAnnouncement.hidden = true;
-    if (softresAnnouncementCreateBtn) softresAnnouncementCreateBtn.hidden = !isAdmin;
   }
 }
 

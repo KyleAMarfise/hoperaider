@@ -4344,7 +4344,7 @@ td .row-actions button {
 .softres-section-divider {
   border: none;
   border-top: 1px solid var(--line-muted, #5e4b2a);
-  margin: 1.5rem 0;
+  margin: 2.5rem 0;
 }
 .softres-loot-disclaimer {
   color: var(--text-dim);
