@@ -4277,7 +4277,7 @@ td .row-actions button {
 }
 
 .softres-loot-scroll {
-  max-height: 75vh;
+  max-height: 38vh;
   overflow-y: scroll;
   scrollbar-width: thin;
   scrollbar-color: rgba(209, 167, 84, 0.4) transparent;
