@@ -2220,16 +2220,16 @@
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Gronn-Stitched Girdle</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 125</span><br>Binds when picked up<table width=\"100%\"><tr><td>Waist</td><th><span class=\"q1\">Leather</span></th></tr></table><span>222 Armor</span><br><span>+27 Stamina</span><br /><br>Blue Socket<br>Yellow Socket<br><span class=\"q0\">Socket Bonus: +3 Critical Strike Rating</span><br /><br />Durability 40 / 40</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves critical strike rating by 25.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 72.</span><br></td></tr></table>"
             },
             {
-              "itemId": 31292,
+              "itemId": 34846,
               "name": "Black Sack of Gems",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_bag_17.jpg",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_bag_10_black.jpg",
               "quality": "Uncommon",
               "itemLevel": 1,
               "slot": "Quest",
               "class": "Quest",
               "subclass": "Quest",
               "dropChance": 1,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q3\">Crystal Pulse Shield</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 112</span><br>Binds when equipped<table width=\"100%\"><tr><td>Off Hand</td><th><span class=\"q1\">Shield</span></th></tr></table><span>3711 Armor</span><br>83 Block<br><span>+24 Intellect</span><br>Durability 100 / 100</td></tr></table><table><tr><td>Requires Level 69<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 35 and damage done by up to 12 for all magical spells and effects.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 6 mana per 5 sec.</span><br></td></tr></table>"
+              "wowheadTooltip": "<table><tr><td><!--nstart--><b class=\"q2\">Black Sack of Gems</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->1</span><!--bo--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td><!--itemEffects:0--><span class=\"q2\">&lt;Right Click to Open&gt;</span><br><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">47</span> <span class=\"moneycopper\">62</span></div></td></tr></table>"
             }
           ]
         },
