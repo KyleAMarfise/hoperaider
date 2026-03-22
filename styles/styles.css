@@ -3724,8 +3724,7 @@ td .row-actions button {
 /* ── Soft Reserve Page ───────────────────────────────────────────────────── */
 .admin-softres-page .container {
   align-content: start;
-  width: min(98vw, 100% - 1rem);
-  max-width: none;
+  width: min(1600px, 78vw);
 }
 .admin-softres-page .container,
 .admin-softres-page .card,
@@ -5239,8 +5238,7 @@ td .row-actions button {
 
 /* Raid info bar */
 .pug-page .container {
-  width: min(98vw, 100% - 1rem);
-  max-width: none;
+  width: min(1600px, 78vw);
 }
 .pug-page .card {
   border: none;
