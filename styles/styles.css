@@ -4100,17 +4100,15 @@ td .row-actions button {
 }
 .softres-loot-layout {
   display: flex;
+  flex-direction: column;
   gap: 1rem;
-  align-items: stretch;
 }
 .softres-loot-layout > .softres-loot-browser {
-  flex: 0 0 45%;
-  min-width: 0;
+  width: 100%;
   margin-top: 0;
 }
 .softres-loot-layout > .softres-overview {
-  flex: 1;
-  min-width: 0;
+  width: 100%;
   margin-bottom: 0;
 }
 @media (max-width: 1400px) {
@@ -4123,13 +4121,6 @@ td .row-actions button {
     flex-direction: column;
   }
   .softres-top-row > .softres-character-bar {
-    flex: none;
-    width: 100%;
-  }
-  .softres-loot-layout {
-    flex-direction: column;
-  }
-  .softres-loot-layout > .softres-overview {
     flex: none;
     width: 100%;
   }
