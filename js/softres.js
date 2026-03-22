@@ -784,16 +784,15 @@ function renderCharacterReserves() {
   if (!items.length) {
     softresCharReserves.innerHTML = '<span class="text-dim">No reserves yet — click <strong>+</strong> on items below</span>';
   } else {
-    let html = '<span class="softres-char-label">Reserves:</span> ';
-    items.forEach((it, idx) => {
+    let html = '<span class="softres-char-label">RESERVES:</span>';
+    items.forEach((it) => {
       const color = QUALITY_COLORS[it.quality] || "#ccc";
       const lootItem = itemTooltipMap.get(Number(it.itemId));
       const dropPct = lootItem?.dropChance != null ? ` <span class="softres-drop-pct">${(lootItem.dropChance * 100).toFixed(1)}%</span>` : '';
       const removeBtn = canModify
         ? ` <button class="softres-reserve-btn softres-remove-btn softres-inline-remove" data-reserve-action="remove" data-item-id="${it.itemId}" title="Remove reserve">✕</button>`
         : '';
-      if (idx > 0) html += '<span class="softres-char-reserve-sep">&</span>';
-      html += `<span class="softres-char-reserve-item" style="color:${color}" data-item-id="${it.itemId}">${escapeHtml(it.name)}${dropPct}${removeBtn}</span>`;
+      html += `<span class="softres-char-reserve-item" style="color:${color}" data-item-id="${it.itemId}">• ${escapeHtml(it.name)}${dropPct}${removeBtn}</span>`;
     });
     softresCharReserves.innerHTML = html;
   }
@@ -1106,7 +1105,7 @@ function renderReserves() {
   const itemDroppedFilter = (softresItemDroppedFilter?.value || "").trim().toLowerCase();
 
   if (raidReserves.length === 0) {
-    softresRows.innerHTML = '<tr><td colspan="5" class="text-dim">No reserves yet for this raid.</td></tr>';
+    softresRows.innerHTML = '<tr><td colspan="4" class="text-dim">No reserves yet for this raid.</td></tr>';
     return;
   }
 
@@ -1154,7 +1153,7 @@ function renderReserves() {
     }
     // Class group spacing
     if (wowClass !== lastClass && lastClass !== null && !itemDroppedFilter) {
-      html += '<tr class="softres-class-gap"><td colspan="5"></td></tr>';
+      html += '<tr class="softres-class-gap"><td colspan="4"></td></tr>';
     }
     lastClass = wowClass;
     const isOverOrUnder = items.length !== maxRes;
@@ -1211,14 +1210,13 @@ function renderReserves() {
     visibleCount++;
     html += `<tr class="${rowClass}">
       <td style="color:${classColor};font-weight:600">${escapeHtml(charName)}</td>
-      <td style="color:${classColor}">${escapeHtml(wowClass)}</td>
       <td>${itemsHtml}</td>
       <td class="text-dim">${relativeTime(res.updatedAt)}</td>
       <td>${actionsHtml}</td>
     </tr>`;
   }
   if (!html) {
-    html = '<tr><td colspan="5" class="text-dim">No characters reserved a matching item.</td></tr>';
+    html = '<tr><td colspan="4" class="text-dim">No characters reserved a matching item.</td></tr>';
   }
 
   // Show accepted signups who haven't SR'd yet (only when not filtering by item)
@@ -1230,13 +1228,12 @@ function renderReserves() {
     });
     if (noSrSignups.length) {
       noSrSignups.sort((a, b) => (a.characterName || "").localeCompare(b.characterName || ""));
-      html += `<tr><td colspan="5" class="softres-nosr-header text-dim">No SR yet (${noSrSignups.length})</td></tr>`;
+      html += `<tr><td colspan="4" class="softres-nosr-header text-dim">No SR yet (${noSrSignups.length})</td></tr>`;
       for (const s of noSrSignups) {
         const wowClass = s.wowClass || "—";
         const classColor = WOW_CLASS_COLORS[wowClass] || "#ccc";
         html += `<tr class="softres-nosr-row">
           <td style="color:${classColor};font-weight:600;opacity:0.6">${escapeHtml(s.characterName || "—")}</td>
-          <td style="color:${classColor};opacity:0.6">${escapeHtml(wowClass)}</td>
           <td colspan="3" class="text-dim">—</td>
         </tr>`;
       }
@@ -1476,6 +1473,10 @@ async function onRaidSelected(raidId) {
     softresOverview.hidden = true;
     softresAdminAdd.hidden = true;
     softresLootBrowser.hidden = true;
+    const softresLootLayout = document.getElementById("softresLootLayout");
+    if (softresLootLayout) softresLootLayout.hidden = true;
+    const softresTopRow = document.getElementById("softresTopRow");
+    if (softresTopRow) softresTopRow.hidden = true;
     softresLockControls.hidden = true;
     if (hardresSection) hardresSection.hidden = true;
     if (softresAnnouncement) softresAnnouncement.hidden = true;
@@ -1489,9 +1490,13 @@ async function onRaidSelected(raidId) {
 
   softresDetail.hidden = false;
 
-  softresRaidTitle.textContent = `${raid.raidName || "Raid"} — ${formatMonthDayYear(raid.raidDate || "")}`;
+  softresRaidTitle.textContent = "Character Loot";
   softresAdminAdd.hidden = false;
   softresLootBrowser.hidden = false;
+  const softresLootLayout = document.getElementById("softresLootLayout");
+  if (softresLootLayout) softresLootLayout.hidden = false;
+  const softresTopRow = document.getElementById("softresTopRow");
+  if (softresTopRow) softresTopRow.hidden = false;
 
   // Load loot data and find matching raid
   await loadLootData();
@@ -1881,7 +1886,7 @@ async function handleReserveAction(e) {
     if (!isAdmin && res.ownerUid !== authUid) return;
     softresCharacterSelect.value = res.characterId || "";
     renderCharacterReserves();
-    softresLootBrowser.scrollIntoView({ behavior: "smooth", block: "start" });
+    // No scroll — loot table is already visible side by side
   }
 }
 

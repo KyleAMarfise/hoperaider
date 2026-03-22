@@ -1917,6 +1917,19 @@ async function updateSignupStatus(signupId, nextStatus) {
     ...legacySignupProfileDeleteFields(),
     updatedAt: serverTimestamp()
   });
+
+  // Remove soft reserves when withdrawing or declining
+  if (["withdrawn", "decline", "denied"].includes(normalizedStatus) && existingEntry.raidId && existingEntry.characterId) {
+    const srDoc = allSoftReserves.find(r => r.raidId === existingEntry.raidId && r.characterId === existingEntry.characterId);
+    if (srDoc) {
+      try {
+        await deleteDoc(doc(db, "softreserves", srDoc.id));
+      } catch (err) {
+        console.warn("Could not remove soft reserves:", err.message);
+      }
+    }
+  }
+
   currentRows = currentRows.map((entry) =>
     entry.id === signupId
       ? { ...entry, status: normalizedStatus, updatedAt: new Date().toISOString() }
@@ -3377,7 +3390,11 @@ function renderCategoryRows(targetElement, rows, rosterMap, reverse = false) {
       const item = group.summary;
       const detailId = `raid-detail-${safeId(group.key)}`;
       const raidSignups = group.signups.filter((signup) => signup.__isSignup !== false && signup.characterId);
-      const signupCount = raidSignups.length;
+      const activeSignups = raidSignups.filter((signup) => {
+        const s = normalizeSignupStatus(signup.status);
+        return s !== "decline" && s !== "withdrawn" && s !== "denied";
+      });
+      const signupCount = activeSignups.length;
       const resolvedSignups = raidSignups.map((signup) => resolveSignupCharacterData(signup));
       const isExpanded = expandedRaidGroups.has(group.key);
       const viewerOwnerUid = getViewerOwnerUid();
@@ -3456,8 +3473,8 @@ function renderPastRaidsCompact(pastItems) {
     const timeStr = start ? `${start}${end ? " – " + end : ""} ST` : "";
     const runType = item.runType ? ` (${escapeHtml(item.runType)})` : "";
     const raidSignups = group.signups.filter((s) => s.__isSignup !== false && s.characterId);
-    const signupCount = raidSignups.length;
-    const countLabel = signupCount > 0 ? `${signupCount} signup${signupCount !== 1 ? "s" : ""}` : "0 signups";
+    const activeCount = raidSignups.filter((s) => { const st = normalizeSignupStatus(s.status); return st !== "decline" && st !== "withdrawn" && st !== "denied"; }).length;
+    const countLabel = activeCount > 0 ? `${activeCount} signup${activeCount !== 1 ? "s" : ""}` : "0 signups";
     const resolvedSignups = raidSignups.map((signup) => resolveSignupCharacterData(signup));
     const isExpanded = expandedRaidGroups.has(group.key);
     return `<button type="button" class="past-raid-row${isExpanded ? " is-expanded" : ""}" data-past-toggle="${escapeHtml(detailId)}" data-past-group-key="${escapeHtml(group.key)}">
@@ -3655,7 +3672,7 @@ function renderCalendarView(scheduleItems) {
       const raidLabel = escapeHtml(raid.raidName || "Raid");
       const runType = raid.runType ? ` (${escapeHtml(raid.runType)})` : "";
       const leaderStr = raid.raidLeader ? ` — RL: ${escapeHtml(raid.raidLeader)}` : "";
-      const signupCount = raidSignups.length;
+      const signupCount = raidSignups.filter((s) => { const st = normalizeSignupStatus(s.status); return st !== "decline" && st !== "withdrawn" && st !== "denied"; }).length;
       const sizeStr = raid.raidSize ? `/${raid.raidSize}` : "";
       const countLabel = `<span class="chip-time">${signupCount}${sizeStr} signed</span>`;
       const raidId = selectedRaid?.id || "";

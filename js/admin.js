@@ -564,7 +564,6 @@ function buildRequestQueueRows(rows, profilesById, actionMode = "full") {
               <button type="button" data-request-action="accept" data-signup-id="${escapeHtml(signup.id)}">Accept</button>
             </div>`
           : `<span class="request-action-na">Record only</span>`;
-      const charSlug = String(characterName || "").trim().toLowerCase();
       return `<tr>
         <td>${escapeHtml(formatMonthDayYear(signup.raidDate || ""))}</td>
         <td>${escapeHtml(signup.raidName || "—")}</td>
@@ -572,7 +571,6 @@ function buildRequestQueueRows(rows, profilesById, actionMode = "full") {
         <td>${escapeHtml(characterName)}</td>
         <td>${renderClassText(attributes.wowClass)}</td>
         <td>${escapeHtml(attributes.specialization)}</td>
-        <td class="armory-col-narrow" data-armory-char="${escapeHtml(charSlug)}" data-armory-field="ilvl">…</td>
         <td>${renderGearLink(gearUrl)}</td>
         <td>${renderExternalLink(logsUrl, "Logs")}</td>
         <td class="audit-parses-cell">${renderWclParsesCell({ characterName, logsUrl }, signup.raidName || "")}</td>
@@ -762,7 +760,7 @@ function updatePendingBadge() {
   }
   const pendingCount = currentSignups.filter((signup) => {
     const status = normalizeSignupStatus(signup.status);
-    return isActiveSignup(signup) && (status === "requested" || status === "tentative" || status === "withdrawn");
+    return isActiveSignup(signup) && (status === "requested" || status === "tentative");
   }).length;
   adminOpsBadge.textContent = String(pendingCount);
   adminOpsBadge.hidden = pendingCount <= 0;
@@ -771,11 +769,88 @@ function updatePendingBadge() {
   document.title = pendingCount > 0 ? `(${pendingCount}) ${baseTitle}` : baseTitle;
 }
 
+function buildRaidClassCompositions(pendingSignups, profilesById) {
+  // Find unique raids from pending signups
+  const raidIds = [...new Set(pendingSignups.map(s => s.raidId).filter(Boolean))];
+  if (!raidIds.length) return "";
+
+  const CLASS_ORDER = ["Warrior", "Paladin", "Hunter", "Rogue", "Priest", "Shaman", "Mage", "Warlock", "Druid"];
+
+  return raidIds.map(raidId => {
+    // Get all accepted signups for this raid
+    const accepted = currentSignups.filter(s =>
+      s.raidId === raidId && normalizeSignupStatus(s.status) === "accept"
+    );
+    const raidInfo = pendingSignups.find(s => s.raidId === raidId);
+    const raid = currentRaids.find(r => r.id === raidId);
+    const raidLabel = `${raidInfo?.raidName || "Raid"} — ${formatMonthDayYear(raidInfo?.raidDate || "")}`;
+
+    // Raid size and slot config
+    const raidSizeMatch = String(raid?.raidSize || "").match(/^(\d+)-man$/i);
+    const totalSlots = raidSizeMatch ? Number(raidSizeMatch[1]) : 0;
+    const tankSlots = raid?.tankSlots != null ? Number(raid.tankSlots) : null;
+    const healerSlots = raid?.healerSlots != null ? Number(raid.healerSlots) : null;
+    const dpsSlots = raid?.dpsSlots != null ? Number(raid.dpsSlots) : null;
+
+    // Count classes and roles
+    const classCounts = {};
+    const roleCounts = { Tank: 0, Healer: 0, DPS: 0 };
+    for (const signup of accepted) {
+      const attrs = resolveSignupCharacterAttributes(signup, profilesById);
+      const cls = attrs.wowClass || "—";
+      classCounts[cls] = (classCounts[cls] || 0) + 1;
+      const role = resolveSignupRole(signup);
+      if (roleCounts[role] !== undefined) roleCounts[role]++;
+    }
+
+    // Build class chips in order
+    const classChips = CLASS_ORDER
+      .filter(cls => classCounts[cls])
+      .map(cls => {
+        const color = WOW_CLASS_COLORS[cls] || "#ccc";
+        return `<span class="comp-class-chip" style="color:${color}">${cls} <strong>${classCounts[cls]}</strong></span>`;
+      })
+      .join("");
+
+    // Role chips with slot info
+    const roleEntries = [
+      { role: "Tank", label: "Tank", slots: tankSlots },
+      { role: "Healer", label: "Healer", slots: healerSlots },
+      { role: "DPS", label: "DPS", slots: dpsSlots }
+    ];
+    const roleChips = roleEntries.map(({ role, label, slots }) => {
+      const count = roleCounts[role];
+      const slotLabel = slots != null ? `${count}/${slots}` : `${count}`;
+      const isFull = slots != null && count >= slots;
+      const fullClass = isFull ? " comp-role-full" : "";
+      return `<span class="comp-role-chip${fullClass}">${label} <strong>${slotLabel}</strong></span>`;
+    }).join('<span class="comp-role-sep"> · </span>');
+
+    // Open spots
+    const openSpots = totalSlots > 0 ? totalSlots - accepted.length : 0;
+    const spotsLabel = totalSlots > 0
+      ? `<span class="raid-comp-spots${openSpots <= 0 ? " comp-spots-full" : ""}">${openSpots > 0 ? `${openSpots} open spot${openSpots !== 1 ? "s" : ""}` : "Full"}</span>`
+      : "";
+
+    return `<div class="raid-comp-card">
+      <div class="raid-comp-summary">
+        <span class="raid-comp-title">${escapeHtml(raidLabel)}</span>
+        <span class="raid-comp-accepted">Accepted: <strong>${accepted.length}${totalSlots ? `/${totalSlots}` : ""}</strong></span>
+        ${spotsLabel}
+        <span class="raid-comp-roles">${roleChips}</span>
+        <span class="raid-comp-classes">${classChips}</span>
+      </div>
+    </div>`;
+  }).join("");
+}
+
 function renderSignupRequestsTable() {
   if (!isAdmin) {
     signupRequestRows.innerHTML = "";
     signupRequestBadge.textContent = "0";
     setMessage(signupRequestMessage, "");
+    const raidCompContainer = document.getElementById("raidCompSummaryContainer");
+    if (raidCompContainer) raidCompContainer.innerHTML = "";
     return;
   }
 
@@ -797,29 +872,67 @@ function renderSignupRequestsTable() {
   const benched = activeItems.filter((signup) => normalizeSignupStatus(signup.status) === "tentative");
   const withdrew = activeItems.filter((signup) => normalizeSignupStatus(signup.status) === "withdrawn");
 
-  signupRequestBadge.textContent = String(activeItems.length);
+  const actionableCount = requested.length + benched.length;
+  signupRequestBadge.textContent = String(actionableCount);
   updatePendingBadge();
   const existingAuthText = String(authStatus.textContent || "").split(" • Pending requests:")[0];
-  authStatus.textContent = `${existingAuthText} • Pending requests: ${activeItems.length}`;
+  authStatus.textContent = `${existingAuthText} • Pending requests: ${actionableCount}`;
 
   if (!activeItems.length) {
-    signupRequestRows.innerHTML = `<tr><td colspan="13">No active signup request records.</td></tr>`;
+    signupRequestRows.innerHTML = `<tr><td colspan="11">No active signup request records.</td></tr>`;
     setMessage(signupRequestMessage, "");
     return;
   }
 
   const profilesById = getCharacterMapById();
-  const requestedHeader = requested.length
-    ? `<tr class="request-group-row"><td colspan="13"><strong>Signup Requests (${requested.length})</strong></td></tr>${buildRequestQueueRows(requested, profilesById, "full")}`
-    : "";
-  const benchedHeader = benched.length
-    ? `<tr class="request-group-row"><td colspan="13"><strong>Benched Themselves (${benched.length})</strong></td></tr>${buildRequestQueueRows(benched, profilesById, "accept-only")}`
-    : "";
-  const withdrewHeader = withdrew.length
-    ? `<tr class="request-group-row"><td colspan="13"><strong>Accepted Then Withdrew (${withdrew.length})</strong></td></tr>${buildRequestQueueRows(withdrew, profilesById, "none")}`
-    : "";
 
-  signupRequestRows.innerHTML = `${requestedHeader}${benchedHeader}${withdrewHeader}`;
+  // Group active items by raid
+  const raidGroups = new Map();
+  for (const signup of activeItems) {
+    const key = signup.raidId || `${signup.raidName}|${signup.raidDate}`;
+    if (!raidGroups.has(key)) raidGroups.set(key, []);
+    raidGroups.get(key).push(signup);
+  }
+
+  // Build composition cards and grouped request rows
+  const raidCompContainer = document.getElementById("raidCompSummaryContainer");
+  const compCards = buildRaidClassCompositions(activeItems, profilesById);
+  if (raidCompContainer) raidCompContainer.innerHTML = "";
+
+  let html = "";
+  let raidIndex = 0;
+  for (const [raidKey, raidSignups] of raidGroups) {
+    const raidInfo = raidSignups[0];
+    const raidLabel = `${raidInfo?.raidName || "Raid"} — ${formatMonthDayYear(raidInfo?.raidDate || "")}`;
+
+    // Composition card for this raid
+    const compHtml = buildRaidClassCompositions(raidSignups, profilesById);
+
+    const raidRequested = raidSignups.filter(s => normalizeSignupStatus(s.status) === "requested");
+    const raidBenched = raidSignups.filter(s => normalizeSignupStatus(s.status) === "tentative");
+    const raidWithdrew = raidSignups.filter(s => normalizeSignupStatus(s.status) === "withdrawn");
+
+    // Raid header with composition embedded
+    html += `<tr class="request-raid-header"><td colspan="11">
+      <div class="request-raid-header-content">${compHtml}</div>
+    </td></tr>`;
+
+    if (raidRequested.length) {
+      html += `<tr class="request-group-row"><td colspan="11"><strong>Signup Requests (${raidRequested.length})</strong></td></tr>`;
+      html += buildRequestQueueRows(raidRequested, profilesById, "full");
+    }
+    if (raidBenched.length) {
+      html += `<tr class="request-group-row"><td colspan="11"><strong>Benched Themselves (${raidBenched.length})</strong></td></tr>`;
+      html += buildRequestQueueRows(raidBenched, profilesById, "accept-only");
+    }
+    if (raidWithdrew.length) {
+      html += `<tr class="request-group-row"><td colspan="11"><strong>Accepted Then Withdrew (${raidWithdrew.length})</strong></td></tr>`;
+      html += buildRequestQueueRows(raidWithdrew, profilesById, "none");
+    }
+    raidIndex++;
+  }
+
+  signupRequestRows.innerHTML = html;
   enrichArmoryColumns(signupRequestRows);
   enrichWclColumns(signupRequestRows);
 
@@ -1574,6 +1687,20 @@ signupRequestsSection.addEventListener("click", async (event) => {
       status: nextStatus,
       updatedAt: serverTimestamp()
     });
+
+    // Remove soft reserves when denying
+    if (nextStatus === "denied") {
+      const signup = currentSignups.find((s) => s.id === signupId);
+      if (signup?.raidId && signup?.characterId) {
+        try {
+          const srSnap = await getDocs(query(collection(db, "softreserves"), where("raidId", "==", signup.raidId), where("characterId", "==", signup.characterId)));
+          for (const srDoc of srSnap.docs) {
+            await deleteDoc(doc(db, "softreserves", srDoc.id));
+          }
+        } catch {}
+      }
+    }
+
     setMessage(signupRequestMessage, `Request ${action === "accept" ? "accepted" : "denied"}.`);
   } catch (error) {
     setMessage(signupRequestMessage, error.message, true);

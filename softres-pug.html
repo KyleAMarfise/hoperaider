@@ -83,7 +83,7 @@
       </div>
 
       <!-- Raid info bar -->
-      <div class="card softres-section pug-raid-info-card" style="margin-bottom:1rem;">
+      <div class="pug-raid-info-card" style="margin-bottom:1rem;">
         <div class="pug-raid-info-content">
           <span class="pug-raid-name" id="pugRaidName"></span>
           <span class="pug-raid-meta text-dim" id="pugRaidMeta"></span>
@@ -91,116 +91,122 @@
         </div>
       </div>
 
-      <!-- Hard Reserves -->
-      <div id="hardresSection" class="card hardres-section" hidden>
-        <div class="hardres-header">
-          <h3>Hard Reserves <span id="hardresCount" class="badge">0</span></h3>
-        </div>
-        <div class="table-wrap" id="hardresTableWrap" hidden>
-          <table class="softres-table hardres-table">
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th>Character</th>
-                <th>Note</th>
-                <th>Added</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="hardresRows"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Active Reserves Overview -->
-      <div id="softresOverview" class="card softres-section softres-overview" hidden>
-        <div class="softres-overview-header">
-          <h3 id="softresRaidTitle">Raid Reserves</h3>
-          <span id="softresReserveCount" class="badge">0</span>
-        </div>
-        <div class="softres-item-dropped-bar">
-          <label for="softresItemDroppedFilter" class="softres-item-dropped-label">Item Dropped</label>
-          <input type="text" id="softresItemDroppedFilter" class="softres-item-dropped-input" placeholder="Start typing item name…" autocomplete="off" />
-        </div>
-        <div class="table-wrap">
-          <table class="softres-table">
-            <thead>
-              <tr>
-                <th>Character</th>
-                <th>Class</th>
-                <th>Reserves</th>
-                <th>Updated</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="softresRows"></tbody>
-          </table>
-        </div>
-        <p id="softresMessage" class="message"></p>
-      </div>
-
-      <!-- Guest character identity + current reserves -->
-      <div id="softresAdminAdd" class="card softres-section softres-character-bar" hidden>
-        <div class="softres-char-row">
-          <div class="pug-char-identity">
-            <span class="pug-char-label">Reserving as</span>
-            <span class="pug-char-name-label" id="pugCharLabel"></span>
-          </div>
-          <div id="softresCharReserves" class="softres-char-reserves"></div>
-        </div>
-      </div>
-
-      <!-- Loot Table Browser -->
-      <div class="card softres-section softres-loot-browser" id="softresLootBrowser" hidden>
-        <div class="list-header">
-          <h3>Loot Table</h3>
-        </div>
-        <p class="softres-loot-disclaimer">Item stats sourced from Wowhead. Click ↗ to view full details.</p>
-        <div class="softres-loot-filters">
-          <label>
-            Boss
-            <div class="multi-select" id="lootBossMultiSelect">
-              <button type="button" class="multi-select-toggle" id="lootBossToggle">All Bosses</button>
-              <div class="multi-select-dropdown" id="lootBossDropdown" hidden>
-                <label class="multi-select-option multi-select-all">
-                  <input type="checkbox" value="" checked /> All Bosses
-                </label>
-                <div id="lootBossOptions"></div>
-              </div>
+      <!-- Row 1: Character Selection + Hard Reserves side by side -->
+      <div class="softres-top-row">
+        <!-- Guest character identity + current reserves -->
+        <div id="softresAdminAdd" class="softres-character-bar" hidden>
+          <h4 class="softres-char-heading">Character Selection</h4>
+          <div class="softres-char-row">
+            <div class="pug-char-identity">
+              <span class="pug-char-label">Reserving as</span>
+              <span class="pug-char-name-label" id="pugCharLabel"></span>
             </div>
-          </label>
-          <label>
-            Type
-            <select id="lootTypeFilter">
-              <option value="">All Types</option>
-            </select>
-          </label>
-          <label>
-            Slot
-            <select id="lootSlotFilter">
-              <option value="">All Slots</option>
-            </select>
-          </label>
-          <label>
-            Search
-            <input id="lootSearchFilter" type="text" placeholder="Item name…" />
-          </label>
+            <div id="softresCharReserves" class="softres-char-reserves"></div>
+          </div>
         </div>
-        <div class="table-wrap softres-loot-scroll">
-          <table class="softres-table softres-loot-table">
-            <thead>
-              <tr>
-                <th></th>
-                <th>Item</th>
-                <th>Type</th>
-                <th>Slot</th>
-                <th>Boss</th>
-                <th>Drop %</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="lootTableRows"></tbody>
-          </table>
+
+        <!-- Hard Reserves -->
+        <div id="hardresSection" class="hardres-section" hidden>
+          <div class="hardres-header">
+            <h3>Hard Reserves <span id="hardresCount" class="badge">0</span></h3>
+          </div>
+          <div class="table-wrap" id="hardresTableWrap" hidden>
+            <table class="softres-table hardres-table">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Character</th>
+                  <th>Note</th>
+                  <th>Added</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="hardresRows"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 2: Loot Table + Character Loot side by side -->
+      <div class="softres-loot-layout">
+        <!-- Loot Table Browser -->
+        <div class="softres-loot-browser" id="softresLootBrowser" hidden>
+          <div class="list-header">
+            <h3>Loot Table</h3>
+          </div>
+          <p class="softres-loot-disclaimer">Item stats sourced from Wowhead. Click ↗ to view full details.</p>
+          <div class="softres-loot-filters">
+            <label>
+              Boss
+              <div class="multi-select" id="lootBossMultiSelect">
+                <button type="button" class="multi-select-toggle" id="lootBossToggle">All Bosses</button>
+                <div class="multi-select-dropdown" id="lootBossDropdown" hidden>
+                  <label class="multi-select-option multi-select-all">
+                    <input type="checkbox" value="" checked /> All Bosses
+                  </label>
+                  <div id="lootBossOptions"></div>
+                </div>
+              </div>
+            </label>
+            <label>
+              Type
+              <select id="lootTypeFilter">
+                <option value="">All Types</option>
+              </select>
+            </label>
+            <label>
+              Slot
+              <select id="lootSlotFilter">
+                <option value="">All Slots</option>
+              </select>
+            </label>
+            <label>
+              Search
+              <input id="lootSearchFilter" type="text" placeholder="Item name…" />
+            </label>
+          </div>
+          <div class="table-wrap softres-loot-scroll">
+            <table class="softres-table softres-loot-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Item</th>
+                  <th>Type</th>
+                  <th>Slot</th>
+                  <th>Boss</th>
+                  <th>Drop %</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="lootTableRows"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Character Loot (reserves overview) -->
+        <div id="softresOverview" class="softres-overview" hidden>
+          <div class="softres-overview-header">
+            <h3 id="softresRaidTitle">Character Loot</h3>
+            <span id="softresReserveCount" class="badge">0</span>
+          </div>
+          <div class="softres-item-dropped-bar">
+            <label for="softresItemDroppedFilter" class="softres-item-dropped-label">Item Dropped</label>
+            <input type="text" id="softresItemDroppedFilter" class="softres-item-dropped-input" placeholder="Start typing item name…" autocomplete="off" />
+          </div>
+          <div class="table-wrap">
+            <table class="softres-table">
+              <thead>
+                <tr>
+                  <th>Character</th>
+                  <th>Reserves</th>
+                  <th>Updated</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="softresRows"></tbody>
+            </table>
+          </div>
+          <p id="softresMessage" class="message"></p>
         </div>
       </div>
 
