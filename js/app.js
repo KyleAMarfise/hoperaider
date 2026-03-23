@@ -2580,6 +2580,60 @@ function updateOnboardingBanner() {
   onboardingBanner.hidden = !needsProfile;
 }
 
+// Check if the current viewer needs to fill SRs for a given raid
+function viewerNeedsSR(raidId) {
+  if (!raidId || !authUid) return false;
+  // Find viewer's accepted signup for this raid
+  const viewerSignup = currentRows.find(s =>
+    s.raidId === raidId
+    && s.ownerUid === authUid
+    && normalizeSignupStatus(s.status) === "accept"
+  );
+  if (!viewerSignup) return false;
+  // Check if SR exists for this character + raid
+  const hasSR = allSoftReserves.some(sr =>
+    sr.raidId === raidId && sr.characterId === viewerSignup.characterId
+  );
+  return !hasSR;
+}
+
+// Get all raids where the viewer needs SRs
+function getRaidsNeedingSR() {
+  if (!authUid) return [];
+  const seen = new Set();
+  const result = [];
+  for (const signup of currentRows) {
+    if (signup.ownerUid !== authUid) continue;
+    if (normalizeSignupStatus(signup.status) !== "accept") continue;
+    if (!signup.raidId || seen.has(signup.raidId)) continue;
+    seen.add(signup.raidId);
+    const raid = currentRaids.find(r => r.id === signup.raidId);
+    if (!raid || raid.softresLocked) continue;
+    // Skip past raids
+    const cutoff = getRaidCutoffDateTime(raid);
+    if (cutoff && cutoff.getTime() < Date.now()) continue;
+    const hasSR = allSoftReserves.some(sr =>
+      sr.raidId === signup.raidId && sr.characterId === signup.characterId
+    );
+    if (!hasSR) result.push(raid);
+  }
+  return result;
+}
+
+function updateSRNeededBanner() {
+  const banner = document.getElementById("srNeededBanner");
+  if (!banner) return;
+  const raids = getRaidsNeedingSR();
+  if (raids.length === 0) {
+    banner.hidden = true;
+    return;
+  }
+  const raidNames = raids.map(r => r.raidName + " (" + formatMonthDayYear(r.raidDate) + ")").join(", ");
+  banner.querySelector(".sr-needed-text").innerHTML =
+    `You have <strong>${raids.length}</strong> raid${raids.length > 1 ? "s" : ""} that need${raids.length === 1 ? "s" : ""} soft reserves: ${escapeHtml(raidNames)}`;
+  banner.hidden = false;
+}
+
 function loadDemoCharacters() {
   try {
     const raw = window.localStorage.getItem(DEMO_CHARACTER_STORAGE_KEY);
@@ -3416,7 +3470,7 @@ function renderCategoryRows(targetElement, rows, rosterMap, reverse = false) {
           </td>
           <td class="raid-time-cell">${renderRaidWindowMultiline(item.raidStart, item.raidEnd, { highlightLocal: true })}</td>
           <td>${escapeHtml(item.phase ? `Phase ${String(item.phase)}` : "—")}</td>
-          <td><span class="raid-name-glow">${escapeHtml(item.raidName || "—")}</span>${item.raidLeader ? `<br><span class="raid-leader-label">RL: ${escapeHtml(item.raidLeader)}</span>` : ""}</td>
+          <td><span class="raid-name-glow">${escapeHtml(item.raidName || "—")}</span>${viewerNeedsSR(selectedRaid?.id) ? ' <span class="sr-needed-badge">SR Needed</span>' : ""}${item.raidLeader ? `<br><span class="raid-leader-label">RL: ${escapeHtml(item.raidLeader)}</span>` : ""}</td>
           <td>${escapeHtml(item.runType || "—")}${item.runType === "Partial" && item.plannedBosses?.length ? `<div class="planned-bosses-list">${item.plannedBosses.map((b) => `<span class="planned-boss-tag">${escapeHtml(b)}</span>`).join("")}</div>` : ""}</td>
           <td>${escapeHtml(item.raidSize || "—")}</td>
           <td>${renderRosterProgress(item, rosterMap, resolvedSignups)}</td>
@@ -3528,6 +3582,7 @@ function renderRows(items) {
   setMessage(listMessage, scheduleItems.length ? "" : "No raids scheduled yet.");
 
   renderCalendarView(scheduleItems);
+  updateSRNeededBanner();
 }
 
 /* ── Calendar View ── */
