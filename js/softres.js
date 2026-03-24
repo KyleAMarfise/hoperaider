@@ -1215,8 +1215,11 @@ function renderReserves() {
       actionsHtml = `<button class="secondary softres-action-btn" data-action="select" data-id="${escapeHtml(res.id)}">Select</button>`;
     }
 
-    // Check signup status for this character in this raid
-    const charSignup = currentSignups.find(s => s.characterId === res.characterId && s.raidId === selectedRaidId);
+    // Check signup status for this character in this raid (match by characterId or ownerUid)
+    const charSignup = currentSignups.find(s =>
+      s.raidId === selectedRaidId &&
+      (s.characterId === res.characterId || s.ownerUid === res.ownerUid)
+    );
     const signupStatus = charSignup ? normalizeSignupStatus(charSignup.status) : null;
     const notAccepted = signupStatus && signupStatus !== "accept";
     const noSignup = !charSignup;
