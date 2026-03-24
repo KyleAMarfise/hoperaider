@@ -4639,6 +4639,42 @@ td .row-actions button {
 .softres-row-overlimit {
   background: rgba(255, 60, 60, 0.08);
 }
+.softres-row-warning {
+  background: rgba(255, 165, 0, 0.08);
+}
+.softres-row-warning td:first-child {
+  border-left: 3px solid #ffa500;
+}
+.sr-status-warning {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.sr-no-signup {
+  background: rgba(255, 60, 60, 0.15);
+  color: #ff6b6b;
+  border: 1px solid rgba(255, 60, 60, 0.3);
+}
+.sr-benched {
+  background: rgba(255, 165, 0, 0.15);
+  color: #ffa500;
+  border: 1px solid rgba(255, 165, 0, 0.3);
+}
+.sr-pending {
+  background: rgba(100, 180, 255, 0.15);
+  color: #6db3f8;
+  border: 1px solid rgba(100, 180, 255, 0.3);
+}
+.sr-declined {
+  background: rgba(255, 60, 60, 0.15);
+  color: #ff6b6b;
+  border: 1px solid rgba(255, 60, 60, 0.3);
+}
 .softres-class-gap td {
   padding: 0;
   height: 0.5rem;

@@ -107,6 +107,14 @@ const softresAnnouncementDismissBtn = document.getElementById("softresAnnounceme
 
 // ── State ───────────────────────────────────────────────────────────────────
 let db = null;
+function normalizeSignupStatus(val) {
+  const s = String(val || "").toLowerCase();
+  if (["requested","accept","tentative","decline","withdrawn","denied"].includes(s)) return s;
+  if (s === "confirmed") return "accept";
+  if (s === "pending") return "requested";
+  return "decline";
+}
+
 let authUid = null;
 let isAdmin = false;
 let isOwner = false;
@@ -1207,9 +1215,26 @@ function renderReserves() {
       actionsHtml = `<button class="secondary softres-action-btn" data-action="select" data-id="${escapeHtml(res.id)}">Select</button>`;
     }
 
+    // Check signup status for this character in this raid
+    const charSignup = currentSignups.find(s => s.characterId === res.characterId && s.raidId === selectedRaidId);
+    const signupStatus = charSignup ? normalizeSignupStatus(charSignup.status) : null;
+    const notAccepted = signupStatus && signupStatus !== "accept";
+    const noSignup = !charSignup;
+    let statusBadge = '';
+    if (noSignup) {
+      statusBadge = ' <span class="sr-status-warning sr-no-signup" title="Not signed up for this raid">⚠ No Signup</span>';
+    } else if (signupStatus === "tentative") {
+      statusBadge = ' <span class="sr-status-warning sr-benched" title="Benched for this raid">🪑 Benched</span>';
+    } else if (signupStatus === "requested") {
+      statusBadge = ' <span class="sr-status-warning sr-pending" title="Signup not yet accepted">⏳ Pending</span>';
+    } else if (signupStatus === "decline" || signupStatus === "withdrawn" || signupStatus === "denied") {
+      statusBadge = ' <span class="sr-status-warning sr-declined" title="Declined / Withdrawn / Denied">❌ Not Going</span>';
+    }
+    const warningRow = (notAccepted || noSignup) ? ' softres-row-warning' : '';
+
     visibleCount++;
-    html += `<tr class="${rowClass}">
-      <td style="color:${classColor};font-weight:600">${escapeHtml(charName)}</td>
+    html += `<tr class="${rowClass}${warningRow}">
+      <td style="color:${classColor};font-weight:600">${escapeHtml(charName)}${statusBadge}</td>
       <td>${itemsHtml}</td>
       <td class="text-dim">${relativeTime(res.updatedAt)}</td>
       <td>${actionsHtml}</td>
