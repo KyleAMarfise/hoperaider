@@ -1635,6 +1635,11 @@ button.danger {
   border-color: #8a3a34;
   background: linear-gradient(180deg, #995149, #733630);
 }
+button.bench {
+  border-color: #8a7a34;
+  background: linear-gradient(180deg, #99913a, #736b28);
+  color: #fff;
+}
 
 button:hover:not(:disabled) {
   filter: brightness(1.07);

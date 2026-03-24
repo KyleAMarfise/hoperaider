@@ -557,11 +557,13 @@ function buildRequestQueueRows(rows, profilesById, actionMode = "full") {
       const actionCell = actionMode === "full"
         ? `<div class="row-actions">
             <button type="button" data-request-action="accept" data-signup-id="${escapeHtml(signup.id)}">Accept</button>
+            <button type="button" class="bench" data-request-action="bench" data-signup-id="${escapeHtml(signup.id)}">Bench</button>
             <button type="button" class="danger" data-request-action="deny" data-signup-id="${escapeHtml(signup.id)}">Deny</button>
           </div>`
         : actionMode === "accept-only"
           ? `<div class="row-actions">
               <button type="button" data-request-action="accept" data-signup-id="${escapeHtml(signup.id)}">Accept</button>
+              <button type="button" class="bench" data-request-action="bench" data-signup-id="${escapeHtml(signup.id)}">Bench</button>
             </div>`
           : `<span class="request-action-na">Record only</span>`;
       return `<tr>
@@ -1666,7 +1668,7 @@ signupRequestsSection.addEventListener("click", async (event) => {
     }
   }
 
-  const nextStatus = action === "accept" ? "accept" : "denied";
+  const nextStatus = action === "accept" ? "accept" : action === "bench" ? "tentative" : "denied";
   target.disabled = true;
 
   try {
@@ -1679,7 +1681,7 @@ signupRequestsSection.addEventListener("click", async (event) => {
       saveDemoSignups(currentSignups);
       renderSignupRequestsTable();
       renderCharacterAuditTable();
-      setMessage(signupRequestMessage, `Request ${action === "accept" ? "accepted" : "denied"} (demo mode).`);
+      setMessage(signupRequestMessage, `Request ${action === "accept" ? "accepted" : action === "bench" ? "benched" : "denied"} (demo mode).`);
       return;
     }
 
@@ -1701,7 +1703,7 @@ signupRequestsSection.addEventListener("click", async (event) => {
       }
     }
 
-    setMessage(signupRequestMessage, `Request ${action === "accept" ? "accepted" : "denied"}.`);
+    setMessage(signupRequestMessage, `Request ${action === "accept" ? "accepted" : action === "bench" ? "benched" : "denied"}.`);
   } catch (error) {
     setMessage(signupRequestMessage, error.message, true);
   } finally {
