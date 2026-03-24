@@ -397,7 +397,7 @@ if (siteTitleEl) {
   siteTitleEl.textContent = appSettings.siteTitle || "Hope Raid Tracker";
 }
 if (guildDiscordLink) {
-  guildDiscordLink.href = appSettings.discordInviteUrl || "https://discord.gg/Y6fgmCJ9";
+  guildDiscordLink.href = appSettings.discordInviteUrl || "https://discord.gg/H2MtWtBGGC";
 }
 
 function hasConfigValues() {

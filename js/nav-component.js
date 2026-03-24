@@ -101,7 +101,7 @@
           <a
             id="guildDiscordLink"
             class="nav-button discord-button"
-            href="https://discord.gg/Y6fgmCJ9"
+            href="https://discord.gg/H2MtWtBGGC"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Guild Discord"

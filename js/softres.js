@@ -489,7 +489,7 @@ function relativeTime(ts) {
 
 // ── Site branding ───────────────────────────────────────────────────────────
 if (siteTitleEl) siteTitleEl.textContent = appSettings.siteTitle || "Hope Raid Tracker";
-if (guildDiscordLink) guildDiscordLink.href = appSettings.discordInviteUrl || "https://discord.gg/Y6fgmCJ9";
+if (guildDiscordLink) guildDiscordLink.href = appSettings.discordInviteUrl || "https://discord.gg/H2MtWtBGGC";
 
 // ── Config check ────────────────────────────────────────────────────────────
 function hasConfigValues() {
