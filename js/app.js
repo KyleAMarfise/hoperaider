@@ -755,7 +755,8 @@ function formatRaidDate(dateText) {
   if (!parsed) {
     return "—";
   }
-  return formatMonthDayYear(dateText);
+  const dayName = parsed.toLocaleDateString("en-US", { weekday: "short" });
+  return `${dayName}, ${formatMonthDayYear(dateText)}`;
 }
 
 function padCountdown(value) {
