@@ -1222,9 +1222,12 @@ function renderReserves() {
     );
     const signupStatus = charSignup ? normalizeSignupStatus(charSignup.status) : null;
     const notAccepted = signupStatus && signupStatus !== "accept";
-    const noSignup = !charSignup;
+    const isGuest = res.isGuest === true;
+    const noSignup = !charSignup && !isGuest;
     let statusBadge = '';
-    if (noSignup) {
+    if (isGuest && !charSignup) {
+      statusBadge = ' <span class="sr-status-pug" title="Guest via PUG link">🔗 PUG</span>';
+    } else if (noSignup) {
       statusBadge = ' <span class="sr-status-warning sr-no-signup" title="Not signed up for this raid">⚠ No Signup</span>';
     } else if (signupStatus === "tentative") {
       statusBadge = ' <span class="sr-status-warning sr-benched" title="Benched for this raid">🪑 Benched</span>';
@@ -1233,7 +1236,7 @@ function renderReserves() {
     } else if (signupStatus === "decline" || signupStatus === "withdrawn" || signupStatus === "denied") {
       statusBadge = ' <span class="sr-status-warning sr-declined" title="Declined / Withdrawn / Denied">❌ Not Going</span>';
     }
-    const warningRow = (notAccepted || noSignup) ? ' softres-row-warning' : '';
+    const warningRow = (!isGuest && (notAccepted || noSignup)) ? ' softres-row-warning' : '';
 
     visibleCount++;
     html += `<tr class="${rowClass}${warningRow}">

@@ -339,6 +339,7 @@ service cloud.firestore {
           'characterName',
           'wowClass',
           'ownerUid',
+          'isGuest',
           'items',
           'createdAt',
           'updatedAt'

@@ -902,6 +902,7 @@ async function handleReserveButton(e) {
           characterName: existing.characterName || "",
           wowClass:      existing.wowClass || "",
           ownerUid:      authUid,
+          isGuest:       true,
           items:         [...getReserveItems(existing), itemEntry],
           createdAt:     existing.createdAt || serverTimestamp(),
           updatedAt:     serverTimestamp()
@@ -916,6 +917,7 @@ async function handleReserveButton(e) {
           characterName: guestCharName,
           wowClass:      guestCharClass,
           ownerUid:      authUid,
+          isGuest:       true,
           items:         [itemEntry],
           createdAt:     serverTimestamp(),
           updatedAt:     serverTimestamp()

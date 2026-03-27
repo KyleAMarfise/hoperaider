@@ -4660,6 +4660,19 @@ td .row-actions button {
   color: #ff6b6b;
   border: 1px solid rgba(255, 60, 60, 0.3);
 }
+.sr-status-pug {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  white-space: nowrap;
+  background: rgba(100, 180, 255, 0.15);
+  color: #64b4ff;
+  border: 1px solid rgba(100, 180, 255, 0.3);
+}
 .sr-benched {
   background: rgba(255, 165, 0, 0.15);
   color: #ffa500;
