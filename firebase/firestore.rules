@@ -326,8 +326,7 @@ service cloud.firestore {
         && (!('signupsLocked' in data) || data.signupsLocked is bool)
         && (!('plannedBosses' in data) || data.plannedBosses is list)
         && (!('announcement' in data) || (data.announcement is string && data.announcement.size() <= 500))
-        && data.createdByUid is string
-        && data.createdByUid == request.auth.uid;
+        && data.createdByUid is string;
     }
 
     function validSoftReserveData(data) {
