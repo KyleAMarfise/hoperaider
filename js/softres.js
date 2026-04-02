@@ -187,6 +187,13 @@ const BOSS_KILL_ORDER = {
     "Warp Slicer", "Kael'thas Sunstrider",
     "Trash Drops"
   ],
+  "Tempest Keep: The Eye": [
+    "Al'ar", "Void Reaver", "High Astromancer Solarian",
+    "Cosmic Infuser", "Devastation", "Infinity Blades",
+    "Netherstrand Longbow", "Phaseshift Bulwark", "Staff of Disintegration",
+    "Warp Slicer", "Kael'thas Sunstrider",
+    "Trash Drops"
+  ],
   "Hyjal Summit": [
     "Rage Winterchill", "Anetheron", "Kaz'rogal", "Azgalor", "Archimonde",
     "Trash Drops"
@@ -1226,15 +1233,17 @@ function renderReserves() {
     const noSignup = !charSignup && !isGuest;
     let statusBadge = '';
     if (isGuest && !charSignup) {
-      statusBadge = ' <span class="sr-status-pug" title="Guest via PUG link">🔗 PUG</span>';
+      statusBadge = ' <span class="sr-status-pug sr-has-tip" data-sr-tip="This player joined via a PUG invite link and is not a guild member.">🔗 PUG</span>';
     } else if (noSignup) {
-      statusBadge = ' <span class="sr-status-warning sr-no-signup" title="Not signed up for this raid">⚠ No Signup</span>';
+      statusBadge = ' <span class="sr-status-warning sr-no-signup sr-has-tip" data-sr-tip="This character has not signed up for this raid yet. Their soft reserves will still be saved.">⚠ No Signup</span>';
+    } else if (signupStatus === "accept") {
+      statusBadge = ' <span class="sr-status-accepted sr-has-tip" data-sr-tip="This character has been accepted into the raid roster. Their soft reserves are locked in.">✓ Accepted</span>';
     } else if (signupStatus === "tentative") {
-      statusBadge = ' <span class="sr-status-warning sr-benched" title="Benched for this raid">🪑 Benched</span>';
+      statusBadge = ' <span class="sr-status-warning sr-benched sr-has-tip" data-sr-tip="This character is benched (tentative). They may be called in if a spot opens up.">🪑 Benched</span>';
     } else if (signupStatus === "requested") {
-      statusBadge = ' <span class="sr-status-warning sr-pending" title="Signup not yet accepted">⏳ Pending</span>';
+      statusBadge = ' <span class="sr-status-warning sr-pending sr-has-tip" data-sr-tip="Signup requested but not yet accepted. Reserves are saved but not guaranteed.">⏳ Pending</span>';
     } else if (signupStatus === "decline" || signupStatus === "withdrawn" || signupStatus === "denied") {
-      statusBadge = ' <span class="sr-status-warning sr-declined" title="Declined / Withdrawn / Denied">❌ Not Going</span>';
+      statusBadge = ' <span class="sr-status-warning sr-declined sr-has-tip" data-sr-tip="This character has declined, withdrawn, or been denied for this raid.">❌ Not Going</span>';
     }
     const warningRow = (!isGuest && (notAccepted || noSignup)) ? ' softres-row-warning' : '';
 
@@ -2552,5 +2561,37 @@ if (!hasConfigValues()) {
     // Load loot data and build tooltip lookup
     await loadLootData();
     buildTooltipMap();
+  });
+}
+
+// ── SR status badge tooltips ──────────────────────────────────────────────────
+{
+  let tipEl = null;
+  function showTip(target) {
+    const text = target.dataset.srTip;
+    if (!text) return;
+    if (!tipEl) {
+      tipEl = document.createElement("div");
+      tipEl.className = "sr-tooltip";
+      document.body.appendChild(tipEl);
+    }
+    tipEl.textContent = text;
+    tipEl.style.display = "block";
+    const rect = target.getBoundingClientRect();
+    tipEl.style.left = `${Math.max(8, Math.min(rect.left, window.innerWidth - 296))}px`;
+    tipEl.style.top = `${rect.top - tipEl.offsetHeight - 6}px`;
+    if (parseInt(tipEl.style.top) < 4) {
+      tipEl.style.top = `${rect.bottom + 6}px`;
+    }
+  }
+  function hideTip() {
+    if (tipEl) tipEl.style.display = "none";
+  }
+  document.addEventListener("mouseover", (e) => {
+    const badge = e.target.closest(".sr-has-tip");
+    if (badge) showTip(badge); else hideTip();
+  });
+  document.addEventListener("mouseout", (e) => {
+    if (e.target.closest(".sr-has-tip")) hideTip();
   });
 }

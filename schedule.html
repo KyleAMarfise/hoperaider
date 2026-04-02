@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hope Raid Tracker — Raid Schedule</title>
+  <link rel="icon" type="image/x-icon" href="assets/images/World%20of%20Warcraft%20Alliance.ico" />
+  <link rel="apple-touch-icon" href="assets/images/World%20of%20Warcraft%20Alliance.PNG" />
+  <link rel="stylesheet" href="styles/styles.css" />
+</head>
+<body class="admin-page admin-schedule-page" data-nav-page="schedule">
+  <section id="authGate" class="auth-gate" hidden>
+    <div class="auth-gate-card">
+      <h1>Hope Raid Tracker</h1>
+      <p id="authGateMessage" class="auth-gate-message">Sign in to continue.</p>
+      <div class="auth-gate-buttons">
+        <button type="button" id="authGateSignInButton" class="auth-btn auth-btn-google">Sign in with Google</button>
+        <button type="button" id="authGateYahooButton" class="auth-btn auth-btn-yahoo">Sign in with Yahoo</button>
+      </div>
+      <div class="auth-gate-divider"><span>or</span></div>
+      <form class="auth-gate-email-form" id="authGateEmailForm">
+        <input type="email" id="authGateEmail" class="auth-input" placeholder="Email address" required autocomplete="email" />
+        <input type="password" id="authGatePassword" class="auth-input" placeholder="Password" required autocomplete="current-password" />
+        <div class="auth-gate-email-buttons">
+          <button type="submit" class="auth-btn auth-btn-email">Sign In with Email</button>
+          <button type="button" id="authGateCreateAccount" class="auth-btn auth-btn-create">Create Account</button>
+        </div>
+        <p class="auth-gate-email-hint">First time? Click <strong>Create Account</strong>. Already registered? Click <strong>Sign In</strong>.</p>
+      </form>
+    </div>
+  </section>
+
+  <main class="container" id="appShell" hidden>
+    <header class="header">
+      <div id="sharedNavRoot"></div>
+    </header>
+
+    <div class="scroll-parchment">
+      <div class="scroll-parchment-inner">
+        <div class="scroll-title-row">
+          <h2 id="scheduleTitle" class="scroll-title">HOPE GUILD RAID SCHEDULE</h2>
+          <button type="button" id="editTitleButton" class="sched-action-btn" title="Edit title" hidden>&#9998;</button>
+        </div>
+        <div id="editTitleForm" class="scroll-title-edit" hidden>
+          <input type="text" id="editTitleInput" class="sched-input scroll-title-input" maxlength="120" />
+          <button type="button" id="saveTitleButton" class="sched-save-btn">Save</button>
+          <button type="button" id="cancelTitleButton" class="secondary">Cancel</button>
+        </div>
+
+        <div id="goalsSection" class="sched-goals-section">
+          <div class="sched-goals-header">
+            <h3 id="goalsTitle" class="sched-goals-title">Goals</h3>
+            <button type="button" id="editGoalsButton" class="sched-action-btn" title="Edit goals" hidden>&#9998;</button>
+          </div>
+          <ul id="goalsList" class="sched-goals-list"></ul>
+          <div id="goalsEditForm" class="sched-goals-edit" hidden>
+            <label class="sched-edit-label">
+              Section Title
+              <input id="goalsTitleInput" class="sched-input" type="text" maxlength="80" placeholder="Goals" />
+            </label>
+            <label class="sched-edit-label">
+              Items <small class="help-text">(one per line — bullets are added automatically)</small>
+              <textarea id="goalsInput" class="sched-input" rows="4" placeholder="Progress early week&#10;Farm efficiently late week&#10;Gear guild + alts"></textarea>
+            </label>
+            <div class="sched-edit-actions">
+              <button type="button" id="saveGoalsButton" class="sched-save-btn">Save</button>
+              <button type="button" id="cancelGoalsButton" class="secondary">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <hr class="scroll-divider" />
+
+        <div id="scheduleContent" class="schedule-doc"></div>
+
+        <div id="scheduleHeaderActions" class="scroll-footer-actions" hidden>
+          <button type="button" id="addDayButton" class="secondary">+ Add Day</button>
+        </div>
+
+        <p id="scheduleMessage" class="message"></p>
+      </div>
+    </div>
+
+    <dialog id="addDayDialog" class="sched-add-dialog">
+      <div class="sched-add-dialog-content">
+        <h3 class="sched-add-dialog-title">Add Day to Schedule</h3>
+        <div class="sched-edit-fields">
+          <div class="sched-edit-row">
+            <label class="sched-edit-label">
+              Day
+              <select id="addDayDay" class="sched-input">
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+                <option value="Saturday">Saturday</option>
+                <option value="Sunday">Sunday</option>
+                <option value="Monday">Monday</option>
+              </select>
+            </label>
+            <label class="sched-edit-label sched-edit-label-sm">
+              Emoji
+              <input id="addDayEmoji" class="sched-input" type="text" maxlength="4" placeholder="🔥" />
+            </label>
+          </div>
+          <label class="sched-edit-label">
+            Title
+            <input id="addDayTitle" class="sched-input" type="text" maxlength="80" placeholder="RAID NAME" required />
+          </label>
+          <div class="sched-edit-row">
+            <label class="sched-edit-label">
+              Start Time (CST) <small class="help-text">(None for off/flex)</small>
+              <select id="addDayStart" class="sched-input"></select>
+            </label>
+            <label class="sched-edit-label">
+              End Time (CST) <small class="help-text">&nbsp;</small>
+              <select id="addDayEnd" class="sched-input"></select>
+            </label>
+          </div>
+          <label class="sched-edit-label">
+            Details <small class="help-text">(one per line — bullets are added automatically)</small>
+            <textarea id="addDayDetails" class="sched-input" rows="4" placeholder="Full clear&#10;Alt-friendly"></textarea>
+          </label>
+        </div>
+        <div class="sched-edit-actions">
+          <button type="button" id="addDaySaveButton" class="sched-save-btn">Add Day</button>
+          <button type="button" id="addDayCancelButton" class="secondary">Cancel</button>
+        </div>
+        <p id="addDayMessage" class="message"></p>
+      </div>
+    </dialog>
+  </main>
+
+  <script>
+    if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+      const script = document.createElement("script");
+      script.src = "config/local/app-config.local.js";
+      document.head.appendChild(script);
+    }
+  </script>
+  <script src="js/nav-component.js"></script>
+  <script src="config/prod/app-config.github.js"></script>
+  <script type="module" src="js/schedule.js"></script>
+</body>
+</html>

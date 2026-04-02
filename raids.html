@@ -65,6 +65,7 @@
             <select id="raidRunType" name="raidRunType" required>
               <option value="Weekly">Weekly — Full raid, all bosses</option>
               <option value="Partial">Partial — Select bosses only</option>
+              <option value="Core Group">Core Group — Core raiders only</option>
             </select>
           </label>
 
@@ -111,6 +112,15 @@
                 <input id="dpsSlots" name="dpsSlots" type="number" min="0" max="25" />
               </label>
             </div>
+          </fieldset>
+        </div>
+
+        <div class="time-slots">
+          <fieldset class="slot-group">
+            <legend>Role Composition (Optional)</legend>
+            <small class="help-text">Specify exactly what classes/specs you need per role. Leave empty to use total slot counts only.</small>
+            <div id="roleSpecSlotsContainer" class="role-spec-rows"></div>
+            <button type="button" id="addRoleSpecButton" class="secondary role-spec-add-btn">+ Add Spec Slot</button>
           </fieldset>
         </div>
 

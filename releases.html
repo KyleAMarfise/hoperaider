@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hope Raid Tracker — Release Notes</title>
+  <link rel="icon" type="image/x-icon" href="assets/images/World%20of%20Warcraft%20Alliance.ico" />
+  <link rel="apple-touch-icon" href="assets/images/World%20of%20Warcraft%20Alliance.PNG" />
+  <link rel="stylesheet" href="styles/styles.css" />
+</head>
+<body class="admin-page admin-releases-page" data-nav-page="releases">
+  <section id="authGate" class="auth-gate" hidden>
+    <div class="auth-gate-card">
+      <h1>Hope Raid Tracker</h1>
+      <p id="authGateMessage" class="auth-gate-message">Sign in to continue.</p>
+      <div class="auth-gate-buttons">
+        <button type="button" id="authGateSignInButton" class="auth-btn auth-btn-google">Sign in with Google</button>
+        <button type="button" id="authGateYahooButton" class="auth-btn auth-btn-yahoo">Sign in with Yahoo</button>
+      </div>
+      <div class="auth-gate-divider"><span>or</span></div>
+      <form class="auth-gate-email-form" id="authGateEmailForm">
+        <input type="email" id="authGateEmail" class="auth-input" placeholder="Email address" required autocomplete="email" />
+        <input type="password" id="authGatePassword" class="auth-input" placeholder="Password" required autocomplete="current-password" />
+        <div class="auth-gate-email-buttons">
+          <button type="submit" class="auth-btn auth-btn-email">Sign In with Email</button>
+          <button type="button" id="authGateCreateAccount" class="auth-btn auth-btn-create">Create Account</button>
+        </div>
+        <p class="auth-gate-email-hint">First time? Click <strong>Create Account</strong>. Already registered? Click <strong>Sign In</strong>.</p>
+      </form>
+    </div>
+  </section>
+
+  <main class="container" id="appShell" hidden>
+    <header class="header">
+      <div id="sharedNavRoot"></div>
+    </header>
+
+    <div class="scroll-parchment releases-parchment">
+      <div class="scroll-parchment-inner">
+        <div class="scroll-title-row">
+          <h2 class="scroll-title">Release Notes</h2>
+        </div>
+        <hr class="scroll-divider" />
+
+        <div id="releasesContent" class="releases-doc"></div>
+
+        <div id="releasesAdminActions" class="scroll-footer-actions" hidden>
+          <button type="button" id="addReleaseButton" class="secondary">+ Add Release</button>
+        </div>
+
+        <p id="releasesMessage" class="message"></p>
+      </div>
+    </div>
+
+    <dialog id="addReleaseDialog" class="sched-add-dialog">
+      <div class="sched-add-dialog-content">
+        <h3 class="sched-add-dialog-title" id="releaseDialogTitle">Add Release Note</h3>
+        <input type="hidden" id="releaseEditId" />
+        <div class="sched-edit-fields">
+          <div class="sched-edit-row">
+            <label class="sched-edit-label">
+              Date
+              <input id="releaseDate" class="sched-input" type="date" required />
+            </label>
+            <label class="sched-edit-label">
+              Version <small class="help-text">(optional)</small>
+              <input id="releaseVersion" class="sched-input" type="text" maxlength="20" placeholder="v1.2.0" />
+            </label>
+          </div>
+          <label class="sched-edit-label">
+            Summary
+            <input id="releaseSummary" class="sched-input" type="text" maxlength="120" placeholder="Short description of what changed" required />
+          </label>
+          <label class="sched-edit-label">
+            Details <small class="help-text">(one per line — bullets are added automatically)</small>
+            <textarea id="releaseDetails" class="sched-input" rows="6" placeholder="Added raid schedule page&#10;Core Raider system for exclusive raids&#10;Role composition slots in raid creator"></textarea>
+          </label>
+        </div>
+        <div class="sched-edit-actions">
+          <button type="button" id="saveReleaseButton" class="sched-save-btn">Save</button>
+          <button type="button" id="deleteReleaseButton" class="danger" hidden>Delete</button>
+          <button type="button" id="cancelReleaseButton" class="secondary">Cancel</button>
+        </div>
+        <p id="releaseDialogMessage" class="message"></p>
+      </div>
+    </dialog>
+  </main>
+
+  <script>
+    if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+      const script = document.createElement("script");
+      script.src = "config/local/app-config.local.js";
+      document.head.appendChild(script);
+    }
+  </script>
+  <script src="js/nav-component.js"></script>
+  <script src="config/prod/app-config.github.js"></script>
+  <script type="module" src="js/releases.js"></script>
+</body>
+</html>

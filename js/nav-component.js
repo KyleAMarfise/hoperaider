@@ -53,6 +53,8 @@
       </div>
     </details>
 
+    <a class="nav-button" href="/schedule.html">Raid Schedule</a>
+
     <div id="adminMenu" class="nav-admin-links" hidden>
       <a id="adminRaidsLink" class="nav-button" href="/raids.html" hidden>Raid Creator</a>
       <a id="adminOpsLink" class="nav-button" href="/admin.html" hidden>
@@ -61,16 +63,20 @@
       </a>
       <a id="adminSoftresLink" class="nav-button" href="/softres.html" hidden>Soft Reserves</a>
     </div>
+
+    <a class="nav-button releases-button" href="/releases.html">&#128220; Release Notes</a>
   `;
 
   const adminActions = `
     <a class="nav-button" href="/">Signup Page</a>
+    <a class="nav-button ${page === "schedule" ? "is-active" : ""}" href="/schedule.html">Raid Schedule</a>
     <a id="adminRaidsLink" class="nav-button ${page === "raids" ? "is-active" : ""}" href="/raids.html">Raid Creator</a>
     <a id="adminOpsLink" class="nav-button ${page === "admin" ? "is-active" : ""}" href="/admin.html">
       Requests &amp; Audit
       <span id="adminOpsBadge" class="nav-mini-badge" hidden>0</span>
     </a>
     <a class="nav-button ${page === "softres" ? "is-active" : ""}" href="/softres.html">Soft Reserves</a>
+    <a class="nav-button releases-button ${page === "releases" ? "is-active" : ""}" href="/releases.html">&#128220; Release Notes</a>
   `;
 
   const authStatusId = page === "signup" ? "authStatus" : "adminAuthStatus";

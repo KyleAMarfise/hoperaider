@@ -159,7 +159,7 @@ service cloud.firestore {
     }
 
     function validRunType(value) {
-      return value in ['Weekly', 'Partial'];
+      return value in ['Weekly', 'Partial', 'Core Group'];
     }
 
     function validCharacterData(data) {
@@ -302,6 +302,7 @@ service cloud.firestore {
           'softresMaxReserves',
           'signupsLocked',
           'plannedBosses',
+          'roleSpecSlots',
           'announcement',
           'createdByUid',
           'createdAt',
@@ -325,6 +326,7 @@ service cloud.firestore {
         && (!('softresMaxReserves' in data) || (data.softresMaxReserves is int && data.softresMaxReserves >= 1 && data.softresMaxReserves <= 10))
         && (!('signupsLocked' in data) || data.signupsLocked is bool)
         && (!('plannedBosses' in data) || data.plannedBosses is list)
+        && (!('roleSpecSlots' in data) || data.roleSpecSlots is list)
         && (!('announcement' in data) || (data.announcement is string && data.announcement.size() <= 500))
         && data.createdByUid is string;
     }
@@ -495,6 +497,21 @@ service cloud.firestore {
     match /pugTokens/{token} {
       allow read: if true;
       allow write: if isAdmin();
+    }
+
+    match /releases/{releaseId} {
+      allow read: if request.auth != null;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /coreRaiders/{characterId} {
+      allow read: if request.auth != null;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /schedule/{entryId} {
+      allow read: if request.auth != null;
+      allow create, update, delete: if isAdmin();
     }
 
     match /guestCharacters/{uid} {

@@ -61,6 +61,8 @@ const adminOpsBadge = document.getElementById("adminOpsBadge");
 const signOutButton = document.getElementById("signOutButton");
 const partialBossSection = document.getElementById("partialBossSection");
 const partialBossCheckboxes = document.getElementById("partialBossCheckboxes");
+const roleSpecSlotsContainer = document.getElementById("roleSpecSlotsContainer");
+const addRoleSpecButton = document.getElementById("addRoleSpecButton");
 
 const BOSS_KILL_ORDER = {
   "Karazhan": [
@@ -74,10 +76,7 @@ const BOSS_KILL_ORDER = {
     "Hydross the Unstable", "The Lurker Below", "Leotheras the Blind",
     "Fathom-Lord Karathress", "Morogrim Tidewalker", "Lady Vashj"
   ],
-  "The Eye": [
-    "Al'ar", "Void Reaver", "High Astromancer Solarian", "Kael'thas Sunstrider"
-  ],
-  "Tempest Keep": [
+  "Tempest Keep: The Eye": [
     "Al'ar", "Void Reaver", "High Astromancer Solarian", "Kael'thas Sunstrider"
   ],
   "Hyjal Summit": [
@@ -109,7 +108,7 @@ const RAID_PRESETS_BY_PHASE = {
   ],
   2: [
     { name: "Serpentshrine Cavern", size: "25", tanks: 3, healers: 7, dps: 15 },
-    { name: "The Eye", size: "25", tanks: 3, healers: 7, dps: 15 }
+    { name: "Tempest Keep: The Eye", size: "25", tanks: 3, healers: 7, dps: 15 }
   ],
   3: [
     { name: "Hyjal Summit", size: "25", tanks: 3, healers: 7, dps: 15 },
@@ -496,7 +495,7 @@ function refreshPartialBossSection(selectedBosses = []) {
     partialBossSection.hidden = true;
     return;
   }
-  const bosses = BOSS_KILL_ORDER[raidName] || [];
+  const bosses = BOSS_KILL_ORDER[raidName] || BOSS_KILL_ORDER[migrateRaidName(raidName)] || [];
   if (!bosses.length) {
     partialBossSection.hidden = true;
     return;
@@ -513,16 +512,136 @@ function getSelectedBosses() {
   return Array.from(partialBossCheckboxes.querySelectorAll('input[name="plannedBoss"]:checked')).map((cb) => cb.value);
 }
 
+// ── Role Spec Slots (optional composition wish-list) ──────────────────────
+const WOW_CLASSES = ["Druid", "Hunter", "Mage", "Paladin", "Priest", "Rogue", "Shaman", "Warlock", "Warrior"];
+const ROLE_SPECS = {
+  Tank:   { Druid: ["Feral Tank"], Paladin: ["Protection"], Warrior: ["Protection"] },
+  Healer: { Druid: ["Restoration"], Paladin: ["Holy"], Priest: ["Holy", "Discipline"], Shaman: ["Restoration"] },
+  DPS:    { Druid: ["Balance", "Feral DPS"], Hunter: ["Beast Mastery", "Marksmanship", "Survival"], Mage: ["Arcane", "Fire", "Frost"], Paladin: ["Retribution"], Priest: ["Shadow"], Rogue: ["Combat", "Assassination"], Shaman: ["Elemental", "Enhancement"], Warlock: ["Affliction", "Demonology", "Destruction"], Warrior: ["Arms", "Fury"] }
+};
+
+function getClassesForRole(role) {
+  return Object.keys(ROLE_SPECS[role] || {});
+}
+
+function getSpecsForRoleClass(role, wowClass) {
+  return (ROLE_SPECS[role] || {})[wowClass] || [];
+}
+
+function renderRoleSpecRow(index, spec = {}) {
+  const role = spec.role || "";
+  const wowClass = spec.class || "";
+  const specName = spec.spec || "";
+  const count = spec.count != null ? spec.count : 1;
+  const classOptions = role ? getClassesForRole(role) : [];
+  const specOptions = role && wowClass ? getSpecsForRoleClass(role, wowClass) : [];
+
+  return `<div class="role-spec-row" data-spec-index="${index}">
+    <select class="role-spec-role" data-field="role">
+      <option value="">Role</option>
+      <option value="Tank" ${role === "Tank" ? "selected" : ""}>🛡 Tank</option>
+      <option value="Healer" ${role === "Healer" ? "selected" : ""}>✚ Healer</option>
+      <option value="DPS" ${role === "DPS" ? "selected" : ""}>⚔ DPS</option>
+    </select>
+    <select class="role-spec-class" data-field="class">
+      <option value="">Class</option>
+      ${classOptions.map((c) => `<option value="${c}" ${c === wowClass ? "selected" : ""}>${c}</option>`).join("")}
+    </select>
+    <select class="role-spec-spec" data-field="spec">
+      <option value="">Any Spec</option>
+      ${specOptions.map((s) => `<option value="${s}" ${s === specName ? "selected" : ""}>${s}</option>`).join("")}
+    </select>
+    <input type="number" class="role-spec-count" data-field="count" min="1" max="25" value="${count}" title="How many" />
+    <button type="button" class="role-spec-remove-btn" data-remove-index="${index}" title="Remove">&times;</button>
+  </div>`;
+}
+
+function renderRoleSpecSlots(specs = []) {
+  if (!roleSpecSlotsContainer) return;
+  roleSpecSlotsContainer.innerHTML = specs.map((s, i) => renderRoleSpecRow(i, s)).join("");
+  bindRoleSpecEvents();
+}
+
+function autoSelectClassAndSpec(row) {
+  const role = row.querySelector(".role-spec-role").value;
+  const classSel = row.querySelector(".role-spec-class");
+  const specSel = row.querySelector(".role-spec-spec");
+  const classes = getClassesForRole(role);
+
+  classSel.innerHTML = `<option value="">Class</option>` + classes.map((c) => `<option value="${c}">${c}</option>`).join("");
+  specSel.innerHTML = `<option value="">Any Spec</option>`;
+
+  // Auto-select class if only one option, or if every class has only one spec (Tank/Healer minus Priest)
+  if (classes.length === 1) {
+    classSel.value = classes[0];
+    const specs = getSpecsForRoleClass(role, classes[0]);
+    specSel.innerHTML = `<option value="">Any Spec</option>` + specs.map((s) => `<option value="${s}">${s}</option>`).join("");
+    if (specs.length === 1) specSel.value = specs[0];
+  }
+}
+
+function autoSelectSpec(row) {
+  const role = row.querySelector(".role-spec-role").value;
+  const classSel = row.querySelector(".role-spec-class");
+  const specSel = row.querySelector(".role-spec-spec");
+  const specs = getSpecsForRoleClass(role, classSel.value);
+  specSel.innerHTML = `<option value="">Any Spec</option>` + specs.map((s) => `<option value="${s}">${s}</option>`).join("");
+  if (specs.length === 1) specSel.value = specs[0];
+}
+
+function bindRoleSpecEvents() {
+  if (!roleSpecSlotsContainer) return;
+  roleSpecSlotsContainer.querySelectorAll(".role-spec-role").forEach((sel) => {
+    sel.addEventListener("change", () => autoSelectClassAndSpec(sel.closest(".role-spec-row")));
+  });
+  roleSpecSlotsContainer.querySelectorAll(".role-spec-class").forEach((sel) => {
+    sel.addEventListener("change", () => autoSelectSpec(sel.closest(".role-spec-row")));
+  });
+  roleSpecSlotsContainer.querySelectorAll(".role-spec-remove-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const current = getSelectedRoleSpecSlots();
+      current.splice(Number(btn.dataset.removeIndex), 1);
+      renderRoleSpecSlots(current);
+    });
+  });
+}
+
+function addRoleSpecRow() {
+  const current = getSelectedRoleSpecSlots();
+  current.push({ role: "", class: "", spec: "", count: 1 });
+  renderRoleSpecSlots(current);
+}
+
+function getSelectedRoleSpecSlots() {
+  if (!roleSpecSlotsContainer) return [];
+  return Array.from(roleSpecSlotsContainer.querySelectorAll(".role-spec-row")).map((row) => ({
+    role: row.querySelector(".role-spec-role").value,
+    class: row.querySelector(".role-spec-class").value,
+    spec: row.querySelector(".role-spec-spec").value,
+    count: Number(row.querySelector(".role-spec-count").value) || 1
+  })).filter((s) => s.role);
+}
+
+const RAID_NAME_MIGRATIONS = {
+  "The Eye": "Tempest Keep: The Eye",
+  "Tempest Keep": "Tempest Keep: The Eye"
+};
+
+function migrateRaidName(name) {
+  return RAID_NAME_MIGRATIONS[name] || name;
+}
+
 function refreshRaidTemplateOptions(selectedRaid = "") {
   const selectedPhase = Number(raidPhaseInput.value);
   const phaseRaids = RAID_PRESETS_BY_PHASE[selectedPhase] || [];
+  const migrated = migrateRaidName(selectedRaid);
 
   raidTemplateInput.innerHTML = phaseRaids
     .map((raid) => `<option value="${raid.name}">${raid.name}</option>`)
     .join("");
 
-  if (selectedRaid && phaseRaids.some((raid) => raid.name === selectedRaid)) {
-    raidTemplateInput.value = selectedRaid;
+  if (migrated && phaseRaids.some((raid) => raid.name === migrated)) {
+    raidTemplateInput.value = migrated;
   }
 
   syncRaidSize();
@@ -594,6 +713,7 @@ function resetRaidForm() {
   syncRoleSlotDefaults();
   partialBossSection.hidden = true;
   partialBossCheckboxes.innerHTML = "";
+  renderRoleSpecSlots([]);
   setMessage(raidAdminMessage, "");
 }
 
@@ -623,6 +743,7 @@ function loadRaidForm(item) {
   }
 
   refreshPartialBossSection(item.plannedBosses || []);
+  renderRoleSpecSlots(item.roleSpecSlots || []);
 }
 
 populateHourOptions(raidStartInput, START_HOURS, "Select CST start");
@@ -679,6 +800,10 @@ raidRunTypeInput.addEventListener("change", () => {
 cancelRaidEditButton.addEventListener("click", () => {
   resetRaidForm();
 });
+
+if (addRoleSpecButton) {
+  addRoleSpecButton.addEventListener("click", addRoleSpecRow);
+}
 
 adminRaidSection.addEventListener("click", async (event) => {
   const target = event.target;
@@ -792,6 +917,7 @@ raidForm.addEventListener("submit", async (event) => {
   }
 
   const plannedBosses = runType === "Partial" ? getSelectedBosses() : [];
+  const roleSpecSlots = getSelectedRoleSpecSlots();
 
   const payload = {
     phase,
@@ -806,6 +932,7 @@ raidForm.addEventListener("submit", async (event) => {
     healerSlots,
     dpsSlots,
     plannedBosses,
+    roleSpecSlots,
     createdByUid: isDemoMode ? "demo-local" : authUid,
     updatedAt: serverTimestamp()
   };

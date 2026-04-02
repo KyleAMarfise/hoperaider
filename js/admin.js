@@ -43,6 +43,7 @@ const signupRequestMessage = document.getElementById("signupRequestMessage");
 const signupRequestBadge = document.getElementById("signupRequestBadge");
 const characterAuditSection = document.getElementById("characterAuditSection");
 const auditSearchInput = document.getElementById("auditSearch");
+const auditCoreFilter = document.getElementById("auditCoreFilter");
 const auditClassFilter = document.getElementById("auditClassFilter");
 const auditActivityFilter = document.getElementById("auditActivityFilter");
 const characterAuditRows = document.getElementById("characterAuditRows");
@@ -392,6 +393,8 @@ let unsubscribeMembers = null;
 let unsubscribeOwners = null;
 let unsubscribeAttendanceDocks = null;
 let currentAttendanceDocks = new Map(); // uid → docks count
+let unsubscribeCoreRaiders = null;
+let currentCoreRaiders = new Set(); // set of characterId strings
 
 if (siteTitleEl) {
   siteTitleEl.textContent = appSettings.siteTitle || "Hope Raid Tracker";
@@ -928,8 +931,17 @@ function renderSignupRequestsTable() {
       html += buildRequestQueueRows(raidBenched, profilesById, "accept-only");
     }
     if (raidWithdrew.length) {
-      html += `<tr class="request-group-row"><td colspan="11"><strong>Accepted Then Withdrew (${raidWithdrew.length})</strong></td></tr>`;
-      html += buildRequestQueueRows(raidWithdrew, profilesById, "none");
+      const withdrawnNames = raidWithdrew.map((s) => {
+        const profile = profilesById.get(s.characterId);
+        const charName = s.profileCharacterName || profile?.characterName || "Unknown";
+        return escapeHtml(charName);
+      }).join(", ");
+      html += `<tr class="request-group-row request-withdrew-row"><td colspan="11">
+        <details class="withdrew-summary">
+          <summary><strong>Withdrew (${raidWithdrew.length})</strong> <span class="withdrew-names">${withdrawnNames}</span></summary>
+          <table class="withdrew-detail-table">${buildRequestQueueRows(raidWithdrew, profilesById, "none")}</table>
+        </details>
+      </td></tr>`;
     }
     raidIndex++;
   }
@@ -1116,6 +1128,7 @@ function buildUserAuditRows(signups) {
       bucket.set(key, {
         isMain: Boolean(entry.key === "main"),
         characterKey: String(entry.key || previous?.characterKey || "main"),
+        characterId: String(profile.id || previous?.characterId || ""),
         characterName,
         wowClass: String(entry.wowClass || previous?.wowClass || "").trim() || "—",
         mainRole: String(entry.mainRole || previous?.mainRole || "").trim() || "—",
@@ -1188,7 +1201,11 @@ function renderRoleSpec(role, specialization) {
 function renderCharacterCell(entry, row) {
   const characterName = escapeHtml(entry.characterName || "—");
   const charTooltip = [`UID: ${row.uid}`, `Discord Name: ${row.profileName || row.displayName || "Unknown"}`, `Google Email: ${row.email || "Unknown"}`].join("\n");
-  return `<span class="audit-character-name" title="${escapeHtml(charTooltip)}">${characterName}</span>`;
+  const charId = entry.characterId || "";
+  const isCoreRaider = currentCoreRaiders.has(charId);
+  const coreBadge = isCoreRaider ? `<span class="core-raider-badge" title="Core Raider">★</span>` : "";
+  const coreToggle = isAdmin ? `<button type="button" class="core-raider-toggle ${isCoreRaider ? "is-core" : ""}" data-core-char-id="${escapeHtml(charId)}" title="${isCoreRaider ? "Remove Core Raider status" : "Set as Core Raider"}">${isCoreRaider ? "★" : "☆"}</button>` : "";
+  return `<span class="audit-character-name" title="${escapeHtml(charTooltip)}">${characterName}</span>${coreBadge}${coreToggle}`;
 }
 
 function findExistingAssignment(uid, raidId, characterName) {
@@ -1384,13 +1401,18 @@ function normalizeClassKey(value) {
 
 function filterAuditRows(rows) {
   const search = String(auditSearchInput.value || "").trim().toLowerCase();
+  const coreOnly = auditCoreFilter && auditCoreFilter.checked;
 
   return rows.filter((row) => {
-    if (!search) {
-      return true;
+    if (search && !String(row.searchIndex || "").includes(search)) {
+      return false;
     }
-
-    return String(row.searchIndex || "").includes(search);
+    if (coreOnly) {
+      const entries = row.characterEntries || [];
+      const hasCoreChar = entries.some((e) => currentCoreRaiders.has(e.characterId));
+      if (!hasCoreChar) return false;
+    }
+    return true;
   });
 }
 
@@ -1715,6 +1737,12 @@ auditSearchInput.addEventListener("input", () => {
   renderCharacterAuditTable();
 });
 
+if (auditCoreFilter) {
+  auditCoreFilter.addEventListener("change", () => {
+    renderCharacterAuditTable();
+  });
+}
+
 if (auditClassFilter) {
   auditClassFilter.addEventListener("change", () => {
     renderCharacterAuditTable();
@@ -1844,6 +1872,31 @@ characterAuditSection.addEventListener("change", async (event) => {
 characterAuditSection.addEventListener("click", async (event) => {
   const target = event.target;
   if (!(target instanceof HTMLElement)) {
+    return;
+  }
+
+  // ── Core Raider toggle ───────────────────────────────────────────────────
+  const coreToggle = target.closest("button[data-core-char-id]");
+  if (coreToggle instanceof HTMLButtonElement && isAdmin && db) {
+    const charId = String(coreToggle.dataset.coreCharId || "").trim();
+    if (!charId) return;
+    const isCurrentlyCore = currentCoreRaiders.has(charId);
+    coreToggle.disabled = true;
+    try {
+      if (isCurrentlyCore) {
+        await deleteDoc(doc(db, "coreRaiders", charId));
+      } else {
+        await setDoc(doc(db, "coreRaiders", charId), {
+          isCoreRaider: true,
+          updatedAt: serverTimestamp(),
+          updatedBy: authUid || ""
+        });
+      }
+    } catch (err) {
+      setMessage(characterAuditMessage, "Error toggling Core Raider: " + err.message, true);
+    } finally {
+      coreToggle.disabled = false;
+    }
     return;
   }
 
@@ -2273,6 +2326,10 @@ if (!hasConfigValues()) {
       unsubscribeOwners();
       unsubscribeOwners = null;
     }
+    if (unsubscribeCoreRaiders) {
+      unsubscribeCoreRaiders();
+      unsubscribeCoreRaiders = null;
+    }
     if (unsubscribeAttendanceDocks) {
       unsubscribeAttendanceDocks();
       unsubscribeAttendanceDocks = null;
@@ -2446,6 +2503,19 @@ if (!hasConfigValues()) {
       },
       (error) => {
         console.warn("[ATTENDANCE] snapshot error:", error.message);
+      }
+    );
+
+    unsubscribeCoreRaiders = onSnapshot(
+      collection(db, "coreRaiders"),
+      (snapshot) => {
+        currentCoreRaiders = new Set(
+          snapshot.docs.filter((d) => d.data().isCoreRaider).map((d) => String(d.id || "").trim())
+        );
+        renderCharacterAuditTable();
+      },
+      (error) => {
+        console.warn("[CORE_RAIDERS] snapshot error:", error.message);
       }
     );
   });

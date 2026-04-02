@@ -88,7 +88,7 @@ const RAID_PRESETS_BY_PHASE = {
   ],
   2: [
     { name: "Serpentshrine Cavern", size: "25", tanks: 3, healers: 7, dps: 15 },
-    { name: "The Eye", size: "25", tanks: 3, healers: 7, dps: 15 }
+    { name: "Tempest Keep: The Eye", size: "25", tanks: 3, healers: 7, dps: 15 }
   ],
   3: [
     { name: "Hyjal Summit", size: "25", tanks: 3, healers: 7, dps: 15 },
@@ -350,8 +350,7 @@ const RAID_NAME_TO_WCL_ZONES = {
   "Magtheridon's Lair": ["Gruul/Mag"],
   "Gruul's + Mag's": ["Gruul/Mag"],
   "Serpentshrine Cavern": ["SSC/TK"],
-  "The Eye": ["SSC/TK"],
-  "Tempest Keep": ["SSC/TK"],
+  "Tempest Keep: The Eye": ["SSC/TK"],
   "Hyjal Summit": ["BT/Hyjal"],
   "Black Temple": ["BT/Hyjal"],
   "Zul'Aman": ["Zul'Aman"],
@@ -478,6 +477,7 @@ let currentRaids = [];
 let currentCharacters = [];
 let allCharacters = [];
 let isDemoMode = false;
+let coreRaiderCharIds = new Set(); // character IDs with Core Raider status
 let pendingSignupStatus = "tentative";
 let profileModalMode = "create";
 const expandedRaidGroups = new Set();
@@ -1375,13 +1375,33 @@ function renderRoleCompositionBar(resolvedSignups, raidItem) {
       ? `${totalFilled}/${totalTarget} (${totalOpen} open)`
       : `${totalFilled}/${totalTarget} Full`;
 
+  const specDetails = renderRoleSpecDetails(raidItem);
+
   return `<div class="role-composition-panel">
     <div class="role-composition-header">
       <span class="role-composition-title">Role Composition</span>
       <span class="role-composition-total">${escapeHtml(totalLabel)}</span>
     </div>
     ${bars}
+    ${specDetails}
   </div>`;
+}
+
+function renderRoleSpecDetails(raidItem) {
+  if (!raidItem || typeof raidItem !== "object") return "";
+  const specs = Array.isArray(raidItem.roleSpecSlots) ? raidItem.roleSpecSlots : [];
+  if (!specs.length) return "";
+
+  const roleIcons = { Tank: "🛡", Healer: "✚", DPS: "⚔" };
+  const lines = specs
+    .filter((s) => s.role)
+    .map((s) => {
+      const icon = roleIcons[s.role] || "";
+      const label = [s.count > 1 ? `${s.count}x` : "", s.spec || "", s.class || "", s.role].filter(Boolean).join(" ");
+      return `<span class="role-spec-detail">${icon} ${escapeHtml(label)}</span>`;
+    }).join("");
+
+  return lines ? `<div class="role-spec-details"><span class="role-spec-details-label">Looking for:</span>${lines}</div>` : "";
 }
 
 function renderRosterTable(resolvedSignups, raidName, raidId) {
@@ -1725,19 +1745,26 @@ function renderSignupStatusOptions(selectedStatus) {
     .join("");
 }
 
-function renderRaidProfileOptions(selectedCharacterId = "", selectedCharacterKey = "") {
+function renderRaidProfileOptions(selectedCharacterId = "", selectedCharacterKey = "", raid = null) {
   const selectedId = String(selectedCharacterId || "");
   const selectedKey = String(selectedCharacterKey || "");
-  return [
-    `<option value="">Select character</option>`,
-    ...currentCharacters.flatMap((profile) => {
-      return getProfileCharacterEntries(profile).map((entry) => {
-        const value = `${profile.id}::${entry.key}`;
-        const isSelected = profile.id === selectedId && entry.key === (selectedKey || "main");
-        return `<option value="${escapeHtml(value)}" ${isSelected ? "selected" : ""}>${escapeHtml(entry.characterName)}</option>`;
-      });
-    })
-  ].join("");
+  const isCoreGroupRaid = raid && raid.runType === "Core Group";
+  const options = currentCharacters.flatMap((profile) => {
+    return getProfileCharacterEntries(profile).map((entry) => {
+      // For Core Group raids, only show characters with Core Raider status
+      if (isCoreGroupRaid && !coreRaiderCharIds.has(profile.id)) return null;
+      const value = `${profile.id}::${entry.key}`;
+      const isSelected = profile.id === selectedId && entry.key === (selectedKey || "main");
+      const coreLabel = coreRaiderCharIds.has(profile.id) ? " ★" : "";
+      return `<option value="${escapeHtml(value)}" ${isSelected ? "selected" : ""}>${escapeHtml(entry.characterName)}${coreLabel}</option>`;
+    });
+  }).filter(Boolean);
+
+  const placeholder = isCoreGroupRaid && !options.length
+    ? `<option value="">No core raider characters</option>`
+    : `<option value="">Select character</option>`;
+
+  return [placeholder, ...options].join("");
 }
 
 function parseRaidProfileSelection(value) {
@@ -1752,15 +1779,19 @@ function parseRaidProfileSelection(value) {
   };
 }
 
-function renderRaidProfileControl(raidId, signup) {
+function renderRaidProfileControl(raidId, signup, raid) {
   const selectedCharacterId = signup?.characterId || "";
   const selectedCharacterKey = signup?.profileCharacterKey || "main";
   const signupStatus = normalizeSignupStatus(signup?.status || "");
   const isEditable = !signup || signupStatus === "requested" || signupStatus === "withdrawn";
   const isDisabled = !isEditable;
   return `<select class="raid-profile-select" data-raid-profile-select="true" data-raid-id="${escapeHtml(raidId)}" ${isDisabled ? "disabled" : ""}>
-      ${renderRaidProfileOptions(selectedCharacterId, selectedCharacterKey)}
+      ${renderRaidProfileOptions(selectedCharacterId, selectedCharacterKey, raid)}
     </select>`;
+}
+
+function userHasCoreCharacter() {
+  return currentCharacters.some((c) => coreRaiderCharIds.has(c.id));
 }
 
 function renderRaidCharacterControl(raidId, signup, raid) {
@@ -1770,7 +1801,10 @@ function renderRaidCharacterControl(raidId, signup, raid) {
   if (!isAdmin && isRaidLocked(raid)) {
     return `<span class="signup-control-disabled">Locked</span>`;
   }
-  return renderRaidProfileControl(raidId, signup);
+  if (!isAdmin && raid && raid.runType === "Core Group" && !signup && !userHasCoreCharacter()) {
+    return `<span class="signup-control-disabled" title="Only Core Raider characters can sign up">★ Core Only</span>`;
+  }
+  return renderRaidProfileControl(raidId, signup, raid);
 }
 
 async function clearRaidSignup(signupId) {
@@ -1793,6 +1827,10 @@ async function clearRaidSignup(signupId) {
 function renderRaidSignupControl(raidId, signup, raid) {
   if (!raidId) {
     return `<span class="signup-control-disabled">Unavailable</span>`;
+  }
+  // Core Group raids: lock signup for users without core raider characters
+  if (!isAdmin && raid && raid.runType === "Core Group" && !signup && !userHasCoreCharacter()) {
+    return `<span class="signup-control-disabled">★ Core Raiders Only</span>`;
   }
   const locked = isRaidLocked(raid);
   if (!isAdmin && locked) {
@@ -3261,7 +3299,7 @@ function getSeedDemoRaids() {
     {
       id: "seed-raid-past",
       phase: 2,
-      raidName: "The Eye",
+      raidName: "Tempest Keep: The Eye",
       raidDate: demoDateFromOffset(-2),
       runType: "Weekly",
       raidStart: 20,
@@ -4787,6 +4825,14 @@ if (!hasConfigValues()) {
         void reloadOwnCharacters();
       }
     );
+
+    // Subscribe to core raider status (for Core Group raid filtering)
+    onSnapshot(collection(db, "coreRaiders"), (snapshot) => {
+      coreRaiderCharIds = new Set(
+        snapshot.docs.filter((d) => d.data().isCoreRaider).map((d) => String(d.id || "").trim())
+      );
+      renderRows(currentRows);
+    });
 
     // Load loot data for item tooltips in roster
     void loadAppLootData();
