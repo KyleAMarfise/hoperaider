@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-18T00:11:41.183Z",
+  "generatedAt": "2026-04-06T00:00:06.004Z",
   "raids": [
     {
       "zoneId": 3457,
@@ -2124,6 +2124,18 @@
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Aldori Legacy Defender</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 125</span><br>Binds when picked up<table width=\"100%\"><tr><td>Off Hand</td><th><span class=\"q1\">Shield</span></th></tr></table><span>5279 Armor</span><br>137 Block<br><span>+39 Stamina</span><br /><br>Blue Socket<br><span class=\"q0\">Socket Bonus: +2 Defense Rating</span><br /><br />Durability 120 / 120</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Increases defense rating by 19.</span><br><span class=\"q2\">Equip: Improves hit rating by 15.</span><br></td></tr></table>"
             },
             {
+              "itemId": 34846,
+              "name": "Black Sack of Gems",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_bag_10_black.jpg",
+              "quality": "Uncommon",
+              "itemLevel": 1,
+              "slot": "Quest",
+              "class": "Quest",
+              "subclass": "Quest",
+              "dropChance": null,
+              "wowheadTooltip": "<table><tr><td><b class=\"q2\">Black Sack of Gems</b><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 1</span></td></tr></table><table><tr><td><span class=\"q2\">&lt;Right Click to Open&gt;</span><br></td></tr></table>"
+            },
+            {
               "itemId": 28826,
               "name": "Shuriken of Negation",
               "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_ahnqirajtrinket_03.jpg",
@@ -2218,18 +2230,6 @@
               "subclass": "Leather",
               "dropChance": 0.1396,
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Gronn-Stitched Girdle</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 125</span><br>Binds when picked up<table width=\"100%\"><tr><td>Waist</td><th><span class=\"q1\">Leather</span></th></tr></table><span>222 Armor</span><br><span>+27 Stamina</span><br /><br>Blue Socket<br>Yellow Socket<br><span class=\"q0\">Socket Bonus: +3 Critical Strike Rating</span><br /><br />Durability 40 / 40</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves critical strike rating by 25.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 72.</span><br></td></tr></table>"
-            },
-            {
-              "itemId": 34846,
-              "name": "Black Sack of Gems",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_bag_10_black.jpg",
-              "quality": "Uncommon",
-              "itemLevel": 1,
-              "slot": "Quest",
-              "class": "Quest",
-              "subclass": "Quest",
-              "dropChance": 1,
-              "wowheadTooltip": "<table><tr><td><!--nstart--><b class=\"q2\">Black Sack of Gems</b><!--nend--><!--ndstart--><!--ndend--><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level <!--ilvl-->1</span><!--bo--><!--ue--><!--ebstats--><!--egstats--><!--eistats--><!--nameDescStats--></td></tr></table><table><tr><td><!--itemEffects:0--><span class=\"q2\">&lt;Right Click to Open&gt;</span><br><!--pvpEquip--><!--pvpEquip--><div class=\"whtt-sellprice\">Sell Price: <span class=\"moneysilver\">47</span> <span class=\"moneycopper\">62</span></div></td></tr></table>"
             }
           ]
         },
@@ -2357,18 +2357,6 @@
         {
           "name": "Magtheridon",
           "items": [
-            {
-              "itemId": 32385,
-              "name": "Magtheridon's Head",
-              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_head_tauren_01.jpg",
-              "quality": "Epic",
-              "itemLevel": 1,
-              "slot": "Quest",
-              "class": "Quest",
-              "subclass": "Quest",
-              "dropChance": 1,
-              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Magtheridon's Head</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 70</span><br>Binds when picked up<br>Unique<br>This Item Begins a Quest</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q\">&quot;All that remains of the hellspawn, Magtheridon.&quot;</span><br></td></tr></table>"
-            },
             {
               "itemId": 28777,
               "name": "Cloak of the Pit Stalker",

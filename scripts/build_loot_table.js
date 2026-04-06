@@ -243,6 +243,28 @@ const raidItems = items.filter(i => {
   return false;
 });
 
+// ── Manual item injections ────────────────────────────────────────────────────
+// Items that don't pass the normal filter (quest items, containers, etc.)
+// but should still appear in the loot table for soft reserve purposes.
+const MANUAL_ITEMS = [
+  {
+    itemId: 34846,
+    name: "Black Sack of Gems",
+    icon: "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_bag_10_black.jpg",
+    quality: "Uncommon",
+    itemLevel: 1,
+    slot: "Quest",
+    class: "Quest",
+    subclass: "Quest",
+    dropChance: 1,
+    source: { zone: 3923, name: "Gruul the Dragonkiller" }
+  }
+];
+
+for (const manual of MANUAL_ITEMS) {
+  raidItems.push(manual);
+}
+
 // Build structured output grouped by raid -> boss -> items
 const output = {
   generatedAt: new Date().toISOString(),
