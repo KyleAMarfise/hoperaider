@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-06T00:00:06.004Z",
+  "generatedAt": "2026-04-07T01:18:46.258Z",
   "raids": [
     {
       "zoneId": 3457,
@@ -2440,6 +2440,30 @@
               "subclass": "Shield",
               "dropChance": 0.1397,
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Aegis of the Vindicator</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 125</span><br>Binds when picked up<table width=\"100%\"><tr><td>Off Hand</td><th><span class=\"q1\">Shield</span></th></tr></table><span>5279 Armor</span><br>137 Block<br><span>+21 Intellect</span><br>Durability 120 / 120</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 53 and damage done by up to 18 for all magical spells and effects.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 11 mana per 5 sec.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32385,
+              "name": "Magtheridon's Head",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_head_orc_01.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Quest",
+              "class": "Quest",
+              "subclass": "Quest",
+              "dropChance": null,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Magtheridon's Head</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 70</span><br>Binds when picked up<br>Unique<br>This Item Begins a Quest</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q\">&quot;All that remains of the hellspawn, Magtheridon.&quot;</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 32386,
+              "name": "Magtheridon's Head",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_head_orc_01.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Quest",
+              "class": "Quest",
+              "subclass": "Quest",
+              "dropChance": null,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Magtheridon's Head</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 70</span><br>Binds when picked up<br>Unique<br>This Item Begins a Quest</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q\">&quot;All that remains of the hellspawn, Magtheridon.&quot;</span><br></td></tr></table>"
             },
             {
               "itemId": 28783,

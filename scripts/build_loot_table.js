@@ -247,6 +247,7 @@ const raidItems = items.filter(i => {
 // Items that don't pass the normal filter (quest items, containers, etc.)
 // but should still appear in the loot table for soft reserve purposes.
 const MANUAL_ITEMS = [
+  // Black Sack of Gems — quest item container, not equippable but SR-able
   {
     itemId: 34846,
     name: "Black Sack of Gems",
@@ -258,6 +259,32 @@ const MANUAL_ITEMS = [
     subclass: "Quest",
     dropChance: 1,
     source: { zone: 3923, name: "Gruul the Dragonkiller" }
+  },
+  // Magtheridon's Head (Alliance) — quest starter, non-equippable but SR-able
+  {
+    itemId: 32385,
+    name: "Magtheridon's Head",
+    icon: "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_head_orc_01.jpg",
+    quality: "Epic",
+    itemLevel: 70,
+    slot: "Quest",
+    class: "Quest",
+    subclass: "Quest",
+    dropChance: 0.4544,
+    source: { zone: 3836, name: "Magtheridon" }
+  },
+  // Magtheridon's Head (Horde) — quest starter, non-equippable but SR-able
+  {
+    itemId: 32386,
+    name: "Magtheridon's Head",
+    icon: "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_head_orc_01.jpg",
+    quality: "Epic",
+    itemLevel: 70,
+    slot: "Quest",
+    class: "Quest",
+    subclass: "Quest",
+    dropChance: 0.4191,
+    source: { zone: 3836, name: "Magtheridon" }
   }
 ];
 
