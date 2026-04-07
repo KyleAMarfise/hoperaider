@@ -272,19 +272,6 @@ const MANUAL_ITEMS = [
     subclass: "Quest",
     dropChance: 0.4544,
     source: { zone: 3836, name: "Magtheridon" }
-  },
-  // Magtheridon's Head (Horde) — quest starter, non-equippable but SR-able
-  {
-    itemId: 32386,
-    name: "Magtheridon's Head",
-    icon: "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_head_orc_01.jpg",
-    quality: "Epic",
-    itemLevel: 70,
-    slot: "Quest",
-    class: "Quest",
-    subclass: "Quest",
-    dropChance: 0.4191,
-    source: { zone: 3836, name: "Magtheridon" }
   }
 ];
 
