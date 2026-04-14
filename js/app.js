@@ -1713,26 +1713,16 @@ function findSoftReserveForSignup(signup, raidIdOverride = null) {
 
   // DEBUG: always log SR lookups for the current user's signups
   if (signup.ownerUid === authUid) {
-    const myRaidSRs = allSoftReserves.filter(r => r.raidId === raidId && r.ownerUid === authUid);
     const allMyRaidSRs = allSoftReserves.filter(r => r.ownerUid === authUid);
     console.log("[SR-LOOKUP]", {
       matched: !!match,
-      signup: {
-        characterId: signup.characterId,
-        profileCharacterName: signup.profileCharacterName,
-        characterName: signup.characterName,
-        raidId: signup.raidId,
-        ownerUid: signup.ownerUid
-      },
-      allSoftReserves_length: allSoftReserves.length,
-      myTotalSRs: allMyRaidSRs.length,
-      myRaidSRs: myRaidSRs.map(r => ({
-        srId: r.id,
-        srCharId: r.characterId,
-        srCharName: r.characterName,
-        srOwnerUid: r.ownerUid,
-        srRaidId: r.raidId
-      }))
+      lookupRaidId: raidId,
+      signupRaidId: signup.raidId,
+      signupRaidName: signup.raidName,
+      signupCharName: signup.profileCharacterName || signup.characterName,
+      signupCharId: signup.characterId,
+      allMyRaidIds: [...new Set(allMyRaidSRs.map(r => r.raidId))],
+      allMySRs: allMyRaidSRs.map(r => ({ raidId: r.raidId, raidName: r.raidName, charName: r.characterName, charId: r.characterId }))
     });
   }
   return match;
