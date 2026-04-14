@@ -4872,10 +4872,17 @@ if (!hasConfigValues()) {
     void loadAppLootData();
 
     // Subscribe to soft reserves (for SR column in roster table)
-    unsubscribeSoftReserves = onSnapshot(collection(db, "softreserves"), (snapshot) => {
-      allSoftReserves = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-      renderRows(currentRows);
-    });
+    unsubscribeSoftReserves = onSnapshot(
+      collection(db, "softreserves"),
+      (snapshot) => {
+        allSoftReserves = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+        console.log("[SR-LISTENER] snapshot fired, docs:", allSoftReserves.length);
+        renderRows(currentRows);
+      },
+      (error) => {
+        console.error("[SR-LISTENER] error:", error.code, error.message);
+      }
+    );
 
     // Subscribe to hard reserves (for HR section in roster table)
     unsubscribeHardReserves = onSnapshot(collection(db, "hardreserves"), (snapshot) => {
