@@ -1453,8 +1453,22 @@ function renderRosterTable(resolvedSignups, raidName, raidId) {
       const statusNorm = normalizeSignupStatus(signup.status);
 
       // Soft reserves + hard reserves for this character in this raid
+      // For alts, SRs store a composite characterId ("profileId::alt-0") while signups store
+      // just the profile doc ID. Fall back to matching by character name (case-insensitive)
+      // so alt signups can still find their SRs.
+      const signupCharNameLc = String(signup.profileCharacterName || signup.characterName || "").trim().toLowerCase();
       const charReserves = raidId
-        ? allSoftReserves.find(r => r.raidId === raidId && r.characterId === signup.characterId)
+        ? allSoftReserves.find(r => {
+            if (r.raidId !== raidId) return false;
+            if (r.characterId === signup.characterId) return true;
+            // Alt fallback: match by name (SR composite ID starts with profile ID + "::")
+            if (signupCharNameLc && String(r.characterName || "").trim().toLowerCase() === signupCharNameLc) {
+              // Ensure the SR belongs to the same user (via ownerUid or profile ID prefix)
+              if (r.ownerUid && signup.ownerUid && r.ownerUid === signup.ownerUid) return true;
+              if (typeof r.characterId === "string" && r.characterId.startsWith(signup.characterId + "::")) return true;
+            }
+            return false;
+          })
         : null;
       const reserveItems = charReserves && Array.isArray(charReserves.items) ? charReserves.items : [];
       const charHRs = hrByName.get(charName.toLowerCase()) || [];
