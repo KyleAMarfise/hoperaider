@@ -1453,23 +1453,7 @@ function renderRosterTable(resolvedSignups, raidName, raidId) {
       const statusNorm = normalizeSignupStatus(signup.status);
 
       // Soft reserves + hard reserves for this character in this raid
-      // For alts, SRs store a composite characterId ("profileId::alt-0") while signups store
-      // just the profile doc ID. Fall back to matching by character name (case-insensitive)
-      // so alt signups can still find their SRs.
-      const signupCharNameLc = String(signup.profileCharacterName || signup.characterName || "").trim().toLowerCase();
-      const charReserves = raidId
-        ? allSoftReserves.find(r => {
-            if (r.raidId !== raidId) return false;
-            if (r.characterId === signup.characterId) return true;
-            // Alt fallback: match by name (SR composite ID starts with profile ID + "::")
-            if (signupCharNameLc && String(r.characterName || "").trim().toLowerCase() === signupCharNameLc) {
-              // Ensure the SR belongs to the same user (via ownerUid or profile ID prefix)
-              if (r.ownerUid && signup.ownerUid && r.ownerUid === signup.ownerUid) return true;
-              if (typeof r.characterId === "string" && r.characterId.startsWith(signup.characterId + "::")) return true;
-            }
-            return false;
-          })
-        : null;
+      const charReserves = raidId ? findSoftReserveForSignup(signup, raidId) : null;
       const reserveItems = charReserves && Array.isArray(charReserves.items) ? charReserves.items : [];
       const charHRs = hrByName.get(charName.toLowerCase()) || [];
       const srParts = reserveItems.map(it =>
@@ -1706,6 +1690,26 @@ function legacySignupProfileDeleteFields() {
     offSpecialization: deleteField(),
     specialization: deleteField()
   };
+}
+
+// Find a soft reserve that matches a signup, handling the alt-character ID mismatch.
+// Signups store characterId = profile doc ID (same for main and alts).
+// SRs for alts store characterId = "profileId::alt-0" composite ID.
+// Match by raw characterId first, then fall back to (characterName + ownerUid/prefix).
+function findSoftReserveForSignup(signup, raidIdOverride = null) {
+  if (!signup) return null;
+  const raidId = raidIdOverride || signup.raidId;
+  if (!raidId) return null;
+  const signupCharNameLc = String(signup.profileCharacterName || signup.characterName || "").trim().toLowerCase();
+  return allSoftReserves.find(r => {
+    if (r.raidId !== raidId) return false;
+    if (r.characterId === signup.characterId) return true;
+    if (signupCharNameLc && String(r.characterName || "").trim().toLowerCase() === signupCharNameLc) {
+      if (r.ownerUid && signup.ownerUid && r.ownerUid === signup.ownerUid) return true;
+      if (typeof r.characterId === "string" && r.characterId.startsWith(signup.characterId + "::")) return true;
+    }
+    return false;
+  }) || null;
 }
 
 function normalizeSignupStatus(value) {
@@ -1973,7 +1977,7 @@ async function updateSignupStatus(signupId, nextStatus) {
 
   // Remove soft reserves when withdrawing or declining
   if (["withdrawn", "decline", "denied"].includes(normalizedStatus) && existingEntry.raidId && existingEntry.characterId) {
-    const srDoc = allSoftReserves.find(r => r.raidId === existingEntry.raidId && r.characterId === existingEntry.characterId);
+    const srDoc = findSoftReserveForSignup(existingEntry);
     if (srDoc) {
       try {
         await deleteDoc(doc(db, "softreserves", srDoc.id));
@@ -2644,10 +2648,7 @@ function viewerNeedsSR(raidId) {
   );
   if (!viewerSignup) return false;
   // Check if SR exists for this character + raid
-  const hasSR = allSoftReserves.some(sr =>
-    sr.raidId === raidId && sr.characterId === viewerSignup.characterId
-  );
-  return !hasSR;
+  return !findSoftReserveForSignup(viewerSignup, raidId);
 }
 
 // Get all raids where the viewer needs SRs
@@ -2665,9 +2666,7 @@ function getRaidsNeedingSR() {
     // Skip past raids
     const cutoff = getRaidCutoffDateTime(raid);
     if (cutoff && cutoff.getTime() < Date.now()) continue;
-    const hasSR = allSoftReserves.some(sr =>
-      sr.raidId === signup.raidId && sr.characterId === signup.characterId
-    );
+    const hasSR = Boolean(findSoftReserveForSignup(signup));
     if (!hasSR) result.push(raid);
   }
   return result;
