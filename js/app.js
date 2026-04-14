@@ -1701,7 +1701,7 @@ function findSoftReserveForSignup(signup, raidIdOverride = null) {
   const raidId = raidIdOverride || signup.raidId;
   if (!raidId) return null;
   const signupCharNameLc = String(signup.profileCharacterName || signup.characterName || "").trim().toLowerCase();
-  return allSoftReserves.find(r => {
+  const match = allSoftReserves.find(r => {
     if (r.raidId !== raidId) return false;
     if (r.characterId === signup.characterId) return true;
     if (signupCharNameLc && String(r.characterName || "").trim().toLowerCase() === signupCharNameLc) {
@@ -1710,6 +1710,27 @@ function findSoftReserveForSignup(signup, raidIdOverride = null) {
     }
     return false;
   }) || null;
+
+  // DEBUG: log alt mismatches for diagnosing the SR-not-showing issue
+  if (!match && signup.ownerUid === authUid) {
+    const candidatesForRaid = allSoftReserves.filter(r => r.raidId === raidId && r.ownerUid === signup.ownerUid);
+    if (candidatesForRaid.length) {
+      console.log("[SR-LOOKUP] No match for signup:", {
+        signup_characterId: signup.characterId,
+        signup_profileCharacterName: signup.profileCharacterName,
+        signup_characterName: signup.characterName,
+        signup_ownerUid: signup.ownerUid,
+        raidId,
+        totalSRs: allSoftReserves.length,
+        srCandidatesSameRaidSameOwner: candidatesForRaid.map(r => ({
+          srCharId: r.characterId,
+          srCharName: r.characterName,
+          srOwnerUid: r.ownerUid
+        }))
+      });
+    }
+  }
+  return match;
 }
 
 function normalizeSignupStatus(value) {
