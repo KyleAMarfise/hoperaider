@@ -132,6 +132,9 @@ let unsubscribeReserves = null;
 let unsubscribeHardReserves = null;
 let unsubscribeSignups = null;
 let currentSignups = [];
+// All signups for the current user (across all raids) — used to badge raid tiles
+let unsubscribeMySignups = null;
+let mySignups = [];
 
 let currentHardReserves = [];
 let pendingHrItem = null; // item being hard reserved (dialog open)
@@ -627,6 +630,30 @@ function renderRaidOptions() {
   softresRaidGrid.innerHTML = html;
 }
 
+// Returns an HTML badge describing the user's signup status for this raid, or empty string
+function renderMySignupBadge(raidId) {
+  const mine = mySignups.filter(s => s.raidId === raidId);
+  if (!mine.length) return '';
+  // Highest priority status (accepted > tentative > requested > withdrawn/decline/denied)
+  const priority = { accept: 4, tentative: 3, requested: 2, withdrawn: 1, decline: 1, denied: 1 };
+  const best = mine.reduce((top, s) => {
+    const sn = normalizeSignupStatus(s.status);
+    return (priority[sn] || 0) > (priority[normalizeSignupStatus(top.status)] || 0) ? s : top;
+  }, mine[0]);
+  const charNames = mine
+    .filter(s => ["accept", "requested", "tentative"].includes(normalizeSignupStatus(s.status)))
+    .map(s => s.profileCharacterName || s.characterName)
+    .filter(Boolean);
+  const charLabel = charNames.length ? ` (${escapeHtml(charNames.join(", "))})` : "";
+  const status = normalizeSignupStatus(best.status);
+  switch (status) {
+    case "accept":    return `<span class="srt-mysignup srt-mysignup-accepted" title="You're accepted">\u2713 Accepted${charLabel}</span>`;
+    case "tentative": return `<span class="srt-mysignup srt-mysignup-benched" title="You're benched">\u{1FA91} Benched${charLabel}</span>`;
+    case "requested": return `<span class="srt-mysignup srt-mysignup-pending" title="Signup pending">\u23F3 Pending${charLabel}</span>`;
+    default:          return '';
+  }
+}
+
 function renderUpcomingTile(raid) {
   const rDate = parseDateOnly(raid.raidDate);
   const isSelected = raid.id === selectedRaidId;
@@ -643,9 +670,11 @@ function renderUpcomingTile(raid) {
   const size = raid.raidSize ? `${raid.raidSize}-man` : '';
   const lockIcon = isLocked ? ' 🔒' : '';
   const resLabel = resCount > 0 ? `${resCount} reserve${resCount !== 1 ? 's' : ''}` : 'No reserves';
+  const myBadge = renderMySignupBadge(raid.id);
 
   const classes = ['softres-raid-tile'];
   if (isSelected) classes.push('is-selected');
+  if (myBadge) classes.push('has-my-signup');
 
   return `<button type="button" class="${classes.join(' ')}" data-raid-id="${escapeHtml(raid.id)}">
     <span class="srt-status srt-status-upcoming">Upcoming</span>
@@ -653,6 +682,7 @@ function renderUpcomingTile(raid) {
     <span class="srt-date">${escapeHtml(dateLabel)}</span>
     <span class="srt-time">${escapeHtml(timeStr)}${size ? ' · ' + escapeHtml(size) : ''}</span>
     <span class="srt-reserves">${resLabel}</span>
+    ${myBadge}
   </button>`;
 }
 
@@ -2536,12 +2566,27 @@ if (!hasConfigValues()) {
     unsubscribeRaids = onSnapshot(raidsQuery, (snapshot) => {
       currentRaids = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
       renderRaidOptions();
-      // Auto-select the nearest upcoming raid on first load
+      // Auto-select on first load — priority: URL param > nearest raid user is signed up for > nearest upcoming
       if (!selectedRaidId && currentRaids.length) {
-        const upcoming = currentRaids
-          .filter(r => !isRaidPast(r))
-          .sort((a, b) => (parseDateOnly(a.raidDate)?.getTime() || 0) - (parseDateOnly(b.raidDate)?.getTime() || 0));
-        const autoRaid = upcoming[0] || currentRaids[0];
+        const params = new URLSearchParams(window.location.search);
+        const urlRaidId = params.get("raidId");
+        let autoRaid = null;
+        if (urlRaidId) {
+          autoRaid = currentRaids.find(r => r.id === urlRaidId);
+        }
+        if (!autoRaid && mySignups.length) {
+          const mySignedRaidIds = new Set(mySignups.map(s => s.raidId));
+          const myUpcoming = currentRaids
+            .filter(r => mySignedRaidIds.has(r.id) && !isRaidPast(r))
+            .sort((a, b) => (parseDateOnly(a.raidDate)?.getTime() || 0) - (parseDateOnly(b.raidDate)?.getTime() || 0));
+          autoRaid = myUpcoming[0] || null;
+        }
+        if (!autoRaid) {
+          const upcoming = currentRaids
+            .filter(r => !isRaidPast(r))
+            .sort((a, b) => (parseDateOnly(a.raidDate)?.getTime() || 0) - (parseDateOnly(b.raidDate)?.getTime() || 0));
+          autoRaid = upcoming[0] || currentRaids[0];
+        }
         if (autoRaid) onRaidSelected(autoRaid.id);
       }
       renderLockState();
@@ -2549,6 +2594,13 @@ if (!hasConfigValues()) {
       renderReserves();
       renderCharacterReserves(); // re-render +/- buttons when max changes
     }, (err) => { setMsg("Error loading raids: " + err.message, true); });
+
+    // Subscribe to the current user's own signups (for raid tile badges + auto-select)
+    const mySignupsQuery = query(collection(db, "signups"), where("ownerUid", "==", authUid));
+    unsubscribeMySignups = onSnapshot(mySignupsQuery, (snapshot) => {
+      mySignups = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderRaidOptions();
+    }, (err) => { console.error("Error loading user signups:", err); });
 
     // Subscribe to characters
     const charsRef = collection(db, "characters");

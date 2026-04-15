@@ -1701,7 +1701,7 @@ function findSoftReserveForSignup(signup, raidIdOverride = null) {
   const raidId = raidIdOverride || signup.raidId;
   if (!raidId) return null;
   const signupCharNameLc = String(signup.profileCharacterName || signup.characterName || "").trim().toLowerCase();
-  const match = allSoftReserves.find(r => {
+  return allSoftReserves.find(r => {
     if (r.raidId !== raidId) return false;
     if (r.characterId === signup.characterId) return true;
     if (signupCharNameLc && String(r.characterName || "").trim().toLowerCase() === signupCharNameLc) {
@@ -1710,27 +1710,6 @@ function findSoftReserveForSignup(signup, raidIdOverride = null) {
     }
     return false;
   }) || null;
-
-  // DEBUG: always log SR lookups for the current user's signups
-  if (signup.ownerUid === authUid) {
-    const srsForThisRaid = allSoftReserves.filter(r => r.raidId === raidId);
-    const allMyRaidSRs = allSoftReserves.filter(r => r.ownerUid === authUid);
-    console.log("[SR-LOOKUP]", {
-      matched: !!match,
-      authUid: authUid,
-      signup_ownerUid: signup.ownerUid,
-      signupRaidId: signup.raidId,
-      signupRaidName: signup.raidName,
-      signupCharName: signup.profileCharacterName || signup.characterName,
-      signupCharId: signup.characterId,
-      totalSRs: allSoftReserves.length,
-      srsForThisRaid_count: srsForThisRaid.length,
-      srsForThisRaid: srsForThisRaid.map(r => ({ id: r.id, ownerUid: r.ownerUid, charName: r.characterName, charId: r.characterId })),
-      mySRs_count: allMyRaidSRs.length,
-      mySRs: allMyRaidSRs.map(r => ({ raidId: r.raidId, raidName: r.raidName, charName: r.characterName, charId: r.characterId, ownerUid: r.ownerUid }))
-    });
-  }
-  return match;
 }
 
 function normalizeSignupStatus(value) {
@@ -2704,6 +2683,11 @@ function updateSRNeededBanner() {
   const raidNames = raids.map(r => r.raidName + " (" + formatMonthDayYear(r.raidDate) + ")").join(", ");
   banner.querySelector(".sr-needed-text").innerHTML =
     `You have <strong>${raids.length}</strong> raid${raids.length > 1 ? "s" : ""} that need${raids.length === 1 ? "s" : ""} soft reserves: ${escapeHtml(raidNames)}`;
+  // Deep-link the banner's "Go to Soft Reserves" button to the first needing raid so the user lands on the right one
+  const link = banner.querySelector(".sr-needed-link");
+  if (link && raids[0]?.id) {
+    link.href = `/softres.html?raidId=${encodeURIComponent(raids[0].id)}`;
+  }
   banner.hidden = false;
 }
 
@@ -3543,7 +3527,19 @@ function renderCategoryRows(targetElement, rows, rosterMap, reverse = false) {
           </td>
           <td class="raid-time-cell">${renderRaidWindowMultiline(item.raidStart, item.raidEnd, { highlightLocal: true })}</td>
           <td>${escapeHtml(item.phase ? `Phase ${String(item.phase)}` : "—")}</td>
-          <td><span class="raid-name-glow">${escapeHtml(item.raidName || "—")}</span>${viewerNeedsSR(selectedRaid?.id) ? ' <span class="sr-needed-badge">SR Needed</span>' : ""}${item.raidLeader ? `<br><span class="raid-leader-label">RL: ${escapeHtml(item.raidLeader)}</span>` : ""}</td>
+          <td><span class="raid-name-glow">${escapeHtml(item.raidName || "—")}</span>${(() => {
+            if (!selectedRaid?.id) return "";
+            const raidSrUrl = `/softres.html?raidId=${encodeURIComponent(selectedRaid.id)}`;
+            if (viewerNeedsSR(selectedRaid.id)) {
+              return ` <a class="sr-needed-badge sr-needed-link" href="${raidSrUrl}" title="Click to soft reserve for this exact raid">SR Needed \u2192</a>`;
+            }
+            // Show an "Open SR" link if the viewer is signed up for this raid (even if already SR'd)
+            const myAccepted = currentRows.find((s) => s.raidId === selectedRaid.id && s.ownerUid === authUid && ["accept","requested","tentative"].includes(normalizeSignupStatus(s.status)));
+            if (myAccepted) {
+              return ` <a class="sr-open-link" href="${raidSrUrl}" title="Open Soft Reserves for this raid">Open SR \u2192</a>`;
+            }
+            return "";
+          })()}${item.raidLeader ? `<br><span class="raid-leader-label">RL: ${escapeHtml(item.raidLeader)}</span>` : ""}</td>
           <td>${escapeHtml(item.runType || "—")}${item.runType === "Partial" && item.plannedBosses?.length ? `<div class="planned-bosses-list">${item.plannedBosses.map((b) => `<span class="planned-boss-tag">${escapeHtml(b)}</span>`).join("")}</div>` : ""}</td>
           <td>${escapeHtml(item.raidSize || "—")}</td>
           <td>${renderRosterProgress(item, rosterMap, resolvedSignups)}</td>
@@ -4876,7 +4872,6 @@ if (!hasConfigValues()) {
       collection(db, "softreserves"),
       (snapshot) => {
         allSoftReserves = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-        console.log("[SR-LISTENER] snapshot fired, docs:", allSoftReserves.length);
         renderRows(currentRows);
       },
       (error) => {
