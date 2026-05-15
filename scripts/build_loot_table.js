@@ -126,6 +126,13 @@ const BOSS_SOURCE_OVERRIDES = {
   // Ashes of Al'ar mount — "Rare Drop" with no zone in DB
   32458: { zone: 3845, name: "Kael'thas Sunstrider" }, // Ashes of Al'ar
 
+  // ── TEMPEST KEEP — T5 Chest Tokens ───────────────────────────────────
+  // "Rare Drop" with no zone in DB — zone must be set before the filter runs
+  // so the isTierToken path inside the filter can pick them up correctly
+  30236: { zone: 3845, name: "Kael'thas Sunstrider" }, // Chestguard of the Vanquished Champion
+  30237: { zone: 3845, name: "Kael'thas Sunstrider" }, // Chestguard of the Vanquished Defender
+  30238: { zone: 3845, name: "Kael'thas Sunstrider" }, // Chestguard of the Vanquished Hero
+
   // ── TEMPEST KEEP — Profession Patterns (Trash Drops) ─────────────────
   // "Rare Drop" with no zone in DB; confirmed as SSC/TK trash drops
   30281: { zone: 3845, name: "Trash Drops", category: 'Zone Drop' }, // Pattern: Belt of the Long Road

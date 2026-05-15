@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-15T01:03:01.108Z",
+  "generatedAt": "2026-05-15T23:30:23.984Z",
   "raids": [
     {
       "zoneId": 3457,
@@ -4203,6 +4203,42 @@
               "subclass": "Bow",
               "dropChance": 0.984,
               "wowheadTooltip": "<table><tr><td><b class=\"q5\">Netherstrand Longbow</b><span class=\"q\"><br>Item Level 175</span><br />Tempest Keep<br>Unique<br>Duration: 15 min (real time)<table width=\"100%\"><tr><td>Ranged</td><th><span class=\"q1\">Bow</span></th></tr></table><table width=\"100%\"><tr><td><span>256 - 385 Damage</span></td><th>Speed 2.90</th></tr></table>(110.52 damage per second)<br><span>+20 Stamina</span><br>Durability 110 / 110<div class=\"wowhead-tooltip-item-classes\">Classes: Hunter</div></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves ranged critical strike rating by 50.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases ranged attack power by 70.</span><br><span id=\"useText2\" class=\"q2\">Equip: Increases your ranged weapon critical strike damage bonus by 50%.</span><br><span id=\"useText3\" class=\"q2\">Use: Summons a bundle of Nether Spikes for use as ammo.</span><br><span id=\"useText4\" class=\"q2\">Chance on hit: Increases Physical damage taken by the target by 5%. Can be applied up to 5 times. Lasts 30 sec.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 30236,
+              "name": "Chestguard of the Vanquished Champion",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_chest_chain_03.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.6183,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Chestguard of the Vanquished Champion</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 70</span><br>Binds when picked up<div class=\"wowhead-tooltip-item-classes\">Classes: Paladin, Rogue, Shaman</div></td></tr></table><table><tr><td>Requires Level 70<br></td></tr></table>"
+            },
+            {
+              "itemId": 30237,
+              "name": "Chestguard of the Vanquished Defender",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_chest_chain_03.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.6046,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Chestguard of the Vanquished Defender</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 70</span><br>Binds when picked up<div class=\"wowhead-tooltip-item-classes\">Classes: Warrior, Priest, Druid</div></td></tr></table><table><tr><td>Requires Level 70<br></td></tr></table>"
+            },
+            {
+              "itemId": 30238,
+              "name": "Chestguard of the Vanquished Hero",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_chest_chain_03.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Tier Token",
+              "class": "Miscellaneous",
+              "subclass": "Junk",
+              "dropChance": 0.633,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Chestguard of the Vanquished Hero</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 70</span><br>Binds when picked up<div class=\"wowhead-tooltip-item-classes\">Classes: Hunter, Mage, Warlock</div></td></tr></table><table><tr><td>Requires Level 70<br></td></tr></table>"
             },
             {
               "itemId": 30316,
