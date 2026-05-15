@@ -15,7 +15,7 @@ const TBC_RAIDS = [
   { zoneId: 3923, name: "Gruul's Lair",          phase: 1, size: 25 },
   { zoneId: 3836, name: "Magtheridon's Lair",    phase: 1, size: 25 },
   { zoneId: 3607, name: "Serpentshrine Cavern",   phase: 2, size: 25 },
-  { zoneId: 3845, name: "Tempest Keep",           phase: 2, size: 25 },
+  { zoneId: 3845, name: "Tempest Keep: The Eye",   phase: 2, size: 25 },
   { zoneId: 3606, name: "Hyjal Summit",           phase: 3, size: 25 },
   { zoneId: 3959, name: "Black Temple",            phase: 3, size: 25 },
   { zoneId: 3805, name: "Zul'Aman",               phase: 4, size: 10 },
