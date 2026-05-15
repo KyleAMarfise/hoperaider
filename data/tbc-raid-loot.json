@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-07T01:27:00.252Z",
+  "generatedAt": "2026-05-15T00:48:05.687Z",
   "raids": [
     {
       "zoneId": 3457,
@@ -542,6 +542,18 @@
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Emerald Ripper</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<br>Unique<table width=\"100%\"><tr><td>One-Hand</td><th><span class=\"q1\">Dagger</span></th></tr></table><table width=\"100%\"><tr><td><span>126 - 189 Damage</span></td><th>Speed 1.80</th></tr></table>(87.50 damage per second)<br><span>+19 Agility</span><br><span>+18 Stamina</span><br>Durability 75 / 75</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 36.</span><br></td></tr></table>"
             },
             {
+              "itemId": 22559,
+              "name": "Formula: Enchant Weapon - Mongoose",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_note_01.jpg",
+              "quality": "Rare",
+              "itemLevel": 75,
+              "slot": "Recipe",
+              "class": "Recipe",
+              "subclass": "Enchanting",
+              "dropChance": 0.0431,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q3\">Formula: Enchant Weapon - Mongoose</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 75</span><br>Binds when picked up</td></tr></table><table><tr><td>Requires Enchanting (375)<br><span class=\"q2\">Use: Learn how to permanently enchant a Melee Weapon to occasionally increase Agility by 120 and attack speed slightly.</span><br><span id=\"useText2\" class=\"q2\">Permanently enchant a Melee Weapon to occasionally increase Agility by 120 and attack speed slightly. &nbsp;Requires a level 35 or higher item.</span><br></td></tr></table>"
+            },
+            {
               "itemId": 28568,
               "name": "Idol of the Avian Heart",
               "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_thegoldencheep.jpg",
@@ -1051,6 +1063,23 @@
           ]
         },
         {
+          "name": "Phantom Stagehand",
+          "items": [
+            {
+              "itemId": 22545,
+              "name": "Formula: Enchant Boots - Surefooted",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_note_01.jpg",
+              "quality": "Uncommon",
+              "itemLevel": 74,
+              "slot": "Recipe",
+              "class": "Recipe",
+              "subclass": "Enchanting",
+              "dropChance": 0.058,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q2\">Formula: Enchant Boots - Surefooted</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 74</span><br>Binds when picked up</td></tr></table><table><tr><td>Requires Enchanting (370)<br><span class=\"q2\">Use: Teaches you how to permanently enchant boots to give 5% snare and root resistance as well as 10 hit rating.</span><br><span id=\"useText2\" class=\"q2\">Permanently enchant boots to increase snare and root resistance by 5% and increase hit rating by 10. &nbsp;Requires a level 35 or higher item.</span><br></td></tr></table>"
+            }
+          ]
+        },
+        {
           "name": "Prince Malchezaar",
           "items": [
             {
@@ -1496,6 +1525,18 @@
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Tirisfal Wand of Ascendancy</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<table width=\"100%\"><tr><td>Ranged</td><th><span class=\"q1\">Wand</span></th></tr></table><table width=\"100%\"><tr><td><span>169 - 314 Shadow Damage</span></td><th>Speed 1.50</th></tr></table>(161.00 damage per second)<br><span>+10 Stamina</span><br><span>+9 Intellect</span><br>Durability 75 / 75</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell hit rating by 11.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 15.</span><br></td></tr></table>"
             },
             {
+              "itemId": 22560,
+              "name": "Formula: Enchant Weapon - Sunfire",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_note_01.jpg",
+              "quality": "Rare",
+              "itemLevel": 75,
+              "slot": "Recipe",
+              "class": "Recipe",
+              "subclass": "Enchanting",
+              "dropChance": 0.0423,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q3\">Formula: Enchant Weapon - Sunfire</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 75</span><br>Binds when picked up</td></tr></table><table><tr><td>Requires Enchanting (375)<br><span class=\"q2\">Use: Learn how to permanently enchant a Melee Weapon to increase the damage done by your arcane and fire spells by up to 50.</span><br><span id=\"useText2\" class=\"q2\">Permanently enchant a Melee Weapon to add up to 50 damage to fire and arcane spells. &nbsp;Requires a level 35 or higher item.</span><br></td></tr></table>"
+            },
+            {
               "itemId": 28726,
               "name": "Mantle of the Mind Flayer",
               "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_shoulder_25.jpg",
@@ -1595,6 +1636,18 @@
               "subclass": "Mace",
               "dropChance": 0.1663,
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Fool's Bane</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q\"><br>Item Level 115</span><br>Binds when picked up<table width=\"100%\"><tr><td>Main Hand</td><th><span class=\"q1\">Mace</span></th></tr></table><table width=\"100%\"><tr><td><span>159 - 296 Damage</span></td><th>Speed 2.60</th></tr></table>(87.50 damage per second)<br /><br>Yellow Socket<br><span class=\"q0\">Socket Bonus: +3 Stamina</span><br /><br />Durability 105 / 105</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves critical strike rating by 24.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 30.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 22561,
+              "name": "Formula: Enchant Weapon - Soulfrost",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_note_01.jpg",
+              "quality": "Rare",
+              "itemLevel": 75,
+              "slot": "Recipe",
+              "class": "Recipe",
+              "subclass": "Enchanting",
+              "dropChance": 0.0478,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q3\">Formula: Enchant Weapon - Soulfrost</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 75</span><br>Binds when picked up</td></tr></table><table><tr><td>Requires Enchanting (375)<br><span class=\"q2\">Use: Learn how to permanently enchant a Melee Weapon to increase the damage done by your frost and shadow spells by up to 54.</span><br><span id=\"useText2\" class=\"q2\">Permanently enchant a Melee Weapon to add up to 54 damage to frost and shadow spells. &nbsp;Requires a level 35 or higher item.</span><br></td></tr></table>"
             },
             {
               "itemId": 28659,
@@ -1953,6 +2006,18 @@
               "subclass": "Tailoring",
               "dropChance": 0.2221,
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Pattern: Soulcloth Vest</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 75</span><br>Binds when picked up</td></tr></table><table><tr><td>Requires Tailoring (375)<br><span class=\"q2\">Use: Teaches you how to sew a Soulcloth Vest.</span><br><br /><span class=\"q4\">Soulcloth Vest</span><span class=\"q\"><br>Item Level 100</span><br>Binds when equipped<table width=\"100%\"><tr><td>Chest</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>170 Armor</span><br><span>+24 Stamina</span><br><span>+20 Intellect</span><br><span>+16 Spirit</span><br>+45 Arcane Resistance<br /><br>Yellow Socket<br>Red Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +4 Intellect</span><br /><br />Durability 100 / 100<br>Requires Level 70<br><br /><span class=\"q\">Soulcloth Embrace (0/3)</span><div class=\"q0 indent\"><span>Soulcloth Vest</span><br /><span>Soulcloth Shoulders</span><br /><span>Soulcloth Gloves</span></div><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Bolt of Soulcloth&nbsp;(8), Rune Thread&nbsp;(4)</div></td></tr></table>"
+            },
+            {
+              "itemId": 23809,
+              "name": "Schematic: Stabilized Eternium Scope",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_scroll_05.jpg",
+              "quality": "Rare",
+              "itemLevel": 75,
+              "slot": "Recipe",
+              "class": "Recipe",
+              "subclass": "Engineering",
+              "dropChance": null,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q3\">Schematic: Stabilized Eternium Scope</b></td><th><b class=\"q0 whtt-extra\">Phase 1</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 75</span><br>Binds when picked up</td></tr></table><table><tr><td>Requires Engineering (375)<br><span class=\"q2\">Use: Teaches you how to make a Stabilized Eternium Scope.</span><br><br /><span class=\"q3\">Stabilized Eternium Scope</span><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 75</span><br>Requires Level 60<br><span id=\"useText1\" class=\"q2\">Use: Attaches a permanent scope to a bow or gun that increases its critical strike rating by 28.</span><br><div class=\"whtt-extra whtt-maxstack\">Max Stack: 5</div><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Hardened Adamantite Tube&nbsp;(2), Felsteel Stabilizer&nbsp;(6), Star of Elune&nbsp;(2)</div></td></tr></table>"
             },
             {
               "itemId": 28592,
@@ -3505,6 +3570,66 @@
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Pendant of the Perilous</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q\"><br>Item Level 128</span><br>Binds when picked up<table width=\"100%\"><tr><td>Neck</td><th><span class=\"q1\"></span></th></tr></table><span>+32 Strength</span><br><span>+24 Stamina</span></td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves critical strike rating by 23.</span><br></td></tr></table>"
             },
             {
+              "itemId": 30280,
+              "name": "Pattern: Belt of Blasting",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_scroll_04.jpg",
+              "quality": "Epic",
+              "itemLevel": 75,
+              "slot": "Recipe",
+              "class": "Recipe",
+              "subclass": "Tailoring",
+              "dropChance": 0.005,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Pattern: Belt of Blasting</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 75</span><br>Binds when picked up</td></tr></table><table><tr><td>Requires Tailoring (375)<br><span class=\"q2\">Use: Teaches you how to sew a Belt of Blasting.</span><br><br /><span class=\"q4\">Belt of Blasting</span><span class=\"q\"><br>Item Level 128</span><br>Binds when equipped<table width=\"100%\"><tr><td>Waist</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>121 Armor</span><br /><br>Blue Socket<br>Yellow Socket<br><span class=\"q0\">Socket Bonus: +4 Spell Damage and Healing</span><br /><br />Durability 35 / 35<br>Requires Level 70<br><span class=\"q2\">Equip: Improves spell hit rating by 23.</span><br><span class=\"q2\">Equip: Improves spell critical strike rating by 30.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 50.</span><br><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Nether Vortex&nbsp;(2), Bolt of Imbued Netherweave&nbsp;(4), Primal Fire&nbsp;(15), Rune Thread&nbsp;(2)</div></td></tr></table>"
+            },
+            {
+              "itemId": 30302,
+              "name": "Pattern: Belt of Deep Shadow",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_scroll_04.jpg",
+              "quality": "Epic",
+              "itemLevel": 75,
+              "slot": "Recipe",
+              "class": "Recipe",
+              "subclass": "Leatherworking",
+              "dropChance": 0.0053,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Pattern: Belt of Deep Shadow</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 75</span><br>Binds when picked up</td></tr></table><table><tr><td>Requires Leatherworking (375)<br><span class=\"q2\">Use: Teaches you how to make a Belt of Deep Shadow.</span><br><br /><span class=\"q4\">Belt of Deep Shadow</span><span class=\"q\"><br>Item Level 128</span><br>Binds when equipped<table width=\"100%\"><tr><td>Waist</td><th><span class=\"q1\">Leather</span></th></tr></table><span>227 Armor</span><br><span>+32 Agility</span><br><span>+14 Stamina</span><br /><br>Blue Socket<br>Blue Socket<br><span class=\"q0\">Socket Bonus: +3 Agility</span><br /><br />Durability 40 / 40<br>Requires Level 70<br><span class=\"q2\">Equip: Improves hit rating by 18.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 66.</span><br><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Nether Vortex&nbsp;(2), Heavy Knothide Leather&nbsp;(4), Primal Shadow&nbsp;(10), Rune Thread&nbsp;(2), Primal Air&nbsp;(10)</div></td></tr></table>"
+            },
+            {
+              "itemId": 30301,
+              "name": "Pattern: Belt of Natural Power",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_scroll_04.jpg",
+              "quality": "Epic",
+              "itemLevel": 75,
+              "slot": "Recipe",
+              "class": "Recipe",
+              "subclass": "Leatherworking",
+              "dropChance": 0.0053,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Pattern: Belt of Natural Power</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 75</span><br>Binds when picked up</td></tr></table><table><tr><td>Requires Leatherworking (375)<br><span class=\"q2\">Use: Teaches you how to make a Belt of Natural Power.</span><br><br /><span class=\"q4\">Belt of Natural Power</span><span class=\"q\"><br>Item Level 128</span><br>Binds when equipped<table width=\"100%\"><tr><td>Waist</td><th><span class=\"q1\">Leather</span></th></tr></table><span class=\"q2 tip\" data-simple-tooltip=\"&lt;span class=&quot;q&quot;&gt;Has 196 bonus armor.&lt;/span&gt;\">423 Armor</span><br><span>+29 Strength</span><br><span>+20 Agility</span><br><span>+38 Stamina</span><br><span>+12 Intellect</span><br /><br>Red Socket<br>Red Socket<br><span class=\"q0\">Socket Bonus: +4 Stamina</span><br /><br />Durability 40 / 40<br>Requires Level 70<br><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Nether Vortex&nbsp;(2), Heavy Knothide Leather&nbsp;(4), Primal Life&nbsp;(10), Rune Thread&nbsp;(2), Primal Air&nbsp;(10)</div></td></tr></table>"
+            },
+            {
+              "itemId": 30306,
+              "name": "Pattern: Boots of Utter Darkness",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_scroll_04.jpg",
+              "quality": "Epic",
+              "itemLevel": 75,
+              "slot": "Recipe",
+              "class": "Recipe",
+              "subclass": "Leatherworking",
+              "dropChance": 0.0087,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Pattern: Boots of Utter Darkness</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 75</span></td></tr></table><table><tr><td>Requires Leatherworking (375)<br><span class=\"q2\">Use: Teaches you how to make Boots of Utter Darkness.</span><br><br /><span class=\"q4\">Boots of Utter Darkness</span><span class=\"q\"><br>Item Level 128</span><br>Binds when picked up<table width=\"100%\"><tr><td>Feet</td><th><span class=\"q1\">Leather</span></th></tr></table><span>278 Armor</span><br><span>+34 Stamina</span><br>Durability 60 / 60<br>Requires Level 70<br><span class=\"q2\">Equip: Improves hit rating by 23.</span><br><span class=\"q2\">Equip: Improves critical strike rating by 32.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 66.</span><br><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Primal Nether&nbsp;(2), Heavy Knothide Leather&nbsp;(4), Primal Shadow&nbsp;(12), Rune Thread&nbsp;(2)</div></td></tr></table>"
+            },
+            {
+              "itemId": 30321,
+              "name": "Plans: Belt of the Guardian",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_scroll_04.jpg",
+              "quality": "Epic",
+              "itemLevel": 75,
+              "slot": "Recipe",
+              "class": "Recipe",
+              "subclass": "Blacksmithing",
+              "dropChance": 0.0048,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Plans: Belt of the Guardian</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 75</span><br>Binds when picked up</td></tr></table><table><tr><td>Requires Blacksmithing (375)<br><span class=\"q2\">Use: Teaches you how to make a Belt of the Guardian.</span><br><br /><span class=\"q4\">Belt of the Guardian</span><span class=\"q\"><br>Item Level 128</span><br>Binds when equipped<table width=\"100%\"><tr><td>Waist</td><th><span class=\"q1\">Plate</span></th></tr></table><span>904 Armor</span><br><span>+48 Stamina</span><br><span>+13 Intellect</span><br /><br>Red Socket<br>Yellow Socket<br><span class=\"q0\">Socket Bonus: +4 Stamina</span><br /><br />Durability 55 / 55<br>Requires Level 70<br><span class=\"q2\">Equip: Increases defense rating by 19.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 21.</span><br><span id=\"useText2\" class=\"q2\">Equip: Increases the block value of your shield by 33.</span><br><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Nether Vortex&nbsp;(2), Hardened Adamantite Bar&nbsp;(5), Primal Water&nbsp;(10), Primal Earth&nbsp;(5)</div></td></tr></table>"
+            },
+            {
               "itemId": 30023,
               "name": "Totem of the Maelstrom",
               "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/spell_nature_earthbind.jpg",
@@ -4155,6 +4280,66 @@
               "subclass": "Leather",
               "dropChance": 0.0217,
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Bark-Gloves of Ancient Wisdom</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q\"><br>Item Level 128</span><br>Binds when picked up<table width=\"100%\"><tr><td>Hands</td><th><span class=\"q1\">Leather</span></th></tr></table><span>252 Armor</span><br><span>+28 Stamina</span><br><span>+25 Intellect</span><br><span>+33 Spirit</span><br>Durability 40 / 40</td></tr></table><table><tr><td>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 73 and damage done by up to 25 for all magical spells and effects.</span><br></td></tr></table>"
+            },
+            {
+              "itemId": 30281,
+              "name": "Pattern: Belt of the Long Road",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_scroll_04.jpg",
+              "quality": "Epic",
+              "itemLevel": 75,
+              "slot": "Recipe",
+              "class": "Recipe",
+              "subclass": "Tailoring",
+              "dropChance": 0.0046,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Pattern: Belt of the Long Road</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 75</span><br>Binds when picked up</td></tr></table><table><tr><td>Requires Tailoring (375)<br><span class=\"q2\">Use: Teaches you how to sew a Belt of the Long Road.</span><br><br /><span class=\"q4\">Belt of the Long Road</span><span class=\"q\"><br>Item Level 128</span><br>Binds when equipped<table width=\"100%\"><tr><td>Waist</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>121 Armor</span><br><span>+13 Stamina</span><br><span>+18 Intellect</span><br><span>+33 Spirit</span><br /><br>Blue Socket<br>Yellow Socket<br><span class=\"q0\">Socket Bonus: +7 Healing +3 Spell Damage</span><br /><br />Durability 35 / 35<br>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 73 and damage done by up to 25 for all magical spells and effects.</span><br><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Nether Vortex&nbsp;(2), Bolt of Imbued Netherweave&nbsp;(4), Primal Life&nbsp;(10), Rune Thread&nbsp;(2), Primal Water&nbsp;(10)</div></td></tr></table>"
+            },
+            {
+              "itemId": 30283,
+              "name": "Pattern: Boots of the Long Road",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_scroll_04.jpg",
+              "quality": "Epic",
+              "itemLevel": 75,
+              "slot": "Recipe",
+              "class": "Recipe",
+              "subclass": "Tailoring",
+              "dropChance": 0.009,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Pattern: Boots of the Long Road</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 75</span></td></tr></table><table><tr><td>Requires Tailoring (375)<br><span class=\"q2\">Use: Teaches you how to sew Boots of the Long Road.</span><br><br /><span class=\"q4\">Boots of the Long Road</span><span class=\"q\"><br>Item Level 128</span><br>Binds when picked up<table width=\"100%\"><tr><td>Feet</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>148 Armor</span><br><span>+25 Stamina</span><br><span>+26 Intellect</span><br><span>+22 Spirit</span><br>Durability 50 / 50<br>Requires Level 70<br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 73 and damage done by up to 25 for all magical spells and effects.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 9 mana per 5 sec.</span><br><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Primal Nether&nbsp;(2), Primal Mooncloth&nbsp;(4), Spellcloth&nbsp;(4), Rune Thread&nbsp;(2)</div></td></tr></table>"
+            },
+            {
+              "itemId": 30323,
+              "name": "Plans: Boots of the Protector",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_scroll_04.jpg",
+              "quality": "Epic",
+              "itemLevel": 75,
+              "slot": "Recipe",
+              "class": "Recipe",
+              "subclass": "Blacksmithing",
+              "dropChance": 0.0094,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Plans: Boots of the Protector</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 75</span></td></tr></table><table><tr><td>Requires Blacksmithing (375)<br><span class=\"q2\">Use: Teaches you how to make Boots of the Protector.</span><br><br /><span class=\"q4\">Boots of the Protector</span><span class=\"q\"><br>Item Level 128</span><br>Binds when picked up<table width=\"100%\"><tr><td>Feet</td><th><span class=\"q1\">Plate</span></th></tr></table><span>1105 Armor</span><br><span>+48 Stamina</span><br><span>+22 Intellect</span><br>Durability 75 / 75<br>Requires Level 70<br><span class=\"q2\">Equip: Increases defense rating by 26.</span><br><span class=\"q2\">Equip: Increases your shield block rating by 17.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 27.</span><br><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Primal Nether&nbsp;(2), Hardened Adamantite Bar&nbsp;(4), Primal Water&nbsp;(12)</div></td></tr></table>"
+            },
+            {
+              "itemId": 30322,
+              "name": "Plans: Red Belt of Battle",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_scroll_04.jpg",
+              "quality": "Epic",
+              "itemLevel": 75,
+              "slot": "Recipe",
+              "class": "Recipe",
+              "subclass": "Blacksmithing",
+              "dropChance": 0.0045,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Plans: Red Belt of Battle</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 75</span><br>Binds when picked up</td></tr></table><table><tr><td>Requires Blacksmithing (375)<br><span class=\"q2\">Use: Teaches you how to make a Red Belt of Battle.</span><br><br /><span class=\"q4\">Red Belt of Battle</span><span class=\"q\"><br>Item Level 128</span><br>Binds when equipped<table width=\"100%\"><tr><td>Waist</td><th><span class=\"q1\">Plate</span></th></tr></table><span>904 Armor</span><br><span>+41 Strength</span><br><span>+21 Stamina</span><br /><br>Blue Socket<br>Yellow Socket<br><span class=\"q0\">Socket Bonus: +3 Critical Strike Rating</span><br /><br />Durability 55 / 55<br>Requires Level 70<br><span class=\"q2\">Equip: Improves hit rating by 14.</span><br><span class=\"q2\">Equip: Improves critical strike rating by 24.</span><br><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Nether Vortex&nbsp;(2), Hardened Adamantite Bar&nbsp;(5), Primal Fire&nbsp;(10)</div></td></tr></table>"
+            },
+            {
+              "itemId": 30324,
+              "name": "Plans: Red Havoc Boots",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_scroll_04.jpg",
+              "quality": "Epic",
+              "itemLevel": 75,
+              "slot": "Recipe",
+              "class": "Recipe",
+              "subclass": "Blacksmithing",
+              "dropChance": 0.009,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Plans: Red Havoc Boots</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 75</span></td></tr></table><table><tr><td>Requires Blacksmithing (375)<br><span class=\"q2\">Use: Teaches you how to make Red Havoc Boots.</span><br><br /><span class=\"q4\">Red Havoc Boots</span><span class=\"q\"><br>Item Level 128</span><br>Binds when picked up<table width=\"100%\"><tr><td>Feet</td><th><span class=\"q1\">Plate</span></th></tr></table><span>1105 Armor</span><br><span>+49 Stamina</span><br>Durability 75 / 75<br>Requires Level 70<br><span class=\"q2\">Equip: Increases defense rating by 32.</span><br><span class=\"q2\">Equip: Increases your shield block rating by 25.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases the block value of your shield by 30.</span><br><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Primal Nether&nbsp;(2), Hardened Adamantite Bar&nbsp;(4), Primal Fire&nbsp;(12)</div></td></tr></table>"
             },
             {
               "itemId": 30024,
@@ -6766,6 +6951,30 @@
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Swiftsteel Bludgeon</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>One-Hand</td><th><span class=\"q1\">Mace</span></th></tr></table><table width=\"100%\"><tr><td><span>105 - 196 Damage</span></td><th>Speed 1.50</th></tr></table>(100.33 damage per second)<br>Durability 105 / 105</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves hit rating by 19.</span><br><span class=\"q2\">Equip: Improves haste rating by 27.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 40.</span><br></td></tr></table>"
             },
             {
+              "itemId": 32744,
+              "name": "Pattern: Bracers of Renewed Life",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_scroll_04.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Recipe",
+              "class": "Recipe",
+              "subclass": "Leatherworking",
+              "dropChance": 0.0088,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Pattern: Bracers of Renewed Life</b></td><th><b class=\"q0 whtt-extra\">Phase 3</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 70</span><br>Binds when picked up</td></tr></table><table><tr><td>Requires Leatherworking (375)<br><span class=\"q2\">Use: Teaches you how to craft Bracers of Renewed Life.</span><br><br /><span class=\"q4\">Bracers of Renewed Life</span><span class=\"q\"><br>Item Level 141</span><br>Binds when equipped<table width=\"100%\"><tr><td>Wrist</td><th><span class=\"q1\">Leather</span></th></tr></table><span>194 Armor</span><br><span>+26 Stamina</span><br><span>+20 Intellect</span><br>Durability 40 / 40<br>Requires Level 70<br><span class=\"q2\">Equip: Improves spell haste rating by 28.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 64 and damage done by up to 22 for all magical spells and effects.</span><br><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Heavy Knothide Leather&nbsp;(4), Primal Air&nbsp;(6), Primal Life&nbsp;(6), Heart of Darkness&nbsp;(4)</div></td></tr></table>"
+            },
+            {
+              "itemId": 32755,
+              "name": "Pattern: Mantle of Nimble Thought",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_scroll_04.jpg",
+              "quality": "Epic",
+              "itemLevel": 70,
+              "slot": "Recipe",
+              "class": "Recipe",
+              "subclass": "Tailoring",
+              "dropChance": 0.0407,
+              "wowheadTooltip": "<table><tr><td><b class=\"q4\">Pattern: Mantle of Nimble Thought</b><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 70</span></td></tr></table><table><tr><td>Requires Tailoring (375)<br><span class=\"q2\">Use: Teaches you how to sew a Mantle of Nimble Thought.</span><br><br /><span class=\"q4\">Mantle of Nimble Thought</span><span class=\"q\"><br>Item Level 141</span><br>Binds when picked up<table width=\"100%\"><tr><td>Shoulder</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>177 Armor</span><br><span>+37 Stamina</span><br><span>+26 Intellect</span><br>Durability 60 / 60<br>Requires Level 70<br><span class=\"q2\">Equip: Improves spell haste rating by 38.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 44.</span><br><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Bolt of Imbued Netherweave&nbsp;(4), Spellcloth&nbsp;(2), Primal Mana&nbsp;(6), Heart of Darkness&nbsp;(2)</div></td></tr></table>"
+            },
+            {
               "itemId": 32606,
               "name": "Girdle of the Lightbearer",
               "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_belt_28.jpg",
@@ -7313,6 +7522,23 @@
               "subclass": "Cloth",
               "dropChance": 0.1385,
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Fury of the Ursine</b></td><th><b class=\"q0 whtt-extra\">Phase 4</b></th></tr></table><span class=\"q\"><br>Item Level 128</span><br>Binds when picked up<table width=\"100%\"><tr><td>Wrist</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>94 Armor</span><br><span>+12 Stamina</span><br><span>+17 Intellect</span><br><span>+16 Spirit</span><br /><br>Yellow Socket<br><span class=\"q0\">Socket Bonus: +2 Spell Damage and Healing</span><br /><br />Durability 35 / 35</td></tr></table><table><tr><td>Requires Level 70<br><span class=\"q2\">Equip: Improves spell critical strike rating by 17.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 29.</span><br></td></tr></table>"
+            }
+          ]
+        },
+        {
+          "name": "Trash Drops",
+          "items": [
+            {
+              "itemId": 33307,
+              "name": "Formula: Enchant Weapon - Executioner",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_note_01.jpg",
+              "quality": "Rare",
+              "itemLevel": 75,
+              "slot": "Recipe",
+              "class": "Recipe",
+              "subclass": "Enchanting",
+              "dropChance": 0.03,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q3\">Formula: Enchant Weapon - Executioner</b></td><th><b class=\"q0 whtt-extra\">Phase 4</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 75</span><br>Binds when picked up</td></tr></table><table><tr><td>Requires Enchanting (375)<br><span class=\"q2\">Use: Learn how to permanently enchant a Melee Weapon to occasionally ignore 840 of your enemy's armor.  Requires a level 60 or higher item.</span><br><span id=\"useText2\" class=\"q2\">Permanently enchant a Melee Weapon to occasionally ignore 840 of your enemy's armor. &nbsp;Requires a level 60 or higher item.</span><br></td></tr></table>"
             }
           ]
         },
@@ -8717,6 +8943,18 @@
               "subclass": "Blacksmithing",
               "dropChance": 0.1083,
               "wowheadTooltip": "<table><tr><td><b class=\"q4\">Plans: Sunblessed Gauntlets</b><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 70</span><br>Binds when picked up</td></tr></table><table><tr><td>Requires Blacksmithing (365)<br><span class=\"q2\">Use: Teaches you how to make a Sunblessed Gauntlets.</span><br><br /><span class=\"q4\">Sunblessed Gauntlets</span><span class=\"q\"><br>Item Level 159</span><br>Binds when equipped<table width=\"100%\"><tr><td>Hands</td><th><span class=\"q1\">Plate</span></th></tr></table><span>1239 Armor</span><br><span>+33 Stamina</span><br><span>+31 Intellect</span><br /><br>Blue Socket<br>Red Socket<br><span class=\"q0\">Socket Bonus: 1 Mana per 5 sec.</span><br /><br />Durability 55 / 55<br>Requires Level 70<br><span class=\"q2\">Equip: Improves spell critical strike rating by 36.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases healing done by up to 84 and damage done by up to 28 for all magical spells and effects.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 8 mana per 5 sec.</span><br><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Hardened Khorium&nbsp;(8), Primal Life&nbsp;(20), Primal Might&nbsp;(6), Sunmote&nbsp;(6)</div></td></tr></table>"
+            },
+            {
+              "itemId": 35273,
+              "name": "Study of Advanced Smelting",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_misc_book_08.jpg",
+              "quality": "Rare",
+              "itemLevel": 70,
+              "slot": "Recipe",
+              "class": "Recipe",
+              "subclass": "Book",
+              "dropChance": 0.0953,
+              "wowheadTooltip": "<table><tr><td><b class=\"q3\">Study of Advanced Smelting</b><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 70</span><br>Binds when picked up</td></tr></table><table><tr><td>Requires Mining (375)<br><span class=\"q2\">Use: Teaches you how to make Hardened Khorium.</span><br><br /><span class=\"q2\">Hardened Khorium</span><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 70</span><br><div class=\"whtt-extra whtt-maxstack\">Max Stack: 20</div><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Khorium Bar&nbsp;(3), Hardened Adamantite Bar</div></td></tr></table>"
             },
             {
               "itemId": 34210,

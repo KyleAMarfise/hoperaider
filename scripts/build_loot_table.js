@@ -93,6 +93,14 @@ const BOSS_SOURCE_OVERRIDES = {
   28755: { zone: 3457, name: "Chess Event" }, // Bladed Shoulderpads of the Merciless
   28756: { zone: 3457, name: "Chess Event" }, // Headdress of the High Potentate
 
+  // ── SERPENTSHRINE CAVERN — Profession Patterns (Trash Drops) ────────────
+  // "Rare Drop" with no zone in DB; confirmed as SSC/TK trash drops
+  30280: { zone: 3607, name: "Trash Drops", category: 'Zone Drop' }, // Pattern: Belt of Blasting
+  30306: { zone: 3607, name: "Trash Drops", category: 'Zone Drop' }, // Pattern: Boots of Utter Darkness
+  30301: { zone: 3607, name: "Trash Drops", category: 'Zone Drop' }, // Pattern: Belt of Natural Power
+  30302: { zone: 3607, name: "Trash Drops", category: 'Zone Drop' }, // Pattern: Belt of Deep Shadow
+  30321: { zone: 3607, name: "Trash Drops", category: 'Zone Drop' }, // Plans: Belt of the Guardian
+
   // ── TEMPEST KEEP — Kael'thas Sunstrider ──────────────────────────────
   // Legendary weapons listed under their own names as separate "bosses"
   30311: { zone: 3845, name: "Kael'thas Sunstrider" }, // Warp Slicer
@@ -117,6 +125,14 @@ const BOSS_SOURCE_OVERRIDES = {
   29998: { zone: 3845, name: "Kael'thas Sunstrider" }, // Royal Gauntlets of Silvermoon
   // Ashes of Al'ar mount — "Rare Drop" with no zone in DB
   32458: { zone: 3845, name: "Kael'thas Sunstrider" }, // Ashes of Al'ar
+
+  // ── TEMPEST KEEP — Profession Patterns (Trash Drops) ─────────────────
+  // "Rare Drop" with no zone in DB; confirmed as SSC/TK trash drops
+  30281: { zone: 3845, name: "Trash Drops", category: 'Zone Drop' }, // Pattern: Belt of the Long Road
+  30283: { zone: 3845, name: "Trash Drops", category: 'Zone Drop' }, // Pattern: Boots of the Long Road
+  30323: { zone: 3845, name: "Trash Drops", category: 'Zone Drop' }, // Plans: Boots of the Protector
+  30322: { zone: 3845, name: "Trash Drops", category: 'Zone Drop' }, // Plans: Red Belt of Battle
+  30324: { zone: 3845, name: "Trash Drops", category: 'Zone Drop' }, // Plans: Red Havoc Boots
 
   // ── BLACK TEMPLE — Teron Gorefiend ───────────────────────────────────
   // All listed as "Rare Drop" with no zone in DB
@@ -160,6 +176,15 @@ const BOSS_SOURCE_OVERRIDES = {
   35290: { zone: 4075, name: "Eredar Twins" }, // Sin'dorei Pendant of Conquest
   35291: { zone: 4075, name: "Eredar Twins" }, // Sin'dorei Pendant of Salvation
   35292: { zone: 4075, name: "Eredar Twins" }, // Sin'dorei Pendant of Triumph
+
+  // ── BLACK TEMPLE — Profession Patterns (Trash Drops) ─────────────────
+  // Verified BT trash drops despite appearing in Phase 2 SSC/TK searches
+  32744: { zone: 3959, name: "Trash Drops", category: 'Zone Drop' }, // Pattern: Bracers of Renewed Life
+  32755: { zone: 3959, name: "Trash Drops", category: 'Zone Drop' }, // Pattern: Mantle of Nimble Thought
+
+  // ── SUNWELL PLATEAU — Profession Patterns (Trash Drops) ──────────────
+  // "Rare Drop" with no zone category in DB; confirmed SWP trash drop
+  35217: { zone: 4075, name: "Trash Drops", category: 'Zone Drop' }, // Pattern: Embrace of the Phoenix
 };
 
 // Boss names in wow-classic-items that need renaming to the correct encounter name.
@@ -199,7 +224,7 @@ for (const item of items) {
     if (!item.source) item.source = {};
     item.source.zone = override.zone;
     item.source.name = override.name;
-    item.source.category = 'Boss Drop';
+    item.source.category = override.category || 'Boss Drop';
   }
   if (!item.source) continue;
 }
@@ -208,7 +233,7 @@ for (const item of items) {
 const raidItems = items.filter(i => {
   if (!i.source) return false;
   if (EXCLUDE_ITEMS.has(i.itemId)) return false;
-  if (i.quality !== 'Epic' && i.quality !== 'Legendary') return false;
+  if (i.quality !== 'Epic' && i.quality !== 'Legendary' && i.class !== 'Recipe') return false;
   if (!zoneIdSet.has(i.source.zone)) return false;
 
   // Tier tokens — allow any source category since some have "Rare Drop" / "Zone Drop"
