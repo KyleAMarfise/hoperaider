@@ -555,11 +555,18 @@ async function loadLootData() {
   }
 }
 
+// Maps legacy/variant raid names → canonical loot table name
+const LOOT_NAME_ALIASES = {
+  "the eye":               "Tempest Keep: The Eye",
+  "tempest keep":          "Tempest Keep: The Eye",
+  "tempest keep: the eye": "Tempest Keep: The Eye",
+};
+
 function findRaidLoot(raidName) {
   if (!lootData || !lootData.raids) return null;
-  // Normalize: match the raid document's raidName to the loot table name
   const normalized = String(raidName || "").trim().toLowerCase();
-  return lootData.raids.find(r => r.name.toLowerCase() === normalized) || null;
+  const canonical = (LOOT_NAME_ALIASES[normalized] || raidName || "").toLowerCase();
+  return lootData.raids.find(r => r.name.toLowerCase() === canonical) || null;
 }
 
 // ── Raid selector ───────────────────────────────────────────────────────────
