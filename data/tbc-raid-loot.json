@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-15T23:30:23.984Z",
+  "generatedAt": "2026-05-17T22:50:50.889Z",
   "raids": [
     {
       "zoneId": 3457,
@@ -3606,6 +3606,42 @@
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Pattern: Belt of Natural Power</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 75</span><br>Binds when picked up</td></tr></table><table><tr><td>Requires Leatherworking (375)<br><span class=\"q2\">Use: Teaches you how to make a Belt of Natural Power.</span><br><br /><span class=\"q4\">Belt of Natural Power</span><span class=\"q\"><br>Item Level 128</span><br>Binds when equipped<table width=\"100%\"><tr><td>Waist</td><th><span class=\"q1\">Leather</span></th></tr></table><span class=\"q2 tip\" data-simple-tooltip=\"&lt;span class=&quot;q&quot;&gt;Has 196 bonus armor.&lt;/span&gt;\">423 Armor</span><br><span>+29 Strength</span><br><span>+20 Agility</span><br><span>+38 Stamina</span><br><span>+12 Intellect</span><br /><br>Red Socket<br>Red Socket<br><span class=\"q0\">Socket Bonus: +4 Stamina</span><br /><br />Durability 40 / 40<br>Requires Level 70<br><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Nether Vortex&nbsp;(2), Heavy Knothide Leather&nbsp;(4), Primal Life&nbsp;(10), Rune Thread&nbsp;(2), Primal Air&nbsp;(10)</div></td></tr></table>"
             },
             {
+              "itemId": 30303,
+              "name": "Pattern: Belt of the Black Eagle",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_scroll_04.jpg",
+              "quality": "Epic",
+              "itemLevel": 75,
+              "slot": "Recipe",
+              "class": "Recipe",
+              "subclass": "Leatherworking",
+              "dropChance": 0.0048,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Pattern: Belt of the Black Eagle</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 75</span><br>Binds when picked up</td></tr></table><table><tr><td>Requires Leatherworking (375)<br><span class=\"q2\">Use: Teaches you how to make a Belt of the Black Eagle.</span><br><br /><span class=\"q4\">Belt of the Black Eagle</span><span class=\"q\"><br>Item Level 128</span><br>Binds when equipped<table width=\"100%\"><tr><td>Waist</td><th><span class=\"q1\">Mail</span></th></tr></table><span>506 Armor</span><br><span>+17 Agility</span><br><span>+20 Stamina</span><br><span>+23 Intellect</span><br /><br>Blue Socket<br>Yellow Socket<br><span class=\"q0\">Socket Bonus: +3 Agility</span><br /><br />Durability 50 / 50<br>Requires Level 70<br><span class=\"q2\">Equip: Improves critical strike rating by 17.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 66.</span><br><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Nether Vortex&nbsp;(2), Heavy Knothide Leather&nbsp;(4), Primal Air&nbsp;(10), Wind Scales&nbsp;(10), Rune Thread&nbsp;(2)</div></td></tr></table>"
+            },
+            {
+              "itemId": 30282,
+              "name": "Pattern: Boots of Blasting",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_scroll_04.jpg",
+              "quality": "Epic",
+              "itemLevel": 75,
+              "slot": "Recipe",
+              "class": "Recipe",
+              "subclass": "Tailoring",
+              "dropChance": 0.0095,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Pattern: Boots of Blasting</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 75</span></td></tr></table><table><tr><td>Requires Tailoring (375)<br><span class=\"q2\">Use: Teaches you how to sew Boots of Blasting.</span><br><br /><span class=\"q4\">Boots of Blasting</span><span class=\"q\"><br>Item Level 128</span><br>Binds when picked up<table width=\"100%\"><tr><td>Feet</td><th><span class=\"q1\">Cloth</span></th></tr></table><span>148 Armor</span><br><span>+25 Stamina</span><br><span>+25 Intellect</span><br>Durability 50 / 50<br>Requires Level 70<br><span class=\"q2\">Equip: Improves spell hit rating by 18.</span><br><span class=\"q2\">Equip: Improves spell critical strike rating by 25.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 39.</span><br><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Primal Nether&nbsp;(2), Shadowcloth&nbsp;(4), Spellcloth&nbsp;(4), Rune Thread&nbsp;(2)</div></td></tr></table>"
+            },
+            {
+              "itemId": 30307,
+              "name": "Pattern: Boots of the Crimson Hawk",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_scroll_04.jpg",
+              "quality": "Epic",
+              "itemLevel": 75,
+              "slot": "Recipe",
+              "class": "Recipe",
+              "subclass": "Leatherworking",
+              "dropChance": 0.009,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Pattern: Boots of the Crimson Hawk</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 75</span></td></tr></table><table><tr><td>Requires Leatherworking (375)<br><span class=\"q2\">Use: Teaches you how to make Boots of the Crimson Hawk.</span><br><br /><span class=\"q4\">Boots of the Crimson Hawk</span><span class=\"q\"><br>Item Level 128</span><br>Binds when picked up<table width=\"100%\"><tr><td>Feet</td><th><span class=\"q1\">Mail</span></th></tr></table><span>619 Armor</span><br><span>+28 Agility</span><br><span>+28 Stamina</span><br><span>+27 Intellect</span><br>Durability 70 / 70<br>Requires Level 70<br><span class=\"q2\">Equip: Improves critical strike rating by 19.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 58.</span><br><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Primal Nether&nbsp;(2), Heavy Knothide Leather&nbsp;(4), Primal Air&nbsp;(10), Wind Scales&nbsp;(6), Rune Thread&nbsp;(2)</div></td></tr></table>"
+            },
+            {
               "itemId": 30306,
               "name": "Pattern: Boots of Utter Darkness",
               "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_scroll_04.jpg",
@@ -3616,6 +3652,18 @@
               "subclass": "Leatherworking",
               "dropChance": 0.0087,
               "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Pattern: Boots of Utter Darkness</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 75</span></td></tr></table><table><tr><td>Requires Leatherworking (375)<br><span class=\"q2\">Use: Teaches you how to make Boots of Utter Darkness.</span><br><br /><span class=\"q4\">Boots of Utter Darkness</span><span class=\"q\"><br>Item Level 128</span><br>Binds when picked up<table width=\"100%\"><tr><td>Feet</td><th><span class=\"q1\">Leather</span></th></tr></table><span>278 Armor</span><br><span>+34 Stamina</span><br>Durability 60 / 60<br>Requires Level 70<br><span class=\"q2\">Equip: Improves hit rating by 23.</span><br><span class=\"q2\">Equip: Improves critical strike rating by 32.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases attack power by 66.</span><br><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Primal Nether&nbsp;(2), Heavy Knothide Leather&nbsp;(4), Primal Shadow&nbsp;(12), Rune Thread&nbsp;(2)</div></td></tr></table>"
+            },
+            {
+              "itemId": 30308,
+              "name": "Pattern: Hurricane Boots",
+              "icon": "https://render-classic-us.worldofwarcraft.com/icons/56/inv_scroll_04.jpg",
+              "quality": "Epic",
+              "itemLevel": 75,
+              "slot": "Recipe",
+              "class": "Recipe",
+              "subclass": "Leatherworking",
+              "dropChance": 0.0092,
+              "wowheadTooltip": "<table><tr><td><table style=\"display:inline-table; vertical-align:inherit\"><tr><td><b class=\"q4\">Pattern: Hurricane Boots</b></td><th><b class=\"q0 whtt-extra\">Phase 2</b></th></tr></table><span class=\"q whtt-extra whtt-ilvl\"><br>Item Level 75</span></td></tr></table><table><tr><td>Requires Leatherworking (375)<br><span class=\"q2\">Use: Teaches you how to make Hurricane Boots.</span><br><br /><span class=\"q4\">Hurricane Boots</span><span class=\"q\"><br>Item Level 128</span><br>Binds when picked up<table width=\"100%\"><tr><td>Feet</td><th><span class=\"q1\">Mail</span></th></tr></table><span>619 Armor</span><br><span>+25 Stamina</span><br><span>+26 Intellect</span><br>Durability 70 / 70<br>Requires Level 70<br><span class=\"q2\">Equip: Improves spell critical strike rating by 26.</span><br><span id=\"useText1\" class=\"q2\">Equip: Increases damage and healing done by magical spells and effects by up to 39.</span><br><span id=\"useText2\" class=\"q2\">Equip: Restores 6 mana per 5 sec.</span><br><div class=\"q1 whtt-extra whtt-reagents\"><br />Requires Primal Nether&nbsp;(2), Heavy Knothide Leather&nbsp;(4), Primal Water&nbsp;(10), Wind Scales&nbsp;(6), Rune Thread&nbsp;(2)</div></td></tr></table>"
             },
             {
               "itemId": 30321,

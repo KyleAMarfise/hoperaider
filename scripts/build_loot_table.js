@@ -96,7 +96,11 @@ const BOSS_SOURCE_OVERRIDES = {
   // ── SERPENTSHRINE CAVERN — Profession Patterns (Trash Drops) ────────────
   // "Rare Drop" with no zone in DB; confirmed as SSC/TK trash drops
   30280: { zone: 3607, name: "Trash Drops", category: 'Zone Drop' }, // Pattern: Belt of Blasting
+  30282: { zone: 3607, name: "Trash Drops", category: 'Zone Drop' }, // Pattern: Boots of Blasting
+  30303: { zone: 3607, name: "Trash Drops", category: 'Zone Drop' }, // Pattern: Belt of the Black Eagle
   30306: { zone: 3607, name: "Trash Drops", category: 'Zone Drop' }, // Pattern: Boots of Utter Darkness
+  30307: { zone: 3607, name: "Trash Drops", category: 'Zone Drop' }, // Pattern: Boots of the Crimson Hawk
+  30308: { zone: 3607, name: "Trash Drops", category: 'Zone Drop' }, // Pattern: Hurricane Boots
   30301: { zone: 3607, name: "Trash Drops", category: 'Zone Drop' }, // Pattern: Belt of Natural Power
   30302: { zone: 3607, name: "Trash Drops", category: 'Zone Drop' }, // Pattern: Belt of Deep Shadow
   30321: { zone: 3607, name: "Trash Drops", category: 'Zone Drop' }, // Plans: Belt of the Guardian
