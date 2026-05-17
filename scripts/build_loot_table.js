@@ -392,3 +392,45 @@ for (const raid of output.raids) {
   console.log(`${raid.name}: ${raidTotal} items across ${raid.bosses.length} bosses`);
 }
 console.log(`\nTotal: ${totalItems} items written to ${outPath}`);
+
+// ── Audit: items that look like raid drops but have no zone in the npm DB ──
+// These slip through the zone filter and need manual BOSS_SOURCE_OVERRIDES entries.
+// Run this audit after every build to catch items the npm DB misclassifies.
+const includedIds = new Set();
+for (const raid of output.raids) {
+  for (const boss of raid.bosses) {
+    for (const item of boss.items) includedIds.add(item.itemId);
+  }
+}
+
+// TBC item ID range (Phase 1 ~22000, Sunwell ~35400). Anything higher is WotLK+.
+const TBC_ID_MAX = 36000;
+const orphans = [];
+for (const item of items) {
+  if (includedIds.has(item.itemId)) continue;
+  if (EXCLUDE_ITEMS.has(item.itemId)) continue;
+  if (item.itemId > TBC_ID_MAX) continue; // skip WotLK+ items
+  if (!item.source) continue;
+  if (item.source.zone) continue; // has a zone — not orphaned
+  if (item.quality !== 'Epic' && item.quality !== 'Legendary') continue;
+
+  // Only flag Epic recipes and actual tier tokens — these are the items that
+  // legitimately drop from raid bosses but get filtered out due to missing zones.
+  if (item.class === 'Recipe' || isTierToken(item)) {
+    orphans.push({
+      id: item.itemId,
+      name: item.name,
+      sub: item.subclass || '',
+      type: isTierToken(item) ? 'Tier Token' : `${item.subclass || ''} Recipe`,
+    });
+  }
+}
+
+if (orphans.length) {
+  console.log(`\n⚠️  ${orphans.length} Epic recipes/tier tokens have no zone in the npm DB`);
+  console.log(`   (review — add to BOSS_SOURCE_OVERRIDES if any belong to a TBC raid):`);
+  orphans.sort((a, b) => a.id - b.id);
+  for (const o of orphans) {
+    console.log(`     ${o.id}  ${o.name}  [${o.type}]`);
+  }
+}
