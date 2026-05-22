@@ -376,6 +376,30 @@ for (const raid of TBC_RAIDS) {
   output.raids.push(raidEntry);
 }
 
+// ── Mirror Recipe items between SSC and TK trash drops ──────────────────────
+// Phase 2 profession patterns drop from trash in BOTH SSC and TK. Since
+// BOSS_SOURCE_OVERRIDES can only assign one zone per item, we mirror Recipe
+// items between the two raids' Trash Drops bosses here.
+const sscRaid = output.raids.find(r => r.name === 'Serpentshrine Cavern');
+const tkRaid  = output.raids.find(r => r.name === 'Tempest Keep: The Eye');
+if (sscRaid && tkRaid) {
+  const sscTrash = sscRaid.bosses.find(b => b.name === 'Trash Drops');
+  const tkTrash  = tkRaid.bosses.find(b => b.name === 'Trash Drops');
+  if (sscTrash && tkTrash) {
+    const sscIds = new Set(sscTrash.items.map(i => i.itemId));
+    const tkIds  = new Set(tkTrash.items.map(i => i.itemId));
+    for (const item of [...sscTrash.items]) {
+      if (item.slot === 'Recipe' && !tkIds.has(item.itemId)) tkTrash.items.push(item);
+    }
+    for (const item of [...tkTrash.items]) {
+      if (item.slot === 'Recipe' && !sscIds.has(item.itemId)) sscTrash.items.push(item);
+    }
+    const sortFn = (a, b) => a.slot.localeCompare(b.slot) || a.name.localeCompare(b.name);
+    sscTrash.items.sort(sortFn);
+    tkTrash.items.sort(sortFn);
+  }
+}
+
 // Write output
 const outPath = path.join(__dirname, '..', 'data', 'tbc-raid-loot.json');
 fs.mkdirSync(path.dirname(outPath), { recursive: true });
