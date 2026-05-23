@@ -238,7 +238,7 @@ let wclTokenCache = null;
 let wclTokenExpiry = 0;
 const wclParseCache = new Map();
 const wclPendingFetches = new Map();
-const WCL_SESSION_KEY = "wclParseCache_v2";
+const WCL_SESSION_KEY = "wclParseCache_v3";
 (function loadWclSessionCache() {
   try {
     const stored = sessionStorage.getItem(WCL_SESSION_KEY);
@@ -298,7 +298,10 @@ async function fetchWclParses(characterName) {
     const safeName = String(characterName).trim().replace(/[^a-zA-Z\u00C0-\u024F'-]/g, "");
     if (!safeName) { wclParseCache.set(slug, null); return null; }
 
-    const zoneFields = WCL_TBC_ZONES.map((z, i) => `z${i}: zoneRankings(zoneID: ${z.id})`).join(" ");
+    // partition: -1 = best performance across all partitions. Required for
+    // Fresh's SSC/TK zone, which uses partition 2 — the default partition (1)
+    // has no rankings, so omitting this returned null and showed N/A.
+    const zoneFields = WCL_TBC_ZONES.map((z, i) => `z${i}: zoneRankings(zoneID: ${z.id}, partition: -1)`).join(" ");
     const query = `{ characterData { character(name: "${safeName}", serverSlug: "${WCL_SERVER_SLUG}", serverRegion: "${WCL_SERVER_REGION}") { ${zoneFields} } } }`;
 
     try {
