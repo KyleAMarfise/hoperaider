@@ -324,77 +324,9 @@ html[data-theme="hybrid"] .sched-tz-line {
 }
 html[data-theme="hybrid"] .sched-row-columns { gap: 1rem; }
 
-/* ── Theme switcher floating widget ──────────────────────────────────────── */
-.theme-switcher {
-  position: fixed;
-  bottom: 16px;
-  right: 16px;
-  z-index: 9999;
-  font-family: "Trebuchet MS", sans-serif;
-}
-.theme-switcher-btn {
-  background: #1a1a1e;
-  color: #e8dcc3;
-  border: 1px solid #d1a754;
-  border-radius: 999px;
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(209, 167, 84, 0.2);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: transform 0.15s ease, box-shadow 0.2s ease;
-}
-.theme-switcher-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(209, 167, 84, 0.4);
-}
-.theme-switcher-panel {
-  position: absolute;
-  bottom: 100%;
-  right: 0;
-  margin-bottom: 8px;
-  background: #131316;
-  border: 1px solid #d1a754;
-  border-radius: 12px;
-  padding: 0.5rem;
-  min-width: 240px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7);
-  display: none;
-}
-.theme-switcher-panel.open { display: block; }
-.theme-switcher-option {
-  display: block;
-  width: 100%;
-  text-align: left;
-  background: transparent;
-  border: 1px solid transparent;
-  color: #e8dcc3;
-  padding: 0.6rem 0.8rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-family: inherit;
-  margin-bottom: 2px;
-}
-.theme-switcher-option:hover {
-  background: rgba(209, 167, 84, 0.12);
-  border-color: rgba(209, 167, 84, 0.3);
-}
-.theme-switcher-option.active {
-  background: rgba(209, 167, 84, 0.2);
-  border-color: #d1a754;
-  font-weight: 700;
-}
-.theme-switcher-option small {
-  display: block;
-  color: #9f8f70;
-  font-weight: 400;
-  font-size: 0.78rem;
-  margin-top: 2px;
-}
+/* (Theme-switcher floating widget removed — Hybrid is the production default.
+   The evaluation switcher CSS lived here previously. If you need to re-enable
+   theme switching for testing, check git history for the .theme-switcher rules.) */
 
 /* ============================================================================
  * Raid color palette (theme-agnostic)

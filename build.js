@@ -28,10 +28,11 @@ const JS_FILES = [
   "js/schedule.js",
   "js/releases.js",
   "js/nav-component.js",
+  "js/theme-switcher.js",
   "js/main.js",
 ];
 
-const CSS_FILES = ["styles/styles.css"];
+const CSS_FILES = ["styles/styles.css", "styles/themes.css"];
 
 const HTML_FILES = ["index.html", "raids.html", "admin.html", "softres.html", "softres-pug.html", "schedule.html", "releases.html"];
 
