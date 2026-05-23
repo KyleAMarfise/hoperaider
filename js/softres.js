@@ -683,7 +683,7 @@ function renderUpcomingTile(raid) {
   if (isSelected) classes.push('is-selected');
   if (myBadge) classes.push('has-my-signup');
 
-  return `<button type="button" class="${classes.join(' ')}" data-raid-id="${escapeHtml(raid.id)}">
+  return `<button type="button" class="${classes.join(' ')}" data-raid-id="${escapeHtml(raid.id)}" data-raid="${escapeHtml(raid.raidName || '')}">
     <span class="srt-status srt-status-upcoming">Upcoming</span>
     <span class="srt-name">${escapeHtml(raid.raidName || 'Raid')}${runType}${lockIcon}</span>
     <span class="srt-date">${escapeHtml(dateLabel)}</span>
@@ -712,7 +712,7 @@ function renderPastRow(raid) {
   const classes = ['srt-past-row'];
   if (isSelected) classes.push('is-selected');
 
-  return `<button type="button" class="${classes.join(' ')}" data-raid-id="${escapeHtml(raid.id)}">
+  return `<button type="button" class="${classes.join(' ')}" data-raid-id="${escapeHtml(raid.id)}" data-raid="${escapeHtml(raid.raidName || '')}">
     <span class="srt-past-name">${escapeHtml(raid.raidName || 'Raid')}${runType}${lockIcon}</span>
     <span class="srt-past-date">${escapeHtml(dateLabel)}</span>
     <span class="srt-past-time">${escapeHtml(timeStr)}</span>
