@@ -139,7 +139,7 @@ const WCL_TBC_ZONES = [
   { id: 1013, label: "Sunwell" },
   { id: 1011, label: "BT/Hyjal" },
   { id: 1012, label: "Zul'Aman" },
-  { id: 1052, label: "SSC/TK" },
+  { id: 1056, label: "SSC/TK" },
   { id: 1048, label: "Gruul/Mag" },
   { id: 1047, label: "Kara" }
 ];
@@ -150,7 +150,7 @@ const wclParseCache = new Map();     // slug → results array (or null on error
 const wclPendingFetches = new Map(); // slug → Promise (deduplication)
 
 // Persist parse results in sessionStorage so page refreshes don't re-fetch
-const WCL_SESSION_KEY = "wclParseCache_v1";
+const WCL_SESSION_KEY = "wclParseCache_v2";
 (function loadWclSessionCache() {
   try {
     const stored = sessionStorage.getItem(WCL_SESSION_KEY);
@@ -266,6 +266,7 @@ const RAID_NAME_TO_WCL_ZONES = {
   "Serpentshrine Cavern": ["SSC/TK"],
   "The Eye": ["SSC/TK"],
   "Tempest Keep": ["SSC/TK"],
+  "Tempest Keep: The Eye": ["SSC/TK"],
   "Hyjal Summit": ["BT/Hyjal"],
   "Black Temple": ["BT/Hyjal"],
   "Zul'Aman": ["Zul'Aman"],
