@@ -285,6 +285,25 @@ async function getWclToken() {
   return wclTokenFetchPromise;
 }
 
+// Limit concurrent WCL API requests so we don't blow our rate-limit quota
+// by firing 20+ character lookups simultaneously when the page loads.
+const WCL_MAX_CONCURRENT = 3;
+let wclInFlight = 0;
+const wclQueue = [];
+function wclAcquireSlot() {
+  return new Promise((resolve) => {
+    if (wclInFlight < WCL_MAX_CONCURRENT) { wclInFlight++; resolve(); }
+    else wclQueue.push(() => { wclInFlight++; resolve(); });
+  });
+}
+function wclReleaseSlot() {
+  wclInFlight--;
+  const next = wclQueue.shift();
+  if (next) next();
+}
+// Pause new requests for 10 min after a 429; subsequent in-flight calls skip out.
+let wclRateLimitedUntil = 0;
+
 async function fetchWclParses(characterName) {
   const slug = String(characterName || "").trim().toLowerCase();
   if (!slug) return null;
@@ -292,6 +311,9 @@ async function fetchWclParses(characterName) {
   if (wclPendingFetches.has(slug)) return wclPendingFetches.get(slug);
 
   const promise = (async () => {
+    // If we hit a 429 recently, skip outright — don't cache, so we retry next page load
+    if (Date.now() < wclRateLimitedUntil) return null;
+
     const token = await getWclToken();
     if (!token) { wclParseCache.set(slug, null); return null; }
 
@@ -304,13 +326,19 @@ async function fetchWclParses(characterName) {
     const zoneFields = WCL_TBC_ZONES.map((z, i) => `z${i}: zoneRankings(zoneID: ${z.id}, partition: -1)`).join(" ");
     const query = `{ characterData { character(name: "${safeName}", serverSlug: "${WCL_SERVER_SLUG}", serverRegion: "${WCL_SERVER_REGION}") { ${zoneFields} } } }`;
 
+    await wclAcquireSlot();
     try {
       const res = await fetch(`${WCL_BASE_URL}/api/v2/client`, {
         method: "POST",
         headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
         body: JSON.stringify({ query })
       });
-      if (res.status === 429) { wclParseCache.set(slug, null); return null; }
+      if (res.status === 429) {
+        // Transient — back off and DO NOT cache null, so next page load retries
+        // instead of silently showing N/A forever.
+        wclRateLimitedUntil = Date.now() + 10 * 60 * 1000;
+        return null;
+      }
       if (!res.ok) { wclParseCache.set(slug, null); return null; }
       const data = await res.json();
       const char = data?.data?.characterData?.character;
@@ -330,6 +358,8 @@ async function fetchWclParses(characterName) {
     } catch {
       wclParseCache.set(slug, null);
       return null;
+    } finally {
+      wclReleaseSlot();
     }
   })();
 

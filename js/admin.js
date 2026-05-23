@@ -198,6 +198,23 @@ async function getWclToken() {
   return wclTokenFetchPromise;
 }
 
+// Limit concurrent WCL API requests to avoid blowing the rate-limit quota
+const WCL_MAX_CONCURRENT = 3;
+let wclInFlight = 0;
+const wclQueue = [];
+function wclAcquireSlot() {
+  return new Promise((resolve) => {
+    if (wclInFlight < WCL_MAX_CONCURRENT) { wclInFlight++; resolve(); }
+    else wclQueue.push(() => { wclInFlight++; resolve(); });
+  });
+}
+function wclReleaseSlot() {
+  wclInFlight--;
+  const next = wclQueue.shift();
+  if (next) next();
+}
+let wclRateLimitedUntil = 0;
+
 async function fetchWclParses(characterName) {
   const slug = String(characterName || "").trim().toLowerCase();
   if (!slug) return null;
@@ -206,6 +223,8 @@ async function fetchWclParses(characterName) {
   if (wclPendingFetches.has(slug)) return wclPendingFetches.get(slug);
 
   const promise = (async () => {
+    if (Date.now() < wclRateLimitedUntil) return null;
+
     const token = await getWclToken();
     if (!token) { wclParseCache.set(slug, null); return null; }
 
@@ -218,13 +237,18 @@ async function fetchWclParses(characterName) {
     const zoneFields = WCL_TBC_ZONES.map((z, i) => `z${i}: zoneRankings(zoneID: ${z.id}, partition: -1)`).join(" ");
     const query = `{ characterData { character(name: "${safeName}", serverSlug: "${WCL_SERVER_SLUG}", serverRegion: "${WCL_SERVER_REGION}") { ${zoneFields} } } }`;
 
+    await wclAcquireSlot();
     try {
       const res = await fetch(`${WCL_BASE_URL}/api/v2/client`, {
         method: "POST",
         headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
         body: JSON.stringify({ query })
       });
-      if (res.status === 429) { wclParseCache.set(slug, null); return null; }
+      if (res.status === 429) {
+        // Transient — back off and DO NOT cache null, so next page load retries
+        wclRateLimitedUntil = Date.now() + 10 * 60 * 1000;
+        return null;
+      }
       if (!res.ok) { wclParseCache.set(slug, null); return null; }
       const data = await res.json();
       const char = data?.data?.characterData?.character;
@@ -244,6 +268,8 @@ async function fetchWclParses(characterName) {
     } catch {
       wclParseCache.set(slug, null);
       return null;
+    } finally {
+      wclReleaseSlot();
     }
   })();
 
