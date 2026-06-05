@@ -292,23 +292,25 @@
   width: 60px;
   min-height: 60px;
 }
-/* The far-left "small bags" — physically smaller slots; the jokes do the rest. */
-.wow-bag-slot.wow-bag-small {
-  width: 42px;
-  min-height: 42px;
-  padding: 4px;
-  align-self: center;
+/* A bag holding several roasts: each on its own line, capped so it can't run off-screen. */
+.wow-bag-joke {
+  margin: 0.5rem 0 0;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
-.wow-bag-small .wow-action-icon-img {
-  width: 100%;
-  height: auto;
+.wow-bag-joke:first-of-type {
+  margin-top: 0.35rem;
+  padding-top: 0;
+  border-top: none;
 }
 .wow-bag-popover {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
   z-index: 1200;
-  width: 240px;
+  width: 260px;
+  max-height: 70vh;
+  overflow-y: auto;
   padding: 0.7rem 0.85rem;
   border-radius: 8px;
   border: 1px solid #7e828a;
