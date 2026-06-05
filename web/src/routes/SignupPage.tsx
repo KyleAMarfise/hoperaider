@@ -735,7 +735,7 @@ export function SignupPage() {
 
   const { docs: signups } = useCollection<Signup>(signupsQ);
   const { docs: raids } = useCollection<RaidLite>(raidsQ);
-  const { docs: allCharacters } = useCollection<CharacterProfile>(charactersQ);
+  const { docs: allCharacters, loading: charactersLoading } = useCollection<CharacterProfile>(charactersQ);
   const { docs: coreDocs } = useCollection<{ isCoreRaider?: boolean }>(coreQ);
   const { docs: softReserves } = useCollection<any>(srQ);
   const { docs: hardReserves } = useCollection<any>(hrQ);
@@ -896,10 +896,12 @@ export function SignupPage() {
         </div>
       )}
 
-      {myCharacters.length === 0 ? (
+      {/* Wait for the characters collection to load before deciding which to show —
+          otherwise the onboarding banner flashes for a frame on every navigation. */}
+      {charactersLoading ? null : myCharacters.length === 0 ? (
         <div className="onboarding-banner">
           <div className="onboarding-banner-content">
-            <strong>Welcome to Hope Raid Tracker!</strong>
+            <strong>Welcome to Hope Raider!</strong>
             <p>Before you can sign up for raids, you need to create a character profile.</p>
             <button type="button" className="onboarding-cta" onClick={openCreate}>
               Create Your Profile

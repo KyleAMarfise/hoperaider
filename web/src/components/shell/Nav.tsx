@@ -5,6 +5,7 @@ import { useAuth } from "../../context/AuthContext";
 import { db } from "../../lib/firebase";
 import { appSettings } from "../../lib/config";
 import { cx } from "../../lib/formatters";
+import { isActiveSignup } from "../../lib/admin";
 import { useCollection } from "../../hooks/useCollection";
 import { ProfileMenu } from "./ProfileMenu";
 import { RaidClock } from "./RaidClock";
@@ -60,8 +61,7 @@ const EXTRA_BAGS: Bag[] = [
     jokes: [
       "Duglet, our bear 'tank': 16 slots, zero threat. Shifts to bear, loses the boss to the mage, then growls at the healers like it's their fault. Still gemmed +spell damage 'in case I go boomkin.'",
       "Stinted, hunter: the pet does the damage, Stinted does the dying. Feigns Death so convincingly we forget he's in the raid — which is fair, his DPS already left.",
-      "shadyroamer, warlock: would rather watch you corpse-run for ten minutes than spend a single Soul Shard. Zero soulstones, infinite excuses, hearthstone set to 'not my problem.'",
-      "And the bench warmers: six slots' worth of DPS, raid awareness, and the other four reasons you're not in the raid."
+      "shadyroamer, warlock: would rather watch you corpse-run for ten minutes than spend a single Soul Shard. Zero soulstones, infinite excuses, hearthstone set to 'not my problem.'"
     ]
   },
   {
@@ -140,7 +140,9 @@ export function Nav() {
     [isAdmin]
   );
   const { docs: pendingSignups } = useCollection(pendingQuery);
-  const pendingCount = pendingSignups.length;
+  // Only count requests for raids that haven't happened yet — stale "requested"
+  // signups on past raids were inflating the badge.
+  const pendingCount = useMemo(() => pendingSignups.filter((s) => isActiveSignup(s as any)).length, [pendingSignups]);
 
   return (
     <div className="wow-nav">
