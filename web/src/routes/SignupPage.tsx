@@ -10,6 +10,7 @@ import { buildArmoryUrl } from "../lib/armory";
 import { buildLogsUrl } from "../lib/wcl";
 import { sendDiscordSignupNotification } from "../lib/discord";
 import { QUALITY_COLORS } from "../lib/loot";
+import { ItemTooltipProvider, useItemTooltipCtx } from "../components/common/ItemTooltip";
 import { hourLabel, buildTimezoneLines, detectViewerTimezoneLabel } from "../lib/timezone";
 import {
   getProfileCharacterEntries,
@@ -146,6 +147,7 @@ function RoleCompositionBar({ resolvedSignups, raidItem }: { resolvedSignups: an
 const CLASS_ORDER = ["Warrior", "Paladin", "Hunter", "Rogue", "Priest", "Shaman", "Mage", "Warlock", "Druid"];
 
 function RosterTable({ resolvedSignups, raidName, raidId, softReserves, hardReserves }: { resolvedSignups: any[]; raidName?: string; raidId?: string; softReserves: any[]; hardReserves: any[] }) {
+  const { hoverPropsForItemId } = useItemTooltipCtx();
   if (!resolvedSignups.length) return <p className="roster-empty">No signups yet.</p>;
 
   const hrByName = new Map<string, any[]>();
@@ -199,12 +201,12 @@ function RosterTable({ resolvedSignups, raidName, raidId, softReserves, hardRese
           lastClass = wowClass;
           const parts = [
             ...reserveItems.map((it, i) => (
-              <span key={`sr${i}`} style={{ color: QUALITY_COLORS[it.quality] || "#ccc", fontWeight: 600 }}>
+              <span key={`sr${i}`} style={{ color: QUALITY_COLORS[it.quality] || "#ccc", fontWeight: 600, cursor: "help" }} {...hoverPropsForItemId(it.itemId)}>
                 {it.name || "?"}
               </span>
             )),
             ...charHRs.map((hr, i) => (
-              <span key={`hr${i}`} className="hardres-badge roster-hr-inline" title={hr.note || "Hard Reserve"}>
+              <span key={`hr${i}`} className="hardres-badge roster-hr-inline" style={{ cursor: "help" }} title={hr.note || "Hard Reserve"} {...hoverPropsForItemId(hr.itemId)}>
                 {hr.itemName || "?"}
               </span>
             ))
@@ -268,7 +270,7 @@ function RosterTable({ resolvedSignups, raidName, raidId, softReserves, hardRese
               <td className="roster-sr-col">
                 {joinDots(
                   unassignedHRs.map((hr, i) => (
-                    <span key={i} className="hardres-badge roster-hr-inline" title={hr.note || "Hard Reserve"}>
+                    <span key={i} className="hardres-badge roster-hr-inline" style={{ cursor: "help" }} title={hr.note || "Hard Reserve"} {...hoverPropsForItemId(hr.itemId)}>
                       {hr.itemName || "?"}
                     </span>
                   ))
@@ -880,6 +882,7 @@ export function SignupPage() {
   };
 
   return (
+    <ItemTooltipProvider>
     <section className="card" id="raidSections">
       {srNeeded.length > 0 && (
         <div className="sr-needed-banner">
@@ -1006,5 +1009,6 @@ export function SignupPage() {
 
       <ProfileModal open={modalOpen} profile={editProfile} allCharacters={allCharacters} onClose={() => setModalOpen(false)} onSaved={() => setMessage("Profile saved.")} />
     </section>
+    </ItemTooltipProvider>
   );
 }
