@@ -46,11 +46,27 @@
   flex: 1;
   min-width: 0;
 }
+/* Keep the name + level within the health-bar width: the name takes the available
+   space and ellipsizes if too long; the level stays pinned inside, never spilling. */
+.wow-unit-frame .unit-name-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  width: 100%;
+  min-width: 0;
+}
 .wow-unit-frame .unit-name {
-  font-size: 1.55rem;
+  font-size: 1.3rem;
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .wow-unit-frame .unit-level {
   font-size: 1.05rem;
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 
 /* Modern health / mana bars on the unit frame. */
