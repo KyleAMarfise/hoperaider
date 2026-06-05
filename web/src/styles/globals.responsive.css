@@ -1,0 +1,413 @@
+/*
+ * Responsive overrides layered on top of the original styles.css.
+ *
+ * The real problem on the old site wasn't the shell width (.container was already
+ * min(1800px, 94vw)) — it was that .scroll-parchment capped *content* at 1100px,
+ * leaving big empty margins inside the shell. So we keep the shell at its original
+ * size (the nav looks exactly as before) and let the parchment content fill it.
+ */
+
+.container {
+  /* same as the original shell — keeps the nav from stretching oddly wide */
+  width: min(1800px, 94vw);
+}
+
+/* Card/strategy pages: fill the shell instead of the old 1100px cap. */
+.scroll-parchment {
+  max-width: 100%;
+}
+
+/* Prose-heavy pages stay readable rather than stretching edge-to-edge. */
+.releases-parchment {
+  max-width: min(1000px, 100%);
+}
+
+/* Remove the perimeter box around the tile group. The hybrid theme re-applies a
+   bronze border-image + shadow to every .card with higher specificity than
+   .softres-picker-card, so we override it here (loaded after themes.css). */
+html[data-theme="hybrid"] .softres-picker-card,
+html[data-theme="hybrid"] .softres-detail-card.card {
+  border: none;
+  border-image: none;
+  box-shadow: none;
+  background: transparent;
+  backdrop-filter: none;
+}
+
+/* Floating raid tiles that KEEP their per-raid accent border (--tile-accent).
+   Prefixed with html[data-theme="hybrid"] so they out-rank the theme's generic
+   `button { border: bronze }` rule — otherwise un-selected tiles (Gruul, Kara)
+   fall back to the theme's bronze border instead of their raid accent. */
+html[data-theme="hybrid"] .softres-raid-tile {
+  border: 2px solid var(--tile-accent, #4a3e2a);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+html[data-theme="hybrid"] .softres-raid-tile.has-my-signup {
+  border-color: var(--tile-accent, #5ec47a);
+}
+html[data-theme="hybrid"] .softres-raid-tile:hover {
+  border-color: var(--tile-accent, var(--gold));
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.5), 0 0 16px -4px var(--tile-accent, transparent);
+  transform: translateY(-3px);
+}
+html[data-theme="hybrid"] .softres-raid-tile.is-selected {
+  border-color: var(--tile-accent, var(--gold));
+  box-shadow: 0 0 18px var(--tile-accent, rgba(192, 168, 112, 0.5)), 0 10px 26px rgba(0, 0, 0, 0.5);
+  transform: scale(1.04);
+}
+/* Per-raid accent on the Completed Raids dropdown rows. */
+.srt-past-row {
+  border-left: 3px solid var(--tile-accent, #3a3224);
+}
+
+/* Space the Character Loot panel away from the loot table above it. */
+.softres-overview {
+  margin-top: 1rem;
+}
+
+/* Soft Reserves — modern polish */
+/* Loot table: ~10 rows then scroll, with a sticky (opaque) header. */
+.softres-loot-scroll {
+  max-height: 26rem;
+  overflow-y: auto;
+}
+.softres-loot-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #1a160f;
+}
+/* Softer, modern row separators + hover instead of hard ruled lines. */
+.softres-loot-table tbody td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.045);
+}
+.softres-loot-table tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.03);
+}
+/* Announcement banner: flow in-content (was position:fixed, overlapping the nav). */
+.softres-announcement {
+  position: static;
+  border-radius: 10px;
+  margin: 0 0 0.75rem;
+}
+
+/* Flatten the inner panels (drop the heavy drop-shadows) for a cleaner feel. */
+.softres-character-bar,
+.hardres-section,
+.softres-loot-browser,
+.softres-overview {
+  box-shadow: none !important;
+}
+
+/* Raid Creator — make edit/modify mode unmistakable. */
+.admin-raid-section-compact.raid-editing {
+  box-shadow: 0 0 0 2px var(--gold, #f0c878), 0 0 26px rgba(240, 200, 120, 0.22) !important;
+}
+.raid-edit-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 0 0 1rem;
+  padding: 0.65rem 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--gold-soft, #c79b48);
+  background: linear-gradient(180deg, rgba(240, 200, 120, 0.16), rgba(240, 200, 120, 0.05));
+  color: #ffe6a8;
+  font-size: 1.02rem;
+}
+.raid-edit-banner strong {
+  color: #fff;
+}
+.admin-raid-groups tr.raid-row-editing {
+  background: rgba(240, 200, 120, 0.13);
+  box-shadow: inset 3px 0 0 var(--gold, #f0c878);
+}
+.raid-row-editing-btn {
+  background: var(--gold, #f0c878) !important;
+  border-color: var(--gold, #f0c878) !important;
+  color: #1a1408 !important;
+  font-weight: 700;
+}
+.raid-update-btn {
+  background: linear-gradient(180deg, #4cae5a, #2f8a3e) !important;
+  border-color: #3a9d4e !important;
+  color: #fff !important;
+  box-shadow: 0 0 12px rgba(76, 174, 90, 0.5) !important;
+}
+/* Cancel is a distinct colour and pushed away from Update to avoid mis-clicks. */
+.raid-cancel-btn {
+  margin-left: auto !important;
+  background: linear-gradient(180deg, #7a4a4a, #4e2c2c) !important;
+  border-color: #9a5a5a !important;
+  color: #ffd9d9 !important;
+}
+
+/* Schedule page: comfortable width + a constrained inline edit form so the fields
+   don't stretch across the whole screen (fixes the cramped/overlapping edit layout). */
+.schedule-parchment {
+  max-width: min(1280px, 96vw);
+  margin-left: auto;
+  margin-right: auto;
+}
+.schedule-doc .sched-row-editing .sched-edit-fields {
+  max-width: 880px;
+}
+.schedule-doc .sched-row-editing .sched-input {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+/* Release notes: lighter, cooler bullet text so it reads apart from the gold headings. */
+.release-details,
+.release-details li {
+  color: #d9d4c8;
+  line-height: 1.7;
+}
+
+/* ── Strategy page ──────────────────────────────────────────────────────────── */
+
+/* In-progress / testing notice. High-contrast amber so it can't be mistaken for
+   finished content. Removed once the page goes live. */
+.strategy-wip-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  margin: 0 0 1.25rem;
+  padding: 0.8rem 1.1rem;
+  border-radius: 10px;
+  border: 1px solid #d9a441;
+  border-left: 5px solid #f0b94a;
+  background: linear-gradient(180deg, rgba(240, 185, 74, 0.18), rgba(240, 185, 74, 0.06));
+  box-shadow: 0 0 22px rgba(240, 185, 74, 0.14);
+}
+.strategy-wip-icon {
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+.strategy-wip-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  color: #f3e6c4;
+  font-size: 0.96rem;
+  line-height: 1.5;
+}
+.strategy-wip-text strong {
+  color: #ffe9b0;
+  font-size: 1.02rem;
+  letter-spacing: 0.01em;
+}
+
+/* Content-phase tabs: make the selected phase unmistakable — a check mark, a
+   "Viewing" pill, and a stronger gold treatment than the slight border alone. */
+.strategy-phase-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.strategy-phase-tab-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.strategy-phase-tab-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  font-size: 0.8rem;
+  color: #1a1408;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.strategy-phase-tab.is-active .strategy-phase-tab-check {
+  background: var(--gold, #f0c878);
+  border-color: var(--gold, #f0c878);
+  box-shadow: 0 0 10px -1px var(--gold, #f0c878);
+}
+.strategy-phase-tab.is-active {
+  border-color: var(--gold, #f0c878) !important;
+  box-shadow: inset 0 0 0 1px var(--gold, #f0c878), 0 0 16px -4px var(--gold, #f0c878) !important;
+}
+.strategy-phase-tab-pill {
+  margin-left: 0.4rem;
+  padding: 0.08rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #1a1408;
+  background: var(--gold, #f0c878);
+}
+
+/* Per-raid accent on section headers + a colour bar so multiple bosses/raids in one
+   phase are easy to tell apart while auditing. --section-accent set inline per section. */
+.strategy-section {
+  --section-accent: var(--gold, #c0a870);
+}
+.strategy-section-head {
+  border-left: 4px solid var(--section-accent);
+  padding-left: 0.7rem;
+}
+.strategy-section-title {
+  color: var(--section-accent) !important;
+}
+
+/* Section jump-tabs: a coloured dot keyed to the same per-raid accent. */
+.strategy-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.strategy-tab-dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--section-accent, var(--gold));
+  box-shadow: 0 0 6px var(--section-accent, transparent);
+  flex: 0 0 auto;
+}
+
+/* Each boss card gets its own accent so the list scans as distinct blocks. */
+.strategy-card {
+  --card-accent: var(--gold, #c0a870);
+  border-left: 4px solid var(--card-accent);
+}
+.strategy-card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.strategy-card-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--card-accent);
+  color: #1a1408;
+  font-weight: 800;
+  font-size: 0.85rem;
+  box-shadow: 0 0 8px -1px var(--card-accent);
+}
+.strategy-card-title {
+  color: var(--card-accent) !important;
+}
+
+/* Active fight-phase tab adopts the boss accent; panels fade in on switch so the
+   transition between fight phases is obvious. */
+.strategy-fp-tab.is-active {
+  border-color: var(--card-accent) !important;
+  color: var(--card-accent) !important;
+  box-shadow: inset 0 -2px 0 var(--card-accent);
+}
+.strategy-fp-panel {
+  animation: strategy-fp-fade 0.28s ease;
+}
+@keyframes strategy-fp-fade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Admin page: floating sections + responsive audit table ──────────────────── */
+/* The hybrid theme re-applies a bronze border-image + shadow to every .card with
+   higher specificity than the base reset, which re-boxes these sections. Strip it so
+   Signup Requests floats free (and the audit's own inner table-wrap box stands out). */
+html[data-theme="hybrid"] .signup-requests-compact.card,
+html[data-theme="hybrid"] .character-audit-grow.card {
+  border: none;
+  border-image: none;
+  box-shadow: none;
+  background: none;
+  backdrop-filter: none;
+}
+/* Clear separation so the floating requests section reads apart from the audit. */
+.signup-requests-compact.card {
+  margin-bottom: 1.75rem;
+}
+
+/* Give the admin page more of the viewport so the wide audit/requests tables breathe,
+   and let it scale down on smaller screens. Out-specifies the old 85vw rule. */
+body.admin-operations-page .container {
+  width: min(2200px, 97vw);
+  max-width: 97vw;
+}
+/* The audit table is data-dense (11 columns). Let it size to content and scroll
+   horizontally instead of truncating fields; vertical scroll already capped at 70vh. */
+.audit-table-scroll {
+  overflow-x: auto;
+}
+.admin-operations-page #characterAuditSection .audit-table {
+  width: max-content;
+  min-width: 100%;
+}
+
+/* ── Signup page: profile bar + per-raid controls ─────────────────────────────── */
+.profile-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 1rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid rgba(199, 155, 72, 0.35);
+  background: linear-gradient(180deg, rgba(199, 155, 72, 0.1), rgba(199, 155, 72, 0.03));
+}
+.profile-bar-label {
+  font-weight: 700;
+  color: var(--gold, #c79b48);
+  margin-right: 0.25rem;
+}
+.profile-bar-chip {
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--gold-soft, #c79b48);
+  background: rgba(240, 200, 120, 0.12);
+  color: #ffe6a8;
+  font-weight: 600;
+  cursor: pointer;
+}
+.profile-bar-chip:hover {
+  background: rgba(240, 200, 120, 0.22);
+}
+.profile-bar-add {
+  margin-left: auto;
+}
+/* Stack the character + signup selects within their shared cell. */
+.raid-controls-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 11rem;
+}
+.raid-controls-cell .raid-profile-select,
+.raid-controls-cell .raid-signup-select {
+  width: 100%;
+  box-sizing: border-box;
+}
+/* Alt-character remove button spacing in the profile modal. */
+.alt-remove-btn {
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 700px) {
+  .container {
+    width: 94vw;
+  }
+}

@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hope Raid Tracker — Raid Strategy</title>
+  <link rel="icon" type="image/x-icon" href="assets/images/World%20of%20Warcraft%20Alliance.ico" />
+  <link rel="apple-touch-icon" href="assets/images/World%20of%20Warcraft%20Alliance.PNG" />
+  <link rel="stylesheet" href="styles/styles.css" />
+  <link rel="stylesheet" href="styles/themes.css" />
+</head>
+<body class="admin-page admin-strategy-page" data-nav-page="strategy">
+  <section id="authGate" class="auth-gate" hidden>
+    <div class="auth-gate-card">
+      <h1>Hope Raid Tracker</h1>
+      <p id="authGateMessage" class="auth-gate-message">Sign in to continue.</p>
+      <div class="auth-gate-buttons">
+        <button type="button" id="authGateSignInButton" class="auth-btn auth-btn-google">Sign in with Google</button>
+        <button type="button" id="authGateYahooButton" class="auth-btn auth-btn-yahoo">Sign in with Yahoo</button>
+      </div>
+      <div class="auth-gate-divider"><span>or</span></div>
+      <form class="auth-gate-email-form" id="authGateEmailForm">
+        <input type="email" id="authGateEmail" class="auth-input" placeholder="Email address" required autocomplete="email" />
+        <input type="password" id="authGatePassword" class="auth-input" placeholder="Password" required autocomplete="current-password" />
+        <div class="auth-gate-email-buttons">
+          <button type="submit" class="auth-btn auth-btn-email">Sign In with Email</button>
+          <button type="button" id="authGateCreateAccount" class="auth-btn auth-btn-create">Create Account</button>
+        </div>
+        <p class="auth-gate-email-hint">First time? Click <strong>Create Account</strong>. Already registered? Click <strong>Sign In</strong>.</p>
+      </form>
+    </div>
+  </section>
+
+  <main class="container" id="appShell" hidden>
+    <header class="header">
+      <div id="sharedNavRoot"></div>
+    </header>
+
+    <div class="scroll-parchment strategy-parchment">
+      <div class="scroll-parchment-inner">
+        <div class="scroll-title-row">
+          <h2 id="strategyTitle" class="scroll-title">HOPE GUILD RAID STRATEGY</h2>
+          <button type="button" id="editTitleButton" class="sched-action-btn" title="Edit title &amp; intro" hidden>&#9998;</button>
+        </div>
+        <p id="strategyIntro" class="strategy-intro" hidden></p>
+        <div id="editTitleForm" class="scroll-title-edit strategy-title-edit" hidden>
+          <input type="text" id="editTitleInput" class="sched-input scroll-title-input" maxlength="120" placeholder="Page title" />
+          <textarea id="editIntroInput" class="sched-input strategy-intro-input" rows="2" maxlength="300" placeholder="Short intro (optional)"></textarea>
+          <div class="sched-edit-actions">
+            <button type="button" id="saveTitleButton" class="sched-save-btn">Save</button>
+            <button type="button" id="cancelTitleButton" class="secondary">Cancel</button>
+          </div>
+        </div>
+
+        <div id="strategyPhaseTabs" class="strategy-phase-tabs" role="tablist" aria-label="Content phase"></div>
+
+        <nav id="strategyTabs" class="strategy-tabs" aria-label="Strategy sections" hidden></nav>
+
+        <hr class="scroll-divider" />
+
+        <div id="strategyContent" class="strategy-doc"></div>
+
+        <div id="strategyAdminActions" class="scroll-footer-actions" hidden>
+          <button type="button" id="addSectionButton" class="secondary">+ Add Section</button>
+        </div>
+
+        <p id="strategyMessage" class="message"></p>
+      </div>
+    </div>
+
+    <dialog id="sectionDialog" class="sched-add-dialog">
+      <div class="sched-add-dialog-content">
+        <h3 class="sched-add-dialog-title" id="sectionDialogTitle">Add Section</h3>
+        <input type="hidden" id="sectionEditId" />
+        <div class="sched-edit-fields">
+          <div class="sched-edit-row">
+            <label class="sched-edit-label">
+              Title
+              <input id="sectionTitleInput" class="sched-input" type="text" maxlength="60" placeholder="Serpentshrine Cavern" required />
+            </label>
+            <label class="sched-edit-label sched-edit-label-sm">
+              Emoji
+              <input id="sectionEmojiInput" class="sched-input" type="text" maxlength="4" placeholder="🌊" />
+            </label>
+          </div>
+          <div class="sched-edit-row">
+            <label class="sched-edit-label">
+              Layout
+              <select id="sectionLayoutSelect" class="sched-input">
+                <option value="grid">Grid (cards side-by-side — good for roster &amp; reference)</option>
+                <option value="list">List (full-width cards — good for boss strategy)</option>
+              </select>
+            </label>
+            <label class="sched-edit-label">
+              Content Phase
+              <select id="sectionPhaseSelect" class="sched-input">
+                <option value="1">Phase 1 (Kara · Gruul · Mag)</option>
+                <option value="2">Phase 2 (SSC · Tempest Keep)</option>
+                <option value="all">Both / General (always shown)</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="sched-edit-actions">
+          <button type="button" id="saveSectionButton" class="sched-save-btn">Save</button>
+          <button type="button" id="deleteSectionButton" class="danger" hidden>Delete</button>
+          <button type="button" id="cancelSectionButton" class="secondary">Cancel</button>
+        </div>
+        <p id="sectionDialogMessage" class="message"></p>
+      </div>
+    </dialog>
+
+    <dialog id="entryDialog" class="sched-add-dialog strategy-entry-dialog">
+      <div class="sched-add-dialog-content">
+        <h3 class="sched-add-dialog-title" id="entryDialogTitle">Add Card</h3>
+        <input type="hidden" id="entryEditId" />
+        <input type="hidden" id="entrySectionId" />
+        <div class="sched-edit-fields">
+          <div class="sched-edit-row">
+            <label class="sched-edit-label">
+              Title
+              <input id="entryTitleInput" class="sched-input" type="text" maxlength="80" placeholder="High King Maulgar" required />
+            </label>
+            <label class="sched-edit-label sched-edit-label-sm">
+              Emoji
+              <input id="entryEmojiInput" class="sched-input" type="text" maxlength="4" placeholder="" />
+            </label>
+          </div>
+          <label class="sched-edit-label">
+            Tag <small class="help-text">(optional short label, e.g. "Council", "2 phases")</small>
+            <input id="entryTagInput" class="sched-input" type="text" maxlength="40" placeholder="" />
+          </label>
+          <label class="sched-edit-label">
+            Notes <small class="help-text">(plain lines = bullets · <code>#</code> = fight phase · <code>##</code> = colored group)</small>
+            <textarea id="entryNotesInput" class="sched-input strategy-notes-input" rows="9" placeholder="Pull notes go here as plain bullets&#10;# Phase 1 — Platforms&#10;## Tanks&#10;TANK 1 → starts on Al'ar&#10;## Healers&#10;1 healer per tank&#10;# Phase 2 — Melt Armor&#10;## Tanks&#10;T1 ↔ T2 swap on Melt Armor"></textarea>
+          </label>
+          <details class="strategy-format-help">
+            <summary>Formatting &amp; colors</summary>
+            <div class="strategy-format-help-body">
+              <p><code>#&nbsp;Phase name</code> → adds a <strong>fight-phase tab</strong> to the card.</p>
+              <p><code>##&nbsp;Group label</code> → starts a <strong>colored block</strong>. Plain lines under it become its bullets.</p>
+              <p>Group color is picked from the label keyword:</p>
+              <div class="strategy-format-legend">
+                <span class="strategy-tone-tank">Tanks</span>
+                <span class="strategy-tone-heal">Healers</span>
+                <span class="strategy-tone-interrupt">Interrupts / Kicks</span>
+                <span class="strategy-tone-kill">Kill Order</span>
+                <span class="strategy-tone-position">Positioning</span>
+                <span class="strategy-tone-threat">Misdirect</span>
+                <span class="strategy-tone-utility">Curse / Utility</span>
+                <span class="strategy-tone-neutral">Anything else</span>
+              </div>
+            </div>
+          </details>
+          <fieldset class="strategy-links-fieldset">
+            <legend>Links <small class="help-text">(videos &amp; documents)</small></legend>
+            <div id="entryLinkRows"></div>
+            <button type="button" id="addLinkRowButton" class="secondary strategy-link-add-btn">+ Add link</button>
+          </fieldset>
+        </div>
+        <div class="sched-edit-actions">
+          <button type="button" id="saveEntryButton" class="sched-save-btn">Save</button>
+          <button type="button" id="deleteEntryButton" class="danger" hidden>Delete</button>
+          <button type="button" id="cancelEntryButton" class="secondary">Cancel</button>
+        </div>
+        <p id="entryDialogMessage" class="message"></p>
+      </div>
+    </dialog>
+  </main>
+
+  <script>
+    if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+      const script = document.createElement("script");
+      script.src = "config/local/app-config.local.js";
+      document.head.appendChild(script);
+    }
+  </script>
+  <script src="js/nav-component.js"></script>
+  <script src="js/theme-switcher.js"></script>
+  <script src="config/prod/app-config.github.js"></script>
+  <script type="module" src="js/strategy.js"></script>
+</body>
+</html>

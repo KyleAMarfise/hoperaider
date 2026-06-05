@@ -6194,6 +6194,410 @@ textarea.sched-input {
   text-decoration: underline;
 }
 
+/* ── Raid Strategy Page ─────────────────────────────────────────────────────── */
+.strategy-intro {
+  margin: 0.25rem auto 0.75rem;
+  max-width: 720px;
+  text-align: center;
+  color: var(--text-soft);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.strategy-title-edit {
+  flex-direction: column;
+  max-width: 560px;
+  margin: 0 auto 0.75rem;
+}
+.strategy-intro-input {
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+/* Section jump tabs */
+.strategy-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+  margin: 0.5rem 0 0.25rem;
+}
+.strategy-tab {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-soft);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--gold-soft);
+  border-radius: 999px;
+  padding: 0.3em 0.9em;
+  text-decoration: none;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.strategy-tab:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+  background: rgba(209,167,84,0.10);
+}
+
+/* Sections */
+.strategy-doc {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.strategy-section {
+  scroll-margin-top: 90px;
+}
+.strategy-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(209,167,84,0.18);
+}
+.strategy-section-title {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  text-shadow: 0 0 10px rgba(209,167,84,0.22);
+}
+.strategy-section-emoji {
+  margin-right: 0.4rem;
+}
+.strategy-section-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+/* Card layouts */
+.strategy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.85rem;
+}
+.strategy-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+/* Card */
+.strategy-card {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(209,167,84,0.22);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+}
+.strategy-card-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.strategy-card-emoji {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+.strategy-card-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+.strategy-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #f6dfaf;
+  background: rgba(209,167,84,0.14);
+  border: 1px solid rgba(209,167,84,0.35);
+  padding: 0.12em 0.5em;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.strategy-card-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+.strategy-card-notes {
+  margin: 0.55rem 0 0;
+  padding-left: 1.4em;
+  list-style: disc;
+  color: var(--text-soft);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+.strategy-card-notes li {
+  margin-bottom: 0.12em;
+}
+.strategy-empty-section {
+  color: var(--text-dim);
+  font-style: italic;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* Link buttons on a card */
+.strategy-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.7rem;
+}
+.strategy-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-main);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--gold-soft);
+  border-radius: 6px;
+  padding: 0.3em 0.7em;
+  text-decoration: none;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.strategy-link-btn:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+  background: rgba(209,167,84,0.12);
+}
+.strategy-link-icon {
+  font-size: 0.95em;
+  line-height: 1;
+}
+
+/* Entry dialog — wider for link rows */
+.strategy-entry-dialog {
+  max-width: 640px;
+}
+.strategy-links-fieldset {
+  border: 1px solid rgba(209,167,84,0.25);
+  border-radius: 6px;
+  padding: 0.6rem 0.75rem 0.75rem;
+  margin: 0;
+}
+.strategy-links-fieldset legend {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-soft);
+  padding: 0 0.4em;
+}
+.strategy-link-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+.strategy-link-row .strategy-link-kind {
+  flex: 0 0 90px;
+}
+.strategy-link-row .strategy-link-label {
+  flex: 1 1 120px;
+}
+.strategy-link-row .strategy-link-url {
+  flex: 2 1 160px;
+}
+.strategy-link-row .strategy-link-remove {
+  flex: 0 0 auto;
+}
+.strategy-link-add-btn {
+  margin-top: 0.15rem;
+}
+
+/* Content (release) phase tabs */
+.strategy-phase-tabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.4rem 0 0.5rem;
+}
+.strategy-phase-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  min-width: 160px;
+  padding: 0.5rem 1.1rem;
+  border: 1px solid var(--gold-soft);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+.strategy-phase-tab:hover {
+  border-color: var(--gold);
+  color: var(--text-main);
+}
+.strategy-phase-tab.is-active {
+  background: linear-gradient(180deg, rgba(209,167,84,0.18), rgba(209,167,84,0.06));
+  border-color: var(--gold);
+  color: var(--gold);
+  box-shadow: 0 0 10px rgba(209,167,84,0.15);
+}
+.strategy-phase-tab-label {
+  font-size: 1.05rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.strategy-phase-tab-hint {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+.strategy-phase-tab.is-active .strategy-phase-tab-hint {
+  color: #d8c79a;
+}
+
+/* A phased (boss) card always spans the full width inside a grid section */
+.strategy-grid .strategy-card-phased {
+  grid-column: 1 / -1;
+}
+
+/* Per-boss fight-phase tabs */
+.strategy-phases {
+  margin-top: 0.6rem;
+}
+.strategy-fp-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-bottom: 0.7rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid rgba(209,167,84,0.15);
+}
+.strategy-fp-tab {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-soft);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--line-muted);
+  border-radius: 999px;
+  padding: 0.28em 0.85em;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.strategy-fp-tab:hover {
+  color: var(--gold);
+  border-color: var(--gold-soft);
+}
+.strategy-fp-tab.is-active {
+  color: #1a1408;
+  background: var(--gold);
+  border-color: var(--gold);
+}
+.strategy-fp-panel.is-hidden {
+  display: none;
+}
+
+/* Colored assignment blocks */
+.strategy-blocks {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 0.7rem;
+}
+.strategy-block {
+  --tone: var(--gold-soft);
+  border: 1px solid var(--line-muted);
+  border-left: 4px solid var(--tone);
+  border-radius: 6px;
+  padding: 0.55rem 0.75rem 0.65rem;
+  background: rgba(255,255,255,0.02);
+}
+.strategy-block-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--tone);
+  margin-bottom: 0.35rem;
+  padding-bottom: 0.28rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.strategy-block-items {
+  margin: 0;
+  padding-left: 1.2em;
+  list-style: disc;
+  color: var(--text-soft);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+.strategy-block-items li {
+  margin-bottom: 0.12em;
+}
+
+/* Tone palette (shared by blocks and the editor legend) */
+.strategy-tone-tank { --tone: #5b8dd6; }
+.strategy-tone-heal { --tone: #5ec47a; }
+.strategy-tone-interrupt { --tone: #e0913f; }
+.strategy-tone-kill { --tone: #d65a5a; }
+.strategy-tone-position { --tone: #9aa7bd; }
+.strategy-tone-threat { --tone: #b07fd6; }
+.strategy-tone-utility { --tone: #46b3ad; }
+.strategy-tone-neutral { --tone: #caa867; }
+
+/* Editor: notes formatting help + legend */
+.sched-add-dialog-content code {
+  background: rgba(0,0,0,0.35);
+  border: 1px solid var(--line-muted);
+  border-radius: 3px;
+  padding: 0.02em 0.3em;
+  font-size: 0.85em;
+}
+.strategy-format-help {
+  font-size: 0.85rem;
+  color: var(--text-soft);
+  border: 1px solid rgba(209,167,84,0.18);
+  border-radius: 6px;
+  padding: 0.35rem 0.6rem;
+}
+.strategy-format-help summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text-soft);
+}
+.strategy-format-help-body {
+  margin-top: 0.5rem;
+}
+.strategy-format-help-body p {
+  margin: 0.25rem 0;
+}
+.strategy-format-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.4rem;
+}
+.strategy-format-legend span {
+  --tone: #caa867;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--tone);
+  border: 1px solid var(--tone);
+  border-left: 4px solid var(--tone);
+  border-radius: 4px;
+  padding: 0.12em 0.5em;
+  background: rgba(255,255,255,0.03);
+}
+
 @media (max-width: 700px) {
   .scroll-parchment-inner {
     padding: 1.5rem 1.25rem 1.25rem;
@@ -6215,5 +6619,18 @@ textarea.sched-input {
   }
   .scroll-title-input {
     max-width: none;
+  }
+  .strategy-grid {
+    grid-template-columns: 1fr;
+  }
+  .strategy-blocks {
+    grid-template-columns: 1fr;
+  }
+  .strategy-phase-tab {
+    min-width: 0;
+    flex: 1 1 40%;
+  }
+  .strategy-section-head {
+    align-items: flex-start;
   }
 }

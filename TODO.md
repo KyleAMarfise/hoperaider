@@ -4,24 +4,9 @@
 
 When creating a raid, admins should be able to choose a loot distribution method.
 
-**Option A — Internal SR (current system)**
-Use the website's built-in Soft Reserve system. Best for full guild runs where
-the roster is known and stable. No external link needed.
-
-**Option B — External SR Link**
-Require the raid creator to paste an external SR link (e.g. softres.it) at raid
-creation time. The link is displayed to signed-up members. Useful for pug-heavy
-weeks where external players are bothered by internal-only tooling.
-
 **Option C — TBD (future)**
 Placeholder for a potential HR (Halcyon Reserve) or hybrid loot system.
 Discuss format and rules before implementing.
-
-**Trigger condition for full internal SR adoption:**
-- ≥ 90% of the raid team signing up through the website
-- Only 1–3 new players needing onboarding per week
-- Consistent weekly raid schedule
-- Estimated timeline: ~3 months out (Black Temple progression)
 
 ---
 

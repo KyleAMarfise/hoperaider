@@ -1,0 +1,466 @@
+/*
+ * WoW-style navigation: a unit frame (top-left, like the player's portrait/health)
+ * with a slotted action bar below it, flanked by gold gryphon/dragon ornaments.
+ */
+
+.wow-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: -0.35rem;
+  /* Dark shaded HUD panel behind the nav — darkest behind the action bar so the
+     gold/silver UI reads clearly and the bar feels more immersive. */
+  padding: 0.55rem 1.1rem 0.75rem;
+  border-radius: 0 0 16px 16px;
+  background:
+    radial-gradient(135% 160% at 50% 140%, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.25) 58%, transparent 100%),
+    linear-gradient(180deg, rgba(6, 6, 9, 0.58) 0%, rgba(6, 6, 9, 0.3) 70%, transparent 100%);
+  box-shadow: inset 0 -2px 32px rgba(0, 0, 0, 0.5), 0 8px 22px rgba(0, 0, 0, 0.38);
+  border-bottom: 1px solid rgba(122, 102, 56, 0.4);
+}
+
+/* ── Top row: player unit frame (left) + target frame (right) ─────────────── */
+.wow-nav-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Larger player unit frame — same total width as the target frame so the
+   action bar sits perfectly centred with even spacing on both sides. */
+.wow-unit-frame {
+  gap: 0.85rem;
+  width: 350px;
+}
+.wow-unit-frame .unit-portrait,
+.wow-unit-frame .brand-icon {
+  width: 6rem;
+  height: 6rem;
+  min-width: 6rem;
+  max-width: 6rem;
+  max-height: 6rem;
+}
+.wow-unit-frame .unit-bars {
+  flex: 1;
+  min-width: 0;
+}
+.wow-unit-frame .unit-name {
+  font-size: 1.55rem;
+}
+.wow-unit-frame .unit-level {
+  font-size: 1.05rem;
+}
+
+/* Modern health / mana bars on the unit frame. */
+.wow-unit-frame .unit-health-bar,
+.wow-unit-frame .unit-mana-bar {
+  height: 15px;
+  border-radius: 7px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.55);
+  background: #15161a;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+.wow-unit-frame .unit-mana-bar {
+  margin-top: 4px;
+}
+.wow-unit-frame .unit-health-fill {
+  width: 95%;
+  height: 100%;
+  background: linear-gradient(180deg, #74e487 0%, #41bf57 55%, #2c9a44 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), inset 0 -2px 3px rgba(0, 0, 0, 0.3);
+}
+.wow-unit-frame .unit-mana-fill {
+  width: 80%;
+  height: 100%;
+  background: linear-gradient(180deg, #6cb2ff 0%, #2f78e6 55%, #1f5fd6 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -2px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Action bar row ───────────────────────────────────────────────────────── */
+.wow-bar-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+/* The brushed-steel metal frame of the bar (muted so it isn't distracting). */
+.wow-actionbar {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  border: 2px solid #74787f;
+  background: linear-gradient(180deg, rgba(60, 54, 40, 0.92), rgba(18, 16, 11, 0.96));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -3px 8px rgba(0, 0, 0, 0.55),
+    0 0 0 1px #3f434a,
+    0 8px 22px rgba(0, 0, 0, 0.6);
+}
+
+/* Each ability slot — silver bezel. */
+.wow-action-slot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  width: 72px;
+  min-height: 64px;
+  padding: 6px 3px 5px;
+  border: 1px solid #686c74;
+  border-radius: 7px;
+  background:
+    radial-gradient(120% 90% at 50% -10%, rgba(80, 70, 45, 0.55), transparent 70%),
+    linear-gradient(180deg, #2c281e, #15120b);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.5);
+  color: #ece0c6;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.12s ease, border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+.wow-action-slot:hover {
+  border-color: var(--gold, #f0c878);
+  box-shadow: 0 0 12px rgba(240, 200, 120, 0.45), inset 0 0 8px rgba(240, 200, 120, 0.12);
+  transform: translateY(-2px);
+}
+.wow-action-slot.is-active {
+  border-color: #ffd980;
+  background: linear-gradient(180deg, rgba(245, 205, 120, 0.4) 0%, rgba(120, 88, 30, 0.28) 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 228, 165, 0.55),
+    inset 0 0 16px rgba(240, 200, 120, 0.4),
+    0 0 18px rgba(240, 200, 120, 0.6);
+  transform: translateY(-2px);
+}
+.wow-action-slot.is-active .wow-action-icon-img {
+  filter: brightness(1.12) saturate(1.08);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.7), 0 0 8px rgba(240, 200, 120, 0.6);
+}
+.wow-action-slot.is-active::after {
+  /* bright "ready" bar across the bottom of the active slot */
+  content: "";
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  bottom: 2px;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, #ffd980, transparent);
+  box-shadow: 0 0 6px rgba(255, 217, 128, 0.8);
+}
+
+.wow-action-key {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  font-size: 0.64rem;
+  font-weight: 800;
+  color: #ffe6a8;
+  text-shadow: 0 1px 2px #000;
+  line-height: 1;
+}
+.wow-action-icon {
+  font-size: 1.45rem;
+  line-height: 1;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.65));
+}
+.wow-action-icon svg {
+  width: 22px;
+  height: 22px;
+  fill: #cbb079;
+}
+.wow-action-slot:hover .wow-action-icon svg,
+.wow-action-slot.is-active .wow-action-icon svg {
+  fill: #f0c878;
+}
+.wow-action-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #cdbf9c;
+  white-space: nowrap;
+}
+.wow-action-slot.is-active .wow-action-label {
+  color: #ffe6a8;
+}
+
+/* Vertical divider separating sections of the action bar. */
+.wow-bar-divider {
+  width: 2px;
+  align-self: stretch;
+  margin: 2px 3px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, transparent, rgba(150, 154, 162, 0.4), transparent);
+}
+
+/* Admin slots greyed out for non-admins (still visible, not clickable). */
+.wow-action-locked {
+  opacity: 0.5;
+  filter: grayscale(0.85);
+  cursor: not-allowed;
+}
+.wow-action-locked:hover {
+  border-color: #9097a1;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.5);
+  transform: none;
+}
+.wow-action-locked .wow-action-key {
+  font-size: 0.66rem;
+}
+
+/* Profile menu rides in the bar as a slot */
+.wow-action-profile {
+  cursor: default;
+}
+.wow-action-profile .profile-menu {
+  display: flex;
+}
+.wow-action-profile .profile-icon-button {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+}
+.wow-action-profile .profile-icon-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ── Dragon / gryphon ornaments ───────────────────────────────────────────── */
+/* Real WoW icon art inside a slot. */
+.wow-action-icon-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  object-fit: cover;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.7), 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Bag bar (right of the action bar) ────────────────────────────────────── */
+.wow-bags {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 6px;
+  padding-left: 8px;
+  border-left: 1px solid rgba(150, 154, 162, 0.3);
+}
+.wow-bag-collapse {
+  width: 18px;
+  height: 60px;
+  border: 1px solid #686c74;
+  border-radius: 5px;
+  background: linear-gradient(180deg, #2c281e, #15120b);
+  color: #cbb079;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+}
+.wow-bag-collapse:hover {
+  border-color: var(--gold, #f0c878);
+  color: var(--gold, #f0c878);
+}
+.wow-bag-wrap {
+  position: relative;
+}
+.wow-bag-slot {
+  width: 60px;
+  min-height: 60px;
+}
+.wow-bag-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 1200;
+  width: 240px;
+  padding: 0.7rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid #7e828a;
+  background: linear-gradient(180deg, rgba(26, 22, 16, 0.99), rgba(14, 12, 9, 0.99));
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6), 0 0 0 1px #44484f;
+  color: #e8dcc3;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+.wow-bag-popover-title {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-weight: 800;
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gold, #f0c878);
+}
+
+/* ── Silverish dropdown menus (like the character panel) ───────────────────── */
+/* Opaque background + high z-index so the popup isn't see-through / behind things. */
+.profile-menu-panel,
+.nav-menu-panel {
+  border-color: #7e828a !important;
+  background: linear-gradient(180deg, rgba(26, 22, 16, 0.99), rgba(14, 12, 9, 0.99)) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7), 0 0 0 1px #44484f !important;
+  z-index: 1200 !important;
+}
+
+/* Discord keeps its brand blurple. */
+.wow-action-discord .wow-action-icon svg {
+  fill: #5865f2 !important;
+}
+.wow-action-discord:hover .wow-action-icon svg {
+  fill: #7f8cff !important;
+}
+
+/* Indicator badge (e.g. pending requests count) top-right of a slot. */
+.wow-action-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 4px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  background: linear-gradient(180deg, #ff5a52, #c0312b);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 17px;
+  text-align: center;
+}
+.wow-action-lock {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  font-size: 0.74rem;
+  line-height: 1;
+}
+
+/* ── Target frame (next raid) — top-right of the nav, mirroring the player. ── */
+.wow-target-frame {
+  width: 350px;
+  min-width: 350px;
+  max-width: 350px;
+  padding: 0.4rem 0.75rem 0.6rem;
+  border-radius: 12px;
+  border: 2px solid #c0413c;
+  background: linear-gradient(180deg, rgba(40, 12, 12, 0.95), rgba(20, 8, 8, 0.96));
+  box-shadow: 0 0 16px rgba(200, 60, 60, 0.32), 0 8px 22px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.wow-target-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #ff8a8a;
+  margin-bottom: 0.3rem;
+}
+.wow-target-inner {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+.wow-target-portrait {
+  width: 54px;
+  height: 54px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.1rem;
+  border-radius: 50%;
+  border: 2px solid #8a3a36;
+  background: radial-gradient(circle at 50% 35%, #3a1414, #160808);
+}
+.wow-target-bars {
+  flex: 1;
+  min-width: 0;
+}
+.wow-target-name-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+.wow-target-name {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #ffd0d0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.wow-target-level {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #ff6b6b;
+}
+.wow-target-health {
+  position: relative;
+  height: 23px;
+  margin: 4px 0 3px;
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  background: #2a0c0c;
+}
+.wow-target-health-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #d24b46, #8f2723);
+  animation: wow-target-pulse 2.2s ease-in-out infinite;
+}
+@keyframes wow-target-pulse {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; }
+}
+.wow-target-countdown {
+  position: relative;
+  display: block;
+  text-align: center;
+  line-height: 23px;
+  font-weight: 800;
+  font-size: 1rem;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  font-variant-numeric: tabular-nums;
+}
+.wow-target-sub {
+  font-size: 0.74rem;
+  color: #d6a3a3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 820px) {
+  .wow-unit-frame,
+  .wow-target-frame {
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    flex: 1 1 100%;
+  }
+}
+@media (max-width: 640px) {
+  .wow-action-slot {
+    width: 54px;
+    min-height: 50px;
+  }
+  .wow-action-icon {
+    font-size: 1.25rem;
+  }
+  .wow-action-label {
+    font-size: 0.55rem;
+  }
+}

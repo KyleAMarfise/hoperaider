@@ -514,6 +514,11 @@ service cloud.firestore {
       allow create, update, delete: if isAdmin();
     }
 
+    match /strategy/{entryId} {
+      allow read: if request.auth != null;
+      allow create, update, delete: if isAdmin();
+    }
+
     match /guestCharacters/{uid} {
       allow read: if (request.auth != null && request.auth.uid == uid) || isAdmin();
       allow create: if isGuest()

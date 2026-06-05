@@ -27,6 +27,7 @@ const JS_FILES = [
   "js/softres-pug.js",
   "js/schedule.js",
   "js/releases.js",
+  "js/strategy.js",
   "js/nav-component.js",
   "js/theme-switcher.js",
   "js/main.js",
@@ -34,7 +35,7 @@ const JS_FILES = [
 
 const CSS_FILES = ["styles/styles.css", "styles/themes.css"];
 
-const HTML_FILES = ["index.html", "raids.html", "admin.html", "softres.html", "softres-pug.html", "schedule.html", "releases.html"];
+const HTML_FILES = ["index.html", "raids.html", "admin.html", "softres.html", "softres-pug.html", "schedule.html", "releases.html", "strategy.html"];
 
 // Directories + files to copy as-is (no transformation)
 const COPY_ITEMS = [

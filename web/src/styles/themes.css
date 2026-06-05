@@ -1,0 +1,490 @@
+/* ============================================================================
+ * Theme system — alternative aesthetics for evaluation
+ * Default (no [data-theme]) uses the existing Classic Tavern look in styles.css
+ *
+ * Themes available:
+ *   default      → Classic Tavern (current — defined in styles.css :root)
+ *   polished     → Modernized current style with glassmorphism + micro-interactions
+ *   dragonflight → WoW Retail Dragonflight HUD inspired
+ *   scifi        → Sci-fi/cyberpunk HUD with neon cyan accents
+ *   souls        → Dark Fantasy / Souls-like iron and candlelight
+ * ========================================================================== */
+
+/* ── Theme: POLISHED (current style, modernized) ─────────────────────────── */
+html[data-theme="polished"] {
+  --bg-base: #0a0a0c;
+  --bg-panel: rgba(28, 26, 32, 0.62);
+  --bg-panel-top: rgba(42, 38, 48, 0.72);
+  --line-muted: #4a3f2a;
+  --line-strong: #9c7838;
+  --text-main: #f0e4cc;
+  --text-soft: #d4c4a0;
+  --text-dim: #ab9b7a;
+  --gold: #e6c177;
+  --gold-soft: #c79b48;
+  --blue-accent: #6b8ec4;
+  --danger: #c25852;
+}
+html[data-theme="polished"] body {
+  background:
+    radial-gradient(circle at 20% 10%, rgba(230, 193, 119, 0.10), transparent 50%),
+    radial-gradient(circle at 80% 90%, rgba(107, 142, 196, 0.10), transparent 50%),
+    linear-gradient(180deg, #0e0e11 0%, #09090b 60%, #060608 100%);
+}
+html[data-theme="polished"] .card,
+html[data-theme="polished"] .nav-bar,
+html[data-theme="polished"] .schedule-page,
+html[data-theme="polished"] .releases-page {
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  background: linear-gradient(135deg, rgba(42, 38, 48, 0.62) 0%, rgba(28, 26, 32, 0.55) 100%);
+  border: 1px solid rgba(230, 193, 119, 0.18);
+  border-radius: 14px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+html[data-theme="polished"] .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(230, 193, 119, 0.28);
+  border-color: rgba(230, 193, 119, 0.4);
+}
+html[data-theme="polished"] h1,
+html[data-theme="polished"] h2,
+html[data-theme="polished"] .page-heading {
+  font-family: "Cinzel", "Trebuchet MS", serif;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+html[data-theme="polished"] button,
+html[data-theme="polished"] .nav-button {
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+  border-radius: 10px;
+}
+html[data-theme="polished"] button:hover:not(:disabled),
+html[data-theme="polished"] .nav-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(230, 193, 119, 0.22);
+}
+
+/* ── Theme: DRAGONFLIGHT (Modern WoW retail HUD) ─────────────────────────── */
+html[data-theme="dragonflight"] {
+  --bg-base: #100a08;
+  --bg-panel: #1c1410;
+  --bg-panel-top: #281c15;
+  --line-muted: #5a4028;
+  --line-strong: #b87333;
+  --text-main: #f5e6c8;
+  --text-soft: #d4be96;
+  --text-dim: #9b8867;
+  --gold: #f0c878;
+  --gold-soft: #d4a04a;
+  --blue-accent: #5a9fd4;
+  --danger: #b85540;
+  font-family: "Cormorant Garamond", "Cinzel", "Trebuchet MS", serif;
+}
+html[data-theme="dragonflight"] body {
+  background:
+    radial-gradient(ellipse at 50% -10%, rgba(240, 200, 120, 0.18), transparent 55%),
+    radial-gradient(circle at 15% 20%, rgba(184, 115, 51, 0.10), transparent 45%),
+    linear-gradient(180deg, #1a120e 0%, #0d0805 100%);
+}
+html[data-theme="dragonflight"] .card,
+html[data-theme="dragonflight"] .nav-bar {
+  background: linear-gradient(180deg, #281c15 0%, #1c1410 100%);
+  /* Use a slimmer 1px border so the box width matches the base theme exactly
+     — the 2px border was pushing nav and content past the viewport edge. */
+  border: 1px solid transparent;
+  border-image: linear-gradient(135deg, #f0c878 0%, #b87333 50%, #f0c878 100%) 1;
+  box-shadow:
+    inset 0 1px 0 rgba(240, 200, 120, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5),
+    0 4px 20px rgba(0, 0, 0, 0.7);
+  /* No padding override — inherit from base .card / .nav-bar so layout matches */
+}
+html[data-theme="dragonflight"] h1,
+html[data-theme="dragonflight"] h2,
+html[data-theme="dragonflight"] .page-heading {
+  font-family: "Cinzel", "Cormorant Garamond", serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: linear-gradient(180deg, #f5e6c8 0%, #f0c878 60%, #b87333 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+html[data-theme="dragonflight"] button,
+html[data-theme="dragonflight"] .nav-button {
+  background: linear-gradient(180deg, #3a2818 0%, #1c120a 100%);
+  border: 1px solid #b87333;
+  box-shadow: inset 0 1px 0 rgba(240, 200, 120, 0.25), 0 2px 6px rgba(0, 0, 0, 0.5);
+  color: #f0c878;
+  font-family: "Cinzel", serif;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.85em;
+  border-radius: 4px;
+}
+html[data-theme="dragonflight"] button:hover:not(:disabled) {
+  background: linear-gradient(180deg, #4a3220 0%, #281c12 100%);
+  border-color: #f0c878;
+  box-shadow: inset 0 1px 0 rgba(240, 200, 120, 0.4), 0 0 12px rgba(240, 200, 120, 0.3);
+}
+
+/* ── Theme: HYBRID (Polished × Dragonflight, keeps current Trebuchet MS) ─── */
+html[data-theme="hybrid"] {
+  --bg-base: #0a0a0c;
+  --bg-panel: rgba(32, 24, 18, 0.62);
+  --bg-panel-top: rgba(48, 36, 24, 0.72);
+  --line-muted: #5a4028;
+  --line-strong: #b87333;
+  --text-main: #f5e6c8;
+  --text-soft: #d4be96;
+  --text-dim: #ab9b7a;
+  --gold: #f0c878;
+  --gold-soft: #c79b48;
+  --blue-accent: #6b8ec4;
+  --danger: #c25852;
+  /* explicit: keep the current font stack */
+  font-family: "Trebuchet MS", Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+html[data-theme="hybrid"] body {
+  background:
+    radial-gradient(ellipse at 50% -10%, rgba(240, 200, 120, 0.14), transparent 55%),
+    radial-gradient(circle at 15% 25%, rgba(184, 115, 51, 0.09), transparent 45%),
+    radial-gradient(circle at 85% 80%, rgba(107, 142, 196, 0.07), transparent 50%),
+    linear-gradient(180deg, #14100c 0%, #09060a 60%, #050306 100%);
+}
+html[data-theme="hybrid"] .card,
+html[data-theme="hybrid"] .nav-bar,
+html[data-theme="hybrid"] .schedule-page,
+html[data-theme="hybrid"] .releases-page {
+  /* Polished glassmorphism */
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  background: linear-gradient(135deg, rgba(48, 36, 24, 0.62) 0%, rgba(28, 20, 16, 0.55) 100%);
+  /* Dragonflight bronze gradient border via border-image */
+  border: 1.5px solid transparent;
+  border-image: linear-gradient(135deg, rgba(240, 200, 120, 0.55) 0%, rgba(184, 115, 51, 0.45) 50%, rgba(240, 200, 120, 0.55) 100%) 1;
+  border-radius: 12px;
+  box-shadow:
+    inset 0 1px 0 rgba(240, 200, 120, 0.12),
+    0 6px 24px rgba(0, 0, 0, 0.55);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+html[data-theme="hybrid"] .card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(240, 200, 120, 0.2),
+    0 12px 32px rgba(0, 0, 0, 0.65),
+    0 0 0 1px rgba(240, 200, 120, 0.32);
+}
+html[data-theme="hybrid"] h1,
+html[data-theme="hybrid"] h2,
+html[data-theme="hybrid"] .page-heading {
+  /* Dragonflight gold gradient text, but keep current font */
+  font-family: inherit;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  background: linear-gradient(180deg, #f5e6c8 0%, #f0c878 60%, #b87333 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+html[data-theme="hybrid"] button {
+  /* Form/action buttons keep the bronze gradient — they're meant to feel pressable */
+  background: linear-gradient(180deg, rgba(58, 40, 24, 0.85) 0%, rgba(28, 18, 10, 0.85) 100%);
+  border: 1px solid rgba(184, 115, 51, 0.7);
+  color: #f0c878;
+  font-family: inherit;
+  border-radius: 8px;
+  box-shadow:
+    inset 0 1px 0 rgba(240, 200, 120, 0.18),
+    0 2px 6px rgba(0, 0, 0, 0.45);
+  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+html[data-theme="hybrid"] button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: linear-gradient(180deg, rgba(74, 50, 32, 0.92) 0%, rgba(40, 28, 18, 0.92) 100%);
+  border-color: #f0c878;
+  box-shadow:
+    inset 0 1px 0 rgba(240, 200, 120, 0.3),
+    0 8px 20px rgba(240, 200, 120, 0.22);
+  color: #f5e6c8;
+}
+/* Nav button cluster wrapper: remove the gray gradient box around the buttons */
+html[data-theme="hybrid"] .nav-actions {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  gap: 6px;
+}
+
+/* Nav buttons: ghost style — no dark box, just gold border and glow on hover */
+html[data-theme="hybrid"] .nav-button {
+  background: transparent;
+  border: 1px solid rgba(184, 115, 51, 0.55);
+  color: #f0c878;
+  font-family: inherit;
+  border-radius: 8px;
+  box-shadow: none;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+html[data-theme="hybrid"] .nav-button:hover {
+  background: linear-gradient(180deg, rgba(240, 200, 120, 0.10) 0%, rgba(240, 200, 120, 0.02) 100%);
+  border-color: #f0c878;
+  color: #f5e6c8;
+  box-shadow: 0 0 14px rgba(240, 200, 120, 0.25);
+  transform: translateY(-1px);
+}
+html[data-theme="hybrid"] .nav-button.is-active {
+  background: linear-gradient(180deg, rgba(240, 200, 120, 0.18) 0%, rgba(184, 115, 51, 0.12) 100%);
+  border-color: #f0c878;
+  color: #f5e6c8;
+  box-shadow: inset 0 1px 0 rgba(240, 200, 120, 0.25);
+}
+
+/* Calendar days: solid near-black cells with bright gold edge — maximum pop */
+html[data-theme="hybrid"] .calendar-day {
+  background: #0a0807;
+  border: 1px solid rgba(240, 200, 120, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(240, 200, 120, 0.12),
+    0 4px 12px rgba(0, 0, 0, 0.7);
+}
+html[data-theme="hybrid"] .calendar-day:hover {
+  border-color: #f0c878;
+  box-shadow:
+    inset 0 1px 0 rgba(240, 200, 120, 0.25),
+    0 6px 18px rgba(0, 0, 0, 0.75),
+    0 0 14px rgba(240, 200, 120, 0.3);
+}
+html[data-theme="hybrid"] .calendar-day.is-today {
+  background: linear-gradient(180deg, #1a120a 0%, #0a0807 100%);
+  border: 2px solid #f0c878;
+  box-shadow:
+    inset 0 1px 0 rgba(240, 200, 120, 0.3),
+    0 0 22px rgba(240, 200, 120, 0.55);
+}
+html[data-theme="hybrid"] .calendar-day.is-outside-month {
+  background: rgba(10, 8, 7, 0.5);
+  border-color: rgba(184, 115, 51, 0.18);
+  opacity: 0.45;
+  box-shadow: none;
+}
+/* The colored raid chips inside each day cell — give them a touch more
+   background contrast so they read against the pure-black cell. */
+html[data-theme="hybrid"] .calendar-raid-chip {
+  background: rgba(48, 36, 24, 0.7);
+  border: 1px solid rgba(240, 200, 120, 0.25);
+}
+/* Day-of-week header label (SUN/MON/etc.) above the grid — also brighter */
+html[data-theme="hybrid"] .calendar-day-header {
+  color: #f0c878;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+}
+/* Day number gets stronger contrast in non-today cells */
+html[data-theme="hybrid"] .calendar-day-number {
+  color: #d4be96;
+}
+
+/* Schedule banner: turn the wash-out into a real card with bronze border */
+html[data-theme="hybrid"] .schedule-banner {
+  background: linear-gradient(135deg, rgba(74, 54, 30, 0.85) 0%, rgba(48, 34, 20, 0.85) 100%);
+  border: 1.5px solid transparent;
+  border-image: linear-gradient(135deg, rgba(240, 200, 120, 0.65) 0%, rgba(184, 115, 51, 0.5) 50%, rgba(240, 200, 120, 0.65) 100%) 1;
+  border-radius: 10px;
+  box-shadow:
+    inset 0 1px 0 rgba(240, 200, 120, 0.15),
+    0 4px 16px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+html[data-theme="hybrid"] .schedule-banner-text { color: #f5e6c8; }
+html[data-theme="hybrid"] .schedule-banner-link { color: #f0c878; }
+
+/* Schedule page: compact row spacing so the week fits without scrolling */
+html[data-theme="hybrid"] .sched-row { padding: 0.55rem 0; }
+html[data-theme="hybrid"] .sched-emoji { font-size: 1.3rem; }
+html[data-theme="hybrid"] .sched-day { font-size: 1.15rem; }
+html[data-theme="hybrid"] .sched-sep { font-size: 1.05rem; }
+html[data-theme="hybrid"] .sched-title { font-size: 1.1rem; }
+html[data-theme="hybrid"] .sched-time {
+  margin-top: 0.25rem;
+  padding: 0.2em 0.55em;
+  font-size: 0.95rem;
+}
+html[data-theme="hybrid"] .sched-tz-line {
+  font-size: 0.82rem;
+  line-height: 1.3;
+}
+html[data-theme="hybrid"] .sched-row-columns { gap: 1rem; }
+
+/* (Theme-switcher floating widget removed — Hybrid is the production default.
+   The evaluation switcher CSS lived here previously. If you need to re-enable
+   theme switching for testing, check git history for the .theme-switcher rules.) */
+
+/* ============================================================================
+ * Raid color palette (theme-agnostic)
+ * Each raid has a distinct hue, deliberately chosen to NOT collide with the
+ * green/orange/blue used for accepted/benched/pending signup statuses.
+ *
+ * Two visual treatments:
+ *   1. Main page raid column (.raid-name-glow): tint the pill (text + border + glow)
+ *   2. Soft Reserve tiles (.softres-raid-tile, .srt-past-row): colored left-edge stripe
+ * ========================================================================== */
+
+/* ── Treatment 1: Raid name pill on the main signup table ───────────────── */
+.raid-name-glow[data-raid] {
+  animation: none; /* drop the gold glow pulse; per-raid color carries identity */
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.raid-name-glow[data-raid*="Karazhan"] {
+  color: #c895e8; border-color: rgba(200,149,232,0.55);
+  background: linear-gradient(90deg, rgba(200,149,232,0.12) 0%, transparent 100%);
+  text-shadow: 0 0 9px rgba(200,149,232,0.35), 0 0 18px rgba(200,149,232,0.18);
+}
+.raid-name-glow[data-raid*="Magtheridon"] {
+  color: #d9534f; border-color: rgba(217,83,79,0.55);
+  background: linear-gradient(90deg, rgba(217,83,79,0.12) 0%, transparent 100%);
+  text-shadow: 0 0 9px rgba(217,83,79,0.35), 0 0 18px rgba(217,83,79,0.18);
+}
+.raid-name-glow[data-raid*="Gruul"] {
+  color: #b8a584; border-color: rgba(184,165,132,0.55);
+  background: linear-gradient(90deg, rgba(184,165,132,0.12) 0%, transparent 100%);
+  text-shadow: 0 0 9px rgba(184,165,132,0.35), 0 0 18px rgba(184,165,132,0.18);
+}
+.raid-name-glow[data-raid*="Serpentshrine"] {
+  color: #4ecaca; border-color: rgba(78,202,202,0.55);
+  background: linear-gradient(90deg, rgba(78,202,202,0.12) 0%, transparent 100%);
+  text-shadow: 0 0 9px rgba(78,202,202,0.35), 0 0 18px rgba(78,202,202,0.18);
+}
+.raid-name-glow[data-raid*="Tempest Keep"],
+.raid-name-glow[data-raid*="The Eye"] {
+  color: #d96ebf; border-color: rgba(217,110,191,0.55);
+  background: linear-gradient(90deg, rgba(217,110,191,0.12) 0%, transparent 100%);
+  text-shadow: 0 0 9px rgba(217,110,191,0.35), 0 0 18px rgba(217,110,191,0.18);
+}
+.raid-name-glow[data-raid*="Hyjal"] {
+  color: #d97a4a; border-color: rgba(217,122,74,0.55);
+  background: linear-gradient(90deg, rgba(217,122,74,0.12) 0%, transparent 100%);
+  text-shadow: 0 0 9px rgba(217,122,74,0.35), 0 0 18px rgba(217,122,74,0.18);
+}
+.raid-name-glow[data-raid*="Black Temple"] {
+  color: #a865d9; border-color: rgba(168,101,217,0.55);
+  background: linear-gradient(90deg, rgba(168,101,217,0.12) 0%, transparent 100%);
+  text-shadow: 0 0 9px rgba(168,101,217,0.35), 0 0 18px rgba(168,101,217,0.18);
+}
+.raid-name-glow[data-raid*="Zul"] {
+  color: #e6b04a; border-color: rgba(230,176,74,0.55);
+  background: linear-gradient(90deg, rgba(230,176,74,0.12) 0%, transparent 100%);
+  text-shadow: 0 0 9px rgba(230,176,74,0.35), 0 0 18px rgba(230,176,74,0.18);
+}
+.raid-name-glow[data-raid*="Sunwell"] {
+  color: #f5d350; border-color: rgba(245,211,80,0.55);
+  background: linear-gradient(90deg, rgba(245,211,80,0.12) 0%, transparent 100%);
+  text-shadow: 0 0 9px rgba(245,211,80,0.35), 0 0 18px rgba(245,211,80,0.18);
+}
+/* Compound raids — last so they override partial matches above */
+.raid-name-glow[data-raid*="Gruul's +"],
+.raid-name-glow[data-raid*="+ Mag"] {
+  color: #c97a55; border-color: rgba(201,122,85,0.55);
+  background: linear-gradient(90deg, rgba(201,122,85,0.12) 0%, transparent 100%);
+  text-shadow: 0 0 9px rgba(201,122,85,0.35), 0 0 18px rgba(201,122,85,0.18);
+}
+
+/* ── Treatment 2: Left-edge color stripe on Soft Reserve tiles ──────────── */
+.softres-raid-tile[data-raid],
+.srt-past-row[data-raid] {
+  position: relative;
+  border-left: 4px solid transparent;
+}
+.softres-raid-tile[data-raid*="Karazhan"],   .srt-past-row[data-raid*="Karazhan"]   { border-left-color: #c895e8; }
+.softres-raid-tile[data-raid*="Magtheridon"],.srt-past-row[data-raid*="Magtheridon"]{ border-left-color: #d9534f; }
+.softres-raid-tile[data-raid*="Gruul"],      .srt-past-row[data-raid*="Gruul"]      { border-left-color: #b8a584; }
+.softres-raid-tile[data-raid*="Serpentshrine"], .srt-past-row[data-raid*="Serpentshrine"] { border-left-color: #4ecaca; }
+.softres-raid-tile[data-raid*="Tempest Keep"], .srt-past-row[data-raid*="Tempest Keep"] { border-left-color: #d96ebf; }
+.softres-raid-tile[data-raid*="The Eye"],     .srt-past-row[data-raid*="The Eye"]     { border-left-color: #d96ebf; }
+.softres-raid-tile[data-raid*="Hyjal"],      .srt-past-row[data-raid*="Hyjal"]      { border-left-color: #d97a4a; }
+.softres-raid-tile[data-raid*="Black Temple"], .srt-past-row[data-raid*="Black Temple"] { border-left-color: #a865d9; }
+.softres-raid-tile[data-raid*="Zul"],        .srt-past-row[data-raid*="Zul"]        { border-left-color: #e6b04a; }
+.softres-raid-tile[data-raid*="Sunwell"],    .srt-past-row[data-raid*="Sunwell"]    { border-left-color: #f5d350; }
+.softres-raid-tile[data-raid*="Gruul's +"],  .srt-past-row[data-raid*="Gruul's +"]  { border-left-color: #c97a55; }
+.softres-raid-tile[data-raid*="+ Mag"],      .srt-past-row[data-raid*="+ Mag"]      { border-left-color: #c97a55; }
+
+/* ── Selected SR tile: unmistakable highlight + muted "SELECTED" tag ────── */
+html[data-theme="hybrid"] .softres-raid-tile.is-selected,
+html[data-theme="hybrid"] .softres-raid-tile.has-my-signup.is-selected {
+  border: 2px solid #f0c878;
+  background: linear-gradient(180deg, #4a3620 0%, #2e2010 100%);
+  box-shadow:
+    0 0 0 2px rgba(240, 200, 120, 0.35),
+    0 0 24px rgba(240, 200, 120, 0.55),
+    inset 0 1px 0 rgba(240, 200, 120, 0.35);
+  transform: scale(1.05);
+}
+/* Re-apply colored left stripe on top of selected state — selection overrode it */
+html[data-theme="hybrid"] .softres-raid-tile.is-selected[data-raid] {
+  border-left-width: 4px;
+}
+html[data-theme="hybrid"] .softres-raid-tile.is-selected[data-raid*="Karazhan"]   { border-left-color: #c895e8; }
+html[data-theme="hybrid"] .softres-raid-tile.is-selected[data-raid*="Magtheridon"]{ border-left-color: #d9534f; }
+html[data-theme="hybrid"] .softres-raid-tile.is-selected[data-raid*="Gruul"]      { border-left-color: #b8a584; }
+html[data-theme="hybrid"] .softres-raid-tile.is-selected[data-raid*="Serpentshrine"] { border-left-color: #4ecaca; }
+html[data-theme="hybrid"] .softres-raid-tile.is-selected[data-raid*="Tempest Keep"], html[data-theme="hybrid"] .softres-raid-tile.is-selected[data-raid*="The Eye"] { border-left-color: #d96ebf; }
+html[data-theme="hybrid"] .softres-raid-tile.is-selected[data-raid*="Hyjal"]      { border-left-color: #d97a4a; }
+html[data-theme="hybrid"] .softres-raid-tile.is-selected[data-raid*="Black Temple"] { border-left-color: #a865d9; }
+html[data-theme="hybrid"] .softres-raid-tile.is-selected[data-raid*="Zul"]        { border-left-color: #e6b04a; }
+html[data-theme="hybrid"] .softres-raid-tile.is-selected[data-raid*="Sunwell"]    { border-left-color: #f5d350; }
+html[data-theme="hybrid"] .softres-raid-tile.is-selected[data-raid*="Gruul's +"], html[data-theme="hybrid"] .softres-raid-tile.is-selected[data-raid*="+ Mag"] { border-left-color: #c97a55; }
+
+/* "SELECTED" badge — dark pill that pops against the brightened selected tile */
+html[data-theme="hybrid"] .softres-raid-tile.is-selected::after {
+  content: "✓ SELECTED";
+  position: absolute;
+  top: -10px;
+  right: 10px;
+  background: linear-gradient(180deg, #0a0807 0%, #15110d 100%);
+  color: #f0c878;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #f0c878;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.7),
+    0 0 10px rgba(240, 200, 120, 0.4);
+  pointer-events: none;
+  text-shadow: 0 0 4px rgba(240, 200, 120, 0.5);
+}
+
+/* Same treatment for past-raid rows when selected */
+html[data-theme="hybrid"] .srt-past-row.is-selected {
+  background: linear-gradient(180deg, rgba(74, 54, 30, 0.6) 0%, rgba(46, 32, 16, 0.6) 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(240, 200, 120, 0.5),
+    0 0 12px rgba(240, 200, 120, 0.3);
+}
+html[data-theme="hybrid"] .srt-past-row.is-selected::after {
+  content: "✓ SELECTED";
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: linear-gradient(180deg, #0a0807 0%, #15110d 100%);
+  color: #f0c878;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid #f0c878;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6), 0 0 8px rgba(240, 200, 120, 0.35);
+  text-shadow: 0 0 4px rgba(240, 200, 120, 0.5);
+  pointer-events: none;
+}

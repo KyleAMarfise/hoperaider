@@ -54,6 +54,7 @@
     </details>
 
     <a class="nav-button" href="/schedule.html">Raid Schedule</a>
+    <a class="nav-button" href="/strategy.html">⚔️ Raid Strategy</a>
 
     <div id="adminMenu" class="nav-admin-links" hidden>
       <a id="adminRaidsLink" class="nav-button" href="/raids.html" hidden>Raid Creator</a>
@@ -70,6 +71,7 @@
   const adminActions = `
     <a class="nav-button" href="/">Signup Page</a>
     <a class="nav-button ${page === "schedule" ? "is-active" : ""}" href="/schedule.html">Raid Schedule</a>
+    <a class="nav-button ${page === "strategy" ? "is-active" : ""}" href="/strategy.html">⚔️ Raid Strategy</a>
     <a id="adminRaidsLink" class="nav-button ${page === "raids" ? "is-active" : ""}" href="/raids.html">Raid Creator</a>
     <a id="adminOpsLink" class="nav-button ${page === "admin" ? "is-active" : ""}" href="/admin.html">
       Requests &amp; Audit
