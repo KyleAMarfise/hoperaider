@@ -5,6 +5,7 @@ import { useAuth } from "../../context/AuthContext";
 import { Modal } from "../common/Modal";
 import { WOW_CLASSES, WOW_CLASS_COLORS, ROLE_ICONS, getRolesForClass, getSpecsForSelection } from "../../constants/classes";
 import { getProfileLabel, type CharacterProfile } from "../../lib/admin";
+import { buildArmoryUrl } from "../../lib/armory";
 
 interface ClassSetup {
   wowClass: string;
@@ -202,6 +203,15 @@ export function ProfileModal({
       setError("Fill in Discord name, character name, class, and both Main and Off role/spec.");
       return;
     }
+    // Firestore rules enforce these lengths — check here for a friendly message.
+    if (profileName.trim().length < 3) {
+      setError("Discord name must be at least 3 characters.");
+      return;
+    }
+    if (characterName.trim().length < 2) {
+      setError("Character name must be at least 2 characters.");
+      return;
+    }
     // Only keep fully-completed alts (matches old normalizeAltCharacters).
     const cleanAlts = alts
       .map((a) => ({
@@ -218,10 +228,15 @@ export function ProfileModal({
       profileName: profileName.trim(),
       characterName: characterName.trim(),
       wowClass: setup.wowClass,
+      // `role`, `armoryUrl` and `progressionUrl` are required by the Firestore
+      // validCharacterData() rule (the old site set them too).
+      role: setup.mainRole,
       mainRole: setup.mainRole,
       mainSpecialization: setup.mainSpecialization,
       offRole: setup.offRole,
       offSpecialization: setup.offSpecialization,
+      armoryUrl: buildArmoryUrl(characterName.trim()),
+      progressionUrl: "",
       altCharacters: cleanAlts
     };
 
