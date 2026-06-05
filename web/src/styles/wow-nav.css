@@ -292,6 +292,17 @@
   width: 60px;
   min-height: 60px;
 }
+/* The far-left "small bags" — physically smaller slots; the jokes do the rest. */
+.wow-bag-slot.wow-bag-small {
+  width: 42px;
+  min-height: 42px;
+  padding: 4px;
+  align-self: center;
+}
+.wow-bag-small .wow-action-icon-img {
+  width: 100%;
+  height: auto;
+}
 .wow-bag-popover {
   position: absolute;
   top: calc(100% + 8px);

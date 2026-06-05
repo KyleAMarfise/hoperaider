@@ -43,6 +43,7 @@ interface Bag {
   icon: string;
   name: string;
   joke: string;
+  small?: boolean;
 }
 // WoW's default backpack — rendered on the far RIGHT (like in-game). The fancier
 // bags (Netherweave, etc.) sit to its left.
@@ -68,6 +69,27 @@ const EXTRA_BAGS: Bag[] = [
     joke: "Onore's Bag — warlock who lets the felguard do the heavy lifting while he Life Taps into a wipe. Ask for a Healthstone, get a Ritual of Doom. Somehow always the last one alive AND the reason nobody else is."
   }
 ];
+// Three little bags crammed onto the far LEFT — smaller, and the jokes hit harder.
+const SMALL_BAGS: Bag[] = [
+  {
+    icon: "inv_misc_bag_10",
+    name: "Small Silk Pack",
+    small: true,
+    joke: "Stinted, hunter: the pet does the damage, Stinted does the dying. Feigns Death so convincingly we forget he's in the raid — which is fair, because his DPS already left."
+  },
+  {
+    icon: "inv_misc_bag_11",
+    name: "Wool Bag",
+    small: true,
+    joke: "shadyroamer, warlock: would rather watch you corpse-run for ten minutes than spend a single Soul Shard. Zero soulstones, infinite excuses, hearthstone set to 'not my problem.'"
+  },
+  {
+    icon: "inv_misc_bag_12",
+    name: "Linen Bag",
+    small: true,
+    joke: "Six slots — exactly enough room for your DPS, your raid awareness, and the other four reasons you're benched."
+  }
+];
 
 function BagBar() {
   const [collapsed, setCollapsed] = useState(false);
@@ -82,8 +104,9 @@ function BagBar() {
     return () => document.removeEventListener("click", onDoc);
   }, []);
 
-  // Extras to the left, main backpack on the right; collapsed → backpack only.
-  const bags = collapsed ? [MAIN_BAG] : [...EXTRA_BAGS, MAIN_BAG];
+  // Far left → right: small bags, then the cloth bags, then the main backpack.
+  // Collapsed → backpack only.
+  const bags = collapsed ? [MAIN_BAG] : [...SMALL_BAGS, ...EXTRA_BAGS, MAIN_BAG];
 
   return (
     <div className="wow-bags" ref={ref}>
@@ -103,7 +126,7 @@ function BagBar() {
         <div className="wow-bag-wrap" key={b.icon}>
           <button
             type="button"
-            className={cx("wow-action-slot wow-bag-slot", openBag === b.icon && "is-active")}
+            className={cx("wow-action-slot wow-bag-slot", b.small && "wow-bag-small", openBag === b.icon && "is-active")}
             title={b.name}
             onClick={(e) => {
               e.stopPropagation();
