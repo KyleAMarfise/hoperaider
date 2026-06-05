@@ -516,7 +516,8 @@ service cloud.firestore {
 
     match /strategy/{entryId} {
       allow read: if request.auth != null;
-      allow create, update, delete: if isAdmin();
+      // Editable & manageable by any approved member, not just admins.
+      allow create, update, delete: if isApprovedUser();
     }
 
     match /guestCharacters/{uid} {

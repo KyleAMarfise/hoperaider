@@ -486,7 +486,12 @@ function EntryForm({
 
 // ── Page ───────────────────────────────────────────────────────────────────────
 export function StrategyPage() {
-  const { isAdmin } = useAuth();
+  // The Strategy page is editable & manageable by any signed-in member (not just
+  // admins). The page already sits behind the sign-in gate, so any viewer is a
+  // member. `isAdmin` here therefore gates "can edit" — kept as the name so the
+  // existing edit controls/guards below don't need to change.
+  const { user } = useAuth();
+  const isAdmin = !!user;
 
   const strategyQuery = useMemo(() => query(collection(db, "strategy"), orderBy("order", "asc")), []);
   const pageConfigRef = useMemo(() => doc(db, "strategy", "pageConfig"), []);
@@ -793,7 +798,7 @@ export function StrategyPage() {
       <Modal
         open={sectionDialog.open}
         onClose={() => setSectionDialog({ open: false, section: null })}
-        className="sched-add-dialog"
+        className="sched-add-dialog strategy-edit-dialog"
       >
         <SectionForm
           key={sectionDialog.section?.id ?? "new-section"}
@@ -808,7 +813,7 @@ export function StrategyPage() {
       <Modal
         open={entryDialog.open}
         onClose={() => setEntryDialog({ open: false, entry: null, sectionId: "" })}
-        className="sched-add-dialog strategy-entry-dialog"
+        className="sched-add-dialog strategy-entry-dialog strategy-edit-dialog"
       >
         <EntryForm
           key={entryDialog.entry?.id ?? `new-entry-${entryDialog.sectionId}`}

@@ -168,6 +168,13 @@ html[data-theme="hybrid"] .softres-raid-tile.is-selected {
 
 /* ── Strategy page ──────────────────────────────────────────────────────────── */
 
+/* Wider edit modal (section + card) so there's room to see what you're typing —
+   only the Strategy dialogs, not the Schedule ones (which share .sched-add-dialog). */
+.strategy-edit-dialog {
+  max-width: 880px;
+  width: 94vw;
+}
+
 /* In-progress / testing notice. High-contrast amber so it can't be mistaken for
    finished content. Removed once the page goes live. */
 .strategy-wip-banner {

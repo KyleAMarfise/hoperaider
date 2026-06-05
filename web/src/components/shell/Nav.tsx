@@ -45,13 +45,14 @@ interface Bag {
   name: string;
   joke?: string;
   jokes?: string[]; // a bag can hold several roasts in one popover
+  special?: boolean; // extra-fancy treatment (Stinted's quiver)
 }
 // WoW's default backpack — rendered on the far RIGHT (like in-game). The fancier
 // bags (Netherweave, etc.) sit to its left.
 const MAIN_BAG: Bag = {
   icon: "inv_misc_bag_08",
   name: "Backpack",
-  joke: "Philfestive's Backpack — our holy pally whose heals are festive but whose mana bar is a rumor. Bubble-hearths at 2%, beacons the tank he isn't watching, and calls healing himself 'triage.' The HoTs are merry; the wipes are bright."
+  joke: "Philfestive's Backpack — our holy pally and fearless Guild Master, who runs the raid like he runs his mana bar: generously, and straight into the ground. Spams Flash of Light to empty by the second pull, the Holy Light lands sometime next Tuesday, and his idea of triage is Divine Shield → Hearthstone. Cleanses the wrong target but blesses everyone on the way out. The Blessings are festive; the wipes are bright. GM perks: first to call the pull, first to stand in it. …all that said, Phil's still nasty. (The good kind.)"
 };
 const EXTRA_BAGS: Bag[] = [
   {
@@ -59,22 +60,33 @@ const EXTRA_BAGS: Bag[] = [
     icon: "inv_misc_bag_27",
     name: "Bag of Shame",
     jokes: [
-      "Duglet, our bear 'tank': 16 slots, zero threat. Shifts to bear, loses the boss to the mage, then growls at the healers like it's their fault. Still gemmed +spell damage 'in case I go boomkin.'",
-      "Stinted, hunter: the pet does the damage, Stinted does the dying. Feigns Death so convincingly we forget he's in the raid — which is fair, his DPS already left.",
-      "shadyroamer, warlock: would rather watch you corpse-run for ten minutes than spend a single Soul Shard. Zero soulstones, infinite excuses, hearthstone set to 'not my problem.'"
+      "Duglet, our bear 'tank': 16 slots, zero threat. Shifts to bear, loses the boss to the mage, then growls at the healers like it's their fault. Still gemmed +spell damage 'in case I go boomkin.' …but real talk, Duglet's still a badass.",
+      "shadyroamer, warlock: would rather watch you corpse-run for ten minutes than spend a single Soul Shard. Zero soulstones, infinite excuses, hearthstone set to 'not my problem.' …that said, shadyroamer's still our undisputed Loot King. 👑"
     ]
   },
   {
     icon: "inv_misc_bag_29",
     name: "Imbued Netherweave Bag",
-    joke: "Mariozelda's Bag — fury warrior, all gas no brakes. Whirlwinds into three packs, slams 'It's-a-me!' on Recount, then needs a rescue from the healers like a captured princess. Parses purple, dies orange."
+    joke: "Mariozelda's Bag — fury warrior, all gas no brakes. Whirlwinds into three packs, slams 'It's-a-me!' on Recount, then needs a rescue from the healers like a captured princess. Parses purple, dies orange. …still, the man's funny as hell."
   },
   {
     icon: "inv_misc_bag_14",
     name: "Runecloth Bag",
-    joke: "Onore's Bag — warlock who lets the felguard do the heavy lifting while he Life Taps into a wipe. Ask for a Healthstone, get a Ritual of Doom. Somehow always the last one alive AND the reason nobody else is."
+    joke: "Onore's Bag — affliction 'lock who blankets the boss in Corruption, Curse of Agony, and Unstable Affliction, then alt-tabs while the DoTs do the work. UA dispels for more damage than his Shadow Bolts land. Life Taps to 5%, blames the healers, and Drains Soul off the trash so you don't even get a Healthstone. Somehow always the last one alive AND the reason nobody else is. …and let's be honest — Onore's still sexy."
   }
 ];
+// Stinted demanded his own container — a hunter deserves a quiver, not a shared
+// Bag of Shame. Sits on the far left, with the dressed-up roast inside.
+const QUIVER: Bag = {
+  icon: "inv_misc_quiver_06",
+  name: "Stinted's Personal Quiver",
+  special: true,
+  joke:
+    "✨🏹 By royal decree of Stinted himself — for a mere Bag of Shame could not contain such majesty — behold his very own quiver. 👑✨ " +
+    "Presenting Stinted: Hunter, Lord of the Misdirect, Baron of Feign Death, Keeper of 1,000 arrows (give or take 997 that missed). " +
+    "The pet does the damage; Stinted does the dying — vanishing mid-pull so convincingly we forget he's in the raid, which is fair, his DPS already left. " +
+    "Truly, a legend in his own mind. He asked to be special, so… here's his special little quiver. Punk. 🏹✨"
+};
 
 function BagBar() {
   const [collapsed, setCollapsed] = useState(false);
@@ -89,8 +101,9 @@ function BagBar() {
     return () => document.removeEventListener("click", onDoc);
   }, []);
 
-  // Extras to the left, main backpack on the right; collapsed → backpack only.
-  const bags = collapsed ? [MAIN_BAG] : [...EXTRA_BAGS, MAIN_BAG];
+  // Stinted's quiver on the far left, then the cloth bags, then the backpack on the
+  // far right; collapsed → backpack only.
+  const bags = collapsed ? [MAIN_BAG] : [QUIVER, ...EXTRA_BAGS, MAIN_BAG];
 
   return (
     <div className="wow-bags" ref={ref}>
@@ -110,7 +123,7 @@ function BagBar() {
         <div className="wow-bag-wrap" key={b.icon}>
           <button
             type="button"
-            className={cx("wow-action-slot wow-bag-slot", openBag === b.icon && "is-active")}
+            className={cx("wow-action-slot wow-bag-slot", b.special && "wow-bag-quiver", openBag === b.icon && "is-active")}
             title={b.name}
             onClick={(e) => {
               e.stopPropagation();
@@ -120,8 +133,10 @@ function BagBar() {
             <img className="wow-action-icon-img" src={wowIcon(b.icon)} alt={b.name} loading="lazy" />
           </button>
           {openBag === b.icon && (
-            <div className="wow-bag-popover">
-              <span className="wow-bag-popover-title">📦 {b.name}</span>
+            <div className={cx("wow-bag-popover", b.special && "wow-bag-popover-special")}>
+              <span className="wow-bag-popover-title">
+                {b.special ? "🏹" : "📦"} {b.name}
+              </span>
               {b.jokes ? b.jokes.map((j, i) => <p className="wow-bag-joke" key={i}>{j}</p>) : b.joke}
             </div>
           )}
