@@ -61,6 +61,7 @@ const EXTRA_BAGS: Bag[] = [
     name: "Bag of Shame",
     jokes: [
       "Duglet, our bear 'tank': 16 slots, zero threat. Shifts to bear, loses the boss to the mage, then growls at the healers like it's their fault. Still gemmed +spell damage 'in case I go boomkin.' …but real talk, Duglet's still a badass.",
+      "Kaysar, warrior: will Bloodthirst a boss, then write you a 2,000-word essay on why the tank should've dragged the naga three yards left. Answers 'you raiding tonight?' with a spreadsheet, a positioning diagram, and a philosophy lecture — 'knowledge is pain, that's why it hurts to know.' Inspects your talents mid-pull to confirm Improved Expose Armor was, in fact, mandatory. Forever double-booked with his MoP guild come Thursday. …that said, Kaysar's the guild's actual brain — carries the strats, volunteers for everything, and takes a roast as well as he gives one. Aye aye, captain.",
       "shadyroamer, warlock: would rather watch you corpse-run for ten minutes than spend a single Soul Shard. Zero soulstones, infinite excuses, hearthstone set to 'not my problem.' …that said, shadyroamer's still our undisputed Loot King. 👑"
     ]
   },
