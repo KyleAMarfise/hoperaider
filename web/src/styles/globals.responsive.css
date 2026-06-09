@@ -10,6 +10,9 @@
 .container {
   /* same as the original shell — keeps the nav from stretching oddly wide */
   width: min(1800px, 94vw);
+  /* The grid has min-height ~100vh; pack rows at the top so a sparse page leaves
+     empty space at the bottom (page background) instead of stretching its box. */
+  align-content: start;
 }
 
 /* Card/strategy pages: fill the shell instead of the old 1100px cap. */
@@ -386,10 +389,15 @@ body.admin-operations-page .container {
   max-width: min(1340px, 100%);
   margin-left: auto;
   margin-right: auto;
-  /* The shell .container is a grid with min-height ~100vh, which stretches the
-     parchment to fill the viewport — leaving a big empty gap on a sparse page.
-     Hug the content instead. */
   align-self: start;
+}
+/* Compact the empty state so the box doesn't look so barren before any tips exist. */
+.resources-parchment .scroll-parchment-inner {
+  padding-top: 2rem;
+  padding-bottom: 1.5rem;
+}
+.resources-doc .schedule-empty {
+  padding: 1.5rem 0;
 }
 .resources-intro {
   margin: 0.25rem 0 0;

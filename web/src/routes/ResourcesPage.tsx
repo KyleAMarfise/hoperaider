@@ -264,7 +264,7 @@ export function ResourcesPage() {
         <hr className="scroll-divider" />
 
         <div className="resources-doc">
-          {resources.length === 0 && <p className="schedule-empty">No resources posted yet.</p>}
+          {resources.length === 0 && <p className="schedule-empty">No tips posted yet — be the first to add one!</p>}
           {TYPE_ORDER.map((t) => {
             const items = grouped[t];
             if (!items.length) return null;
