@@ -8,6 +8,7 @@ import { SoftReservesPage } from "./SoftReservesPage";
 import { SoftReservesPugPage } from "./SoftReservesPugPage";
 import { AdminPage } from "./AdminPage";
 import { SignupPage } from "./SignupPage";
+import { ResourcesPage } from "./ResourcesPage";
 import { RequireAdmin } from "../components/shell/RequireAdmin";
 import { ComingSoon } from "./Placeholders";
 
@@ -39,6 +40,7 @@ export const router = createBrowserRouter([
       { path: "strategy", element: <StrategyPage /> },
       { path: "schedule", element: <SchedulePage /> },
       { path: "releases", element: <ReleasesPage /> },
+      { path: "tips", element: <ResourcesPage /> },
       { path: "softres", element: <SoftReservesPage /> },
       { path: "raids", element: <RequireAdmin><RaidCreatorPage /></RequireAdmin> },
       { path: "admin", element: <RequireAdmin><AdminPage /></RequireAdmin> },

@@ -364,6 +364,165 @@ body.admin-operations-page .container {
   min-width: 100%;
 }
 
+/* ── Resources / Tips page (addons / macros / WeakAuras) ──────────────────────── */
+/* Wider edit modal + roomier text areas so big WeakAura import strings are easy
+   to paste and read. The Type field gets a fixed comfy width so its label fits. */
+.resource-edit-dialog {
+  max-width: 980px;
+  width: 95vw;
+}
+.resource-type-field {
+  flex: 0 0 13rem;
+}
+.resource-type-field select {
+  width: 100%;
+}
+.resource-textarea {
+  min-height: 6rem;
+  resize: vertical;
+}
+
+.resources-parchment {
+  max-width: min(1340px, 100%);
+  margin-left: auto;
+  margin-right: auto;
+}
+.resources-intro {
+  margin: 0.25rem 0 0;
+  color: #d9d4c8;
+  font-style: italic;
+}
+.resource-section {
+  margin: 1.5rem 0;
+}
+.resource-section-title {
+  margin: 0 0 0.75rem;
+  color: var(--gold, #c79b48);
+  border-bottom: 1px solid rgba(199, 155, 72, 0.3);
+  padding-bottom: 0.35rem;
+}
+.resource-section-count {
+  color: #9c958650;
+  font-weight: 400;
+  font-size: 0.85rem;
+}
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+@media (max-width: 1100px) {
+  .resource-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 820px) {
+  .resource-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .resource-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.resource-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(199, 155, 72, 0.28);
+  background: linear-gradient(180deg, rgba(30, 26, 18, 0.6), rgba(18, 15, 10, 0.6));
+}
+.resource-card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.resource-type-badge {
+  flex: 0 0 auto;
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: 1px solid currentColor;
+}
+.resource-type-addon {
+  color: #5ec47a;
+}
+.resource-type-macro {
+  color: #e0a83c;
+}
+.resource-type-weakaura {
+  color: #b98cf0;
+}
+.resource-type-other {
+  color: #9aa0aa;
+}
+.resource-title {
+  font-weight: 700;
+  font-size: 1.02rem;
+  color: #ffe6a8;
+  text-decoration: none;
+}
+.resource-title:hover {
+  text-decoration: underline;
+}
+.resource-title-plain {
+  color: #efe7d4;
+}
+.resource-actions {
+  margin-left: auto;
+}
+.resource-desc {
+  margin: 0;
+  color: #d9d4c8;
+  line-height: 1.55;
+  font-size: 0.95rem;
+}
+.resource-code-wrap {
+  position: relative;
+}
+.resource-code {
+  margin: 0;
+  max-height: 11rem;
+  overflow: auto;
+  padding: 0.6rem 0.7rem;
+  border-radius: 8px;
+  background: #0e0c08;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-all;
+  color: #cfc7b4;
+}
+.resource-code-copy {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  z-index: 1;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: 6px;
+  border: 1px solid var(--gold-soft, #c79b48);
+  background: rgba(20, 16, 10, 0.9);
+  color: #ffe6a8;
+  cursor: pointer;
+}
+.resource-foot {
+  margin-top: auto;
+  padding-top: 0.2rem;
+  font-size: 0.78rem;
+  color: #9c9586;
+  font-style: italic;
+}
+
 /* ── Signup page: profile bar + per-raid controls ─────────────────────────────── */
 .profile-bar {
   display: flex;
