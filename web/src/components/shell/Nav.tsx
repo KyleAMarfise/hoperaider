@@ -30,7 +30,7 @@ const NAV_ITEMS: NavItem[] = [
   { to: "/", label: "Signup", icon: "inv_misc_groupneedmore", end: true },
   { to: "/schedule", label: "Schedule", icon: "inv_misc_pocketwatch_01" },
   { to: "/strategy", label: "Strategy", icon: "inv_misc_map_01" },
-  { to: "/tips", label: "Tips", icon: "inv_misc_questionmark" },
+  { to: "/addons", label: "Addons", icon: "inv_misc_questionmark" },
   { to: "/softres", label: "Reserves", icon: "inv_misc_coinbag_special" },
   { to: "/releases", label: "Releases", icon: "inv_misc_book_11" }
 ];

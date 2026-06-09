@@ -25,6 +25,7 @@ export const router = createBrowserRouter([
   // Standalone anonymous guest route — no nav, no auth gate.
   { path: "softres-pug", element: <SoftReservesPugPage /> },
   // Legacy URL redirects (old static site used .html paths).
+  { path: "tips", element: <LegacyRedirect to="/addons" /> }, // page was briefly /tips
   { path: "index.html", element: <LegacyRedirect to="/" /> },
   { path: "schedule.html", element: <LegacyRedirect to="/schedule" /> },
   { path: "releases.html", element: <LegacyRedirect to="/releases" /> },
@@ -40,7 +41,7 @@ export const router = createBrowserRouter([
       { path: "strategy", element: <StrategyPage /> },
       { path: "schedule", element: <SchedulePage /> },
       { path: "releases", element: <ReleasesPage /> },
-      { path: "tips", element: <ResourcesPage /> },
+      { path: "addons", element: <ResourcesPage /> },
       { path: "softres", element: <SoftReservesPage /> },
       { path: "raids", element: <RequireAdmin><RaidCreatorPage /></RequireAdmin> },
       { path: "admin", element: <RequireAdmin><AdminPage /></RequireAdmin> },

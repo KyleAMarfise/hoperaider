@@ -258,13 +258,13 @@ export function ResourcesPage() {
     <div className="scroll-parchment resources-parchment">
       <div className="scroll-parchment-inner">
         <div className="scroll-title-row">
-          <h2 className="scroll-title">Tips</h2>
+          <h2 className="scroll-title">Addons</h2>
         </div>
         <p className="resources-intro">Handy addons, macros, and WeakAuras shared by the team.</p>
         <hr className="scroll-divider" />
 
         <div className="resources-doc">
-          {resources.length === 0 && <p className="schedule-empty">No tips posted yet — be the first to add one!</p>}
+          {resources.length === 0 && <p className="schedule-empty">Nothing posted yet — be the first to add one!</p>}
           {TYPE_ORDER.map((t) => {
             const items = grouped[t];
             if (!items.length) return null;
@@ -293,7 +293,7 @@ export function ResourcesPage() {
         {!!uid && (
           <div className="scroll-footer-actions">
             <button type="button" className="secondary" onClick={() => setDialog({ open: true, resource: null })}>
-              + Add Tip
+              + Add Addon
             </button>
           </div>
         )}
