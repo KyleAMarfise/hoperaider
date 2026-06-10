@@ -597,7 +597,7 @@ function PastRaids({ groups, allCharacters, softReserves, hardReserves, expanded
           const dateLabel = rDate ? new Date(`${rDate}T00:00:00`).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }) : "—";
           const start = Number.isInteger(item.raidStart) ? hourLabel(item.raidStart as number) : "";
           const end = Number.isInteger(item.raidEnd) ? hourLabel(item.raidEnd as number) : "";
-          const timeStr = start ? `${start}${end ? " – " + end : ""} ST` : "";
+          const timeStr = start ? `${start}${end ? " – " + end : ""} CST` : "";
           const raidSignups = group.signups.filter((s) => s.__isSignup !== false && s.characterId);
           const activeCount = raidSignups.filter((s) => !["decline", "withdrawn", "denied"].includes(normalizeSignupStatus(s.status))).length;
           const resolvedSignups = raidSignups.map((s) => resolveSignupCharacterData(s, allCharacters));
@@ -685,7 +685,7 @@ function CalendarView({
             <div key={gi} className={`calendar-raid-chip${viewerIn ? " has-signup" : ""}`} title={`${raid.raidName || "Raid"}${raid.runType ? ` (${raid.runType})` : ""} — ${count} signups`}>
               {raid.raidName || "Raid"}
               {raid.runType ? ` (${raid.runType})` : ""}
-              {startHour && <span className="chip-time">{startHour} ST</span>}
+              {startHour && <span className="chip-time">{startHour} CST</span>}
               <span className="chip-time">
                 {count}
                 {raid.raidSize ? `/${raid.raidSize}` : ""} signed

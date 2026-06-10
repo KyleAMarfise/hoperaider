@@ -73,7 +73,7 @@ function isRaidPast(raid: Raid): boolean {
 function timeWindow(raid: Raid): string {
   const start = Number.isInteger(raid.raidStart as number) ? hourLabel(raid.raidStart as number) : "";
   const end = Number.isInteger(raid.raidEnd as number) ? hourLabel(raid.raidEnd as number) : "";
-  return start ? `${start}${end ? " – " + end : ""} ST` : "";
+  return start ? `${start}${end ? " – " + end : ""} CST` : "";
 }
 
 function MySignupBadge({ raidId, signups }: { raidId: string; signups: Signup[] }) {
